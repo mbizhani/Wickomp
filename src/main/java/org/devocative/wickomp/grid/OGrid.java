@@ -1,5 +1,6 @@
 package org.devocative.wickomp.grid;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.opt.OComponent;
 
@@ -10,9 +11,12 @@ import java.util.List;
 public class OGrid<T extends Serializable> extends OComponent {
 	private Boolean autoRowHeight = false;
 	private OColumnList<T> columns;
+	private boolean multiSort = false;
 	private Boolean pagination = true;
 	private List<Integer> pageList;
 	private Integer pageSize;
+	private Boolean rowNumbers = true;
+	private Boolean singleSelect = true;
 	private String url;
 
 	public OGrid() {
@@ -24,47 +28,81 @@ public class OGrid<T extends Serializable> extends OComponent {
 		return autoRowHeight;
 	}
 
-	public void setAutoRowHeight(Boolean autoRowHeight) {
+	public OGrid<T> setAutoRowHeight(Boolean autoRowHeight) {
 		this.autoRowHeight = autoRowHeight;
+		return this;
 	}
 
 	public OColumnList<T> getColumns() {
 		return columns;
 	}
 
-	public void setColumns(OColumnList<T> columns) {
+	public OGrid<T> setColumns(OColumnList<T> columns) {
 		this.columns = columns;
+		return this;
+	}
+
+	public boolean getMultiSort() {
+		return multiSort;
+	}
+
+	public OGrid<T> setMultiSort(boolean multiSort) {
+		this.multiSort = multiSort;
+		return this;
 	}
 
 	public Boolean getPagination() {
 		return pagination;
 	}
 
-	public void setPagination(Boolean pagination) {
+	public OGrid<T> setPagination(Boolean pagination) {
 		this.pagination = pagination;
+		return this;
 	}
 
 	public List<Integer> getPageList() {
 		return pageList;
 	}
 
-	public void setPageList(List<Integer> pageList) {
+	public OGrid<T> setPageList(List<Integer> pageList) {
 		this.pageList = pageList;
+		return this;
 	}
 
 	public Integer getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(Integer pageSize) {
+	public OGrid<T> setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+		return this;
+	}
+
+	@JsonProperty("rownumbers")
+	public Boolean getRowNumbers() {
+		return rowNumbers;
+	}
+
+	public OGrid<T> setRowNumbers(Boolean rowNumbers) {
+		this.rowNumbers = rowNumbers;
+		return this;
+	}
+
+	public Boolean getSingleSelect() {
+		return singleSelect;
+	}
+
+	public OGrid<T> setSingleSelect(Boolean singleSelect) {
+		this.singleSelect = singleSelect;
+		return this;
 	}
 
 	public String getUrl() {
 		return url;
 	}
 
-	public void setUrl(String url) {
+	public OGrid<T> setUrl(String url) {
 		this.url = url;
+		return this;
 	}
 }

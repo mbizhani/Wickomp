@@ -5,7 +5,7 @@
 
 	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[%p] (%-9t %d) %m%n"/>
+			<param name="ConversionPattern" value="[%p] %m%n"/>
 		</layout>
 	</appender>
 
@@ -18,7 +18,7 @@
 		</layout>
 	</appender>-->
 
-	<logger name="com.devocative" additivity="false">
+	<logger name="org.devocative" additivity="false">
 		<level value="DEBUG"/>
 		<appender-ref ref="CONSOLE"/>
 	</logger>

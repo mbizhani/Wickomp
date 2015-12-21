@@ -17,8 +17,8 @@ public abstract class OCallbackColumn<T extends Serializable> extends OColumn<T>
 		this.linkContent = linkContent;
 	}
 
-	protected OCallbackColumn(IModel<String> text, String dataField) {
-		super(text, dataField);
+	protected OCallbackColumn(IModel<String> text, String field) {
+		super(text, field);
 	}
 
 	public OCallbackColumn<T> setTooltip(IModel<String> tooltip) {

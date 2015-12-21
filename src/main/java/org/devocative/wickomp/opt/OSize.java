@@ -26,6 +26,8 @@ public class OSize extends Options {
 	}
 
 	public static OSize percent(int size) {
+		if (size < 0 || size > 100)
+			throw new RuntimeException("Invalid percent value: " + size);
 		return new OSize(size, EType.Percent);
 	}
 

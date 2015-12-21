@@ -12,8 +12,8 @@ public abstract class OAjaxLinkColumn<T extends Serializable> extends OCallbackC
 		super(text, linkContent);
 	}
 
-	public OAjaxLinkColumn(IModel<String> text, String property) {
-		super(text, property);
+	public OAjaxLinkColumn(IModel<String> text, String field) {
+		super(text, field);
 	}
 
 	public abstract void onClick(AjaxRequestTarget target, IModel<T> rowData);

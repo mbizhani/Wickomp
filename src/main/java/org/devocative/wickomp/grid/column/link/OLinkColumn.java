@@ -17,8 +17,8 @@ public abstract class OLinkColumn<T extends Serializable> extends OCallbackColum
 		super(text, linkContent);
 	}
 
-	protected OLinkColumn(IModel<String> text, String dataField) {
-		super(text, dataField);
+	protected OLinkColumn(IModel<String> text, String field) {
+		super(text, field);
 	}
 
 	public OLinkColumn<T> setTargetBlank(boolean targetBlank) {

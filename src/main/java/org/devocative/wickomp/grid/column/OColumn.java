@@ -7,10 +7,11 @@ import org.devocative.wickomp.opt.Options;
 import java.io.Serializable;
 
 public abstract class OColumn<T extends Serializable> extends Options {
-	private IModel<String> title;
+	private HAlign align;
 	private String field;
 	private Boolean resizable;
-	private HAlign align;
+	private Boolean sortable;
+	private IModel<String> title;
 
 	public OColumn(IModel<String> title) {
 		this(title, null);
@@ -21,8 +22,15 @@ public abstract class OColumn<T extends Serializable> extends Options {
 		this.field = field;
 	}
 
-	public String getTitle() {
-		return title.getObject();
+	///////////////////////// ACCESSORS
+
+	public HAlign getAlign() {
+		return align;
+	}
+
+	public OColumn<T> setAlign(HAlign align) {
+		this.align = align;
+		return this;
 	}
 
 	public String getField() {
@@ -43,14 +51,20 @@ public abstract class OColumn<T extends Serializable> extends Options {
 		return this;
 	}
 
-	public HAlign getAlign() {
-		return align;
+	public Boolean getSortable() {
+		return sortable;
 	}
 
-	public OColumn<T> setAlign(HAlign align) {
-		this.align = align;
+	public OColumn<T> setSortable(Boolean sortable) {
+		this.sortable = sortable;
 		return this;
 	}
+
+	public String getTitle() {
+		return title != null ? title.getObject() : "";
+	}
+
+	///////////////////////// PUBLIC METHODS
 
 	public boolean onCellRender(T bean, int rowNo) {
 		return true;
