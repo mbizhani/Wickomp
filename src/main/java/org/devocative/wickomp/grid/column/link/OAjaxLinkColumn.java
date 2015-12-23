@@ -21,8 +21,8 @@ public abstract class OAjaxLinkColumn<T extends Serializable> extends OCallbackC
 	@Override
 	protected void fillAnchor(Anchor anchor, T bean, int rowNo, int colNo, String url) {
 		anchor
-				.setHref("#")
-				.setOnClick(String.format("Wicket.Ajax.get({u:'%s'})", url));
+			.setHref("#")
+			.setOnClick(String.format("Wicket.Ajax.get({u:'%s'})", url));
 	}
 
 }

@@ -2,9 +2,11 @@ package org.devocative.wickomp.grid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devocative.wickomp.grid.column.OColumnList;
+import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.opt.OComponent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class OGrid<T extends Serializable> extends OComponent {
 	private Integer pageSize;
 	private Boolean rowNumbers = true;
 	private Boolean singleSelect = true;
+	private List<OButton<T>> toolbar;
 	private String url;
 
 	public OGrid() {
@@ -94,6 +97,20 @@ public class OGrid<T extends Serializable> extends OComponent {
 
 	public OGrid<T> setSingleSelect(Boolean singleSelect) {
 		this.singleSelect = singleSelect;
+		return this;
+	}
+
+	public List<OButton<T>> getToolbar() {
+		return toolbar;
+	}
+
+	public OGrid<T> addToolbarButton(OButton button) {
+		if (toolbar == null) {
+			toolbar = new ArrayList<OButton<T>>();
+		}
+
+		button.setIndex(toolbar.size());
+		toolbar.add(button);
 		return this;
 	}
 

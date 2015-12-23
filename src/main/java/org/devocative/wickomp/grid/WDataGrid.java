@@ -13,6 +13,7 @@ import org.devocative.wickomp.data.SortField;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
+import org.devocative.wickomp.grid.toolbar.OButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,42 +36,58 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 	}
 
 	@Override
+	protected String getJQueryFunction() {
+		return "datagrid";
+	}
+
+	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 
 		// It should be called in onBeforeRender, not worked in onInitialize, causing StalePageException
 		options.setUrl(getCallbackURL());
+		int i = 0;
+		for (OColumn<T> column : options.getColumns().getList()) {
+			if (column.getField() == null) {
+				column
+					.setField("f" + (i++))
+					.setDummyField(true);
+			}
+		}
+
+		for (OButton button : options.getToolbar()) {
+			button.setUrl(getCallbackURL());
+		}
 	}
 
 	@Override
 	protected void onRequest(IRequestParameters parameters) {
-		int pageSize = parameters.getParameterValue("rows").toInt(1);
-		int pageNum = parameters.getParameterValue("page").toInt(options.getPageSize());
+		int pageSize = parameters.getParameterValue("rows").toInt(options.getPageSize());
+		int pageNum = parameters.getParameterValue("page").toInt(1);
 
 		String sortList = parameters.getParameterValue("sort").toOptionalString();
 		String orderList = parameters.getParameterValue("order").toOptionalString();
 
+		String type = parameters.getParameterValue("tp").toString();
 		Integer rowNo = parameters.getParameterValue("rn").toOptionalInteger();
 		Integer colNo = parameters.getParameterValue("cn").toOptionalInteger();
 
-		logger.debug("WDataGrid: onRequest.parameters: pageSize={}, pageNum={}, sort={}, order={}, rowNo={}, colNo={}",
-				new Object[]{pageSize, pageNum, sortList, orderList, rowNo, colNo});
+		logger.debug("WDataGrid: onRequest.parameters: type={}, pageSize={}, pageNum={}, sort={}, order={}, rowNo={}, colNo={}",
+			new Object[]{type, pageSize, pageNum, sortList, orderList, rowNo, colNo});
 
-		if (rowNo != null && colNo != null) {
-			IModel<T> rowModel = pageData.get(rowNo);
-			OColumn<T> column = options.getColumns().getList().get(colNo);
-			if (column instanceof OLinkColumn) {
-				OLinkColumn<T> linkColumn = (OLinkColumn<T>) column;
-				linkColumn.onClick(rowModel);
-			} else if (column instanceof OAjaxLinkColumn) {
-				WebApplication app = (WebApplication) getApplication();
-				AjaxRequestTarget target = app.newAjaxRequestTarget(getPage());
-				RequestCycle requestCycle = RequestCycle.get();
-				requestCycle.scheduleRequestHandlerAfterCurrent(target);
-
-				OAjaxLinkColumn<T> ajaxLinkColumn = (OAjaxLinkColumn<T>) column;
-				ajaxLinkColumn.onClick(target, rowModel);
+		if ("cl".equals(type)) {
+			if (rowNo == null) {
+				throw new RuntimeException("Null rowNo parameter!");
 			}
+			if (colNo == null) {
+				throw new RuntimeException("Null colNo parameter!");
+			}
+			handleCellLinkClick(rowNo, colNo);
+		} else if ("bt".equals(type)) {
+			if (colNo == null) {
+				throw new RuntimeException("Null button index parameter!");
+			}
+			handleToolbarButtonClick(colNo);
 		} else {
 			List<SortField> sortFieldList;
 
@@ -93,9 +110,27 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 		}
 	}
 
-	@Override
-	protected String getJQueryFunction() {
-		return "datagrid";
+	private void handleToolbarButtonClick(Integer colNo) {
+		OButton<T> button = options.getToolbar().get(colNo);
+		button.onClick(options.getColumns().getList(), dataSource);
+	}
+
+	private void handleCellLinkClick(Integer rowNo, Integer colNo) {
+		IModel<T> rowModel = pageData.get(rowNo);
+		OColumn<T> column = options.getColumns().getList().get(colNo);
+		if (column instanceof OLinkColumn) {
+			OLinkColumn<T> linkColumn = (OLinkColumn<T>) column;
+			linkColumn.onClick(rowModel);
+		} else if (column instanceof OAjaxLinkColumn) {
+			WebApplication app = (WebApplication) getApplication();
+			AjaxRequestTarget target = app.newAjaxRequestTarget(getPage());
+			RequestCycle requestCycle = RequestCycle.get();
+			requestCycle.scheduleRequestHandlerAfterCurrent(target);
+
+			OAjaxLinkColumn<T> ajaxLinkColumn = (OAjaxLinkColumn<T>) column;
+			ajaxLinkColumn.onClick(target, rowModel);
+
+		}
 	}
 
 	private List<RObject> getPageData(List<T> list) {
@@ -109,7 +144,7 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 			for (int colNo = 0; colNo < options.getColumns().getList().size(); colNo++) {
 				OColumn<T> column = options.getColumns().getList().get(colNo);
 				if (column.onCellRender(bean, rowNo)) {
-					String url = String.format("%s&rn=%s&cn=%s", getCallbackURL(), rowNo, colNo);
+					String url = String.format("%s&rn=%s&cn=%s&tp=cl", getCallbackURL(), rowNo, colNo);
 					map.addProperty(column.getField(), column.cellValue(bean, rowNo, colNo, url));
 				}
 			}

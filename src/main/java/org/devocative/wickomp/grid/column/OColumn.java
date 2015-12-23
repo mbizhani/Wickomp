@@ -1,5 +1,6 @@
 package org.devocative.wickomp.grid.column;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.opt.HAlign;
 import org.devocative.wickomp.opt.Options;
@@ -12,6 +13,8 @@ public abstract class OColumn<T extends Serializable> extends Options {
 	private Boolean resizable;
 	private Boolean sortable;
 	private IModel<String> title;
+
+	private boolean dummyField = false;
 
 	public OColumn(IModel<String> title) {
 		this(title, null);
@@ -65,6 +68,15 @@ public abstract class OColumn<T extends Serializable> extends Options {
 	}
 
 	///////////////////////// PUBLIC METHODS
+
+	@JsonIgnore
+	public boolean isDummyField() {
+		return dummyField;
+	}
+
+	public void setDummyField(boolean dummyField) {
+		this.dummyField = dummyField;
+	}
 
 	public boolean onCellRender(T bean, int rowNo) {
 		return true;

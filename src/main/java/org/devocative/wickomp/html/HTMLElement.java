@@ -68,10 +68,10 @@ public abstract class HTMLElement extends HTMLBase {
 		builder.append("<").append(name);
 		for (Map.Entry<String, String> attr : attributes.entrySet()) {
 			builder.append(" ")
-					.append(attr.getKey())
-					.append("=\"")
-					.append(attr.getValue())
-					.append("\"");
+				.append(attr.getKey())
+				.append("=\"")
+				.append(attr.getValue())
+				.append("\"");
 		}
 		if (children.size() > 0) {
 			builder.append(">");

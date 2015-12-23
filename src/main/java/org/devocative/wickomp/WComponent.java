@@ -43,7 +43,7 @@ public abstract class WComponent extends WebComponent {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		response.render(JavaScriptHeaderItem.forReference(
-				WebApplication.get().getJavaScriptLibrarySettings().getJQueryReference()
+			WebApplication.get().getJavaScriptLibrarySettings().getJQueryReference()
 		));
 
 		/*String js = String.format("%s/js/jqwidgets350/jqx-all.js", getRequest().getContextPath());

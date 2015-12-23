@@ -11,6 +11,8 @@ import java.io.StringWriter;
 /*
  * Some useful annotations:
  *
+ * @JsonIgnore
+ *
  * @JsonInclude(JsonInclude.Include.NON_NULL)
  *
  * @JsonRawValue

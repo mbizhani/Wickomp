@@ -11,6 +11,7 @@ import java.io.Serializable;
 public abstract class OCallbackColumn<T extends Serializable> extends OColumn<T> {
 	private IModel<String> tooltip;
 	private HTMLBase linkContent;
+	private String linkHTMLClass;
 
 	protected OCallbackColumn(IModel<String> text, HTMLBase linkContent) {
 		super(text);
@@ -26,23 +27,28 @@ public abstract class OCallbackColumn<T extends Serializable> extends OColumn<T>
 		return this;
 	}
 
+	public OCallbackColumn setLinkHTMLClass(String linkHTMLClass) {
+		this.linkHTMLClass = linkHTMLClass;
+		return this;
+	}
+
 	@Override
 	public final String cellValue(T bean, int rowNo, int colNo, String url) {
 		Anchor anchor = new Anchor();
-		if (linkContent == null) {
-			if (getField() != null) {
-				Object value = PropertyResolver.getValue(getField(), bean);
-				if (value != null) {
-					anchor.addChild(new HTMLBase(value.toString()));
-				}
-			}
-		} else {
+		if (linkContent != null) {
 			anchor.addChild(linkContent);
+		} else if (!isDummyField()) {
+			Object value = PropertyResolver.getValue(getField(), bean);
+			if (value != null) {
+				anchor.addChild(new HTMLBase(value.toString()));
+			}
 		}
 
 		if (tooltip != null) {
 			anchor.setTitle(tooltip.getObject());
 		}
+
+		anchor.setHtmlClass(linkHTMLClass);
 
 		fillAnchor(anchor, bean, rowNo, colNo, url);
 
