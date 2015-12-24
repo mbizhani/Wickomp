@@ -5,7 +5,6 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.CoreLibrariesContributor;
-import org.devocative.adroit.JsonUtil;
 import org.devocative.wickomp.opt.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

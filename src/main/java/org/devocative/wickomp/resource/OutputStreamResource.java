@@ -41,5 +41,5 @@ public abstract class OutputStreamResource extends AbstractResource {
 		return resourceResponse;
 	}
 
-	protected abstract void handleStream(OutputStream stream);
+	protected abstract void handleStream(OutputStream stream) throws IOException;
 }

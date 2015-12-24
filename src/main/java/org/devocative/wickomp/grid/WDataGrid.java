@@ -5,7 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.devocative.adroit.JsonUtil;
+import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WCallbackComponent;
 import org.devocative.wickomp.data.DataSource;
 import org.devocative.wickomp.data.RObject;
@@ -13,6 +13,7 @@ import org.devocative.wickomp.data.SortField;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
+import org.devocative.wickomp.grid.toolbar.GridInfo;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,8 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 
 	private OGrid<T> options;
 	private DataSource<T> dataSource;
-	private List<IModel<T>> pageData = new ArrayList<IModel<T>>();
+	private List<SortField> sortFieldList = new ArrayList<>();
+	private List<IModel<T>> pageData = new ArrayList<>();
 
 	public WDataGrid(String id, OGrid<T> options, DataSource<T> dataSource) {
 		super(id, options);
@@ -73,7 +75,7 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 		Integer colNo = parameters.getParameterValue("cn").toOptionalInteger();
 
 		logger.debug("WDataGrid: onRequest.parameters: type={}, pageSize={}, pageNum={}, sort={}, order={}, rowNo={}, colNo={}",
-			new Object[]{type, pageSize, pageNum, sortList, orderList, rowNo, colNo});
+			type, pageSize, pageNum, sortList, orderList, rowNo, colNo);
 
 		if ("cl".equals(type)) {
 			if (rowNo == null) {
@@ -89,12 +91,10 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 			}
 			handleToolbarButtonClick(colNo);
 		} else {
-			List<SortField> sortFieldList;
-
 			if (sortList != null && orderList != null) {
-				sortFieldList = createSortList(sortList.split(","), orderList.split(","));
+				updateSortFieldList(sortList.split(","), orderList.split(","));
 			} else {
-				sortFieldList = new ArrayList<SortField>();
+				sortFieldList.clear();
 			}
 
 			logger.debug("WDataGrid: SortFields = {}", sortFieldList);
@@ -112,7 +112,7 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 
 	private void handleToolbarButtonClick(Integer colNo) {
 		OButton<T> button = options.getToolbar().get(colNo);
-		button.onClick(options.getColumns().getList(), dataSource);
+		button.onClick(new GridInfo<>(options.getColumns().getList(), dataSource, sortFieldList));
 	}
 
 	private void handleCellLinkClick(Integer rowNo, Integer colNo) {
@@ -135,7 +135,7 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 
 	private List<RObject> getPageData(List<T> list) {
 		pageData.clear();
-		List<RObject> page = new ArrayList<RObject>();
+		List<RObject> page = new ArrayList<>();
 		for (int rowNo = 0; rowNo < list.size(); rowNo++) {
 			T bean = list.get(rowNo);
 			pageData.add(dataSource.model(bean));
@@ -153,13 +153,11 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 		return page;
 	}
 
-	private List<SortField> createSortList(String[] sortList, String[] orderList) {
-		List<SortField> result = new ArrayList<SortField>();
+	private void updateSortFieldList(String[] sortList, String[] orderList) {
+		sortFieldList.clear();
 
 		for (int i = 0; i < sortList.length; i++) {
-			result.add(new SortField(sortList[i], orderList[i]));
+			sortFieldList.add(new SortField(sortList[i], orderList[i]));
 		}
-
-		return result;
 	}
 }

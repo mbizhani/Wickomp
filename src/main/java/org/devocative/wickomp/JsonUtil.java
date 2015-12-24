@@ -1,4 +1,4 @@
-package org.devocative.adroit;
+package org.devocative.wickomp;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
