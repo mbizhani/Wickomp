@@ -104,9 +104,9 @@ public class OGrid<T extends Serializable> extends OComponent {
 		return toolbar;
 	}
 
-	public OGrid<T> addToolbarButton(OButton button) {
+	public OGrid<T> addToolbarButton(OButton<T> button) {
 		if (toolbar == null) {
-			toolbar = new ArrayList<OButton<T>>();
+			toolbar = new ArrayList<>();
 		}
 
 		button.setIndex(toolbar.size());
