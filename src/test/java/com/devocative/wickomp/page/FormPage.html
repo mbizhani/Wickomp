@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+
+<wicket:head>
+    <title>Wickomp: Form Page</title>
+</wicket:head>
+
+<wicket:extend>
+    <h2>Simple Form</h2>
+
+    <form wicket:id="form">
+        <table>
+            <tr>
+                <th>Name</th>
+                <td><input type="text" wicket:id="name"/></td>
+            </tr>
+
+            <tr>
+                <th>Age</th>
+                <td><input type="text" wicket:id="age"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" wicket:id="save" value="Save"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <hr/>
+
+    <h2>Dynamic Form</h2>
+    <form wicket:id="dynamicForm">
+        <table>
+            <tr wicket:id="fields">
+                <th><span wicket:id="label"></span></th>
+                <td><div wicket:id="field"></div></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" wicket:id="save" value="Save"/>
+                    <input type="reset" value="Clear"/>
+                </td>
+            </tr>
+        </table>
+
+    </form>
+
+</wicket:extend>
+
+</html>

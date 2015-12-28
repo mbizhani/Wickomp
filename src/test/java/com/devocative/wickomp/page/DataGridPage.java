@@ -1,8 +1,8 @@
-package com.devocative.wickomp;
+package com.devocative.wickomp.page;
 
+import com.devocative.wickomp.BasePage;
 import com.devocative.wickomp.vo.PersonVO;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.data.DataSource;
@@ -22,12 +22,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-public class HomePage extends WebPage implements DataSource<PersonVO> {
-	private static final long serialVersionUID = 1L;
-
+public class DataGridPage extends BasePage implements DataSource<PersonVO> {
 	private List<PersonVO> list;
 
-	public HomePage() {
+	public DataGridPage() {
 		list = PersonVO.list();
 
 		OColumnList<PersonVO> columns = new OColumnList<>();
@@ -107,4 +105,5 @@ public class HomePage extends WebPage implements DataSource<PersonVO> {
 	public IModel<PersonVO> model(PersonVO object) {
 		return new Model<>(object);
 	}
+
 }
