@@ -83,7 +83,7 @@ public class DataGridPage extends BasePage implements DataSource<PersonVO> {
 		options
 			.setColumns(columns)
 			.setMultiSort(true)
-			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export", 1000));
+			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export.xlsx", 1000));
 		//options.setWidth(OSize.fixed(800));
 		//options.setWidth(OSize.percent(100));
 		add(new WDataGrid<>("grid", options, this));
