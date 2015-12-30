@@ -2,11 +2,11 @@ package org.devocative.wickomp.data;
 
 import java.io.Serializable;
 
-public class SortField implements Serializable {
+public class WSortField implements Serializable {
 	private String field;
 	private String order;
 
-	public SortField(String field, String order) {
+	public WSortField(String field, String order) {
 		this.field = field;
 		this.order = order;
 	}
@@ -19,7 +19,7 @@ public class SortField implements Serializable {
 		return order;
 	}
 
-	public SortField setOrder(String order) {
+	public WSortField setOrder(String order) {
 		this.order = order;
 		return this;
 	}

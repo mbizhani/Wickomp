@@ -22,7 +22,7 @@ public class OExportExcelButton<T extends Serializable> extends OButton<T> {
 		this.maxRowsCount = maxRowsCount;
 	}
 
-	public void onClick(final GridInfo<T> gridInfo) {
+	public void onClick(final WGridInfo<T> gridInfo) {
 		sendResource(new OutputStreamResource("application/excel", fileName) {
 			@Override
 			protected void handleStream(OutputStream stream) throws IOException {

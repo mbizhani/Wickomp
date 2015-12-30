@@ -5,8 +5,8 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
-import org.devocative.wickomp.data.DataSource;
-import org.devocative.wickomp.data.SortField;
+import org.devocative.wickomp.data.WDataSource;
+import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.grid.OGrid;
 import org.devocative.wickomp.grid.WDataGrid;
 import org.devocative.wickomp.grid.column.OColumn;
@@ -88,9 +88,9 @@ public class DataGridPage extends BasePage {
 			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export.xlsx", 1000));
 		grid1Opt.setHeight(OSize.fixed(300));
 
-		add(new WDataGrid<>("grid1", grid1Opt, new DataSource<PersonVO>() {
+		add(new WDataGrid<>("grid1", grid1Opt, new WDataSource<PersonVO>() {
 			@Override
-			public List<PersonVO> list(long first, long size, List<SortField> sortFields) {
+			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);
 				int end = (int) (first * size);
 				return list.subList(start, Math.min(end, list.size()));
@@ -115,9 +115,9 @@ public class DataGridPage extends BasePage {
 		grid2Opt.setHeight(OSize.fixed(300));
 
 		final WDataGrid<PersonVO> grid2;
-		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new DataSource<PersonVO>() {
+		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new WDataSource<PersonVO>() {
 			@Override
-			public List<PersonVO> list(long first, long size, List<SortField> sortFields) {
+			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);
 				int end = (int) (first * size);
 				return list.subList(start, Math.min(end, list.size()));

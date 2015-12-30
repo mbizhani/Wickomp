@@ -42,7 +42,7 @@ public abstract class OButton<T extends Serializable> extends OComponent {
 
 	////////////////////////////////////// HELPER
 
-	public abstract void onClick(GridInfo<T> gridInfo);
+	public abstract void onClick(WGridInfo<T> gridInfo);
 
 	protected void sendResource(IResource resource) {
 		sendResource(resource, null);

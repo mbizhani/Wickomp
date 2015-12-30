@@ -7,14 +7,14 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WCallbackComponent;
-import org.devocative.wickomp.data.DataSource;
 import org.devocative.wickomp.data.RObject;
-import org.devocative.wickomp.data.SortField;
+import org.devocative.wickomp.data.WDataSource;
+import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
-import org.devocative.wickomp.grid.toolbar.GridInfo;
 import org.devocative.wickomp.grid.toolbar.OButton;
+import org.devocative.wickomp.grid.toolbar.WGridInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +26,11 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 	private static final Logger logger = LoggerFactory.getLogger(WDataGrid.class);
 
 	private OGrid<T> options;
-	private DataSource<T> dataSource;
-	private List<SortField> sortFieldList = new ArrayList<>();
+	private WDataSource<T> dataSource;
+	private List<WSortField> sortFieldList = new ArrayList<>();
 	private List<IModel<T>> pageData = new ArrayList<>();
 
-	public WDataGrid(String id, OGrid<T> options, DataSource<T> dataSource) {
+	public WDataGrid(String id, OGrid<T> options, WDataSource<T> dataSource) {
 		super(id, options);
 
 		this.options = options;
@@ -41,7 +41,7 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 		return options;
 	}
 
-	public DataSource<T> getDataSource() {
+	public WDataSource<T> getDataSource() {
 		return dataSource;
 	}
 
@@ -134,7 +134,7 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 
 	private void handleToolbarButtonClick(Integer colNo) {
 		OButton<T> button = options.getToolbar().get(colNo);
-		button.onClick(new GridInfo<>(options.getColumns().getList(), dataSource, sortFieldList));
+		button.onClick(new WGridInfo<>(options.getColumns().getList(), dataSource, sortFieldList));
 	}
 
 	private void handleCellLinkClick(Integer rowNo, Integer colNo) {
@@ -181,7 +181,7 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 		sortFieldList.clear();
 
 		for (int i = 0; i < sortList.length; i++) {
-			sortFieldList.add(new SortField(sortList[i], orderList[i]));
+			sortFieldList.add(new WSortField(sortList[i], orderList[i]));
 		}
 	}
 }
