@@ -8,7 +8,15 @@ import java.util.List;
 public abstract class WDataSource<T> implements Serializable {
 	private boolean enabled = true;
 
-	public abstract List<T> list(long first, long size, List<WSortField> sortFields);
+	/**
+	 * This method returns a page of result
+	 *
+	 * @param pageIndex  page number during pagination process starts with 1
+	 * @param pageSize   size of a page during pagination process
+	 * @param sortFields list of fields for sorting the result (optional)
+	 * @return list of result
+	 */
+	public abstract List<T> list(long pageIndex, long pageSize, List<WSortField> sortFields);
 
 	public abstract long count();
 
