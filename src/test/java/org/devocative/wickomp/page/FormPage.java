@@ -1,7 +1,5 @@
 package org.devocative.wickomp.page;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -12,14 +10,13 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.WNumberInput;
+import org.devocative.wickomp.form.WSelectionInput;
 import org.devocative.wickomp.form.WTextInput;
 import org.devocative.wickomp.vo.Field;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 public class FormPage extends BasePage {
 
@@ -36,6 +33,7 @@ public class FormPage extends BasePage {
 
 		final Map<String, Serializable> map = new HashMap<>();
 		map.put("name", "Joe");
+		map.put("age", 123456);
 
 		Form<Map<String, Serializable>> dynamicForm = new Form<>("dynamicForm", new CompoundPropertyModel<>(map));
 
@@ -54,11 +52,11 @@ public class FormPage extends BasePage {
 						break;
 
 					case Integer:
-						view.add(new WNumberInput(field.getName()).setGroupSeparator(","));
+						view.add(new WNumberInput(field.getName(), Long.class).setThousandSeparator(","));
 						break;
 
 					case Real:
-						view.add(new WNumberInput(field.getName()).setPrecision(2).setGroupSeparator(","));
+						view.add(new WNumberInput(field.getName(), BigDecimal.class).setPrecision(4).setThousandSeparator(","));
 						break;
 
 					case Boolean:
@@ -86,9 +84,15 @@ public class FormPage extends BasePage {
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 		form.add(new TextField<String>("name"));
 		form.add(new TextField<>("age", Integer.class));
-		form.add(new AjaxButton("save") {
-			@Override
+		form.add(new WSelectionInput("education", Arrays.asList("A", "B", "C"), true));
+		form.add(new Button("save") {
+			/*@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				System.out.println(map);
+			}*/
+
+			@Override
+			public void onSubmit() {
 				System.out.println(map);
 			}
 		});

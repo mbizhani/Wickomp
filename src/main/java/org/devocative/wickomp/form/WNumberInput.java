@@ -1,58 +1,71 @@
 package org.devocative.wickomp.form;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.head.HeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.convert.IConverter;
+import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.resource.Resource;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WNumberInput extends WFormInputPanel<Number> {
-	private TextField<Number> numberField;
+	private static final HeaderItem ADVANCED_LIST_JS = Resource.getCommonJS("autoNumeric.js");
 
-	/*private Integer precision;
-	private String groupSeparator;
+	private WebComponent numberField;
+	private HiddenField<String> hiddenField;
 
-	private Integer min;
-	private Integer max;*/
-
-	private List<String> options = new ArrayList<>();
+	private Map<String, Object> options = new HashMap<>();
 
 
 	public WNumberInput(String id) {
-		this(id, null);
+		this(id, null, null);
 	}
 
-	public WNumberInput(String id, IModel<Number> model) {
-		super(id, model);
+	public WNumberInput(String id, Class<? extends Number> type) {
+		this(id, null, type);
+	}
 
-		numberField = new TextField<>("numberField");
+	public WNumberInput(String id, IModel<Number> model, Class<? extends Number> type) {
+		super(id, model);
+		setType(type);
+
+		numberField = new WebComponent("numberField");
+		numberField.setOutputMarkupId(true);
 		add(numberField);
+
+		hiddenField = new HiddenField<>("hidden");
+		hiddenField.setOutputMarkupId(true);
+		add(hiddenField);
+
+		options.put("aSep", "");
+		options.put("mDec", "0");
 	}
 
 	public WNumberInput setPrecision(Integer precision) {
-		//this.precision = precision;
-		options.add("precision:" + precision);
+		options.put("mDec", precision);
 		return this;
 	}
 
-	public WNumberInput setGroupSeparator(String groupSeparator) {
-		//this.groupSeparator = groupSeparator;
-		options.add("groupSeparator:'" + groupSeparator + "'");
+	public WNumberInput setThousandSeparator(String thousandSeparator) {
+		options.put("aSep", thousandSeparator);
 		return this;
 	}
 
 	public WNumberInput setMin(Integer min) {
-		//this.min = min;
-		options.add("min:" + min);
+		options.put("vMin", min);
 		return this;
 	}
 
 	public WNumberInput setMax(Integer max) {
-		//this.max = max;
-		options.add("max:" + max);
+		options.put("vMin", max);
 		return this;
 	}
 
@@ -60,21 +73,41 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 
-		numberField.setModel(new Model<>(getModelObject()));
-
-		if (options.size() > 0) {
-			StringBuilder builder = new StringBuilder();
-			builder.append(options.get(0));
-
-			for (int i = 1; i < options.size(); i++) {
-				builder.append(",").append(options.get(i));
-			}
-			numberField.add(new AttributeModifier("data-options", builder.toString()));
+		Object number = getModelObject();
+		if (number != null) {
+			numberField.add(new AttributeModifier("value", number.toString()));
+			hiddenField.setModel(new Model<>(number.toString()));
+		} else {
+			hiddenField.setModel(new Model<String>());
 		}
 	}
 
 	@Override
 	protected void convertInput() {
-		setConvertedInput(numberField.getConvertedInput());
+		final IConverter<Number> converter = getConverter(getType());
+		setConvertedInput(converter.convertToObject(hiddenField.getConvertedInput(), getLocale()));
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		response.render(Resource.getJQueryReference());
+		response.render(ADVANCED_LIST_JS);
+	}
+
+	@Override
+	protected void onAfterRender() {
+		super.onAfterRender();
+
+		String script = String.format("$('#%s').autoNumeric('init', %s);",
+			numberField.getMarkupId(), JsonUtil.toJson(options));
+
+		script += String.format("$('#%1$s').bind('keypress',function(){$('#%2$s').val($('#%1$s').autoNumeric('get'));} );",
+			numberField.getMarkupId(), hiddenField.getMarkupId());
+
+		AjaxRequestTarget ajaxRequestTarget = getRequestCycle().find(AjaxRequestTarget.class);
+		if (ajaxRequestTarget == null)
+			getResponse().write(String.format("<script>%s</script>", script));
+		else
+			ajaxRequestTarget.appendJavaScript(script);
 	}
 }
