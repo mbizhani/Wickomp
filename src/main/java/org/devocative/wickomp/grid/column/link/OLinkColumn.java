@@ -8,9 +8,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.devocative.wickomp.html.Anchor;
 import org.devocative.wickomp.html.HTMLBase;
 
-import java.io.Serializable;
-
-public abstract class OLinkColumn<T extends Serializable> extends OCallbackColumn<T> {
+public abstract class OLinkColumn<T> extends OCallbackColumn<T> {
 	private boolean targetBlank = false;
 
 	protected OLinkColumn(IModel<String> text, HTMLBase linkContent) {

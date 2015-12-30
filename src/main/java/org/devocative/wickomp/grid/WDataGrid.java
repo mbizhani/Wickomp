@@ -18,11 +18,10 @@ import org.devocative.wickomp.grid.toolbar.WGridInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WDataGrid<T extends Serializable> extends WCallbackComponent {
+public class WDataGrid<T> extends WCallbackComponent {
 	private static final Logger logger = LoggerFactory.getLogger(WDataGrid.class);
 
 	private OGrid<T> options;

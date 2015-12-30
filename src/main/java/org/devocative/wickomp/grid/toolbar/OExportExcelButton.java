@@ -8,11 +8,10 @@ import org.devocative.wickomp.resource.OutputStreamResource;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OExportExcelButton<T extends Serializable> extends OButton<T> {
+public class OExportExcelButton<T> extends OButton<T> {
 	private String fileName;
 	private Integer maxRowsCount;
 

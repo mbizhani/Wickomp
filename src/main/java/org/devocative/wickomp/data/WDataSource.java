@@ -5,7 +5,7 @@ import org.apache.wicket.model.IModel;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class WDataSource<T extends Serializable> implements Serializable {
+public abstract class WDataSource<T> implements Serializable {
 	private boolean enabled = true;
 
 	public abstract List<T> list(long first, long size, List<WSortField> sortFields);

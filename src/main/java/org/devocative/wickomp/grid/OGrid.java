@@ -5,12 +5,11 @@ import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.opt.OComponent;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class OGrid<T extends Serializable> extends OComponent {
+public class OGrid<T> extends OComponent {
 	private Boolean autoRowHeight = false;
 	private OColumnList<T> columns;
 	private boolean multiSort = false;

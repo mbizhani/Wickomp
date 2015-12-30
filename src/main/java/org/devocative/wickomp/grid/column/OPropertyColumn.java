@@ -3,9 +3,7 @@ package org.devocative.wickomp.grid.column;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
 
-import java.io.Serializable;
-
-public class OPropertyColumn<T extends Serializable> extends OColumn<T> {
+public class OPropertyColumn<T> extends OColumn<T> {
 	public OPropertyColumn(IModel<String> text, String property) {
 		super(text, property);
 	}

@@ -6,9 +6,7 @@ import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.html.Anchor;
 import org.devocative.wickomp.html.HTMLBase;
 
-import java.io.Serializable;
-
-public abstract class OCallbackColumn<T extends Serializable> extends OColumn<T> {
+public abstract class OCallbackColumn<T> extends OColumn<T> {
 	private IModel<String> tooltip;
 	private HTMLBase linkContent;
 	private String linkHTMLClass;

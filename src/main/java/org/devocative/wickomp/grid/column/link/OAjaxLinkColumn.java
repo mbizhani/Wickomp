@@ -5,9 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.html.Anchor;
 import org.devocative.wickomp.html.HTMLBase;
 
-import java.io.Serializable;
-
-public abstract class OAjaxLinkColumn<T extends Serializable> extends OCallbackColumn<T> {
+public abstract class OAjaxLinkColumn<T> extends OCallbackColumn<T> {
 	protected OAjaxLinkColumn(IModel<String> text, HTMLBase linkContent) {
 		super(text, linkContent);
 	}

@@ -5,9 +5,7 @@ import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.opt.HAlign;
 import org.devocative.wickomp.opt.Options;
 
-import java.io.Serializable;
-
-public abstract class OColumn<T extends Serializable> extends Options {
+public abstract class OColumn<T> extends Options {
 	private HAlign align;
 	private String field;
 	private Boolean resizable;

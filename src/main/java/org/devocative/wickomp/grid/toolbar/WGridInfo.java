@@ -4,10 +4,9 @@ import org.devocative.wickomp.data.WDataSource;
 import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.grid.column.OColumn;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class WGridInfo<T extends Serializable> {
+public class WGridInfo<T> {
 	private List<OColumn<T>> columns;
 	private WDataSource<T> dataSource;
 	private List<WSortField> sortFieldList;
