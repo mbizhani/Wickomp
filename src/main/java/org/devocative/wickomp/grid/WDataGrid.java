@@ -37,6 +37,21 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 		this.dataSource = dataSource;
 	}
 
+	public OGrid<T> getOptions() {
+		return options;
+	}
+
+	public DataSource<T> getDataSource() {
+		return dataSource;
+	}
+
+	public void loadData(AjaxRequestTarget target) {
+		if (dataSource.isEnabled()) {
+			target.appendJavaScript(String.format("$(\"#%1$s\").%2$s(\"options\")[\"url\"]=\"%3$s\";$(\"#%1$s\").%2$s(\"reload\");",
+				getMarkupId(), getJQueryFunction(), getCallbackURL()));
+		}
+	}
+
 	@Override
 	protected String getJQueryFunction() {
 		return "datagrid";
@@ -47,7 +62,12 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 		super.onBeforeRender();
 
 		// It should be called in onBeforeRender, not worked in onInitialize, causing StalePageException
-		options.setUrl(getCallbackURL());
+		if (!dataSource.isEnabled()) {
+			options.setUrl(null);
+		} else {
+			options.setUrl(getCallbackURL());
+		}
+
 		int i = 0;
 		for (OColumn<T> column : options.getColumns().getList()) {
 			if (column.getField() == null) {
@@ -57,8 +77,10 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 			}
 		}
 
-		for (OButton button : options.getToolbar()) {
-			button.setUrl(getCallbackURL());
+		if (options.getToolbar() != null) {
+			for (OButton button : options.getToolbar()) {
+				button.setUrl(getCallbackURL());
+			}
 		}
 	}
 
@@ -136,19 +158,21 @@ public class WDataGrid<T extends Serializable> extends WCallbackComponent {
 	private List<RObject> getPageData(List<T> list) {
 		pageData.clear();
 		List<RObject> page = new ArrayList<>();
-		for (int rowNo = 0; rowNo < list.size(); rowNo++) {
-			T bean = list.get(rowNo);
-			pageData.add(dataSource.model(bean));
+		if (dataSource.isEnabled()) {
+			for (int rowNo = 0; rowNo < list.size(); rowNo++) {
+				T bean = list.get(rowNo);
+				pageData.add(dataSource.model(bean));
 
-			RObject map = new RObject();
-			for (int colNo = 0; colNo < options.getColumns().getList().size(); colNo++) {
-				OColumn<T> column = options.getColumns().getList().get(colNo);
-				if (column.onCellRender(bean, rowNo)) {
-					String url = String.format("%s&rn=%s&cn=%s&tp=cl", getCallbackURL(), rowNo, colNo);
-					map.addProperty(column.getField(), column.cellValue(bean, rowNo, colNo, url));
+				RObject map = new RObject();
+				for (int colNo = 0; colNo < options.getColumns().getList().size(); colNo++) {
+					OColumn<T> column = options.getColumns().getList().get(colNo);
+					if (column.onCellRender(bean, rowNo)) {
+						String url = String.format("%s&rn=%s&cn=%s&tp=cl", getCallbackURL(), rowNo, colNo);
+						map.addProperty(column.getField(), column.cellValue(bean, rowNo, colNo, url));
+					}
 				}
+				page.add(map);
 			}
-			page.add(map);
 		}
 		return page;
 	}

@@ -1,4 +1,4 @@
-package com.devocative.wickomp.vo;
+package org.devocative.wickomp.vo;
 
 import java.io.Serializable;
 

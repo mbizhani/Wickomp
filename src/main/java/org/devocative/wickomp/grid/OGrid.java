@@ -21,6 +21,7 @@ public class OGrid<T extends Serializable> extends OComponent {
 	private Boolean singleSelect = true;
 	private List<OButton<T>> toolbar;
 	private String url;
+	private List<T> data;
 
 	public OGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
@@ -120,6 +121,15 @@ public class OGrid<T extends Serializable> extends OComponent {
 
 	public OGrid<T> setUrl(String url) {
 		this.url = url;
+		return this;
+	}
+
+	public List<T> getData() {
+		return data;
+	}
+
+	public OGrid<T> setData(List<T> data) {
+		this.data = data;
 		return this;
 	}
 }

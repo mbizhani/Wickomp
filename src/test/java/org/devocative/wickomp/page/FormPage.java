@@ -1,7 +1,5 @@
-package com.devocative.wickomp.page;
+package org.devocative.wickomp.page;
 
-import com.devocative.wickomp.BasePage;
-import com.devocative.wickomp.vo.Field;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
@@ -12,8 +10,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.WNumberInput;
 import org.devocative.wickomp.form.WTextInput;
+import org.devocative.wickomp.vo.Field;
 
 import java.io.Serializable;
 import java.util.ArrayList;

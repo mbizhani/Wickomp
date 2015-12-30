@@ -1,4 +1,4 @@
-package com.devocative.wickomp;
+package org.devocative.wickomp;
 
 import org.apache.wicket.markup.html.WebPage;
 
