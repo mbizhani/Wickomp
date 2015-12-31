@@ -9,13 +9,14 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
-import org.devocative.wickomp.resource.Resource;
+import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
+import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.List;
 
 public class WSelectionInput extends WFormInputPanel {
-	private static final HeaderItem ADVANCED_LIST_JS = Resource.getCommonJS("advlist/advancedList.js");
-	private static final HeaderItem ADVANCED_LIST_CSS = Resource.getCommonCSS("advlist/advancedList.css");
+	private static final HeaderItem ADVANCED_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
+	private static final HeaderItem ADVANCED_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 
 	private WSelectionList choices;
 	private WebMarkupContainer opener;
@@ -34,6 +35,8 @@ public class WSelectionInput extends WFormInputPanel {
 		add(opener = new WebMarkupContainer("opener"));
 
 		setOutputMarkupId(true);
+
+		add(new FontAwesomeBehavior());
 	}
 
 	public boolean isMultipleSelection() {
@@ -74,7 +77,7 @@ public class WSelectionInput extends WFormInputPanel {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("handleAllAdvList('%s', %s, '%s', '%s');",
+		String script = String.format("handleAllSelList('%s', %s, '%s', '%s');",
 			getMarkupId(),
 			isEnabledInHierarchy(),
 			getString("label.select", null, "select"),

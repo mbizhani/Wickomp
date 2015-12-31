@@ -11,28 +11,24 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WFormInputPanel;
-import org.devocative.wickomp.resource.Resource;
+import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WNumberInput extends WFormInputPanel<Number> {
-	private static final HeaderItem ADVANCED_LIST_JS = Resource.getCommonJS("autoNumeric.js");
+	private static final HeaderItem ADVANCED_LIST_JS = Resource.getCommonJS("form/autoNumeric.js");
 
 	private WebComponent numberField;
 	private HiddenField<String> hiddenField;
 
 	private Map<String, Object> options = new HashMap<>();
 
-
-	public WNumberInput(String id) {
-		this(id, null, null);
-	}
-
 	public WNumberInput(String id, Class<? extends Number> type) {
 		this(id, null, type);
 	}
 
+	// Main Constructor
 	public WNumberInput(String id, IModel<Number> model, Class<? extends Number> type) {
 		super(id, model);
 		setType(type);
@@ -41,7 +37,7 @@ public class WNumberInput extends WFormInputPanel<Number> {
 		numberField.setOutputMarkupId(true);
 		add(numberField);
 
-		hiddenField = new HiddenField<>("hidden");
+		hiddenField = new HiddenField<>("hidden", new Model<String>());
 		hiddenField.setOutputMarkupId(true);
 		add(hiddenField);
 
@@ -76,9 +72,7 @@ public class WNumberInput extends WFormInputPanel<Number> {
 		Object number = getModelObject();
 		if (number != null) {
 			numberField.add(new AttributeModifier("value", number.toString()));
-			hiddenField.setModel(new Model<>(number.toString()));
-		} else {
-			hiddenField.setModel(new Model<String>());
+			hiddenField.setModelObject(number.toString());
 		}
 	}
 

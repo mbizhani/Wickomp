@@ -15,6 +15,8 @@ import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.grid.toolbar.WGridInfo;
+import org.devocative.wickomp.wrcs.EasyUIBehavior;
+import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,9 @@ public class WDataGrid<T> extends WCallbackComponent {
 
 		this.options = options;
 		this.dataSource = dataSource;
+
+		add(new FontAwesomeBehavior());
+		add(new EasyUIBehavior());
 	}
 
 	public OGrid<T> getOptions() {

@@ -1,0 +1,56 @@
+table.selListOpener {
+    padding: 1px;
+    background-color: white;
+    border-width: 1px;
+    border-style: outset inset inset outset;
+}
+
+td.selListOpenerImage, td.selListSNone, td.selListSAll {
+    width: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+td.selListOpenerImage {
+    background-color: #eeeeee;
+}
+
+td.selListSNone {
+    color: red;
+}
+
+td.selListSAll {
+    color: green;
+}
+
+td.selListSNone {
+
+}
+
+input.selListTitle {
+    width: 80px;
+    background-color: inherit !important;
+    border: 0 !important;
+}
+
+div.selListDropDown {
+    visibility: hidden;
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px black outset;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+}
+
+div.selListChoices {
+    max-height: 150px;
+    overflow: auto;
+}
+
+/* this is for IE */
+* html div.selListChoices {
+    height: expression( this.scrollHeight > 149 ? "150px" : "auto" );
+    overflow: auto;
+}

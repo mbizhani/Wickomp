@@ -15,7 +15,7 @@ public class WTextInput extends WFormInputPanel<String> {
 	public WTextInput(String id, IModel<String> model) {
 		super(id, model);
 
-		textField = new TextField<>("textField");
+		textField = new TextField<>("textField", new Model<String>());
 		add(textField);
 	}
 
@@ -23,7 +23,7 @@ public class WTextInput extends WFormInputPanel<String> {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 
-		textField.setModel(new Model<>(getModelObject()));
+		textField.setModelObject(getModelObject());
 	}
 
 	@Override

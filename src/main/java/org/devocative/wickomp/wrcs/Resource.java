@@ -1,4 +1,4 @@
-package org.devocative.wickomp.resource;
+package org.devocative.wickomp.wrcs;
 
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.HeaderItem;
