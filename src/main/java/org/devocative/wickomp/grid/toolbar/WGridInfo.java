@@ -2,23 +2,23 @@ package org.devocative.wickomp.grid.toolbar;
 
 import org.devocative.wickomp.data.WDataSource;
 import org.devocative.wickomp.data.WSortField;
-import org.devocative.wickomp.grid.column.OColumn;
+import org.devocative.wickomp.grid.OGrid;
 
 import java.util.List;
 
 public class WGridInfo<T> {
-	private List<OColumn<T>> columns;
+	private OGrid<T> options;
 	private WDataSource<T> dataSource;
 	private List<WSortField> sortFieldList;
 
-	public WGridInfo(List<OColumn<T>> columns, WDataSource<T> dataSource, List<WSortField> sortFieldList) {
-		this.columns = columns;
+	public WGridInfo(OGrid<T> options, WDataSource<T> dataSource, List<WSortField> sortFieldList) {
+		this.options = options;
 		this.dataSource = dataSource;
 		this.sortFieldList = sortFieldList;
 	}
 
-	public List<OColumn<T>> getColumns() {
-		return columns;
+	public OGrid<T> getOptions() {
+		return options;
 	}
 
 	public WDataSource<T> getDataSource() {

@@ -1,5 +1,6 @@
 package org.devocative.wickomp.grid.toolbar;
 
+import org.apache.wicket.request.IRequestParameters;
 import org.devocative.adroit.ExcelExporter;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
@@ -14,20 +15,27 @@ import java.util.List;
 public class OExportExcelButton<T> extends OButton<T> {
 	private String fileName;
 	private Integer maxRowsCount;
+	private HTMLBase html;
 
 	public OExportExcelButton(HTMLBase html, String fileName, Integer maxRowsCount) {
-		super(html);
+		this.html = html;
 		this.fileName = fileName;
 		this.maxRowsCount = maxRowsCount;
 	}
 
-	public void onClick(final WGridInfo<T> gridInfo) {
+	@Override
+	public String getHTMLContent(WGridInfo<T> gridInfo) {
+		return String.format("<a class=\"easyui-linkbutton\" plain=\"true\" href=\"%s\">%s</a>", getCallbackURL(), html.toString());
+	}
+
+	@Override
+	public void onClick(final WGridInfo<T> gridInfo, IRequestParameters parameters) {
 		sendResource(new OutputStreamResource("application/excel", fileName) {
 			@Override
 			protected void handleStream(OutputStream stream) throws IOException {
 				List<String> columnsTitle = new ArrayList<>();
 
-				for (OColumn<T> column : gridInfo.getColumns()) {
+				for (OColumn<T> column : gridInfo.getOptions().getColumns().getList()) {
 					if (column instanceof OPropertyColumn) {
 						columnsTitle.add(column.getTitle());
 					}
@@ -40,8 +48,9 @@ public class OExportExcelButton<T> extends OButton<T> {
 				for (int rowNo = 0; rowNo < rawData.size(); rowNo++) {
 					T bean = rawData.get(rowNo);
 					List<String> rowResult = new ArrayList<>();
-					for (int colNo = 0; colNo < gridInfo.getColumns().size(); colNo++) {
-						OColumn<T> column = gridInfo.getColumns().get(colNo);
+					List<OColumn<T>> columns = gridInfo.getOptions().getColumns().getList();
+					for (int colNo = 0; colNo < columns.size(); colNo++) {
+						OColumn<T> column = columns.get(colNo);
 						if (column instanceof OPropertyColumn) {
 							String cellValue = column.onCellRender(bean, rowNo) ?
 								column.cellValue(bean, rowNo, colNo, null) :

@@ -15,6 +15,7 @@ import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
 import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
+import org.devocative.wickomp.grid.toolbar.OGroupFieldButton;
 import org.devocative.wickomp.html.icon.FontAwesome;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.resource.OutputStreamResource;
@@ -81,34 +82,12 @@ public class DataGridPage extends BasePage {
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 05"), "col05"))
 		;
 
-		OGrid<PersonVO> grid1Opt = new OGrid<>();
-		grid1Opt
-			.setColumns(columns)
-			.setMultiSort(true)
-			.setGroupField("col01")
-			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export.xlsx", 1000));
-		grid1Opt.setHeight(OSize.fixed(300));
+		initGrid1(columns);
 
-		add(new WDataGrid<>("grid1", grid1Opt, new WDataSource<PersonVO>() {
-			@Override
-			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
-				int start = (int) ((first - 1) * size);
-				int end = (int) (first * size);
-				return list.subList(start, Math.min(end, list.size()));
-			}
+		initGrid2(columns);
+	}
 
-			@Override
-			public long count() {
-				return list.size();
-			}
-
-			@Override
-			public IModel<PersonVO> model(PersonVO object) {
-				return new Model<>(object);
-			}
-
-		}));
-
+	private void initGrid2(OColumnList<PersonVO> columns) {
 		OGrid<PersonVO> grid2Opt = new OGrid<>();
 		grid2Opt
 			.setColumns(columns)
@@ -142,6 +121,48 @@ public class DataGridPage extends BasePage {
 			public void onClick(AjaxRequestTarget target) {
 				grid2.getDataSource().setEnabled(true);
 				grid2.loadData(target);
+			}
+		});
+	}
+
+	private void initGrid1(OColumnList<PersonVO> columns) {
+		OGrid<PersonVO> grid1Opt = new OGrid<>();
+		grid1Opt
+			.setColumns(columns)
+			.setMultiSort(true)
+				//.setGroupField("col01")
+			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export.xlsx", 1000))
+			.addToolbarButton(new OGroupFieldButton<PersonVO>());
+		grid1Opt.setHeight(OSize.fixed(300));
+
+		final WDataGrid<PersonVO> grid1;
+		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new WDataSource<PersonVO>() {
+			@Override
+			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
+				int start = (int) ((first - 1) * size);
+				int end = (int) (first * size);
+				return list.subList(start, Math.min(end, list.size()));
+			}
+
+			@Override
+			public long count() {
+				return list.size();
+			}
+
+			@Override
+			public IModel<PersonVO> model(PersonVO object) {
+				return new Model<>(object);
+			}
+
+		}));
+		grid1.setVisible(false);
+		grid1.setOutputMarkupPlaceholderTag(true);
+
+		add(new AjaxLink("showGrid") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				grid1.setVisible(true);
+				target.add(grid1);
 			}
 		});
 	}

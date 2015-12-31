@@ -1,6 +1,5 @@
 package org.devocative.wickomp;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -49,14 +48,8 @@ public abstract class WCallbackComponent extends WComponent {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		if (isAutoJSRender) {
-			String script = getJQueryCall();
-			AjaxRequestTarget ajaxRequestTarget = getRequestCycle().find(AjaxRequestTarget.class);
-			if (ajaxRequestTarget == null) {
-				getResponse().write(String.format("\n<script>\n$(function(){%s});\n</script>\n", script));
-			} else {
-				ajaxRequestTarget.appendJavaScript(script);
-			}
+		if (isAutoJSRender && isVisible()) {
+			getResponse().write(String.format("\n<script>\n$(function(){%s});\n</script>\n", getJQueryCall()));
 		}
 	}
 }

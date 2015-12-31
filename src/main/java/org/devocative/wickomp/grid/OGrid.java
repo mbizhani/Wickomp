@@ -1,5 +1,6 @@
 package org.devocative.wickomp.grid;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.devocative.wickomp.grid.column.OColumnList;
@@ -137,7 +138,12 @@ public class OGrid<T> extends OComponent {
 		return this;
 	}
 
-	public List<OButton<T>> getToolbar() {
+	public String getToolbar() {
+		return toolbar != null ? String.format("#%s-tb", gridHTMLId) : null;
+	}
+
+	@JsonIgnore
+	public List<OButton<T>> getToolbarButtons() {
 		return toolbar;
 	}
 
@@ -165,8 +171,16 @@ public class OGrid<T> extends OComponent {
 		return view;
 	}
 
-	/*public OGrid<T> setView(OGridViewType view) {
-		this.view = view;
-		return this;
-	}*/
+
+	// ----
+	private String gridHTMLId;
+
+	@JsonIgnore
+	public String getGridHTMLId() {
+		return gridHTMLId;
+	}
+
+	public void setGridHTMLId(String gridHTMLId) {
+		this.gridHTMLId = gridHTMLId;
+	}
 }

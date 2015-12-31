@@ -4,14 +4,12 @@ import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.devocative.wickomp.grid.OGrid;
-import org.devocative.wickomp.grid.OGridViewType;
-import org.devocative.wickomp.grid.WDataGrid;
 
 public class EasyUIBehavior extends Behavior {
 	private static HeaderItem CSS = Resource.getCommonCSS("easyui/themes/default/easyui.css");
 	private static HeaderItem MAIN_JS = Resource.getCommonJS("easyui/jquery.easyui.min.js");
 	private static HeaderItem GROUP_VIEW_JS = Resource.getCommonJS("easyui/ext/datagrid-groupview.js");
+	private static HeaderItem MISC_JS = Resource.getCommonJS("easyui/ext/misc.js");
 
 	public static void setCSS(HeaderItem CSS) {
 		EasyUIBehavior.CSS = CSS;
@@ -31,12 +29,14 @@ public class EasyUIBehavior extends Behavior {
 
 		response.render(CSS);
 		response.render(MAIN_JS);
+		response.render(GROUP_VIEW_JS);
+		response.render(MISC_JS);
 
-		if (component instanceof WDataGrid) {
+		/*if (component instanceof WDataGrid) {
 			OGrid grid = ((WDataGrid) component).getOptions();
 			if (OGridViewType.GroupView.equals(grid.getView())) {
 				response.render(GROUP_VIEW_JS);
 			}
-		}
+		}*/
 	}
 }

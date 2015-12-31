@@ -74,6 +74,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 		} else {
 			options.setUrl(getCallbackURL());
 		}
+		options.setGridHTMLId(getMarkupId());
 
 		int i = 0;
 		for (OColumn<T> column : options.getColumns().getList()) {
@@ -85,7 +86,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 		}
 
 		if (options.getToolbar() != null) {
-			for (OButton button : options.getToolbar()) {
+			for (OButton button : options.getToolbarButtons()) {
 				button.setUrl(getCallbackURL());
 			}
 		}
@@ -118,7 +119,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 			if (colNo == null) {
 				throw new RuntimeException("Null button index parameter!");
 			}
-			handleToolbarButtonClick(colNo);
+			handleToolbarButtonClick(colNo, parameters);
 		} else {
 			if (sortList != null && orderList != null) {
 				updateSortFieldList(sortList.split(","), orderList.split(","));
@@ -139,9 +140,31 @@ public class WDataGrid<T> extends WCallbackComponent {
 		}
 	}
 
-	private void handleToolbarButtonClick(Integer colNo) {
-		OButton<T> button = options.getToolbar().get(colNo);
-		button.onClick(new WGridInfo<>(options.getColumns().getList(), dataSource, sortFieldList));
+	@Override
+	protected void onAfterRender() {
+		super.onAfterRender();
+
+		if (isVisible()) {
+			List<OButton<T>> toolbarButtons = options.getToolbarButtons();
+			if (toolbarButtons != null) {
+				WGridInfo<T> info = new WGridInfo<>(options, dataSource, sortFieldList);
+				StringBuilder builder = new StringBuilder();
+				builder
+					.append(String.format("<div id=\"%s-tb\">", getMarkupId()))
+					.append("<table><tr>");
+				for (OButton<T> button : toolbarButtons) {
+					builder.append("<td>").append(button.getHTMLContent(info)).append("</td>");
+				}
+				builder.append("</tr></table></div>");
+
+				getResponse().write(builder.toString());
+			}
+		}
+	}
+
+	private void handleToolbarButtonClick(Integer colNo, IRequestParameters parameters) {
+		OButton<T> button = options.getToolbarButtons().get(colNo);
+		button.onClick(new WGridInfo<>(options, dataSource, sortFieldList), parameters);
 	}
 
 	private void handleCellLinkClick(Integer rowNo, Integer colNo) {
