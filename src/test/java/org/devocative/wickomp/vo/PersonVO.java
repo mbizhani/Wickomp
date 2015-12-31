@@ -66,19 +66,19 @@ public class PersonVO implements Serializable {
 	@Override
 	public String toString() {
 		return "PersonVO{" +
-				"col01='" + col01 + '\'' +
-				'}';
+			"col01='" + col01 + '\'' +
+			'}';
 	}
 
 	public static List<PersonVO> list() {
 		List<PersonVO> list = new ArrayList<PersonVO>();
 		for (int i = 0; i < 189; i++) {
 			list.add(new PersonVO(
-					"r=" + i,
-					UUID.randomUUID().toString(),
-					"مهدی بیژنی oskol هستم",
-					UUID.randomUUID().toString(),
-					UUID.randomUUID().toString()
+				(i / 7) + "",
+				UUID.randomUUID().toString(),
+				"مهدی بیژنی oskol هستم",
+				UUID.randomUUID().toString(),
+				UUID.randomUUID().toString()
 			));
 		}
 		return list;

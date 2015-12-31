@@ -32,12 +32,7 @@ public class DataGridPage extends BasePage {
 
 		OColumnList<PersonVO> columns = new OColumnList<>();
 		columns
-			.add(new OLinkColumn<PersonVO>(new Model<>("Col01"), "col01") {
-				@Override
-				public void onClick(IModel<PersonVO> rowData) {
-					System.out.println(rowData.getObject());
-				}
-			}.setSortable(true))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01"))
 
 			.add(new OAjaxLinkColumn<PersonVO>(new Model<>("Col 02"), "col02") {
 				@Override
@@ -46,7 +41,12 @@ public class DataGridPage extends BasePage {
 				}
 			}.setSortable(true))
 
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 03"), "col03") {
+			.add(new OLinkColumn<PersonVO>(new Model<>("Col 03"), "col03") {
+				@Override
+				public void onClick(IModel<PersonVO> rowData) {
+					System.out.println(rowData.getObject());
+				}
+
 				@Override
 				public boolean onCellRender(PersonVO bean, int rowNo) {
 					return rowNo % 2 == 0;
@@ -85,6 +85,7 @@ public class DataGridPage extends BasePage {
 		grid1Opt
 			.setColumns(columns)
 			.setMultiSort(true)
+			.setGroupField("col01")
 			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export.xlsx", 1000));
 		grid1Opt.setHeight(OSize.fixed(300));
 

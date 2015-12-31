@@ -1,6 +1,7 @@
 package org.devocative.wickomp.grid;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.opt.OComponent;
@@ -12,15 +13,18 @@ import java.util.List;
 public class OGrid<T> extends OComponent {
 	private Boolean autoRowHeight = false;
 	private OColumnList<T> columns;
-	private boolean multiSort = false;
+	private List<T> data;
+	private String groupField;
+	private Boolean multiSort = false;
 	private Boolean pagination = true;
 	private List<Integer> pageList;
 	private Integer pageSize;
 	private Boolean rowNumbers = true;
 	private Boolean singleSelect = true;
+	private Boolean striped = true;
 	private List<OButton<T>> toolbar;
 	private String url;
-	private List<T> data;
+	private OGridViewType view;
 
 	public OGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
@@ -45,11 +49,35 @@ public class OGrid<T> extends OComponent {
 		return this;
 	}
 
-	public boolean getMultiSort() {
+	public List<T> getData() {
+		return data;
+	}
+
+	public OGrid<T> setData(List<T> data) {
+		this.data = data;
+		return this;
+	}
+
+	public String getGroupField() {
+		return groupField;
+	}
+
+	public OGrid<T> setGroupField(String groupField) {
+		this.groupField = groupField;
+		this.view = OGridViewType.GroupView;
+		return this;
+	}
+
+	@JsonRawValue
+	public String getGroupFormatter() {
+		return getGroupField() != null ? "function(value,rows){return value;}" : null;
+	}
+
+	public Boolean getMultiSort() {
 		return multiSort;
 	}
 
-	public OGrid<T> setMultiSort(boolean multiSort) {
+	public OGrid<T> setMultiSort(Boolean multiSort) {
 		this.multiSort = multiSort;
 		return this;
 	}
@@ -100,6 +128,15 @@ public class OGrid<T> extends OComponent {
 		return this;
 	}
 
+	public Boolean getStriped() {
+		return striped;
+	}
+
+	public OGrid<T> setStriped(Boolean striped) {
+		this.striped = striped;
+		return this;
+	}
+
 	public List<OButton<T>> getToolbar() {
 		return toolbar;
 	}
@@ -123,12 +160,13 @@ public class OGrid<T> extends OComponent {
 		return this;
 	}
 
-	public List<T> getData() {
-		return data;
+	@JsonRawValue
+	public OGridViewType getView() {
+		return view;
 	}
 
-	public OGrid<T> setData(List<T> data) {
-		this.data = data;
+	/*public OGrid<T> setView(OGridViewType view) {
+		this.view = view;
 		return this;
-	}
+	}*/
 }

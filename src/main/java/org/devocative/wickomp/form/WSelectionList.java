@@ -35,6 +35,8 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 		this.multipleSelection = multipleSelection;
 	}
 
+	// --------------------- ACCESSORS
+
 	public boolean isMultipleSelection() {
 		return multipleSelection;
 	}
@@ -43,6 +45,8 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 		this.multipleSelection = multipleSelection;
 		return this;
 	}
+
+	// --------------------- INTERNAL METHODS
 
 	@Override
 	protected String getModelValue() {
@@ -91,6 +95,7 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 			return (selected != null) && selected.equals(getChoiceRenderer().getIdValue(choiceOrObject, index));
 	}
 
+	@Override
 	protected Object convertValue(String[] ids) throws ConversionException {
 		if (multipleSelection) {
 			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0])) {
@@ -106,6 +111,7 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 		}
 	}
 
+	@Override
 	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
 		// Iterate through choices
 		final List<? extends T> choices = getChoices();
@@ -130,11 +136,12 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
-	public boolean isRetainDisabledSelected() {
+	protected boolean isRetainDisabledSelected() {
 		Boolean flag = getMetaData(RETAIN_DISABLED_META_KEY);
 		return (flag != null && flag);
 	}
 
+	@Override
 	protected void appendOptionHtml(final AppendingStringBuffer buffer, final T choice, int index, final String selected) {
 		Object displayValue = getChoiceRenderer().getDisplayValue(choice);
 		Class<?> objectClass = (displayValue == null ? null : displayValue.getClass());
@@ -325,6 +332,4 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 			}
 		}
 	}
-
-
 }

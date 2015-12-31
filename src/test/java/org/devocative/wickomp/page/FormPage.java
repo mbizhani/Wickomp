@@ -2,6 +2,7 @@ package org.devocative.wickomp.page;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -13,10 +14,14 @@ import org.devocative.wickomp.form.WNumberInput;
 import org.devocative.wickomp.form.WSelectionInput;
 import org.devocative.wickomp.form.WTextInput;
 import org.devocative.wickomp.vo.Field;
+import org.devocative.wickomp.vo.KeyValue;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FormPage extends BasePage {
 
@@ -78,13 +83,21 @@ public class FormPage extends BasePage {
 	}
 
 	private void simpleForm() {
+		List<KeyValue> list = new ArrayList<>();
+		list.add(new KeyValue("A", "Alef"));
+		list.add(new KeyValue("B", "Be"));
+		list.add(new KeyValue("C", "Cee"));
+
+
 		final Map<String, Serializable> map = new HashMap<>();
 		map.put("name", "Joe");
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 		form.add(new TextField<String>("name"));
 		form.add(new TextField<>("age", Integer.class));
-		form.add(new WSelectionInput("education", Arrays.asList("A", "B", "C"), true));
+		form.add(new WSelectionInput("eduSingle", list, false));
+		form.add(new WSelectionInput("eduMultiple", list, true));
+		form.add(new DropDownChoice("eduDD", list));
 		form.add(new Button("save") {
 			/*@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {

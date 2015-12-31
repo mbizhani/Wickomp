@@ -6,6 +6,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
@@ -39,6 +40,8 @@ public class WSelectionInput extends WFormInputPanel {
 		add(new FontAwesomeBehavior());
 	}
 
+	// --------------------- ACCESSORS
+
 	public boolean isMultipleSelection() {
 		return choices.isMultipleSelection();
 	}
@@ -48,29 +51,34 @@ public class WSelectionInput extends WFormInputPanel {
 		return this;
 	}
 
+	public WSelectionInput setChoiceRenderer(IChoiceRenderer renderer) {
+		choices.setChoiceRenderer(renderer);
+		return this;
+	}
+
+	// --------------------- METHODS
+
 	public WSelectionInput addToChoices(Behavior... behaviors) {
 		choices.add(behaviors);
 		return this;
 	}
 
+	// --------------------- INTERNAL METHODS
+
 	@Override
-	public void renderHead(IHeaderResponse response) {
-		response.render(Resource.getJQueryReference());
-		response.render(ADVANCED_LIST_JS);
-		response.render(ADVANCED_LIST_CSS);
+	protected void onBeforeRender() {
+		choices.setModelObject(getModelObject());
+
+		if (!isEnabledInHierarchy()) {
+			opener.add(new AttributeAppender("style", "background-color: #eeeeee;"));
+		}
+
+		super.onBeforeRender();
 	}
 
 	@Override
 	protected void convertInput() {
 		setConvertedInput(choices.getConvertedInput());
-	}
-
-	@Override
-	protected void onBeforeRender() {
-		choices.setModelObject(getModelObject());
-		if (!isEnabledInHierarchy())
-			opener.add(new AttributeAppender("style", "background-color: #eeeeee;"));
-		super.onBeforeRender();
 	}
 
 	@Override
@@ -87,5 +95,12 @@ public class WSelectionInput extends WFormInputPanel {
 			getResponse().write(String.format("<script>%s</script>", script));
 		else
 			ajaxRequestTarget.appendJavaScript(script);
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		response.render(Resource.getJQueryReference());
+		response.render(ADVANCED_LIST_JS);
+		response.render(ADVANCED_LIST_CSS);
 	}
 }

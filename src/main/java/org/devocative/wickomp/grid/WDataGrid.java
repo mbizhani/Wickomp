@@ -41,6 +41,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 		add(new EasyUIBehavior());
 	}
 
+	// ------------------------- ACCESSORS
 	public OGrid<T> getOptions() {
 		return options;
 	}
@@ -49,6 +50,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 		return dataSource;
 	}
 
+	// ------------------------- METHODS
 	public void loadData(AjaxRequestTarget target) {
 		if (dataSource.isEnabled()) {
 			target.appendJavaScript(String.format("$(\"#%1$s\").%2$s(\"options\")[\"url\"]=\"%3$s\";$(\"#%1$s\").%2$s(\"reload\");",
@@ -56,6 +58,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 		}
 	}
 
+	// ------------------------- INTERNAL METHODS
 	@Override
 	protected String getJQueryFunction() {
 		return "datagrid";
