@@ -10,10 +10,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.devocative.wickomp.BasePage;
-import org.devocative.wickomp.form.WDateInput;
-import org.devocative.wickomp.form.WNumberInput;
-import org.devocative.wickomp.form.WSelectionInput;
-import org.devocative.wickomp.form.WTextInput;
+import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.vo.Field;
 import org.devocative.wickomp.vo.KeyValue;
 
@@ -100,6 +97,7 @@ public class FormPage extends BasePage {
 		form.add(new WSelectionInput("eduMultiple", list, true));
 		form.add(new DropDownChoice("eduDD", list));
 		form.add(new WDateInput("birthdate", WDateInput.WCalendar.Persian));
+		form.add(new WBooleanInput("alive"));
 		form.add(new Button("save") {
 			/*@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -108,7 +106,12 @@ public class FormPage extends BasePage {
 
 			@Override
 			public void onSubmit() {
-				System.out.println(map);
+				System.out.println("MAP {{");
+				for (Map.Entry<String, Serializable> entry : map.entrySet()) {
+					System.out.printf("\t%s = %s (%s)\n", entry.getKey(), entry.getValue(),
+						entry.getValue() != null ? entry.getValue().getClass().getName() : "-");
+				}
+				System.out.println("}}");
 			}
 		});
 		add(form);

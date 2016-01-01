@@ -81,7 +81,7 @@ public class WNumberInput extends WFormInputPanel<Number> {
 
 	@Override
 	protected void convertInput() {
-		final IConverter<Number> converter = getConverter(getType());
+		IConverter<Number> converter = getConverter(getType());
 		setConvertedInput(converter.convertToObject(hiddenField.getConvertedInput(), getLocale()));
 	}
 
