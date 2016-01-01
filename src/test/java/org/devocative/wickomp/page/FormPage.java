@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.devocative.wickomp.BasePage;
+import org.devocative.wickomp.form.WDateInput;
 import org.devocative.wickomp.form.WNumberInput;
 import org.devocative.wickomp.form.WSelectionInput;
 import org.devocative.wickomp.form.WTextInput;
@@ -98,6 +99,7 @@ public class FormPage extends BasePage {
 		form.add(new WSelectionInput("eduSingle", list, false));
 		form.add(new WSelectionInput("eduMultiple", list, true));
 		form.add(new DropDownChoice("eduDD", list));
+		form.add(new WDateInput("birthdate", WDateInput.WCalendar.Persian));
 		form.add(new Button("save") {
 			/*@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {

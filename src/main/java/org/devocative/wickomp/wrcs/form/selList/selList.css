@@ -1,36 +1,9 @@
 table.selListOpener {
     padding: 1px;
-    background-color: white;
-    border-width: 1px;
-    border-style: outset inset inset outset;
-}
-
-td.selListOpenerImage, td.selListSNone, td.selListSAll {
-    width: 16px;
-    text-align: center;
-    cursor: pointer;
-}
-
-td.selListOpenerImage {
-    background-color: #eeeeee;
-}
-
-td.selListSNone {
-    color: red;
-}
-
-td.selListSAll {
-    color: green;
-}
-
-td.selListSNone {
-
 }
 
 input.selListTitle {
-    width: 80px;
-    background-color: inherit !important;
-    border: 0 !important;
+    width: 120px;
 }
 
 div.selListDropDown {

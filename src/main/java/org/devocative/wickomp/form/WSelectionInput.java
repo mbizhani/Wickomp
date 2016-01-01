@@ -10,14 +10,15 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.List;
 
 public class WSelectionInput extends WFormInputPanel {
-	private static final HeaderItem ADVANCED_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
-	private static final HeaderItem ADVANCED_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
+	private static final HeaderItem SEL_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
+	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 
 	private WSelectionList choices;
 	private WebMarkupContainer opener;
@@ -38,6 +39,7 @@ public class WSelectionInput extends WFormInputPanel {
 		setOutputMarkupId(true);
 
 		add(new FontAwesomeBehavior());
+		add(new CommonBehavior());
 	}
 
 	// --------------------- ACCESSORS
@@ -100,7 +102,7 @@ public class WSelectionInput extends WFormInputPanel {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		response.render(Resource.getJQueryReference());
-		response.render(ADVANCED_LIST_JS);
-		response.render(ADVANCED_LIST_CSS);
+		response.render(SEL_LIST_JS);
+		response.render(SEL_LIST_CSS);
 	}
 }

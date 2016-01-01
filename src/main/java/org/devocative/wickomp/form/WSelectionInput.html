@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
-    <table wicket:id="opener" border="0" cellpadding="0" cellspacing="0" class="selListOpener">
+    <table wicket:id="opener" border="0" cellpadding="0" cellspacing="0" class="selListOpener w-input">
         <tr>
-            <td><input type="text" class="selListTitle" readonly/></td>
-            <td class="selListOpenerImage"><i class="fa fa-angle-down"></i></td>
+            <td><input type="text" class="w-inner-input selListTitle" readonly/></td>
+            <td class="selListOpenerImage w-img-button"><i class="fa fa-angle-down"></i></td>
         </tr>
     </table>
     <div class="selListDropDown">
         <table>
             <tr>
-                <td><input type="text" class="selListFilter"/></td>
-                <td class="selListSNone"><i class="fa fa-eraser"></i></td>
-                <td class="selListSAll"><i class="fa fa-check-square-o"></i></td>
+                <td><input type="text" class="selListFilter w-input"/></td>
+                <td class="selListSNone w-img-button"><i class="fa fa-eraser"></i></td>
+                <td class="selListSAll w-img-button"><i class="fa fa-check-square-o"></i></td>
             </tr>
         </table>
         <div wicket:id="choices" class="selListChoices"></div>

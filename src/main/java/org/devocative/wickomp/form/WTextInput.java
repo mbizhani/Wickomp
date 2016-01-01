@@ -4,6 +4,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.wrcs.CommonBehavior;
 
 public class WTextInput extends WFormInputPanel<String> {
 	private TextField<String> textField;
@@ -17,6 +18,8 @@ public class WTextInput extends WFormInputPanel<String> {
 
 		textField = new TextField<>("textField", new Model<String>());
 		add(textField);
+
+		add(new CommonBehavior());
 	}
 
 	@Override

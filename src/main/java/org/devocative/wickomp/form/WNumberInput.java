@@ -11,13 +11,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WNumberInput extends WFormInputPanel<Number> {
-	private static final HeaderItem ADVANCED_LIST_JS = Resource.getCommonJS("form/autoNumeric.js");
+	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
 
 	private WebComponent numberField;
 	private HiddenField<String> hiddenField;
@@ -43,6 +44,8 @@ public class WNumberInput extends WFormInputPanel<Number> {
 
 		options.put("aSep", "");
 		options.put("mDec", "0");
+
+		add(new CommonBehavior());
 	}
 
 	public WNumberInput setPrecision(Integer precision) {
@@ -85,7 +88,7 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		response.render(Resource.getJQueryReference());
-		response.render(ADVANCED_LIST_JS);
+		response.render(NUMERIC_JS);
 	}
 
 	@Override

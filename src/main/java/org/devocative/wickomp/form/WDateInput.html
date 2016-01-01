@@ -1,0 +1,34 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+
+<wicket:panel>
+    <table dir="ltr" cellpadding="0" cellspacing="0" class="w-input">
+        <tr>
+            <td>
+                <table cellpadding="0" cellspacing="1">
+                    <tr>
+                        <td><input type="text" size="3" maxlength="4" class="yr w-inner-input" wicket:id="year"/></td>
+                        <td>/</td>
+                        <td><input type="text" size="2" maxlength="2" class="mo w-inner-input" wicket:id="month"/></td>
+                        <td>/</td>
+                        <td><input type="text" size="2" maxlength="2" class="dy w-inner-input" wicket:id="day"/></td>
+                        <td wicket:id="calOpener" class="w-img-button"><i class="fa fa-calendar"></i></td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table wicket:id="timePart" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td>-</td>
+                        <td><input type="text" size="2" maxlength="2" class="hr w-inner-input" wicket:id="hour"/></td>
+                        <td>:</td>
+                        <td><input type="text" size="2" maxlength="2" class="mi w-inner-input" wicket:id="minute"/></td>
+                        <td>:</td>
+                        <td><input type="text" size="2" maxlength="2" class="sc w-inner-input" wicket:id="second"/></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</wicket:panel>
+
+</html>
