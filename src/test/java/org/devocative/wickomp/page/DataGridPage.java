@@ -7,6 +7,9 @@ import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.data.WDataSource;
 import org.devocative.wickomp.data.WSortField;
+import org.devocative.wickomp.formatter.OBooleanFormatter;
+import org.devocative.wickomp.formatter.ODateFormatter;
+import org.devocative.wickomp.formatter.ONumberFormatter;
 import org.devocative.wickomp.grid.OGrid;
 import org.devocative.wickomp.grid.WDataGrid;
 import org.devocative.wickomp.grid.column.OColumn;
@@ -80,6 +83,12 @@ public class DataGridPage extends BasePage {
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04"))
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 05"), "col05"))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "birthDate")
+				.setFormatter(ODateFormatter.prDateTime()))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "income")
+				.setFormatter(ONumberFormatter.integer()))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
+				.setFormatter(OBooleanFormatter.bool()))
 		;
 
 		initGrid1(columns);

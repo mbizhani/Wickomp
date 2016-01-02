@@ -11,6 +11,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.opt.OCalendar;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
@@ -18,8 +19,6 @@ import org.devocative.wickomp.wrcs.Resource;
 import java.util.Date;
 
 public class WDateInput extends WFormInputPanel<Date> {
-	public enum WCalendar {Gregorian, Persian}
-
 	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
 	private static final HeaderItem DATE_CALC_JS = Resource.getCommonJS("form/date/dtjalali.js");
 	private static final HeaderItem DATE_JS = Resource.getCommonJS("form/date/date.js");
@@ -27,14 +26,14 @@ public class WDateInput extends WFormInputPanel<Date> {
 
 	private WebMarkupContainer timePart, calOpener;
 	private TextField<Integer> year, month, day, hour, minute, second;
-	private WCalendar calendar;
+	private OCalendar calendar;
 
-	public WDateInput(String id, WCalendar calendar) {
+	public WDateInput(String id, OCalendar calendar) {
 		this(id, null, calendar);
 	}
 
 	// Main Constructor
-	public WDateInput(String id, IModel<Date> model, WCalendar calendar) {
+	public WDateInput(String id, IModel<Date> model, OCalendar calendar) {
 		super(id, model);
 		this.calendar = calendar;
 

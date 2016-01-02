@@ -11,6 +11,9 @@ public class OPropertyColumn<T> extends OColumn<T> {
 	@Override
 	public String cellValue(T bean, int rowNo, int colNo, String url) {
 		Object value = PropertyResolver.getValue(getField(), bean);
-		return value != null ? value.toString() : null;
+		if (value != null) {
+			return formatter != null ? formatter.format(value) : value.toString();
+		}
+		return null;
 	}
 }

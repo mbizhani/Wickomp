@@ -11,6 +11,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
+import org.devocative.wickomp.opt.OCalendar;
 import org.devocative.wickomp.vo.Field;
 import org.devocative.wickomp.vo.KeyValue;
 
@@ -96,7 +97,7 @@ public class FormPage extends BasePage {
 		form.add(new WSelectionInput("eduSingle", list, false));
 		form.add(new WSelectionInput("eduMultiple", list, true));
 		form.add(new DropDownChoice("eduDD", list));
-		form.add(new WDateInput("birthdate", WDateInput.WCalendar.Persian));
+		form.add(new WDateInput("birthdate", OCalendar.Persian).setTimePartVisible(true));
 		form.add(new WBooleanInput("alive"));
 		form.add(new Button("save") {
 			/*@Override

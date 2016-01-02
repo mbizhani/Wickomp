@@ -2,6 +2,7 @@ package org.devocative.wickomp.grid.column;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.wicket.model.IModel;
+import org.devocative.wickomp.formatter.OFormatter;
 import org.devocative.wickomp.opt.HAlign;
 import org.devocative.wickomp.opt.Options;
 
@@ -14,6 +15,8 @@ public abstract class OColumn<T> extends Options {
 
 	private boolean dummyField = false;
 
+	protected OFormatter formatter;
+
 	public OColumn(IModel<String> title) {
 		this(title, null);
 	}
@@ -23,7 +26,7 @@ public abstract class OColumn<T> extends Options {
 		this.field = field;
 	}
 
-	///////////////////////// ACCESSORS
+	//----------------------- ACCESSORS
 
 	public HAlign getAlign() {
 		return align;
@@ -65,7 +68,12 @@ public abstract class OColumn<T> extends Options {
 		return title != null ? title.getObject() : "";
 	}
 
-	///////////////////////// PUBLIC METHODS
+	public OColumn<T> setFormatter(OFormatter formatter) {
+		this.formatter = formatter;
+		return this;
+	}
+
+	//----------------------- PUBLIC METHODS
 
 	@JsonIgnore
 	public boolean isDummyField() {
