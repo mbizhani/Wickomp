@@ -16,6 +16,8 @@ public class OGrid<T> extends OComponent {
 	private OColumnList<T> columns;
 	private List<T> data;
 	private String groupField;
+	private String groupStyle;
+	private String groupStyler;
 	private Boolean multiSort = false;
 	private Boolean pagination = true;
 	private List<Integer> pageList;
@@ -72,6 +74,25 @@ public class OGrid<T> extends OComponent {
 	@JsonRawValue
 	public String getGroupFormatter() {
 		return getGroupField() != null ? "function(value,rows){return value;}" : null;
+	}
+
+	public String getGroupStyle() {
+		return groupStyle;
+	}
+
+	public OGrid<T> setGroupStyle(String groupStyle) {
+		this.groupStyle = groupStyle;
+		return this;
+	}
+
+	@JsonRawValue
+	public String getGroupStyler() {
+		return groupStyler;
+	}
+
+	public OGrid<T> setGroupStyler(String groupStyler) {
+		this.groupStyler = groupStyler;
+		return this;
 	}
 
 	public Boolean getMultiSort() {

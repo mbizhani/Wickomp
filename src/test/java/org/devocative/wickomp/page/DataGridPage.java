@@ -91,8 +91,10 @@ public class DataGridPage extends BasePage {
 		OGrid<PersonVO> grid2Opt = new OGrid<>();
 		grid2Opt
 			.setColumns(columns)
-			.setMultiSort(true);
-		grid2Opt.setHeight(OSize.fixed(300));
+			.setMultiSort(true)
+			.setGroupStyle("background-color:#dddddd")
+			.addToolbarButton(new OGroupFieldButton<PersonVO>());
+		grid2Opt.setHeight(OSize.fixed(500));
 
 		final WDataGrid<PersonVO> grid2;
 		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new WDataSource<PersonVO>() {
