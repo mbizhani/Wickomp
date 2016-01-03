@@ -1,12 +1,16 @@
-table.selListOpener {
+table.slOpener {
     padding: 1px;
 }
 
-input.selListTitle {
+input.slTitle {
     width: 120px;
 }
 
-div.selListDropDown {
+input.slFilter {
+    width: 65px;
+}
+
+div.slDropDown {
     visibility: hidden;
     display: none;
     position: absolute;
@@ -17,13 +21,13 @@ div.selListDropDown {
     z-index: 1000;
 }
 
-div.selListChoices {
+div.slChoices {
     max-height: 150px;
     overflow: auto;
 }
 
 /* this is for IE */
-* html div.selListChoices {
+* html div.slChoices {
     height: expression( this.scrollHeight > 149 ? "150px" : "auto" );
     overflow: auto;
 }

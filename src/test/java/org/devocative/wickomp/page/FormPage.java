@@ -86,6 +86,7 @@ public class FormPage extends BasePage {
 		list.add(new KeyValue("A", "Alef"));
 		list.add(new KeyValue("B", "Be"));
 		list.add(new KeyValue("C", "Cee"));
+		list.add(new KeyValue("D", "Dee"));
 
 
 		final Map<String, Serializable> map = new HashMap<>();

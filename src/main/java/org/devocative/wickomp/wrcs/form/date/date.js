@@ -1,10 +1,11 @@
 function handleDateEvents(divId, nowYear, nowMonth, nowDay) {
-    $('#' + divId + ' .yr').autoNumeric('init', {aSep: '', mDec: 0, vMax: 9999});
-    $('#' + divId + ' .mo').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 12});
-    $('#' + divId + ' .dy').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 31});
-    $('#' + divId + ' .hr').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 23});
-    $('#' + divId + ' .mi').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 59});
-    $('#' + divId + ' .sc').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 59});
+    var twoDigit = "20px";
+    $('#' + divId + ' .yr').css("width", "30px").autoNumeric('init', {aSep: '', mDec: 0, vMax: 9999});
+    $('#' + divId + ' .mo').css("width", twoDigit).autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 12});
+    $('#' + divId + ' .dy').css("width", twoDigit).autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 31});
+    $('#' + divId + ' .hr').css("width", twoDigit).autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 23});
+    $('#' + divId + ' .mi').css("width", twoDigit).autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 59});
+    $('#' + divId + ' .sc').css("width", twoDigit).autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 59});
 
     var div = $('#' + divId);
     var year = div.find(".yr");

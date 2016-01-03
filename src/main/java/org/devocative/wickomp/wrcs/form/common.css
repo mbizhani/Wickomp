@@ -2,6 +2,7 @@
     background-color: white;
     border: 1px solid #aaaaaa;
     border-radius: 3px;
+    padding: 1px;
 }
 
 .w-inner-input {
@@ -13,7 +14,5 @@
     width: 18px;
     text-align: center;
     cursor: pointer;
-    background-color: #eeeeee;
-    border: 1px solid #eeeeee;
     border-radius: 2px;
 }
