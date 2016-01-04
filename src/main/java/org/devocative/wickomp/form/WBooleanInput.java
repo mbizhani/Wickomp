@@ -33,7 +33,7 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
-		response.render(Resource.getJQueryReference());
+		Resource.addJQueryReference(response);
 		response.render(MAIN_CSS);
 		response.render(MAIN_JS);
 	}

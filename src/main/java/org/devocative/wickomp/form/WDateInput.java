@@ -8,10 +8,12 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.opt.OCalendar;
+import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
@@ -27,6 +29,14 @@ public class WDateInput extends WFormInputPanel<Date> {
 	private WebMarkupContainer timePart, calOpener;
 	private TextField<Integer> year, month, day, hour, minute, second;
 	private OCalendar calendar;
+
+	public WDateInput(String id) {
+		this(id, null, null);
+	}
+
+	public WDateInput(String id, IModel<Date> model) {
+		this(id, model, null);
+	}
 
 	public WDateInput(String id, OCalendar calendar) {
 		this(id, null, calendar);
@@ -68,6 +78,11 @@ public class WDateInput extends WFormInputPanel<Date> {
 
 	// ---------------------- ACCESSORS
 
+	public WDateInput setCalendar(OCalendar calendar) {
+		this.calendar = calendar;
+		return this;
+	}
+
 	public WDateInput setTimePartVisible(boolean visible) {
 		timePart.setVisible(visible);
 		return this;
@@ -77,11 +92,27 @@ public class WDateInput extends WFormInputPanel<Date> {
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
-		response.render(Resource.getJQueryReference());
+		Resource.addJQueryReference(response);
 		response.render(NUMERIC_JS);
 		response.render(DATE_JS);
 		response.render(DATE_POPUP_JS);
 		response.render(DATE_CALC_JS);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		if(calendar == null) {
+			WebSession webSession = WebSession.get();
+			if(webSession instanceof OUserPreference) {
+				calendar = ((OUserPreference)webSession).getCalendar();
+			}
+
+			if(calendar == null) {
+				calendar = OCalendar.Persian;
+			}
+		}
 	}
 
 	@Override

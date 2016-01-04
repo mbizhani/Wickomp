@@ -102,7 +102,8 @@ public class DataGridPage extends BasePage {
 			.setColumns(columns)
 			.setMultiSort(true)
 			.setGroupStyle("background-color:#dddddd")
-			.addToolbarButton(new OGroupFieldButton<PersonVO>());
+			.addToolbarButton(new OGroupFieldButton<PersonVO>())
+		;
 		grid2Opt.setHeight(OSize.fixed(500));
 
 		final WDataGrid<PersonVO> grid2;

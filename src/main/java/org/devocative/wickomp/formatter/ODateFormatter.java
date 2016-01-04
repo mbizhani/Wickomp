@@ -1,7 +1,9 @@
 package org.devocative.wickomp.formatter;
 
+import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.adroit.CalendarUtil;
 import org.devocative.wickomp.opt.OCalendar;
+import org.devocative.wickomp.opt.OUserPreference;
 
 import java.util.Date;
 
@@ -42,5 +44,23 @@ public class ODateFormatter implements OFormatter {
 
 	public static ODateFormatter grDateTime() {
 		return GREGORIAN_DATE_TIME;
+	}
+
+	public static ODateFormatter getDateByUserPreference() {
+		WebSession webSession = WebSession.get();
+		if(webSession instanceof OUserPreference) {
+			OUserPreference userPreference = (OUserPreference) webSession;
+			return new ODateFormatter(userPreference.getCalendar(), userPreference.getDatePattern());
+		}
+		throw new RuntimeException("No user preference for Date");
+	}
+
+	public static ODateFormatter getDateTimeByUserPreference() {
+		WebSession webSession = WebSession.get();
+		if(webSession instanceof OUserPreference) {
+			OUserPreference userPreference = (OUserPreference) webSession;
+			return new ODateFormatter(userPreference.getCalendar(), userPreference.getDateTimePattern());
+		}
+		throw new RuntimeException("No user preference for Date");
 	}
 }

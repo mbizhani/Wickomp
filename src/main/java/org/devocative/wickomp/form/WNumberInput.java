@@ -87,7 +87,7 @@ public class WNumberInput extends WFormInputPanel<Number> {
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
-		response.render(Resource.getJQueryReference());
+		Resource.addJQueryReference(response);
 		response.render(NUMERIC_JS);
 	}
 

@@ -101,7 +101,7 @@ public class WSelectionInput extends WFormInputPanel {
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
-		response.render(Resource.getJQueryReference());
+		Resource.addJQueryReference(response);
 		response.render(SEL_LIST_JS);
 		response.render(SEL_LIST_CSS);
 	}

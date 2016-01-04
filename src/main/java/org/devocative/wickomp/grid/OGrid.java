@@ -73,7 +73,7 @@ public class OGrid<T> extends OComponent {
 
 	@JsonRawValue
 	public String getGroupFormatter() {
-		return getGroupField() != null ? "function(value,rows){return value;}" : null;
+		return getGroupField() != null ? "function(value,rows){return value + ' (' + rows.length + ')';}" : null;
 	}
 
 	public String getGroupStyle() {

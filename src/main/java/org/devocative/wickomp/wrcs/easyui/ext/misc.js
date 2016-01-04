@@ -17,7 +17,8 @@ function changeGridGroupField(select, gridId) {
         opt.view = groupview;
         opt.groupField = select.value;
         opt.groupFormatter = function (value, rows) {
-            return value;
+            //return value + " (" + rows.length + ")";
+            return "<table><tr><td>" + value + " </td><td> #[</td><td>" + rows.length + "</td><td>]</td></tr></table>"
         };
         $('#' + gridId).datagrid('sort', {sortName: select.value, sortOrder: 'asc'});
     } else {
