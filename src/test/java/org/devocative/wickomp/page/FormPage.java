@@ -13,7 +13,6 @@ import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.vo.Field;
 import org.devocative.wickomp.vo.KeyValue;
-import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -27,8 +26,6 @@ public class FormPage extends BasePage {
 	public FormPage() {
 		simpleForm();
 		dynamicForm();
-
-		add(new EasyUIBehavior());
 	}
 
 	private void dynamicForm() {
@@ -102,6 +99,7 @@ public class FormPage extends BasePage {
 		form.add(new DropDownChoice("eduDD", list));
 		form.add(new WDateInput("birthdate").setTimePartVisible(true));
 		form.add(new WBooleanInput("alive"));
+		form.add(new WDateRangeInput("dateRange"));
 		form.add(new Button("save") {
 			/*@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {

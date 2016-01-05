@@ -8,86 +8,92 @@
 <wicket:extend>
     <h2>Simple Form</h2>
 
-    <div class="easyui-layout" style="width:100%; height:800px;">
-        <div data-options="region:'east',split:true" title="Search" style="width:300px;">
+    <!--<div class="easyui-layout" style="width:100%; height:800px;">
+        <div data-options="region:'east',split:true" title="Search" style="width:300px;">-->
 
-            <form wicket:id="form">
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <td><input type="text" wicket:id="name"/></td>
-                    </tr>
+    <form wicket:id="form">
+        <table>
+            <tr>
+                <th>Name</th>
+                <td><input type="text" wicket:id="name"/></td>
+            </tr>
 
-                    <tr>
-                        <th>Age</th>
-                        <td><input class="w-textbox" type="text" wicket:id="age"/></td>
-                    </tr>
-                    <tr>
-                        <th>Education Single</th>
-                        <td>
-                            <div wicket:id="eduSingle"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Education Multiple</th>
-                        <td>
-                            <div wicket:id="eduMultiple"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Education DD</th>
-                        <td>
-                            <select wicket:id="eduDD"></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Bir</th>
-                        <td>
-                            <div wicket:id="birthdate"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Alive</th>
-                        <td>
-                            <div wicket:id="alive"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <input type="submit" wicket:id="save" value="Save"/>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+            <tr>
+                <th>Age</th>
+                <td><input class="w-textbox" type="text" wicket:id="age"/></td>
+            </tr>
+            <tr>
+                <th>Education Single</th>
+                <td>
+                    <div wicket:id="eduSingle"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>Education Multiple</th>
+                <td>
+                    <div wicket:id="eduMultiple"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>Education DD</th>
+                <td>
+                    <select wicket:id="eduDD"></select>
+                </td>
+            </tr>
+            <tr>
+                <th>Bir</th>
+                <td>
+                    <div wicket:id="birthdate"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>Alive</th>
+                <td>
+                    <div wicket:id="alive"></div>
+                </td>
+            </tr>
+            <tr>
+                <th>Date Range</th>
+                <td>
+                    <div wicket:id="dateRange"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" wicket:id="save" value="Save"/>
+                </td>
+            </tr>
+        </table>
+    </form>
 
-            <hr/>
+    <hr/>
 
-            <h2>Dynamic Form</h2>
+    <h2>Dynamic Form</h2>
 
-            <form wicket:id="dynamicForm">
-                <table>
-                    <tr wicket:id="fields">
-                        <th><span wicket:id="label"></span></th>
-                        <td>
-                            <div wicket:id="field"></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <input type="submit" wicket:id="save" value="Save"/>
-                            <input type="reset" value="Clear"/>
-                        </td>
-                    </tr>
-                </table>
+    <form wicket:id="dynamicForm">
+        <table>
+            <tr wicket:id="fields">
+                <th><span wicket:id="label"></span></th>
+                <td>
+                    <div wicket:id="field"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" wicket:id="save" value="Save"/>
+                    <input type="reset" value="Clear"/>
+                </td>
+            </tr>
+        </table>
 
-            </form>
-        </div>
+    </form>
+    <!--</div>
 
-        <div data-options="region:'center'">
-            center
-        </div>
-
+    <div data-options="region:'center'">
+        center
     </div>
+
+</div>-->
 
 </wicket:extend>
 
