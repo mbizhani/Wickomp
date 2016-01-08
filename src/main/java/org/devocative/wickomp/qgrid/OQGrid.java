@@ -32,7 +32,7 @@ public class OQGrid<T> extends OComponent {
 	private String gridHTMLId;
 	private String language = "en";
 	private OQDataAdapter<T> source = new OQDataAdapter<>();
-	private List<OQButton<T>> toolbar;
+	private List<OQButton<T>> toolbarButtons;
 
 	public OQGrid() {
 		pageSizeOptions = Arrays.asList(10, 20, 30, 40, 50);
@@ -195,7 +195,7 @@ public class OQGrid<T> extends OComponent {
 	}
 
 	public Boolean getShowToolbar() {
-		return true;
+		return toolbarButtons != null;
 	}
 
 	@JsonRawValue
@@ -226,16 +226,16 @@ public class OQGrid<T> extends OComponent {
 
 	@JsonIgnore
 	public List<OQButton<T>> getToolbarButtons() {
-		return toolbar;
+		return toolbarButtons;
 	}
 
 	public OQGrid<T> addToolbarButton(OQButton<T> button) {
-		if (toolbar == null) {
-			toolbar = new ArrayList<>();
+		if (toolbarButtons == null) {
+			toolbarButtons = new ArrayList<>();
 		}
 
-		button.setIndex(toolbar.size());
-		toolbar.add(button);
+		button.setIndex(toolbarButtons.size());
+		toolbarButtons.add(button);
 		return this;
 	}
 
