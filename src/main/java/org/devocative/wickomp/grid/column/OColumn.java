@@ -3,11 +3,11 @@ package org.devocative.wickomp.grid.column;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.formatter.OFormatter;
-import org.devocative.wickomp.opt.HAlign;
+import org.devocative.wickomp.opt.OHorizontalAlign;
 import org.devocative.wickomp.opt.Options;
 
 public abstract class OColumn<T> extends Options {
-	private HAlign align;
+	private OHorizontalAlign align;
 	private String field;
 	private Boolean resizable;
 	private Boolean sortable;
@@ -28,11 +28,11 @@ public abstract class OColumn<T> extends Options {
 
 	//----------------------- ACCESSORS
 
-	public HAlign getAlign() {
+	public OHorizontalAlign getAlign() {
 		return align;
 	}
 
-	public OColumn<T> setAlign(HAlign align) {
+	public OColumn<T> setAlign(OHorizontalAlign align) {
 		this.align = align;
 		return this;
 	}

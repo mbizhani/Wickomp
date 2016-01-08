@@ -1,7 +1,7 @@
 package org.devocative.wickomp.opt;
 
 public abstract class OComponent extends Options {
-	private OSize width = OSize.percent(100);
+	private OSize width;
 	private OSize height;
 
 	public OSize getWidth() {

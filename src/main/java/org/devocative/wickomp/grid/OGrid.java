@@ -29,10 +29,15 @@ public class OGrid<T> extends OComponent {
 	private String url;
 	private OGridViewType view;
 
+	// ------
+	private String gridHTMLId;
+
 	public OGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
 		pageSize = pageList.get(0);
 	}
+
+	// ------------------------- ACCESSORS
 
 	public Boolean getAutoRowHeight() {
 		return autoRowHeight;
@@ -193,8 +198,7 @@ public class OGrid<T> extends OComponent {
 	}
 
 
-	// ----
-	private String gridHTMLId;
+	// ---------------------- PUBLIC METHODS
 
 	@JsonIgnore
 	public String getGridHTMLId() {

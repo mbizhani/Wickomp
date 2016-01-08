@@ -26,7 +26,7 @@ public abstract class WDataSource<T> implements Serializable {
 		return enabled;
 	}
 
-	public WDataSource setEnabled(boolean enabled) {
+	public WDataSource<T> setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}

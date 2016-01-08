@@ -1,0 +1,19 @@
+.mb-rtl-cell {
+    direction: rtl;
+    text-align: right;
+}
+
+.jqx-grid-column-header-rtl, .jqx-grid-columngroup-header-rtl {
+    border-width: 0 0 0 1px;
+    direction: rtl;
+}
+
+.jqx-grid-cell-rtl {
+    border-width: 0 0 1px 1px;
+    direction: rtl;
+}
+
+.jqx-rtl {
+    text-align: right !important;
+    direction: rtl;
+}

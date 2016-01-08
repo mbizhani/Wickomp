@@ -47,20 +47,24 @@ public class ODateFormatter implements OFormatter {
 	}
 
 	public static ODateFormatter getDateByUserPreference() {
+		OUserPreference userPreference = OUserPreference.DEFAULT;
+
 		WebSession webSession = WebSession.get();
-		if(webSession instanceof OUserPreference) {
-			OUserPreference userPreference = (OUserPreference) webSession;
-			return new ODateFormatter(userPreference.getCalendar(), userPreference.getDatePattern());
+		if (webSession instanceof OUserPreference) {
+			userPreference = (OUserPreference) webSession;
 		}
-		throw new RuntimeException("No user preference for Date");
+
+		return new ODateFormatter(userPreference.getCalendar(), userPreference.getDatePattern());
 	}
 
 	public static ODateFormatter getDateTimeByUserPreference() {
+		OUserPreference userPreference = OUserPreference.DEFAULT;
+
 		WebSession webSession = WebSession.get();
-		if(webSession instanceof OUserPreference) {
-			OUserPreference userPreference = (OUserPreference) webSession;
-			return new ODateFormatter(userPreference.getCalendar(), userPreference.getDateTimePattern());
+		if (webSession instanceof OUserPreference) {
+			userPreference = (OUserPreference) webSession;
 		}
-		throw new RuntimeException("No user preference for Date");
+
+		return new ODateFormatter(userPreference.getCalendar(), userPreference.getDateTimePattern());
 	}
 }

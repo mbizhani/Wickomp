@@ -8,12 +8,10 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.opt.OCalendar;
-import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
@@ -103,15 +101,8 @@ public class WDateInput extends WFormInputPanel<Date> {
 	protected void onInitialize() {
 		super.onInitialize();
 
-		if(calendar == null) {
-			WebSession webSession = WebSession.get();
-			if(webSession instanceof OUserPreference) {
-				calendar = ((OUserPreference)webSession).getCalendar();
-			}
-
-			if(calendar == null) {
-				calendar = OCalendar.Persian;
-			}
+		if (calendar == null) {
+			calendar = getUserPreference().getCalendar();
 		}
 	}
 

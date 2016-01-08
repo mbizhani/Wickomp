@@ -39,13 +39,15 @@ public class EasyUIBehavior extends Behavior {
 		response.render(GROUP_VIEW_JS);
 		response.render(MISC_JS);
 
+		OUserPreference userPreference = OUserPreference.DEFAULT;
 		WebSession webSession = WebSession.get();
 		if (webSession instanceof OUserPreference) {
-			OUserPreference userPreference = (OUserPreference) webSession;
-			if (OLayoutDirection.RTL.equals(userPreference.getLayoutDirection())) {
-				response.render(RTL_CSS);
-				response.render(RTL_JS);
-			}
+			userPreference = (OUserPreference) webSession;
+		}
+
+		if (OLayoutDirection.RTL.equals(userPreference.getLayoutDirection())) {
+			response.render(RTL_CSS);
+			response.render(RTL_JS);
 		}
 	}
 }

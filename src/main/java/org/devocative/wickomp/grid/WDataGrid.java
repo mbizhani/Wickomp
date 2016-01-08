@@ -65,6 +65,20 @@ public class WDataGrid<T> extends WCallbackComponent {
 	}
 
 	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		int i = 0;
+		for (OColumn<T> column : options.getColumns().getList()) {
+			if (column.getField() == null) {
+				column
+					.setField("f" + (i++))
+					.setDummyField(true);
+			}
+		}
+	}
+
+	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 
@@ -76,16 +90,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 		}
 		options.setGridHTMLId(getMarkupId());
 
-		int i = 0;
-		for (OColumn<T> column : options.getColumns().getList()) {
-			if (column.getField() == null) {
-				column
-					.setField("f" + (i++))
-					.setDummyField(true);
-			}
-		}
-
-		if (options.getToolbar() != null) {
+		if (options.getToolbarButtons() != null) {
 			for (OButton button : options.getToolbarButtons()) {
 				button.setUrl(getCallbackURL());
 			}
@@ -94,20 +99,25 @@ public class WDataGrid<T> extends WCallbackComponent {
 
 	@Override
 	protected void onRequest(IRequestParameters parameters) {
+
+		if (!dataSource.isEnabled()) {
+			return;
+		}
+
 		int pageSize = parameters.getParameterValue("rows").toInt(options.getPageSize());
 		int pageNum = parameters.getParameterValue("page").toInt(1);
 
 		String sortList = parameters.getParameterValue("sort").toOptionalString();
 		String orderList = parameters.getParameterValue("order").toOptionalString();
 
-		String type = parameters.getParameterValue("tp").toString();
+		String clickType = parameters.getParameterValue("tp").toString();
 		Integer rowNo = parameters.getParameterValue("rn").toOptionalInteger();
 		Integer colNo = parameters.getParameterValue("cn").toOptionalInteger();
 
-		logger.debug("WDataGrid: onRequest.parameters: type={}, pageSize={}, pageNum={}, sort={}, order={}, rowNo={}, colNo={}",
-			type, pageSize, pageNum, sortList, orderList, rowNo, colNo);
+		logger.debug("WDataGrid: onRequest.parameters: clickType={}, pageSize={}, pageNum={}, sort={}, order={}, rowNo={}, colNo={}",
+			clickType, pageSize, pageNum, sortList, orderList, rowNo, colNo);
 
-		if ("cl".equals(type)) {
+		if ("cl".equals(clickType)) {// click from cell (per row)
 			if (rowNo == null) {
 				throw new RuntimeException("Null rowNo parameter!");
 			}
@@ -115,7 +125,7 @@ public class WDataGrid<T> extends WCallbackComponent {
 				throw new RuntimeException("Null colNo parameter!");
 			}
 			handleCellLinkClick(rowNo, colNo);
-		} else if ("bt".equals(type)) {
+		} else if ("bt".equals(clickType)) {// click from button in toolbar
 			if (colNo == null) {
 				throw new RuntimeException("Null button index parameter!");
 			}

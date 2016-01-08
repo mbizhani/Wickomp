@@ -4,7 +4,9 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.opt.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,14 @@ public abstract class WComponent extends WebComponent {
 		String format = String.format("$(\"#%s\").%s(%s);", getMarkupId(), getJQueryFunction(), opt);
 		logger.debug("JQueryCall: {}", format);
 		return format;
+	}
+
+	protected final OUserPreference getUserPreference() {
+		WebSession session = WebSession.get();
+		if (session instanceof OUserPreference) {
+			return (OUserPreference) session;
+		}
+		return OUserPreference.DEFAULT;
 	}
 
 	@Override
