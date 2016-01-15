@@ -19,7 +19,8 @@ import java.util.List;
 public class WMenuBar extends WPanel {
 	private static final HeaderItem JS = Resource.getCommonJS("menu/jquery.smartmenus.min.js");
 	private static final HeaderItem CSS_CORE = Resource.getCommonCSS("menu/sm-core-css.css");
-	private static final HeaderItem CSS_CLEAN = Resource.getCommonCSS("menu/sm-clean.css");
+//	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-clean.css");
+	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-mint.css");
 
 	private MenuItemFragment rootMenu;
 
@@ -39,7 +40,7 @@ public class WMenuBar extends WPanel {
 		Resource.addJQueryReference(response);
 
 		response.render(CSS_CORE);
-		response.render(CSS_CLEAN);
+		response.render(CSS_THEME);
 
 		response.render(JS);
 	}
@@ -51,9 +52,9 @@ public class WMenuBar extends WPanel {
 		OUserPreference userPreference = getUserPreference();
 
 		if (OLayoutDirection.RTL.equals(userPreference.getLayoutDirection())) {
-			rootMenu.add(new AttributeModifier("class", "sm sm-rtl sm-clean"));
+			rootMenu.add(new AttributeModifier("class", "sm sm-rtl sm-mint"));
 		} else {
-			rootMenu.add(new AttributeModifier("class", "sm sm-clean"));
+			rootMenu.add(new AttributeModifier("class", "sm sm-mint"));
 		}
 	}
 

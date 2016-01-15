@@ -4,14 +4,14 @@
   background: white;
 }
 .sm-mint a, .sm-mint a:hover, .sm-mint a:focus, .sm-mint a:active {
-  padding: 13px 20px;
   /* make room for the toggle button (sub indicator) */
-  padding-right: 58px;
+  margin: 0 2px 0 2px;
+  padding: 5px;
   color: #333333;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
+  /*font-family: Arial, sans-serif;*/
+  /*font-size: 14px;*/
   font-weight: normal;
-  line-height: 17px;
+  line-height: 10px;
   text-decoration: none;
 }
 .sm-mint a.current {
