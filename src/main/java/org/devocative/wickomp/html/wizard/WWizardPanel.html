@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <table>
+        <tr wicket:id="top">
+            <td wicket:id="topButtonBar"></td>
+        </tr>
+        <tr wicket:id="content">
+            <td wicket:id="step"></td>
+        </tr>
+        <tr wicket:id="bottom">
+            <td wicket:id="bottomButtonBar"></td>
+        </tr>
+    </table>
+
+    <wicket:fragment wicket:id="buttonBarFragment">
+        <table>
+            <tr>
+                <td><input type="submit" wicket:id="prev"/></td>
+                <td><input type="submit" wicket:id="next"/></td>
+                <td><input type="submit" wicket:id="finish"/></td>
+            </tr>
+        </table>
+    </wicket:fragment>
+</wicket:panel>
+</html>
