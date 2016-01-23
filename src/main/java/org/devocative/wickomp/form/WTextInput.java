@@ -1,5 +1,6 @@
 package org.devocative.wickomp.form;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -20,6 +21,11 @@ public class WTextInput extends WFormInputPanel<String> {
 		add(textField);
 
 		add(new CommonBehavior());
+	}
+
+	public WTextInput addToTextField(Behavior... behavior) {
+		textField.add(behavior);
+		return this;
 	}
 
 	@Override
