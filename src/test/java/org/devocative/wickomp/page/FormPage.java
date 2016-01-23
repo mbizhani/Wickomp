@@ -1,5 +1,6 @@
 package org.devocative.wickomp.page;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -16,10 +17,7 @@ import org.devocative.wickomp.vo.KeyValue;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FormPage extends BasePage {
 
@@ -88,18 +86,22 @@ public class FormPage extends BasePage {
 		list.add(new KeyValue("D", "Dee"));
 
 
+		final WSelectionInput child, parentSI;
 		final Map<String, Serializable> map = new HashMap<>();
 		map.put("name", "Joe");
+		map.put("child", "B.1");
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 		form.add(new TextField<String>("name"));
 		form.add(new TextField<>("age", Integer.class));
 		form.add(new WSelectionInput("eduSingle", list, false));
 		form.add(new WSelectionInput("eduMultiple", list, true));
-		form.add(new DropDownChoice("eduDD", list));
+		form.add(new DropDownChoice<>("eduDD", list));
 		form.add(new WDateInput("birthdate").setTimePartVisible(true));
 		form.add(new WBooleanInput("alive"));
 		form.add(new WDateRangeInput("dateRange"));
+		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
+		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new Button("save") {
 			/*@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -117,5 +119,18 @@ public class FormPage extends BasePage {
 			}
 		});
 		add(form);
+
+		parentSI.addToChoices(new WSelectionInputAjaxUpdatingBehavior() {
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
+				Object parentSel = getComponent().getDefaultModelObject();
+				child.setChoices(Arrays.asList(
+					String.format("%s.1", parentSel),
+					String.format("%s.2", parentSel),
+					String.format("%s.3", parentSel)
+				));
+				target.add(child);
+			}
+		});
 	}
 }

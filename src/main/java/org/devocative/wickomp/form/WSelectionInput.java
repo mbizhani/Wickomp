@@ -58,6 +58,11 @@ public class WSelectionInput extends WFormInputPanel {
 		return this;
 	}
 
+	public WSelectionInput setChoices(List choiceList) {
+		choices.setChoices(choiceList);
+		return this;
+	}
+
 	// --------------------- METHODS
 
 	public WSelectionInput addToChoices(Behavior... behaviors) {
