@@ -32,6 +32,7 @@ public class WSelectionInput extends WFormInputPanel {
 		super(id, model);
 
 		choices = new WSelectionList("choices", new Model(), choiceList, multipleSelection);
+		choices.setOutputMarkupId(true);
 		add(choices);
 
 		add(opener = new WebMarkupContainer("opener"));
@@ -70,6 +71,13 @@ public class WSelectionInput extends WFormInputPanel {
 		return this;
 	}
 
+	public WSelectionInput updateChoices(AjaxRequestTarget target, List choiceList) {
+		setChoices(choiceList);
+		target.add(choices);
+		target.appendJavaScript(getHandleScript());
+		return this;
+	}
+
 	// --------------------- INTERNAL METHODS
 
 	@Override
@@ -92,16 +100,15 @@ public class WSelectionInput extends WFormInputPanel {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("handleAllSelList('%s', %s, '%s', '%s');",
+		getResponse().write(String.format("<script>%s</script>", getHandleScript()));
+	}
+
+	private String getHandleScript() {
+		return String.format("handleAllSelList('%s', %s, '%s', '%s');",
 			getMarkupId(),
 			isEnabledInHierarchy(),
 			getString("label.select", null, "select"),
 			getString("label.noOfSelection", null, "selection"));
-		AjaxRequestTarget ajaxRequestTarget = getRequestCycle().find(AjaxRequestTarget.class);
-		if (ajaxRequestTarget == null)
-			getResponse().write(String.format("<script>%s</script>", script));
-		else
-			ajaxRequestTarget.appendJavaScript(script);
 	}
 
 	@Override

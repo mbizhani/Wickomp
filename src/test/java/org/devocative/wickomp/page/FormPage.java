@@ -124,12 +124,11 @@ public class FormPage extends BasePage {
 			@Override
 			protected void onUpdate(AjaxRequestTarget target) {
 				Object parentSel = getComponent().getDefaultModelObject();
-				child.setChoices(Arrays.asList(
+				child.updateChoices(target, Arrays.asList(
 					String.format("%s.1", parentSel),
 					String.format("%s.2", parentSel),
 					String.format("%s.3", parentSel)
 				));
-				target.add(child);
 			}
 		});
 	}
