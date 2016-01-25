@@ -31,7 +31,7 @@ public abstract class OCallbackColumn<T> extends OColumn<T> {
 	}
 
 	@Override
-	public final String cellValue(T bean, int rowNo, int colNo, String url) {
+	public final String cellValue(T bean, String id, int colNo, String url) {
 		Anchor anchor = new Anchor();
 		if (linkContent != null) {
 			anchor.addChild(linkContent);
@@ -48,10 +48,10 @@ public abstract class OCallbackColumn<T> extends OColumn<T> {
 
 		anchor.setHtmlClass(linkHTMLClass);
 
-		fillAnchor(anchor, bean, rowNo, colNo, url);
+		fillAnchor(anchor, bean, id, colNo, url);
 
 		return anchor.toString();
 	}
 
-	protected abstract void fillAnchor(Anchor anchor, T bean, int rowNo, int colNo, String url);
+	protected abstract void fillAnchor(Anchor anchor, T bean, String id, int colNo, String url);
 }

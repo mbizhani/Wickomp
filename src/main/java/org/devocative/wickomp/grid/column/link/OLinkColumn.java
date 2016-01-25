@@ -27,7 +27,7 @@ public abstract class OLinkColumn<T> extends OCallbackColumn<T> {
 	public abstract void onClick(IModel<T> rowData);
 
 	@Override
-	protected void fillAnchor(Anchor anchor, T bean, int rowNo, int colNo, String url) {
+	protected void fillAnchor(Anchor anchor, T bean, String id, int colNo, String url) {
 		anchor.setHref(url);
 		if (targetBlank) {
 			anchor.setTarget(Anchor.ETarget._blank);

@@ -5,7 +5,7 @@ import org.apache.wicket.model.IModel;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class WDataSource<T> implements Serializable {
+public abstract class WGridDataSource<T> implements Serializable {
 	private boolean enabled = true;
 
 	/**
@@ -26,7 +26,7 @@ public abstract class WDataSource<T> implements Serializable {
 		return enabled;
 	}
 
-	public WDataSource<T> setEnabled(boolean enabled) {
+	public WGridDataSource<T> setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		return this;
 	}

@@ -17,7 +17,7 @@ public abstract class OAjaxLinkColumn<T> extends OCallbackColumn<T> {
 	public abstract void onClick(AjaxRequestTarget target, IModel<T> rowData);
 
 	@Override
-	protected void fillAnchor(Anchor anchor, T bean, int rowNo, int colNo, String url) {
+	protected void fillAnchor(Anchor anchor, T bean, String id, int colNo, String url) {
 		anchor
 			.setHref("#")
 			.setOnClick(String.format("Wicket.Ajax.get({u:'%s'})", url));

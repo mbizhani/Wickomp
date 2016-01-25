@@ -84,9 +84,9 @@ public abstract class OColumn<T> extends Options {
 		this.dummyField = dummyField;
 	}
 
-	public boolean onCellRender(T bean, int rowNo) {
+	public boolean onCellRender(T bean, String id) {
 		return true;
 	}
 
-	public abstract String cellValue(T bean, int rowNo, int colNo, String url);
+	public abstract String cellValue(T bean, String id, int colNo, String url);
 }

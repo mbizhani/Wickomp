@@ -52,8 +52,8 @@ public class OExportExcelButton<T> extends OButton<T> {
 					for (int colNo = 0; colNo < columns.size(); colNo++) {
 						OColumn<T> column = columns.get(colNo);
 						if (column instanceof OPropertyColumn) {
-							String cellValue = column.onCellRender(bean, rowNo) ?
-								column.cellValue(bean, rowNo, colNo, null) :
+							String cellValue = column.onCellRender(bean, String.valueOf(rowNo)) ?
+								column.cellValue(bean, String.valueOf(rowNo), colNo, null) :
 								"";
 							rowResult.add(cellValue);
 						}

@@ -5,7 +5,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
-import org.devocative.wickomp.data.WDataSource;
+import org.devocative.wickomp.data.WGridDataSource;
 import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.formatter.OBooleanFormatter;
 import org.devocative.wickomp.formatter.ODateFormatter;
@@ -52,7 +52,8 @@ public class DataGridPage extends BasePage {
 				}
 
 				@Override
-				public boolean onCellRender(PersonVO bean, int rowNo) {
+				public boolean onCellRender(PersonVO bean, String id) {
+					int rowNo = Integer.parseInt(id);
 					return rowNo % 2 == 0;
 				}
 			})
@@ -75,7 +76,7 @@ public class DataGridPage extends BasePage {
 
 			.add(new OColumn<PersonVO>(new Model<>("Any")) {
 				@Override
-				public String cellValue(PersonVO bean, int rowNo, int colNo, String url) {
+				public String cellValue(PersonVO bean, String id, int colNo, String url) {
 					return String.format("<a href=\"#\" onclick=\"alert('%s')\">ANY</a>", bean.getCol01());
 				}
 			})
@@ -99,15 +100,15 @@ public class DataGridPage extends BasePage {
 	private void initGrid2(OColumnList<PersonVO> columns) {
 		OGrid<PersonVO> grid2Opt = new OGrid<>();
 		grid2Opt
+			.setGroupStyle("background-color:#dddddd")
 			.setColumns(columns)
 			.setMultiSort(true)
-			.setGroupStyle("background-color:#dddddd")
 			.addToolbarButton(new OGroupFieldButton<PersonVO>())
 		;
 		grid2Opt.setHeight(OSize.fixed(500));
 
 		final WDataGrid<PersonVO> grid2;
-		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new WDataSource<PersonVO>() {
+		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new WGridDataSource<PersonVO>() {
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);
@@ -148,7 +149,7 @@ public class DataGridPage extends BasePage {
 		grid1Opt.setHeight(OSize.fixed(300));
 
 		final WDataGrid<PersonVO> grid1;
-		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new WDataSource<PersonVO>() {
+		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new WGridDataSource<PersonVO>() {
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);
