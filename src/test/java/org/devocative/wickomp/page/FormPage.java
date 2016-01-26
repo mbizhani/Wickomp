@@ -93,7 +93,7 @@ public class FormPage extends BasePage {
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 		form.add(new TextField<String>("name"));
-		form.add(new TextField<>("age", Integer.class));
+		form.add(new WNumberRangeInput("age", Integer.class).setThousandSeparator(","));
 		form.add(new WSelectionInput("eduSingle", list, false));
 		form.add(new WSelectionInput("eduMultiple", list, true));
 		form.add(new DropDownChoice<>("eduDD", list));
