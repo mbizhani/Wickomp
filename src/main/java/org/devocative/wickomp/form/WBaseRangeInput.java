@@ -32,10 +32,13 @@ public abstract class WBaseRangeInput<T extends Serializable> extends WFormInput
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 
-		RangeVO<T> modelObject = getModelObject();
-		if (modelObject != null) {
-			lower.setModelObject(modelObject.getLower());
-			upper.setModelObject(modelObject.getUpper());
+		RangeVO<T> rangeVO = getModelObject();
+		if (rangeVO != null) {
+			lower.setModelObject(rangeVO.getLower());
+			upper.setModelObject(rangeVO.getUpper());
+		} else {
+			lower.setModelObject(null);
+			upper.setModelObject(null);
 		}
 	}
 

@@ -99,7 +99,7 @@ public class FormPage extends BasePage {
 		form.add(new DropDownChoice<>("eduDD", list));
 		form.add(new WDateInput("birthdate").setTimePartVisible(true));
 		form.add(new WBooleanInput("alive"));
-		form.add(new WDateRangeInput("dateRange"));
+		//form.add(new WDateRangeInput("dateRange"));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new Button("save") {

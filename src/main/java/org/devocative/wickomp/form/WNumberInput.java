@@ -1,7 +1,6 @@
 package org.devocative.wickomp.form;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
@@ -76,6 +75,9 @@ public class WNumberInput extends WFormInputPanel<Number> {
 		if (number != null) {
 			numberField.add(new AttributeModifier("value", number.toString()));
 			hiddenField.setModelObject(number.toString());
+		} else {
+			numberField.add(new AttributeModifier("value", ""));
+			hiddenField.setModelObject(null);
 		}
 	}
 
@@ -98,13 +100,9 @@ public class WNumberInput extends WFormInputPanel<Number> {
 		String script = String.format("$('#%s').autoNumeric('init', %s);",
 			numberField.getMarkupId(), JsonUtil.toJson(options));
 
-		script += String.format("$('#%1$s').bind('keypress',function(){$('#%2$s').val($('#%1$s').autoNumeric('get'));} );",
+		script += String.format("$('#%1$s').bind('change',function(){$('#%2$s').val($('#%1$s').autoNumeric('get'));} );",
 			numberField.getMarkupId(), hiddenField.getMarkupId());
 
-		AjaxRequestTarget ajaxRequestTarget = getRequestCycle().find(AjaxRequestTarget.class);
-		if (ajaxRequestTarget == null)
-			getResponse().write(String.format("<script>%s</script>", script));
-		else
-			ajaxRequestTarget.appendJavaScript(script);
+		getResponse().write(String.format("<script>%s</script>", script));
 	}
 }

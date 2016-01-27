@@ -8,6 +8,9 @@ import org.devocative.wickomp.opt.OCalendar;
 import java.util.Date;
 
 public class WDateRangeInput extends WBaseRangeInput<Date> {
+	private OCalendar calendar;
+	private Boolean timePartVisible;
+
 	public WDateRangeInput(String id) {
 		this(id, null);
 	}
@@ -19,14 +22,12 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 	// ---------------------- ACCESSORS
 
 	public WDateRangeInput setCalendar(OCalendar calendar) {
-		((WDateInput) lower).setCalendar(calendar);
-		((WDateInput) upper).setCalendar(calendar);
+		this.calendar = calendar;
 		return this;
 	}
 
-	public WDateRangeInput setTimePartVisible(boolean visible) {
-		((WDateInput) lower).setTimePartVisible(visible);
-		((WDateInput) upper).setTimePartVisible(visible);
+	public WDateRangeInput setTimePartVisible(boolean timePartVisible) {
+		this.timePartVisible = timePartVisible;
 		return this;
 	}
 
@@ -34,6 +35,16 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 
 	@Override
 	protected FormComponent<Date> createFormComponent(String id, IModel<Date> model) {
-		return new WDateInput(id, model);
+		WDateInput input = new WDateInput(id, model);
+
+		if (calendar != null) {
+			input.setCalendar(calendar);
+		}
+
+		if (timePartVisible != null) {
+			input.setTimePartVisible(timePartVisible);
+		}
+
+		return input;
 	}
 }
