@@ -12,6 +12,9 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
+import org.devocative.wickomp.form.code.OCode;
+import org.devocative.wickomp.form.code.OCodeMode;
+import org.devocative.wickomp.form.code.WCodeInput;
 import org.devocative.wickomp.vo.Field;
 import org.devocative.wickomp.vo.KeyValue;
 
@@ -102,6 +105,7 @@ public class FormPage extends BasePage {
 		//form.add(new WDateRangeInput("dateRange"));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
+		form.add(new WCodeInput("sql", new OCode(OCodeMode.SQL)));
 		form.add(new Button("save") {
 			/*@Override
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
