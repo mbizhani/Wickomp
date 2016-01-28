@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.form.code.OCode;
@@ -81,6 +82,8 @@ public class FormPage extends BasePage {
 		add(dynamicForm);
 	}
 
+	private String sql;
+
 	private void simpleForm() {
 		List<KeyValue> list = new ArrayList<>();
 		list.add(new KeyValue("A", "Alef"));
@@ -105,21 +108,26 @@ public class FormPage extends BasePage {
 		//form.add(new WDateRangeInput("dateRange"));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
-		form.add(new WCodeInput("sql", new OCode(OCodeMode.SQL)));
+		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), new OCode(OCodeMode.SQL)));
 		form.add(new Button("save") {
-			/*@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				System.out.println(map);
-			}*/
-
-			@Override
+			//		form.add(new AjaxButton("save") {
 			public void onSubmit() {
+				theSubmit();
+			}
+
+			public void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				theSubmit();
+			}
+
+			private void theSubmit() {
 				System.out.println("MAP {{");
 				for (Map.Entry<String, Serializable> entry : map.entrySet()) {
 					System.out.printf("\t%s = %s (%s)\n", entry.getKey(), entry.getValue(),
 						entry.getValue() != null ? entry.getValue().getClass().getName() : "-");
 				}
 				System.out.println("}}");
+
+				System.out.println("sql = " + sql);
 			}
 		});
 		add(form);

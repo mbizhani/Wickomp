@@ -12,6 +12,7 @@ import org.devocative.wickomp.wrcs.Resource;
 public class WCodeInput extends WFormInputPanel<String> {
 	private static final HeaderItem MAIN_CSS = Resource.getCommonCSS("codemirror/codemirror.css");
 	private static final HeaderItem MAIN_JS = Resource.getCommonJS("codemirror/codemirror.js");
+	private static final HeaderItem JQ_JS = Resource.getCommonJS("codemirror/wcodemirror.js");
 
 	private OCode options;
 	private TextArea<String> editor;
@@ -46,6 +47,7 @@ public class WCodeInput extends WFormInputPanel<String> {
 	public void renderHead(IHeaderResponse response) {
 		response.render(MAIN_CSS);
 		response.render(MAIN_JS);
+		response.render(JQ_JS);
 
 		response.render(Resource.getCommonJS(String.format("codemirror/mode/%s.js", options.getMode().getJsFile())));
 
@@ -60,7 +62,7 @@ public class WCodeInput extends WFormInputPanel<String> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("CodeMirror.fromTextArea(document.getElementById('%s'), %s);",
+		String script = String.format("$('#%s').codemirror(%s);",
 			editor.getMarkupId(),
 			JsonUtil.toJson(options));
 
