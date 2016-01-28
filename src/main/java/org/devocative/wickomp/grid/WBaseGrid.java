@@ -147,7 +147,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			long count = dataSource.count();
 
 			RGridPage result = new RGridPage();
-			result.setRows(getPageData(data));
+			result.setRows(getOnePageOfData(data));
 			result.setTotal(count);
 
 			sendJSONResponse(JsonUtil.toJson(result));
@@ -205,13 +205,14 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		}
 	}
 
-	private List<RObject> getPageData(List<T> list) {
+	private List<RObject> getOnePageOfData(List<T> list) {
 		pageData.clear();
 
 		List<RObject> page = new ArrayList<>();
 		if (dataSource.isEnabled()) {
 			for (int rowNo = 0; rowNo < list.size(); rowNo++) {
 				T bean = list.get(rowNo);
+				RObject rObject = new RObject();
 
 				String id = String.valueOf(rowNo);
 				if (options.getIdField() != null) {
@@ -221,10 +222,10 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 							options.getIdField(), bean));
 					}
 					id = idValue.toString();
+					rObject.addProperty(options.getIdField(), id);
 				}
 				pageData.put(id, dataSource.model(bean));
 
-				RObject rObject = new RObject();
 				for (int colNo = 0; colNo < options.getColumns().getList().size(); colNo++) {
 					OColumn<T> column = options.getColumns().getList().get(colNo);
 					if (column.onCellRender(bean, id)) {

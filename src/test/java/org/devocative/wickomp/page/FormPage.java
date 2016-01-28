@@ -91,6 +91,21 @@ public class FormPage extends BasePage {
 		list.add(new KeyValue("C", "Cee"));
 		list.add(new KeyValue("D", "Dee"));
 
+		OCode oCode = new OCode(OCodeMode.SQL);
+		Map<String, Map<String, String>> tables_cols = new HashMap<>();
+		for (int i = 1; i < 9000; i++) {
+			String table = String.format("t_tbl%06d", i);
+			Map<String, String> cols = new HashMap<>();
+			for (int c = 1; c < ((int) (Math.random() * 100)) + 5; c++) {
+				String col = String.format("c_%05d_%02d", i, c);
+				cols.put(col, null);
+			}
+			tables_cols.put(table, cols);
+		}
+		Map<String,Map> tables = new HashMap<>();
+		tables.put("tables", tables_cols);
+		oCode.setHintOptions(tables);
+
 
 		final WSelectionInput child, parentSI;
 		final Map<String, Serializable> map = new HashMap<>();
@@ -108,7 +123,7 @@ public class FormPage extends BasePage {
 		//form.add(new WDateRangeInput("dateRange"));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
-		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), new OCode(OCodeMode.SQL)));
+		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), oCode));
 		form.add(new Button("save") {
 			//		form.add(new AjaxButton("save") {
 			public void onSubmit() {
