@@ -8,6 +8,7 @@ public class EmployeeVO implements Serializable {
 	private String id;
 	private String name;
 	private Integer age;
+	private String parentId;
 
 	public String getId() {
 		return id;
@@ -33,15 +34,34 @@ public class EmployeeVO implements Serializable {
 		this.age = age;
 	}
 
+	public String getParentId() {
+		return parentId;
+	}
+
+	public EmployeeVO setParentId(String parentId) {
+		this.parentId = parentId;
+		return this;
+	}
 
 	private static List<EmployeeVO> employeeVOs = new ArrayList<>();
 
 	static {
-		for (int i = 1; i <= 2000; i++) {
+		for (int i = 1; i <= 10; i++) {
 			EmployeeVO e = new EmployeeVO();
 			e.setId(String.valueOf(i));
 			e.setName(String.format("M%03d", i));
 			e.setAge((int) (Math.random() * 100));
+			employeeVOs.add(e);
+		}
+
+		for (int i = 50; i <= 100; i++) {
+			EmployeeVO e = new EmployeeVO();
+			e.setId(String.valueOf(i));
+			e.setName(String.format("M%03d", i));
+			e.setAge((int) (Math.random() * 100));
+
+			int parentId = (int) (Math.random() * 10) + 1;
+			e.setParentId(String.valueOf(parentId));
 			employeeVOs.add(e);
 		}
 	}

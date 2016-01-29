@@ -9,6 +9,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WCallbackComponent;
 import org.devocative.wickomp.data.RObject;
+import org.devocative.wickomp.data.RObjectList;
 import org.devocative.wickomp.data.WGridDataSource;
 import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.grid.column.OColumn;
@@ -31,8 +32,8 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	private OBaseGrid<T> options;
 	private WGridDataSource<T> dataSource;
-	private List<WSortField> sortFieldList = new ArrayList<>();
-	private Map<String, IModel<T>> pageData = new HashMap<>();
+	protected List<WSortField> sortFieldList = new ArrayList<>();
+	protected Map<String, IModel<T>> pageData = new HashMap<>();
 
 	public WBaseGrid(String id, OBaseGrid<T> options, WGridDataSource<T> dataSource) {
 		super(id, options);
@@ -147,7 +148,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			long count = dataSource.count();
 
 			RGridPage result = new RGridPage();
-			result.setRows(getOnePageOfData(data));
+			result.setRows(createRObjectList(data));
 			result.setTotal(count);
 
 			sendJSONResponse(JsonUtil.toJson(result));
@@ -176,7 +177,12 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		}
 	}
 
-	protected void onBeanToRObject(T bean, RObject rObject) {
+	protected RObjectList createRObjectList(List<T> data) {
+		pageData.clear();
+
+		RObjectList objectList = new RObjectList();
+		convertBeansToRObjects(data, objectList);
+		return objectList;
 	}
 
 	protected void handleRowsById(String id) {
@@ -205,39 +211,32 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		}
 	}
 
-	private List<RObject> getOnePageOfData(List<T> list) {
-		pageData.clear();
+	protected void convertBeansToRObjects(List<T> list, RObjectList page) {
+		for (int rowNo = 0; rowNo < list.size(); rowNo++) {
+			T bean = list.get(rowNo);
+			RObject rObject = new RObject();
 
-		List<RObject> page = new ArrayList<>();
-		if (dataSource.isEnabled()) {
-			for (int rowNo = 0; rowNo < list.size(); rowNo++) {
-				T bean = list.get(rowNo);
-				RObject rObject = new RObject();
-
-				String id = String.valueOf(rowNo);
-				if (options.getIdField() != null) {
-					Object idValue = PropertyResolver.getValue(options.getIdField(), bean);
-					if (idValue == null) {
-						throw new RuntimeException(String.format("Null value for id: idField=[%s] bean=[%s]",
-							options.getIdField(), bean));
-					}
-					id = idValue.toString();
-					rObject.addProperty(options.getIdField(), id);
+			String id = String.valueOf(rowNo);
+			if (options.getIdField() != null) {
+				Object idValue = PropertyResolver.getValue(options.getIdField(), bean);
+				if (idValue == null) {
+					throw new RuntimeException(String.format("Null value for id: idField=[%s] bean=[%s]",
+						options.getIdField(), bean));
 				}
-				pageData.put(id, dataSource.model(bean));
-
-				for (int colNo = 0; colNo < options.getColumns().getList().size(); colNo++) {
-					OColumn<T> column = options.getColumns().getList().get(colNo);
-					if (column.onCellRender(bean, id)) {
-						String url = String.format("%s&id=%s&cn=%s&tp=cl", getCallbackURL(), id, colNo);
-						rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
-					}
-				}
-				onBeanToRObject(bean, rObject);
-				page.add(rObject);
+				id = idValue.toString();
+				rObject.addProperty(options.getIdField(), id);
 			}
+			pageData.put(id, dataSource.model(bean));
+
+			for (int colNo = 0; colNo < options.getColumns().getList().size(); colNo++) {
+				OColumn<T> column = options.getColumns().getList().get(colNo);
+				if (column.onCellRender(bean, id)) {
+					String url = String.format("%s&id=%s&cn=%s&tp=cl", getCallbackURL(), id, colNo);
+					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
+				}
+			}
+			page.addRObject(id, rObject);
 		}
-		return page;
 	}
 
 	private void updateSortFieldList(String[] sortList, String[] orderList) {

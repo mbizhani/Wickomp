@@ -1,9 +1,12 @@
 package org.devocative.wickomp.grid;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class OTreeGrid<T> extends OBaseGrid<T> {
 	private Boolean animate = true;
 	private Boolean lines;
 	private String treeField;
+	private String parentIdField;
 
 	public Boolean getAnimate() {
 		return animate;
@@ -29,6 +32,16 @@ public class OTreeGrid<T> extends OBaseGrid<T> {
 
 	public OTreeGrid<T> setTreeField(String treeField) {
 		this.treeField = treeField;
+		return this;
+	}
+
+	@JsonIgnore
+	public String getParentIdField() {
+		return parentIdField;
+	}
+
+	public OTreeGrid<T> setParentIdField(String parentIdField) {
+		this.parentIdField = parentIdField;
 		return this;
 	}
 }

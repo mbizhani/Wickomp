@@ -1,23 +1,23 @@
 package org.devocative.wickomp.grid;
 
 import org.devocative.wickomp.data.RObject;
+import org.devocative.wickomp.data.RObjectList;
 import org.devocative.wickomp.data.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RGridPage extends Result {
-	private List<RObject> rows = new ArrayList<RObject>();
+	private RObjectList rows = new RObjectList();
 
 	private List<RObject> footer;
 
 	private Long total;
 
-	public List<?> getRows() {
+	public RObjectList getRows() {
 		return rows;
 	}
 
-	public RGridPage setRows(List<RObject> rows) {
+	public RGridPage setRows(RObjectList rows) {
 		this.rows = rows;
 		return this;
 	}

@@ -13,6 +13,15 @@ public class RObject extends Result {
 		return this;
 	}
 
+	public RObject removeProperty(String property) {
+		properties.remove(property);
+		return this;
+	}
+
+	public String getProperty(String property) {
+		return properties.get(property);
+	}
+
 	@JsonValue
 	public Map<String, String> getValue() {
 		return properties;

@@ -15,8 +15,10 @@ import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.vo.EmployeeVO;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class TreeGridPage extends BasePage {
 	private List<EmployeeVO> list;
@@ -46,13 +48,14 @@ public class TreeGridPage extends BasePage {
 		OTreeGrid<EmployeeVO> treeGrid = new OTreeGrid<>();
 		treeGrid
 			.setTreeField("name")
+				//.setParentIdField("parentId")
 			.setIdField("id")
 			.setColumns(columnList)
 			.setHeight(OSize.fixed(300));
 
 		add(new WTreeGrid<>("treegrid", treeGrid, new WTreeGridDataSource<EmployeeVO>() {
 			@Override
-			public List<EmployeeVO> listByParent(String parentId) {
+			public List<EmployeeVO> listByParent(Serializable parentId, List<WSortField> sortFields) {
 				List<EmployeeVO> result = new ArrayList<>();
 				for (int i = 1; i < 6; i++) {
 					EmployeeVO emp = new EmployeeVO();
@@ -62,6 +65,11 @@ public class TreeGridPage extends BasePage {
 					result.add(emp);
 				}
 				return result;
+			}
+
+			@Override
+			public List<EmployeeVO> listByIds(Set<Serializable> ids, List<WSortField> sortFields) {
+				return null;
 			}
 
 			@Override
