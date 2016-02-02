@@ -18,7 +18,7 @@ import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
 import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
-import org.devocative.wickomp.grid.toolbar.OGroupFieldButton;
+import org.devocative.wickomp.grid.toolbar.OGridGroupingButton;
 import org.devocative.wickomp.html.icon.FontAwesome;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.resource.OutputStreamResource;
@@ -103,7 +103,7 @@ public class DataGridPage extends BasePage {
 			.setGroupStyle("background-color:#dddddd")
 			.setColumns(columns)
 			.setMultiSort(true)
-			.addToolbarButton(new OGroupFieldButton<PersonVO>())
+			.addToolbarButton(new OGridGroupingButton<PersonVO>())
 		;
 		grid2Opt.setHeight(OSize.fixed(500));
 
@@ -145,7 +145,7 @@ public class DataGridPage extends BasePage {
 			.setMultiSort(true)
 				//.setGroupField("col01")
 			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export.xlsx", 1000))
-			.addToolbarButton(new OGroupFieldButton<PersonVO>());
+			.addToolbarButton(new OGridGroupingButton<PersonVO>());
 		grid1Opt.setHeight(OSize.fixed(300));
 
 		final WDataGrid<PersonVO> grid1;

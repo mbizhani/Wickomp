@@ -5,10 +5,8 @@ import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.data.RObject;
 import org.devocative.wickomp.data.RObjectList;
 import org.devocative.wickomp.data.WTreeGridDataSource;
-import org.devocative.wickomp.grid.column.OColumn;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,21 +41,24 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 
 	@Override
 	protected void handleRowsById(String id) {
-		List<RObject> subRow = new ArrayList<>();
+		RObjectList subRow = new RObjectList();
 		List<T> listByParent = dataSource.listByParent(id, sortFieldList);
-		for (T bean : listByParent) {
-			RObject rObject = new RObject();
-			List<OColumn<T>> columns = options.getColumns().getList();
-			for (int colNo = 0; colNo < columns.size(); colNo++) {
-				OColumn<T> column = columns.get(colNo);
-				if (column.onCellRender(bean, id)) {
-					String url = String.format("%s&id=%s&cn=%s&tp=cl", getCallbackURL(), id, colNo);
-					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
-				}
-			}
-			subRow.add(rObject);
-		}
+		convertBeansToRObjects(listByParent, subRow);
 		sendJSONResponse(JsonUtil.toJson(subRow));
+	}
+
+	@Override
+	protected void onAfterBeanToRObject(T bean, RObject rObject) {
+		if (dataSource.hasChildren(bean)) {
+			rObject.addProperty(STATE_PROPERTY, "closed");
+		}
+
+		if (options.getParentIdField() != null) {
+			Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
+			if (parentId != null) {
+				rObject.addProperty(PARENT_ID_PROPERTY, parentId.toString());
+			}
+		}
 	}
 
 	@Override
@@ -72,16 +73,8 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 			do {
 				parentIds = new HashSet<>();
 				for (T bean : data) {
-					Serializable beanId = (Serializable) PropertyResolver.getValue(options.getIdField(), bean);
-					RObject rObject = objectList.getRObject(beanId.toString());
-					if (dataSource.hasChildren(bean)) {
-						rObject.addProperty(STATE_PROPERTY, "closed");
-					}
-
 					Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
 					if (parentId != null) {
-						rObject.addProperty(PARENT_ID_PROPERTY, parentId.toString());
-
 						if (!objectList.hasRObject(parentId.toString())) {
 							parentIds.add(parentId);
 						}

@@ -27,3 +27,23 @@ function changeGridGroupField(select, gridId) {
         $('#' + gridId).datagrid('reload');
     }
 }
+
+function expandAllGroups(gridId) {
+    var grid = $('#' + gridId);
+    if (grid.datagrid('options').view.groups) {
+        var groupsCount = grid.datagrid('options').view.groups.length;
+        for (var i = 0; i < groupsCount; i++) {
+            grid.datagrid('expandGroup', i);
+        }
+    }
+}
+
+function collapseAllGroups(gridId) {
+    var grid = $('#' + gridId);
+    if (grid.datagrid('options').view.groups) {
+        var groupsCount = grid.datagrid('options').view.groups.length;
+        for (var i = 0; i < groupsCount; i++) {
+            grid.datagrid('collapseGroup', i);
+        }
+    }
+}

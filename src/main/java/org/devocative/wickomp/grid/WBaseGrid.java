@@ -188,30 +188,10 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	protected void handleRowsById(String id) {
 	}
 
-	private void handleToolbarButtonClick(Integer colNo, IRequestParameters parameters) {
-		OButton<T> button = options.getToolbarButtons().get(colNo);
-		button.onClick(new WGridInfo<>(options, dataSource, sortFieldList), parameters);
+	protected void onAfterBeanToRObject(T bean, RObject rObject) {
 	}
 
-	private void handleCellLinkClick(String id, Integer colNo) {
-		IModel<T> rowModel = pageData.get(id);
-		OColumn<T> column = options.getColumns().getList().get(colNo);
-		if (column instanceof OLinkColumn) {
-			OLinkColumn<T> linkColumn = (OLinkColumn<T>) column;
-			linkColumn.onClick(rowModel);
-		} else if (column instanceof OAjaxLinkColumn) {
-			WebApplication app = (WebApplication) getApplication();
-			AjaxRequestTarget target = app.newAjaxRequestTarget(getPage());
-			RequestCycle requestCycle = RequestCycle.get();
-			requestCycle.scheduleRequestHandlerAfterCurrent(target);
-
-			OAjaxLinkColumn<T> ajaxLinkColumn = (OAjaxLinkColumn<T>) column;
-			ajaxLinkColumn.onClick(target, rowModel);
-
-		}
-	}
-
-	protected void convertBeansToRObjects(List<T> list, RObjectList page) {
+	protected final void convertBeansToRObjects(List<T> list, RObjectList page) {
 		for (int rowNo = 0; rowNo < list.size(); rowNo++) {
 			T bean = list.get(rowNo);
 			RObject rObject = new RObject();
@@ -235,7 +215,31 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
 				}
 			}
+			onAfterBeanToRObject(bean, rObject);
 			page.addRObject(id, rObject);
+		}
+	}
+
+	private void handleToolbarButtonClick(Integer colNo, IRequestParameters parameters) {
+		OButton<T> button = options.getToolbarButtons().get(colNo);
+		button.onClick(new WGridInfo<>(options, dataSource, sortFieldList), parameters);
+	}
+
+	private void handleCellLinkClick(String id, Integer colNo) {
+		IModel<T> rowModel = pageData.get(id);
+		OColumn<T> column = options.getColumns().getList().get(colNo);
+		if (column instanceof OLinkColumn) {
+			OLinkColumn<T> linkColumn = (OLinkColumn<T>) column;
+			linkColumn.onClick(rowModel);
+		} else if (column instanceof OAjaxLinkColumn) {
+			WebApplication app = (WebApplication) getApplication();
+			AjaxRequestTarget target = app.newAjaxRequestTarget(getPage());
+			RequestCycle requestCycle = RequestCycle.get();
+			requestCycle.scheduleRequestHandlerAfterCurrent(target);
+
+			OAjaxLinkColumn<T> ajaxLinkColumn = (OAjaxLinkColumn<T>) column;
+			ajaxLinkColumn.onClick(target, rowModel);
+
 		}
 	}
 
