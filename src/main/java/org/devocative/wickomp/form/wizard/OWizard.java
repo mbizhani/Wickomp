@@ -1,4 +1,4 @@
-package org.devocative.wickomp.html.wizard;
+package org.devocative.wickomp.form.wizard;
 
 import org.devocative.wickomp.opt.Options;
 import org.slf4j.Logger;

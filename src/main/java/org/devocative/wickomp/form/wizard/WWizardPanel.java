@@ -1,13 +1,17 @@
-package org.devocative.wickomp.html.wizard;
+package org.devocative.wickomp.form.wizard;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.devocative.wickomp.WPanel;
+import org.devocative.wickomp.form.WAjaxButton;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WWizardPanel extends WPanel {
 	public enum ButtonBarPlace {TOP, BOTTOM}
@@ -65,7 +69,18 @@ public class WWizardPanel extends WPanel {
 	protected void onNext(AjaxRequestTarget target, String stepId) {
 	}
 
-	protected void onFinish(AjaxRequestTarget target) {
+	protected void onFinish(AjaxRequestTarget target, String stepId) {
+	}
+
+	protected void onError(AjaxRequestTarget target, String stepId, List<Serializable> errors) {
+	}
+
+	protected void onException(AjaxRequestTarget target, String stepId, Exception e) {
+		if (e.getMessage() != null) {
+			List<Serializable> error = new ArrayList<>();
+			error.add(getString(e.getMessage(), null, e.getMessage()));
+			onError(target, stepId, error);
+		}
 	}
 
 	private void updateStep(WWizardStepPanel stepPanel, AjaxRequestTarget target) {
@@ -77,33 +92,56 @@ public class WWizardPanel extends WPanel {
 	// ------------------------------ WIZARD BUTTON BAR FRAGMENT
 
 	private class WizardButtonBar extends Fragment {
-		private AjaxButton prev, next, finish;
+		private AjaxLink prev;
+		private WAjaxButton next, finish;
 
 		public WizardButtonBar(String id, String markupId, MarkupContainer markupProvider) {
 			super(id, markupId, markupProvider);
 
-			prev = new AjaxButton("prev") {
+			prev = new AjaxLink("prev") {
 				@Override
-				protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				public void onClick(AjaxRequestTarget target) {
 					WWizardStepPanel step = oWizard.getPreviousStep();
 					WWizardPanel.this.onPrevious(target, oWizard.getCurrentStepId());
 					updateButtons(target);
 					WWizardPanel.this.updateStep(step, target);
 				}
 			};
-			next = new AjaxButton("next") {
+
+			next = new WAjaxButton("next") {
 				@Override
-				protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+				protected void onSubmit(AjaxRequestTarget target) {
 					WWizardStepPanel step = oWizard.getNextStep();
 					WWizardPanel.this.onNext(target, oWizard.getCurrentStepId());
 					updateButtons(target);
 					WWizardPanel.this.updateStep(step, target);
 				}
-			};
-			finish = new AjaxButton("finish") {
+
 				@Override
-				protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-					WWizardPanel.this.onFinish(target);
+				protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
+					WWizardPanel.this.onError(target, oWizard.getCurrentStepId(), errors);
+				}
+
+				@Override
+				protected void onException(AjaxRequestTarget target, Exception e) {
+					WWizardPanel.this.onException(target, oWizard.getCurrentStepId(), e);
+				}
+			};
+
+			finish = new WAjaxButton("finish") {
+				@Override
+				protected void onSubmit(AjaxRequestTarget target) {
+					WWizardPanel.this.onFinish(target, oWizard.getCurrentStepId());
+				}
+
+				@Override
+				protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
+					WWizardPanel.this.onError(target, oWizard.getCurrentStepId(), errors);
+				}
+
+				@Override
+				protected void onException(AjaxRequestTarget target, Exception e) {
+					WWizardPanel.this.onException(target, oWizard.getCurrentStepId(), e);
 				}
 			};
 

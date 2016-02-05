@@ -8,9 +8,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.WTextInput;
-import org.devocative.wickomp.html.wizard.OWizard;
-import org.devocative.wickomp.html.wizard.WWizardPanel;
-import org.devocative.wickomp.html.wizard.WWizardStepPanel;
+import org.devocative.wickomp.form.wizard.OWizard;
+import org.devocative.wickomp.form.wizard.WWizardPanel;
+import org.devocative.wickomp.form.wizard.WWizardStepPanel;
+import org.devocative.wickomp.html.WMessager;
+import org.devocative.wickomp.wrcs.EasyUIBehavior;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class WizardPage extends BasePage {
 	private boolean skipThird = false;
@@ -49,10 +54,17 @@ public class WizardPage extends BasePage {
 			}
 
 			@Override
-			protected void onFinish(AjaxRequestTarget target) {
-				target.appendJavaScript("alert('Finished');");
+			protected void onFinish(AjaxRequestTarget target, String stepId) {
+				target.appendJavaScript(String.format("alert('Finished: %s');", stepId));
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, String stepId, List<Serializable> errors) {
+				WMessager.show("Error", errors, target);
 			}
 		});
+
+		add(new EasyUIBehavior());
 	}
 
 	private class Step extends WWizardStepPanel {
@@ -66,7 +78,7 @@ public class WizardPage extends BasePage {
 		@Override
 		protected void onInit() {
 			add(new Label("lbl", String.valueOf(i)));
-			add(new WTextInput("txt", new Model<String>()).setRequired(i == 0));
+			add(new WTextInput("txt", new Model<String>()).setRequired(i == 3).setLabel(new Model<>("TXT " + i)));
 		}
 	}
 
