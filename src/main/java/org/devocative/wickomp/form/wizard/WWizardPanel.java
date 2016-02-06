@@ -101,8 +101,8 @@ public class WWizardPanel extends WPanel {
 			prev = new AjaxLink("prev") {
 				@Override
 				public void onClick(AjaxRequestTarget target) {
-					WWizardStepPanel step = oWizard.getPreviousStep();
 					WWizardPanel.this.onPrevious(target, oWizard.getCurrentStepId());
+					WWizardStepPanel step = oWizard.getPreviousStep();
 					updateButtons(target);
 					WWizardPanel.this.updateStep(step, target);
 				}
@@ -111,8 +111,8 @@ public class WWizardPanel extends WPanel {
 			next = new WAjaxButton("next") {
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
-					WWizardStepPanel step = oWizard.getNextStep();
 					WWizardPanel.this.onNext(target, oWizard.getCurrentStepId());
+					WWizardStepPanel step = oWizard.getNextStep();
 					updateButtons(target);
 					WWizardPanel.this.updateStep(step, target);
 				}

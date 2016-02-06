@@ -31,8 +31,13 @@ public class WMessager {
 	}
 
 	public static void show(String title, String message, ShowType showType, AjaxRequestTarget target) {
+		message = message.replace('\'', '"');
+		message = message.replaceAll("[\\r]", "");
+		message = message.replaceAll("[\\n]", "<br/>");
+		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
+
 		String sc = String.format(
-			"$.messager.show({title:\"%s\",msg:\"%s\",showType:'%s',timeout:0,style:{right:'',bottom:''}});",
+				"$.messager.show({title:'%s',msg:'%s',showType:'%s',timeout:0,width:400,height:300,style:{right:'',bottom:''}});",
 			title, message, showType);
 		target.appendJavaScript(sc);
 	}

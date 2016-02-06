@@ -43,7 +43,7 @@ public class WizardPage extends BasePage {
 
 			@Override
 			protected void onNext(AjaxRequestTarget target, String stepId) {
-				System.out.println("next = " + stepId);
+				System.out.println("current = " + stepId);
 				if (skipThird) {
 					if (stepId.equals("B")) {
 						setStep("D");
