@@ -18,6 +18,7 @@ import org.devocative.wickomp.form.code.OCodeMode;
 import org.devocative.wickomp.form.code.WCodeInput;
 import org.devocative.wickomp.vo.Field;
 import org.devocative.wickomp.vo.KeyValue;
+import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -158,5 +159,7 @@ public class FormPage extends BasePage {
 				));
 			}
 		});
+
+		add(new EasyUIBehavior());
 	}
 }

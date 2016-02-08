@@ -300,8 +300,8 @@ $(window).keyup(function (e) {
 				zIndex: 1100,
 				backgroundColor: "#ffffff",
 				border: "1px solid #888888",
-				top: parent.offset().top + parent.outerHeight(true),
-				left: parent.offset().left
+				top: parent.position().top + parent.outerHeight(true),
+				left: parent.position().left
 			});
 			defaults.dtTable.addClass("dtPopup");
 			$(this).after(defaults.divPopup);

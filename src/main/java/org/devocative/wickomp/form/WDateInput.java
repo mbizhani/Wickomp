@@ -198,7 +198,7 @@ public class WDateInput extends WFormInputPanel<Date> {
 				break;
 			case Persian:
 				now = CalendarUtil.toPersianDateField(new Date());
-				calType = "g";
+				calType = "jalali";
 				break;
 		}
 
