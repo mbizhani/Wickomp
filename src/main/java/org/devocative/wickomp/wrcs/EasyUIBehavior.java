@@ -9,7 +9,7 @@ import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
 
 public class EasyUIBehavior extends Behavior {
-	private static HeaderItem CSS = Resource.getCommonCSS("easyui/themes/default/easyui.css");
+	private static HeaderItem THEME_CSS = Resource.getCommonCSS("easyui/themes/metroBlue.css");
 	private static HeaderItem MAIN_JS = Resource.getCommonJS("easyui/jquery.easyui.min.js");
 	private static HeaderItem GROUP_VIEW_JS = Resource.getCommonJS("easyui/ext/datagrid-groupview.js");
 	private static HeaderItem MISC_JS = Resource.getCommonJS("easyui/ext/misc.js");
@@ -17,8 +17,8 @@ public class EasyUIBehavior extends Behavior {
 	private static HeaderItem RTL_CSS = Resource.getCommonCSS("easyui/ext/rtl.css");
 	private static HeaderItem RTL_JS = Resource.getCommonJS("easyui/ext/rtl.js");
 
-	public static void setCSS(HeaderItem CSS) {
-		EasyUIBehavior.CSS = CSS;
+	public static void setThemeCSS(HeaderItem THEME_CSS) {
+		EasyUIBehavior.THEME_CSS = THEME_CSS;
 	}
 
 	public static void setMainJs(HeaderItem mainJs) {
@@ -33,7 +33,9 @@ public class EasyUIBehavior extends Behavior {
 	public void renderHead(Component component, IHeaderResponse response) {
 		Resource.addJQueryReference(response);
 
-		response.render(CSS);
+		if (THEME_CSS != null) {
+			response.render(THEME_CSS);
+		}
 
 		response.render(MAIN_JS);
 		response.render(GROUP_VIEW_JS);

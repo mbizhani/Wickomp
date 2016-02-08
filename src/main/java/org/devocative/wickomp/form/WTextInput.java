@@ -23,7 +23,7 @@ public class WTextInput extends WFormInputPanel<String> {
 		add(new CommonBehavior());
 	}
 
-	public WTextInput addToTextField(Behavior... behavior) {
+	public WTextInput add(Behavior... behavior) {
 		textField.add(behavior);
 		return this;
 	}

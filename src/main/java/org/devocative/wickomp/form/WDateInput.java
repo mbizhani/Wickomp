@@ -24,7 +24,7 @@ public class WDateInput extends WFormInputPanel<Date> {
 	private static final HeaderItem DATE_JS = Resource.getCommonJS("form/date/date.js");
 	private static final HeaderItem DATE_POPUP_JS = Resource.getCommonJS("form/date/dtpopup.js");
 
-	private WebMarkupContainer timePart, calOpener;
+	private WebMarkupContainer mainTable, timePart, calOpener;
 	private TextField<Integer> year, month, day, hour, minute, second;
 	private OCalendar calendar;
 
@@ -45,9 +45,13 @@ public class WDateInput extends WFormInputPanel<Date> {
 		super(id, model);
 		this.calendar = calendar;
 
-		add(year = createTextField("year"));
-		add(month = createTextField("month"));
-		add(day = createTextField("day"));
+		mainTable = new WebMarkupContainer("mainTable");
+		mainTable.setOutputMarkupId(true);
+		add(mainTable);
+
+		mainTable.add(year = createTextField("year"));
+		mainTable.add(month = createTextField("month"));
+		mainTable.add(day = createTextField("day"));
 
 		year.add(new AttributeModifier("title", new ResourceModel("label.year", "Year")));
 		month.add(new AttributeModifier("title", new ResourceModel("label.month", "Month")));
@@ -58,7 +62,7 @@ public class WDateInput extends WFormInputPanel<Date> {
 		timePart.add(minute = createTextField("minute"));
 		timePart.add(second = createTextField("second"));
 		timePart.setVisible(false);
-		add(timePart);
+		mainTable.add(timePart);
 
 		hour.add(new AttributeModifier("title", new ResourceModel("label.hour", "Hour")));
 		minute.add(new AttributeModifier("title", new ResourceModel("label.minute", "Minute")));
@@ -66,7 +70,7 @@ public class WDateInput extends WFormInputPanel<Date> {
 
 		calOpener = new WebMarkupContainer("calOpener");
 		calOpener.setOutputMarkupId(true);
-		add(calOpener);
+		mainTable.add(calOpener);
 
 
 		add(new FontAwesomeBehavior());
@@ -194,14 +198,16 @@ public class WDateInput extends WFormInputPanel<Date> {
 				break;
 			case Persian:
 				now = CalendarUtil.toPersianDateField(new Date());
-				calType = "jalali";
+				calType = "g";
 				break;
 		}
 
-		String script = String.format("handleDateEvents('%s', '%s', '%s', '%s');" +
-				"$('#%s').showDtPopup('%s','%s','%s','%s');",
+		String script = String.format(
+			"handleDateEvents('%s', '%s', '%s', '%s');" +
+				"$('#%s').showDtPopup('%s','%s','%s','%s', '%s');",
 			getMarkupId(), now.getYear(), now.getMonth(), now.getDay(),
-			calOpener.getMarkupId(), calType, year.getMarkupId(), month.getMarkupId(), day.getMarkupId());
+			calOpener.getMarkupId(), calType, year.getMarkupId(), month.getMarkupId(), day.getMarkupId(),
+			mainTable.getMarkupId());
 		getResponse().write(String.format("<script>%s</script>", script));
 	}
 
