@@ -1,15 +1,16 @@
 package org.devocative.wickomp.opt;
 
 public abstract class OComponent extends Options {
-	private OSize width;
+	private Boolean fit;
 	private OSize height;
+	private OSize width;
 
-	public OSize getWidth() {
-		return width;
+	public Boolean getFit() {
+		return fit;
 	}
 
-	public OComponent setWidth(OSize width) {
-		this.width = width;
+	public OComponent setFit(Boolean fit) {
+		this.fit = fit;
 		return this;
 	}
 
@@ -19,6 +20,15 @@ public abstract class OComponent extends Options {
 
 	public OComponent setHeight(OSize height) {
 		this.height = height;
+		return this;
+	}
+
+	public OSize getWidth() {
+		return width;
+	}
+
+	public OComponent setWidth(OSize width) {
+		this.width = width;
 		return this;
 	}
 }

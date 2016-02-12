@@ -21,7 +21,7 @@ public abstract class OBaseGrid<T> extends OComponent {
 	private Integer pageSize;
 	private Boolean rowNumbers = true;
 	private Boolean singleSelect = true;
-	private Boolean striped = true;
+	private Boolean striped;
 	private List<OButton<T>> toolbar;
 	private String url;
 
@@ -67,6 +67,10 @@ public abstract class OBaseGrid<T> extends OComponent {
 	public OBaseGrid<T> setIdField(String idField) {
 		this.idField = idField;
 		return this;
+	}
+
+	public String getLoadMsg() {
+		return "...";
 	}
 
 	public Boolean getMultiSort() {
