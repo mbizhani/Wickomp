@@ -1,18 +1,18 @@
 .w-input {
-    background-color: white;
-    border: 1px solid #aaaaaa;
-    border-radius: 3px;
-    padding: 1px;
+	background-color: white;
+	border: 1px solid #aaaaaa;
+	border-radius: 3px;
+	padding: 1px;
 }
 
 .w-inner-input {
-    background-color: inherit !important;
-    border: 0 !important;
+	background-color: inherit !important;
+	border: 0 !important;
 }
 
 .w-img-button {
-    width: 18px;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 2px;
+	width: 18px;
+	text-align: center;
+	cursor: pointer;
+	border-radius: 2px;
 }

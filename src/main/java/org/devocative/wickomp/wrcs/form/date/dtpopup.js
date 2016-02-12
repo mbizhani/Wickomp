@@ -300,6 +300,7 @@ $(window).keyup(function (e) {
 				zIndex: 1100,
 				backgroundColor: "#ffffff",
 				border: "1px solid #888888",
+				boxShadow: "5px 5px 5px #cccccc",
 				top: parent.position().top + parent.outerHeight(true),
 				left: parent.position().left
 			});

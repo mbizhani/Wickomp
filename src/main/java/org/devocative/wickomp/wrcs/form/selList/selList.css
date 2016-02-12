@@ -1,33 +1,34 @@
 table.slOpener {
-    padding: 1px;
+	padding: 1px;
 }
 
 input.slTitle {
-    width: 120px;
+	width: 120px;
 }
 
 input.slFilter {
-    width: 65px;
+	width: 65px;
 }
 
 div.slDropDown {
-    visibility: hidden;
-    display: none;
-    position: absolute;
-    background-color: white;
-    border: 1px black outset;
-    padding: 0;
-    margin: 0;
-    z-index: 1000;
+	visibility: hidden;
+	display: none;
+	position: absolute;
+	background-color: white;
+	border: 1px black outset;
+	padding: 0;
+	margin: 0;
+	z-index: 1000;
+	box-shadow: 5px 5px 5px #cccccc;
 }
 
 div.slChoices {
-    max-height: 150px;
-    overflow: auto;
+	max-height: 150px;
+	overflow: auto;
 }
 
 /* this is for IE */
 * html div.slChoices {
-    height: expression( this.scrollHeight > 149 ? "150px" : "auto" );
-    overflow: auto;
+	height: expression( this.scrollHeight > 149 ? "150px" : "auto" );
+	overflow: auto;
 }

@@ -119,6 +119,7 @@
   /* ...end */
   .sm-mint {
     border-top: 0;
+    border-bottom: 0;
     background: transparent;
   }
   .sm-mint a, .sm-mint a:hover, .sm-mint a:focus, .sm-mint a:active, .sm-mint a.highlighted {
