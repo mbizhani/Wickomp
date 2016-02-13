@@ -5,7 +5,11 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.model.IModel;
+import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.html.WMessager;
 
 import java.io.Serializable;
@@ -14,14 +18,37 @@ import java.util.List;
 
 public class WAjaxButton extends Button {
 
-	private String confirmationMessage;
+	private IModel<String> confirmationMessage;
+	private IModel<String> caption;
+	private HTMLBase icon;
 
 	public WAjaxButton(String id) {
-		super(id);
+		this(id, null, null);
 	}
 
-	public WAjaxButton setConfirmationMessage(String confirmationMessage) {
+	public WAjaxButton(String id, IModel<String> caption) {
+		this(id, caption, null);
+	}
+
+	// Main Constructor
+	public WAjaxButton(String id, IModel<String> caption, HTMLBase icon) {
+		super(id);
+		this.caption = caption;
+		this.icon = icon;
+	}
+
+	public WAjaxButton setConfirmationMessage(IModel<String> confirmationMessage) {
 		this.confirmationMessage = confirmationMessage;
+		return this;
+	}
+
+	public WAjaxButton setCaption(IModel<String> caption) {
+		this.caption = caption;
+		return this;
+	}
+
+	public WAjaxButton setIcon(HTMLBase icon) {
+		this.icon = icon;
 		return this;
 	}
 
@@ -30,6 +57,32 @@ public class WAjaxButton extends Button {
 		super.onInitialize();
 
 		add(newAjaxFormSubmitBehavior("click"));
+	}
+
+	@Override
+	protected void onComponentTag(final ComponentTag tag) {
+		super.onComponentTag(tag);
+
+		tag.put("type", "submit");
+		if (caption != null && "input".equalsIgnoreCase(tag.getName())) {
+			tag.put("value", caption.getObject());
+		}
+	}
+
+	@Override
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
+		if ("button".equalsIgnoreCase(openTag.getName()) && (caption != null || icon != null)) {
+			String cap = "";
+			if (caption != null) {
+				cap = caption.getObject();
+			}
+			if (icon != null) {
+				cap += " " + icon.toString();
+			}
+			replaceComponentTagBody(markupStream, openTag, cap);
+		} else {
+			super.onComponentTagBody(markupStream, openTag);
+		}
 	}
 
 	protected AjaxFormSubmitBehavior newAjaxFormSubmitBehavior(String event) {
@@ -63,7 +116,7 @@ public class WAjaxButton extends Button {
 					AjaxCallListener myAjaxCallListener = new AjaxCallListener() {
 						@Override
 						public CharSequence getPrecondition(Component component) {
-							return String.format("if(!confirm('%s')) return false;", confirmationMessage);
+							return String.format("if(!confirm('%s')) return false;", confirmationMessage.getObject());
 						}
 					};
 					attributes.getAjaxCallListeners().add(myAjaxCallListener);

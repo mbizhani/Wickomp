@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <table align="center">
-        <tr wicket:id="top">
-            <td wicket:id="topButtonBar" align="center"></td>
-        </tr>
-        <tr wicket:id="content">
-            <td wicket:id="step"></td>
-        </tr>
-        <tr wicket:id="bottom">
-            <td wicket:id="bottomButtonBar" align="center"></td>
-        </tr>
-    </table>
+	<table align="center">
+		<tr wicket:id="top">
+			<td wicket:id="topButtonBar" align="center"></td>
+		</tr>
+		<tr wicket:id="content">
+			<td wicket:id="step"></td>
+		</tr>
+		<tr wicket:id="bottom">
+			<td wicket:id="bottomButtonBar" align="center"></td>
+		</tr>
+	</table>
 
-    <wicket:fragment wicket:id="buttonBarFragment">
-        <table>
-            <tr>
-                <td><input type="button" wicket:id="prev"/></td>
-                <td><input type="submit" wicket:id="next"/></td>
-                <td><input type="submit" wicket:id="finish"/></td>
-            </tr>
-        </table>
-    </wicket:fragment>
+	<wicket:fragment wicket:id="buttonBarFragment">
+		<table>
+			<tr>
+				<td>
+					<button wicket:id="prev">
+						<i wicket:id="prevIco"></i> <span wicket:id="prevLbl">Prev</span>
+					</button>
+				</td>
+				<td>
+					<button type="submit" wicket:id="next">Next</button>
+				</td>
+				<td>
+					<button type="submit" wicket:id="finish">Finish</button>
+				</td>
+			</tr>
+		</table>
+	</wicket:fragment>
 </wicket:panel>
 </html>

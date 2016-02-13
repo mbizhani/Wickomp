@@ -4,10 +4,16 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.ResourceModel;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.form.WAjaxButton;
+import org.devocative.wickomp.html.icon.FontAwesome;
+import org.devocative.wickomp.opt.OLayoutDirection;
+import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,6 +59,8 @@ public class WWizardPanel extends WPanel {
 		content.setOutputMarkupId(true);
 		content.add(oWizard.getFirstStep());
 		add(content);
+
+		add(new FontAwesomeBehavior());
 	}
 
 	protected void clearSkippedSteps() {
@@ -108,7 +116,7 @@ public class WWizardPanel extends WPanel {
 				}
 			};
 
-			next = new WAjaxButton("next") {
+			next = new WAjaxButton("next", new ResourceModel("label.wizard.next", "Next")) {
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
 					WWizardPanel.this.onNext(target, oWizard.getCurrentStepId());
@@ -128,7 +136,7 @@ public class WWizardPanel extends WPanel {
 				}
 			};
 
-			finish = new WAjaxButton("finish") {
+			finish = new WAjaxButton("finish", new ResourceModel("label.wizard.finish", "Finish"), new FontAwesome("check-circle")) {
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
 					WWizardPanel.this.onFinish(target, oWizard.getCurrentStepId());
@@ -149,9 +157,14 @@ public class WWizardPanel extends WPanel {
 			add(next);
 			add(finish.setEnabled(false));
 
-			prev.add(new AttributeModifier("value", getLocalizer().getString("label.wizard.previous", this, "Previous")));
-			next.add(new AttributeModifier("value", getLocalizer().getString("label.wizard.next", this, "Next")));
-			finish.add(new AttributeModifier("value", getLocalizer().getString("label.wizard.finish", this, "Finish")));
+			prev.add(new Label("prevLbl", new ResourceModel("label.wizard.previous", "Previous")));
+			if (getUserPreference().getLayoutDirection() == OLayoutDirection.RTL) {
+				prev.add(new WebComponent("prevIco").add(new AttributeModifier("class", "fa fa-chevron-right")));
+				next.setIcon(new FontAwesome("chevron-left"));
+			} else {
+				prev.add(new WebComponent("prevIco").add(new AttributeModifier("class", "fa fa-chevron-left")));
+				next.setIcon(new FontAwesome("chevron-right"));
+			}
 		}
 
 		private void updateButtons(AjaxRequestTarget target) {
