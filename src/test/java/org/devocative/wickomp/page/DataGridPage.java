@@ -144,7 +144,7 @@ public class DataGridPage extends BasePage {
 			.setColumns(columns)
 			.setMultiSort(true)
 				//.setGroupField("col01")
-			.addToolbarButton(new OExportExcelButton(new FontAwesome("file-excel-o", "green", new Model<>("Export to excel")), "Export.xlsx", 1000))
+			.addToolbarButton(new OExportExcelButton<PersonVO>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), "Export.xlsx", 1000))
 			.addToolbarButton(new OGridGroupingButton<PersonVO>());
 		grid1Opt.setHeight(OSize.fixed(300));
 

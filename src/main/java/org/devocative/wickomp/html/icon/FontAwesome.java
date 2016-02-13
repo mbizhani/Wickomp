@@ -36,33 +36,30 @@ public class FontAwesome extends HTMLBase {
 
 	private IModel<String> tooltip;
 
+	private String styleClass;
+
 	public FontAwesome(String name) {
-		this(name, null, null, null);
-	}
-
-	public FontAwesome(String name, String color) {
-		this(name, null, color, null);
-	}
-
-	public FontAwesome(String name, String color, IModel<String> tooltip) {
-		this(name, null, color, tooltip);
+		this(name, null);
 	}
 
 	// Main Constructor
-	public FontAwesome(String name, Size size, String color, IModel<String> tooltip) {
+	public FontAwesome(String name, IModel<String> tooltip) {
 		this.name = name;
-		this.size = size;
-		this.color = color;
 		this.tooltip = tooltip;
 	}
 
-	public FontAwesome name(String name) {
-		this.name = name;
+	public FontAwesome setSize(Size size) {
+		this.size = size;
 		return this;
 	}
 
-	public FontAwesome size(Size size) {
-		this.size = size;
+	public FontAwesome setColor(String color) {
+		this.color = color;
+		return this;
+	}
+
+	public FontAwesome setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
 		return this;
 	}
 
@@ -96,6 +93,9 @@ public class FontAwesome extends HTMLBase {
 		}
 		if (flip != null) {
 			builder.append(" fa-flip-").append(flip);
+		}
+		if (styleClass != null) {
+			builder.append(" ").append(styleClass);
 		}
 		builder.append("\"");
 
