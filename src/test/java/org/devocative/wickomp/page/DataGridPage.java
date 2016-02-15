@@ -36,6 +36,7 @@ public class DataGridPage extends BasePage {
 
 		OColumnList<PersonVO> columns = new OColumnList<>();
 		columns
+			//.add(new OCheckboxColumn<PersonVO>())
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01"))
 
 			.add(new OAjaxLinkColumn<PersonVO>(new Model<>("Col 02"), "col02") {
@@ -53,8 +54,12 @@ public class DataGridPage extends BasePage {
 
 				@Override
 				public boolean onCellRender(PersonVO bean, String id) {
-					int rowNo = Integer.parseInt(id);
-					return rowNo % 2 == 0;
+					try {
+						int rowNo = Integer.parseInt(id);
+						return rowNo % 2 == 0;
+					} catch (NumberFormatException e) {
+						return true;
+					}
 				}
 			})
 
@@ -101,8 +106,10 @@ public class DataGridPage extends BasePage {
 		OGrid<PersonVO> grid2Opt = new OGrid<>();
 		grid2Opt
 			.setGroupStyle("background-color:#dddddd")
+			.setIdField("col02")
 			.setColumns(columns)
 			.setMultiSort(true)
+			.setSelectionIndicator(true)
 			.addToolbarButton(new OGridGroupingButton<PersonVO>())
 		;
 		grid2Opt.setHeight(OSize.fixed(500));
@@ -143,7 +150,8 @@ public class DataGridPage extends BasePage {
 		grid1Opt
 			.setColumns(columns)
 			.setMultiSort(true)
-				//.setGroupField("col01")
+			.setIdField("col02")
+				// .setGroupField("col01")
 			.addToolbarButton(new OExportExcelButton<PersonVO>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), "Export.xlsx", 1000))
 			.addToolbarButton(new OGridGroupingButton<PersonVO>());
 		grid1Opt.setHeight(OSize.fixed(300));

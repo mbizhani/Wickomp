@@ -2,6 +2,7 @@ package org.devocative.wickomp.grid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.opt.OComponent;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public abstract class OBaseGrid<T> extends OComponent {
 	private Boolean autoRowHeight = false;
+	private Boolean checkOnSelect;
 	private OColumnList<T> columns;
 	private List<T> data;
 	private String idField;
@@ -20,13 +22,15 @@ public abstract class OBaseGrid<T> extends OComponent {
 	private List<Integer> pageList;
 	private Integer pageSize;
 	private Boolean rowNumbers = true;
-	private Boolean singleSelect = true;
+	private Boolean selectOnCheck;
+	private Boolean singleSelect;
 	private Boolean striped;
 	private List<OButton<T>> toolbar;
 	private String url;
 
 	// ------
 	private String gridHTMLId;
+	private boolean selectionIndicator = false;
 
 	public OBaseGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
@@ -39,6 +43,15 @@ public abstract class OBaseGrid<T> extends OComponent {
 
 	public OBaseGrid<T> setAutoRowHeight(Boolean autoRowHeight) {
 		this.autoRowHeight = autoRowHeight;
+		return this;
+	}
+
+	public Boolean getCheckOnSelect() {
+		return checkOnSelect;
+	}
+
+	public OBaseGrid<T> setCheckOnSelect(Boolean checkOnSelect) {
+		this.checkOnSelect = checkOnSelect;
 		return this;
 	}
 
@@ -119,6 +132,15 @@ public abstract class OBaseGrid<T> extends OComponent {
 		return this;
 	}
 
+	public Boolean getSelectOnCheck() {
+		return selectOnCheck;
+	}
+
+	public OBaseGrid<T> setSelectOnCheck(Boolean selectOnCheck) {
+		this.selectOnCheck = selectOnCheck;
+		return this;
+	}
+
 	public Boolean getSingleSelect() {
 		return singleSelect;
 	}
@@ -165,6 +187,23 @@ public abstract class OBaseGrid<T> extends OComponent {
 		return this;
 	}
 
+	// ---------------------- ACCESSORS FOR JS EVENTS
+
+	@JsonRawValue
+	public String getOnLoadSuccess() {
+		return selectionIndicator ? String.format("function(data){handleSelectionIndicator('%s');}", gridHTMLId) : null;
+	}
+
+	@JsonRawValue
+	public String getOnSelect() {
+		return selectionIndicator ? String.format("function(idx,row){handleSelectionIndicator('%s');}", gridHTMLId) : null;
+	}
+
+	@JsonRawValue
+	public String getOnUnselect() {
+		return selectionIndicator ? String.format("function(idx,row){handleSelectionIndicator('%s');}", gridHTMLId) : null;
+	}
+
 	// ---------------------- PUBLIC METHODS
 
 	@JsonIgnore
@@ -176,4 +215,13 @@ public abstract class OBaseGrid<T> extends OComponent {
 		this.gridHTMLId = gridHTMLId;
 	}
 
+	@JsonIgnore
+	public boolean isSelectionIndicator() {
+		return selectionIndicator;
+	}
+
+	public OBaseGrid<T> setSelectionIndicator(boolean selectionIndicator) {
+		this.selectionIndicator = selectionIndicator;
+		return this;
+	}
 }
