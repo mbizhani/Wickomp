@@ -1,10 +1,12 @@
 package org.devocative.wickomp.form;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
@@ -14,6 +16,7 @@ import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
+import java.util.Collection;
 import java.util.List;
 
 public class WSelectionInput extends WFormInputPanel {
@@ -22,6 +25,7 @@ public class WSelectionInput extends WFormInputPanel {
 
 	private WSelectionList choices;
 	private WebMarkupContainer opener;
+	private WebComponent title;
 
 	public WSelectionInput(String id, List choiceList, boolean multipleSelection) {
 		this(id, null, choiceList, multipleSelection);
@@ -36,6 +40,7 @@ public class WSelectionInput extends WFormInputPanel {
 		add(choices);
 
 		add(opener = new WebMarkupContainer("opener"));
+		opener.add(title = new WebComponent("title"));
 
 		setOutputMarkupId(true);
 
@@ -87,6 +92,19 @@ public class WSelectionInput extends WFormInputPanel {
 		if (!isEnabledInHierarchy()) {
 			opener.add(new AttributeAppender("style", "background-color: #eeeeee;"));
 		}
+
+		// The following snippet is added for input:reset HTML support in this component
+		String cap;
+		if (getModelObject() == null) {
+			cap = getString("label.select");
+		} else if (choices.isMultipleSelection()) {
+			Collection col = (Collection) getModelObject();
+			cap = String.format("%s %s", col.size(), getString("label.noOfSelection"));
+		} else {
+			cap = getModelObject().toString();
+		}
+
+		title.add(new AttributeModifier("value", cap));
 
 		super.onBeforeRender();
 	}

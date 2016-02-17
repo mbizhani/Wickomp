@@ -1,10 +1,8 @@
 package org.devocative.wickomp.form;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.form.HiddenField;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
@@ -19,8 +17,7 @@ import java.util.Map;
 public class WNumberInput extends WFormInputPanel<Number> {
 	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
 
-	private WebComponent numberField;
-	private HiddenField<String> hiddenField;
+	private TextField<String> numberField;
 
 	private Map<String, Object> options = new HashMap<>();
 
@@ -33,13 +30,9 @@ public class WNumberInput extends WFormInputPanel<Number> {
 		super(id, model);
 		setType(type);
 
-		numberField = new WebComponent("numberField");
+		numberField = new TextField<>("numberField", new Model<String>());
 		numberField.setOutputMarkupId(true);
 		add(numberField);
-
-		hiddenField = new HiddenField<>("hidden", new Model<String>());
-		hiddenField.setOutputMarkupId(true);
-		add(hiddenField);
 
 		options.put("aSep", "");
 		options.put("mDec", "0");
@@ -71,20 +64,26 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	protected void onBeforeRender() {
 		super.onBeforeRender();
 
-		Object number = getModelObject();
-		if (number != null) {
-			numberField.add(new AttributeModifier("value", number.toString()));
-			hiddenField.setModelObject(number.toString());
+		if (getModelObject() != null) {
+			numberField.setModelObject(getModelObject().toString());
 		} else {
-			numberField.add(new AttributeModifier("value", ""));
-			hiddenField.setModelObject(null);
+			numberField.setModelObject(null);
 		}
 	}
 
 	@Override
 	protected void convertInput() {
-		IConverter<Number> converter = getConverter(getType());
-		setConvertedInput(converter.convertToObject(hiddenField.getConvertedInput(), getLocale()));
+		String convertedInput = numberField.getConvertedInput();
+		if (convertedInput != null) {
+			if (options.get("aSep") != null) {
+				String reg = String.format("[%s]", options.get("aSep"));
+				convertedInput = convertedInput.replaceAll(reg, "");
+			}
+			IConverter<Number> converter = getConverter(getType());
+			setConvertedInput(converter.convertToObject(convertedInput, getLocale()));
+		} else {
+			setConvertedInput(null);
+		}
 	}
 
 	@Override
@@ -97,11 +96,8 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("$('#%s').autoNumeric('init', %s);",
+		String script = String.format("$('#%1$s').autoNumeric('init', %2$s);",
 			numberField.getMarkupId(), JsonUtil.toJson(options));
-
-		script += String.format("$('#%1$s').bind('change',function(){$('#%2$s').val($('#%1$s').autoNumeric('get'));} );",
-			numberField.getMarkupId(), hiddenField.getMarkupId());
 
 		getResponse().write(String.format("<script>%s</script>", script));
 	}
