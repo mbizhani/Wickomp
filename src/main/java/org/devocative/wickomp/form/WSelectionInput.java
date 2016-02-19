@@ -101,7 +101,12 @@ public class WSelectionInput extends WFormInputPanel {
 			Collection col = (Collection) getModelObject();
 			cap = String.format("%s %s", col.size(), getString("label.noOfSelection"));
 		} else {
-			cap = getModelObject().toString();
+			int i = choices.getChoices().indexOf(getModelObject());
+			if (i > -1) {
+				cap = choices.getChoices().get(i).toString();
+			} else {
+				cap = getString("label.select");
+			}
 		}
 
 		title.add(new AttributeModifier("value", cap));
