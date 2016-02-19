@@ -12,6 +12,27 @@ import java.util.List;
 public class WMessager {
 	public enum ShowType {slide, fade, show}
 
+	public static String getScript(String title, String message, ShowType showType) {
+		message = message.replace('\'', '"');
+		message = message.replaceAll("[\\r]", "");
+		message = message.replaceAll("[\\n]", "<br/>");
+		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
+
+		return String.format(
+			"$.messager.show({title:'%s',msg:'%s',showType:'%s',timeout:0,width:400,height:300,style:{right:'',bottom:''}});",
+			title, message, showType);
+	}
+
+	public static String getHtml(List<?> errors) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<ul>");
+		for (Object error : errors) {
+			builder.append("<li>").append(error).append("</li>");
+		}
+		builder.append("</ul>");
+		return builder.toString();
+	}
+
 	public static void show(String title, String message, AjaxRequestTarget target) {
 		show(title, message, ShowType.show, target);
 	}
@@ -21,24 +42,11 @@ public class WMessager {
 	}
 
 	public static void show(String title, List<?> errors, ShowType showType, AjaxRequestTarget target) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("<ul>");
-		for (Object error : errors) {
-			builder.append("<li>").append(error).append("</li>");
-		}
-		builder.append("</ul>");
-		show(title, builder.toString(), showType, target);
+		show(title, getHtml(errors), showType, target);
 	}
 
 	public static void show(String title, String message, ShowType showType, AjaxRequestTarget target) {
-		message = message.replace('\'', '"');
-		message = message.replaceAll("[\\r]", "");
-		message = message.replaceAll("[\\n]", "<br/>");
-		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
-
-		String sc = String.format(
-				"$.messager.show({title:'%s',msg:'%s',showType:'%s',timeout:0,width:400,height:300,style:{right:'',bottom:''}});",
-			title, message, showType);
+		String sc = getScript(title, message, showType);
 		target.appendJavaScript(sc);
 	}
 
