@@ -10,22 +10,37 @@ import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
 public class WEasyLayout extends WebMarkupContainer {
 	private WebMarkupContainer east, west;
+	private boolean eastFitToContent = true, westFitToContent = true;
 
 	public WEasyLayout(String id) {
 		super(id);
+
+		setOutputMarkupId(true);
 
 		add(new EasyUIBehavior());
 	}
 
 	public WEasyLayout setEast(WebMarkupContainer east) {
 		this.east = east;
+		east.setOutputMarkupId(true);
 		add(east);
 		return this;
 	}
 
 	public WEasyLayout setWest(WebMarkupContainer west) {
 		this.west = west;
+		west.setOutputMarkupId(true);
 		add(west);
+		return this;
+	}
+
+	public WEasyLayout setEastFitToContent(boolean eastFitToContent) {
+		this.eastFitToContent = eastFitToContent;
+		return this;
+	}
+
+	public WEasyLayout setWestFitToContent(boolean westFitToContent) {
+		this.westFitToContent = westFitToContent;
 		return this;
 	}
 
@@ -63,4 +78,26 @@ public class WEasyLayout extends WebMarkupContainer {
 		tag.put("class", "easyui-layout");
 	}
 
+	@Override
+	protected void onAfterRender() {
+		super.onAfterRender();
+
+		if (westFitToContent || eastFitToContent) {
+			StringBuilder builder = new StringBuilder();
+			if (westFitToContent && west != null) {
+				builder.append(getParentFitScript(west));
+			}
+
+			if (eastFitToContent && east != null) {
+				builder.append(getParentFitScript(east));
+			}
+
+			getResponse().write(String.format("<script>%s</script>", builder.toString()));
+		}
+	}
+
+	private String getParentFitScript(WebMarkupContainer container) {
+		String max = String.format("(Math.max.apply(Math, $('#%s').find('table,div').map(function(){return $(this).width();}).get())+40)", container.getMarkupId());
+		return String.format("$('#%s').css('width', %s + 'px');", container.getMarkupId(), max);
+	}
 }

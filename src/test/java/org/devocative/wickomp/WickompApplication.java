@@ -18,6 +18,12 @@ public class WickompApplication extends WebApplication {
 	@Override
 	public void init() {
 		super.init();
+
+		getMarkupSettings().setStripWicketTags(true);
+		getMarkupSettings().setStripComments(true);
+		getMarkupSettings().setCompressWhitespace(true);
+		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+
 		getResourceSettings().getStringResourceLoaders().add(0, new BundleStringResourceLoader("org.devocative.wickomp.Test"));
 	}
 
