@@ -1,5 +1,6 @@
 package org.devocative.wickomp;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
@@ -45,8 +46,9 @@ public abstract class WComponent extends WebComponent {
 	protected void onInitialize() {
 		super.onInitialize();
 
-		if (options == null)
-			throw new RuntimeException("Options not defined!");
+		if (options == null) {
+			throw new WicketRuntimeException("Options not defined!");
+		}
 	}
 
 	@Override
@@ -54,12 +56,6 @@ public abstract class WComponent extends WebComponent {
 		response.render(JavaScriptHeaderItem.forReference(
 			WebApplication.get().getJavaScriptLibrarySettings().getJQueryReference()
 		));
-
-		/*String js = String.format("%s/js/jqwidgets350/jqx-all.js", getRequest().getContextPath());
-		response.render(JavaScriptHeaderItem.forUrl(js));
-
-		String css = String.format("%s/js/jqwidgets350/styles/jqx.base.css", getRequest().getContextPath());
-		response.render(CssHeaderItem.forUrl(css));*/
 
 		CoreLibrariesContributor.contributeAjax(getApplication(), response);
 	}

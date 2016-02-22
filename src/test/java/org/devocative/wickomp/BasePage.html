@@ -2,34 +2,36 @@
 <html dir="rtl" xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 
 <head>
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
 </head>
 
 <body style="margin: 0">
+<div wicket:id="modal"></div>
 <div>
-    <div>Wickomp</div>
-    <div wicket:id="menu"></div>
+	<div>Wickomp</div>
+	<div wicket:id="menu"></div>
 </div>
 <ul>
-    <li><span wicket:id="link"></span></li>
-    <li><span wicket:id="label"></span></li>
-    <li>
-        <wicket:message key="test.key"/>
-    </li>
+	<li><span wicket:id="link"></span></li>
+	<li><span wicket:id="label"></span></li>
+	<li><a wicket:id="showModal">Show Modal</a></li>
+	<li>
+		<wicket:message key="test.key"/>
+	</li>
 </ul>
 
 <hr/>
 
 <wicket:link>
-    <table cellpadding="5" cellspacing="0">
-        <tr>
-            <th>Samples:</th>
-            <td><a href="page/DataGridPage.html">Data Grid</a></td>
-            <td><a href="page/TreeGridPage.html">Tree Grid</a></td>
-            <td><a href="page/FormPage.html">Form</a></td>
-            <td><a href="page/WizardPage.html">Wizard</a></td>
-        </tr>
-    </table>
+	<table cellpadding="5" cellspacing="0">
+		<tr>
+			<th>Samples:</th>
+			<td><a href="page/DataGridPage.html">Data Grid</a></td>
+			<td><a href="page/TreeGridPage.html">Tree Grid</a></td>
+			<td><a href="page/FormPage.html">Form</a></td>
+			<td><a href="page/WizardPage.html">Wizard</a></td>
+		</tr>
+	</table>
 </wicket:link>
 
 <hr/>
