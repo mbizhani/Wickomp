@@ -31,6 +31,7 @@ public abstract class OBaseGrid<T> extends OComponent {
 	// ------
 	private String gridHTMLId;
 	private boolean selectionIndicator = false;
+	private String selectionJSHandler;
 
 	public OBaseGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
@@ -191,17 +192,17 @@ public abstract class OBaseGrid<T> extends OComponent {
 
 	@JsonRawValue
 	public String getOnLoadSuccess() {
-		return selectionIndicator ? String.format("function(data){handleSelectionIndicator('%s');}", gridHTMLId) : null;
+		return getSelectionJSFunc();
 	}
 
 	@JsonRawValue
 	public String getOnSelect() {
-		return selectionIndicator ? String.format("function(idx,row){handleSelectionIndicator('%s');}", gridHTMLId) : null;
+		return getSelectionJSFunc();
 	}
 
 	@JsonRawValue
 	public String getOnUnselect() {
-		return selectionIndicator ? String.format("function(idx,row){handleSelectionIndicator('%s');}", gridHTMLId) : null;
+		return getSelectionJSFunc();
 	}
 
 	// ---------------------- PUBLIC METHODS
@@ -223,5 +224,19 @@ public abstract class OBaseGrid<T> extends OComponent {
 	public OBaseGrid<T> setSelectionIndicator(boolean selectionIndicator) {
 		this.selectionIndicator = selectionIndicator;
 		return this;
+	}
+
+	public OBaseGrid<T> setSelectionJSHandler(String selectionJSHandler) {
+		this.selectionJSHandler = selectionJSHandler;
+		return this;
+	}
+
+	private String getSelectionJSFunc() {
+		if (selectionIndicator) {
+			return selectionJSHandler == null ?
+				String.format("function(data){handleSelectionIndicator('%s');}", gridHTMLId) :
+				String.format("function(data){handleSelectionIndicator('%s', %s);}", gridHTMLId, selectionJSHandler);
+		}
+		return null;
 	}
 }

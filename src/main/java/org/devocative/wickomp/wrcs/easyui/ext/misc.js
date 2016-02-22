@@ -48,42 +48,55 @@ function collapseAllGroups(gridId) {
 	}
 }
 
-function handleSelectionIndicator(gridId) {
+function handleSelectionIndicator(gridId, selectionHandler) {
 	var grid = $('#' + gridId);
 	var noOfSelected = grid.datagrid('getSelections').length.toString();
-	grid.datagrid('getPager').pagination({
-		buttons: [
-			{
-				text: noOfSelected,
-				width: 60,
-				iconCls: "fa fa-check-square-o",
-				handler: function () {
-					var tb = '<table border="1" cellspacing="0"><tr>';
-					var fields = grid.datagrid('getColumnFields');
-					for (var i = 0; i < fields.length; i++) {
-						tb += '<th>' + fields[i] + '</th>';
-					}
-					var selData = grid.datagrid('getSelections');
-					for (var d = 0; d < selData.length; d++) {
-						tb += '<tr>';
-						for (var f = 0; f < fields.length; f++) {
-							tb += '<td>' + selData[d][fields[f]] + '</td>';
-						}
-						tb += '</tr>';
+	var butts = [
+		{
+			text: noOfSelected,
+			width: 60,
+			iconCls: "fa fa-check-square-o",
+			handler: function () {
+				var tb = '<table border="1" cellspacing="0"><tr>';
+				var fields = grid.datagrid('getColumnFields');
+				for (var i = 0; i < fields.length; i++) {
+					tb += '<th>' + fields[i] + '</th>';
+				}
+				var selData = grid.datagrid('getSelections');
+				for (var d = 0; d < selData.length; d++) {
+					tb += '<tr>';
+					for (var f = 0; f < fields.length; f++) {
+						tb += '<td>' + selData[d][fields[f]] + '</td>';
 					}
 					tb += '</tr>';
-					tb += '</table>';
-					$.messager.show({
-						title: '<i class="fa fa-check-square-o"></i>',
-						msg: tb,
-						timeout: 0,
-						showType: 'show',
-						width: 600,
-						height: 400,
-						style: {right: '', bottom: ''}
-					});
 				}
+				tb += '</tr>';
+				tb += '</table>';
+				$.messager.show({
+					title: '<i class="fa fa-check-square-o"></i>',
+					msg: tb,
+					timeout: 0,
+					showType: 'show',
+					width: 600,
+					height: 400,
+					style: {right: '', bottom: ''}
+				});
 			}
-		]
+		}
+	];
+
+	if (selectionHandler) {
+		butts.push({
+			width: 25,
+			iconCls: "fa fa-paper-plane-o",
+			handler: function () {
+				var selData = grid.datagrid('getSelections');
+				selectionHandler(selData);
+			}
+		});
+	}
+
+	grid.datagrid('getPager').pagination({
+		buttons: butts
 	});
 }

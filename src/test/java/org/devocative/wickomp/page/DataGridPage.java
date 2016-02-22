@@ -110,6 +110,7 @@ public class DataGridPage extends BasePage {
 			.setColumns(columns)
 			.setMultiSort(true)
 			.setSelectionIndicator(true)
+			.setSelectionJSHandler("function(asd){alert(asd.toSource());}")
 			.addToolbarButton(new OGridGroupingButton<PersonVO>())
 		;
 		grid2Opt.setHeight(OSize.fixed(500));
