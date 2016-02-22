@@ -7,6 +7,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 
+@Deprecated
 public class WExternalLink extends WebComponent {
 	private IModel<String> label;
 	private String href;

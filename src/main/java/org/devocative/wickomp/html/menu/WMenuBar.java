@@ -5,11 +5,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.devocative.wickomp.WPanel;
-import org.devocative.wickomp.html.WExternalLink;
 import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.wrcs.Resource;
@@ -19,10 +19,11 @@ import java.util.List;
 public class WMenuBar extends WPanel {
 	private static final HeaderItem JS = Resource.getCommonJS("menu/jquery.smartmenus.min.js");
 	private static final HeaderItem CSS_CORE = Resource.getCommonCSS("menu/sm-core-css.css");
-//	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-clean.css");
+	//	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-clean.css");
 	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-mint.css");
 
 	private MenuItemFragment rootMenu;
+	private boolean contextRelativeLink = false;
 
 	public WMenuBar(String id, List<OMenuItem> menuItems) {
 		super(id);
@@ -31,8 +32,18 @@ public class WMenuBar extends WPanel {
 		add(rootMenu);
 	}
 
+	public boolean isContextRelativeLink() {
+		return contextRelativeLink;
+	}
+
+	public WMenuBar setContextRelativeLink(boolean contextRelativeLink) {
+		this.contextRelativeLink = contextRelativeLink;
+		return this;
+	}
+
 	protected Component newMenuItemLink(String compId, OMenuItem item) {
-		return new WExternalLink(compId, item.getLabel(), item.getHref());
+		return new ExternalLink(compId, item.getHref(), item.getLabel().getObject())
+			.setContextRelative(contextRelativeLink);
 	}
 
 	@Override
