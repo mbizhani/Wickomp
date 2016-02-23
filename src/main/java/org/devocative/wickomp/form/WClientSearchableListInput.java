@@ -65,7 +65,11 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 			}
 		}
 
-		setConvertedInput(list);
+		if (list.size() > 0) {
+			setConvertedInput(list);
+		} else {
+			setConvertedInput(null);
+		}
 	}
 
 	protected abstract Component createSelectionPanel(String selectionPanelId);

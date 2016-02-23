@@ -1,7 +1,6 @@
 package org.devocative.wickomp.html;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.wickomp.opt.OLayoutDirection;
@@ -71,19 +70,19 @@ public class WEasyLayout extends WebMarkupContainer {
 		}
 	}
 
-	@Override
+	/*@Override
 	protected void onComponentTag(ComponentTag tag) {
 		super.onComponentTag(tag);
 
 		tag.put("class", "easyui-layout");
-	}
+	}*/
 
 	@Override
 	protected void onAfterRender() {
 		super.onAfterRender();
 
+		StringBuilder builder = new StringBuilder();
 		if (westFitToContent || eastFitToContent) {
-			StringBuilder builder = new StringBuilder();
 			if (westFitToContent && west != null) {
 				builder.append(getParentFitScript(west));
 			}
@@ -92,8 +91,9 @@ public class WEasyLayout extends WebMarkupContainer {
 				builder.append(getParentFitScript(east));
 			}
 
-			getResponse().write(String.format("<script>%s</script>", builder.toString()));
 		}
+		builder.append(String.format("$('#%s').layout();", getMarkupId()));
+		getResponse().write(String.format("<script>%s</script>", builder.toString()));
 	}
 
 	private String getParentFitScript(WebMarkupContainer container) {
