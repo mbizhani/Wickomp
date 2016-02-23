@@ -2,16 +2,18 @@ package org.devocative.wickomp.html.window;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.IRequestParameters;
-import org.devocative.wickomp.WCallbackComponent;
+import org.devocative.wickomp.JsonUtil;
+import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
-public class WModalWindow extends WCallbackComponent {
+public class WModalWindow extends WPanel {
 	private Component content;
 	private WebMarkupContainer container;
+	private AbstractDefaultAjaxBehavior callbackAjaxBehavior;
 
 	private OModalWindow options;
 
@@ -21,7 +23,7 @@ public class WModalWindow extends WCallbackComponent {
 
 	// Main Constructor
 	public WModalWindow(String id, OModalWindow options) {
-		super(id, options);
+		super(id);
 		this.options = options;
 
 		container = new WebMarkupContainer("container");
@@ -30,8 +32,16 @@ public class WModalWindow extends WCallbackComponent {
 
 		container.add(content = new WebMarkupContainer("content").setVisible(false));
 
-		setNeedHtmlBeside(true);
-		setIsAutoJSRender(false);
+		callbackAjaxBehavior = new AbstractDefaultAjaxBehavior() {
+			@Override
+			protected void respond(AjaxRequestTarget target) {
+				content.setVisible(false);
+
+				onClose(target);
+			}
+		};
+
+		add(callbackAjaxBehavior);
 
 		add(new EasyUIBehavior());
 	}
@@ -67,9 +77,12 @@ public class WModalWindow extends WCallbackComponent {
 			options.setTitle(title.getObject());
 		}
 
+		options.setUrl(callbackAjaxBehavior.getCallbackUrl().toString());
 		content.setVisible(true);
 		target.add(container);
-		target.appendJavaScript(getJQueryCall());
+		target.appendJavaScript(String.format("$('#%s').window(%s);",
+			getContainerMarkupId(),
+			JsonUtil.toJson(options)));
 		return this;
 	}
 
@@ -78,17 +91,5 @@ public class WModalWindow extends WCallbackComponent {
 	}
 
 	protected void onClose(AjaxRequestTarget target) {
-	}
-
-	@Override
-	protected String getJQueryFunction() {
-		return "window";
-	}
-
-	@Override
-	protected void onRequest(IRequestParameters parameters) {
-		content.setVisible(false);
-
-		onClose(createAjaxResponse());
 	}
 }
