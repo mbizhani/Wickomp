@@ -1,13 +1,17 @@
 package org.devocative.wickomp.html.window;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import org.devocative.wickomp.opt.ICallbackUrl;
 import org.devocative.wickomp.opt.OComponent;
 
-public class OModalWindow extends OComponent {
+public class OModalWindow extends OComponent implements ICallbackUrl {
 	private Boolean collapsible = false;
 	private Boolean maximizable = false;
 	private Boolean minimizable = false;
 	private boolean modal = true;
 	private String title;
+
+	private String url;
 
 	public Boolean getCollapsible() {
 		return collapsible;
@@ -52,5 +56,15 @@ public class OModalWindow extends OComponent {
 	public OModalWindow setTitle(String title) {
 		this.title = title;
 		return this;
+	}
+
+	@JsonRawValue
+	public String getOnClose() {
+		return String.format("function(){Wicket.Ajax.get({u:'%s'});}", url);
+	}
+
+	@Override
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
