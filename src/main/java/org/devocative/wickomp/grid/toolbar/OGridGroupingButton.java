@@ -21,7 +21,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<table><tr>");
 		builder.append(String.format("<td>%s: </td><td><select onchange=\"changeGridGroupField(this, '%s')\">",
-			new ResourceModel("datagrid.groupField.select", "Group Field").getObject(), gridInfo.getOptions().getGridHTMLId()));
+			new ResourceModel("datagrid.groupField.select", "Group Field").getObject(), gridInfo.getOptions().getHtmlId()));
 
 		builder.append(String.format("<option value=\"\">%s</option>", new ResourceModel("datagrid.groupField.none", "-- None --").getObject()));
 
@@ -36,7 +36,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 			builder.append("<td><a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
 				.append(new ResourceModel("label.nodes.expand", "Expand All").getObject())
 				.append("\" onclick=\"")
-				.append(String.format("expandAllGroups('%s');", gridInfo.getOptions().getGridHTMLId()))
+				.append(String.format("expandAllGroups('%s');", gridInfo.getOptions().getHtmlId()))
 				.append("\">")
 				.append(expand.toString())
 				.append("</a></td>")
@@ -47,7 +47,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 			builder.append("<td><a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
 				.append(new ResourceModel("label.nodes.expand", "Collapse All").getObject())
 				.append("\" onclick=\"")
-				.append(String.format("collapseAllGroups('%s');", gridInfo.getOptions().getGridHTMLId()))
+				.append(String.format("collapseAllGroups('%s');", gridInfo.getOptions().getHtmlId()))
 				.append("\">")
 				.append(collapse.toString())
 				.append("</a></td>")

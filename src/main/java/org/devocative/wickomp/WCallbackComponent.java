@@ -1,9 +1,12 @@
 package org.devocative.wickomp;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.TextRequestHandler;
+import org.devocative.wickomp.opt.ICallbackUrl;
 import org.devocative.wickomp.opt.OComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,24 @@ public abstract class WCallbackComponent extends WComponent {
 		logger.debug("JSON Response: {}", json);
 		RequestCycle requestCycle = RequestCycle.get();
 		requestCycle.replaceAllRequestHandlers(new TextRequestHandler("text/json", "UTF-8", json));
+	}
+
+	protected AjaxRequestTarget createAjaxResponse() {
+		WebApplication app = (WebApplication) getApplication();
+		AjaxRequestTarget target = app.newAjaxRequestTarget(getPage());
+		RequestCycle requestCycle = RequestCycle.get();
+		requestCycle.scheduleRequestHandlerAfterCurrent(target);
+
+		return target;
+	}
+
+	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+
+		if (options instanceof ICallbackUrl) {
+			((ICallbackUrl) options).setUrl(getCallbackURL());
+		}
 	}
 
 	@Override

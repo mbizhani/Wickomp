@@ -3,9 +3,7 @@ package org.devocative.wickomp.grid;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WCallbackComponent;
 import org.devocative.wickomp.data.RObject;
@@ -87,10 +85,15 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		// It should be called in onBeforeRender, not worked in onInitialize, causing StalePageException
 		if (!dataSource.isEnabled()) {
 			options.setUrl(null);
-		} else {
+		}
+		/*
+		The following is set by IHtmlId & ICallbackUrl
+
+		else {
 			options.setUrl(getCallbackURL());
 		}
-		options.setGridHTMLId(getMarkupId());
+		options.setHtmlId(getMarkupId());
+		*/
 
 		if (options.getToolbarButtons() != null) {
 			for (OButton button : options.getToolbarButtons()) {
@@ -232,10 +235,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			OLinkColumn<T> linkColumn = (OLinkColumn<T>) column;
 			linkColumn.onClick(rowModel);
 		} else if (column instanceof OAjaxLinkColumn) {
-			WebApplication app = (WebApplication) getApplication();
-			AjaxRequestTarget target = app.newAjaxRequestTarget(getPage());
-			RequestCycle requestCycle = RequestCycle.get();
-			requestCycle.scheduleRequestHandlerAfterCurrent(target);
+			AjaxRequestTarget target = createAjaxResponse();
 
 			OAjaxLinkColumn<T> ajaxLinkColumn = (OAjaxLinkColumn<T>) column;
 			ajaxLinkColumn.onClick(target, rowModel);

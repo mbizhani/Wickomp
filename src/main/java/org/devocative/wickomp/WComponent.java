@@ -3,19 +3,23 @@ package org.devocative.wickomp;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
+import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.devocative.wickomp.opt.IHtmlId;
 import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.opt.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class WComponent extends WebComponent {
+public abstract class WComponent extends WebMarkupContainer {
 	private static final Logger logger = LoggerFactory.getLogger(WComponent.class);
 
-	private Options options;
+	private boolean needHtmlBeside = false;
+	protected Options options;
 
 	protected WComponent(String id, Options options) {
 		super(id);
@@ -49,6 +53,24 @@ public abstract class WComponent extends WebComponent {
 		if (options == null) {
 			throw new WicketRuntimeException("Options not defined!");
 		}
+
+		if (options instanceof IHtmlId) {
+			((IHtmlId) options).setHtmlId(getMarkupId());
+		}
+	}
+
+	@Override
+	protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
+		return needHtmlBeside ? new PanelMarkupSourcingStrategy(false) : null;
+	}
+
+	public boolean isNeedHtmlBeside() {
+		return needHtmlBeside;
+	}
+
+	public WComponent setNeedHtmlBeside(boolean needHtmlBeside) {
+		this.needHtmlBeside = needHtmlBeside;
+		return this;
 	}
 
 	@Override
