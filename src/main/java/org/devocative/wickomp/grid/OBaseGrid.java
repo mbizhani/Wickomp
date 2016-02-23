@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.toolbar.OButton;
+import org.devocative.wickomp.opt.ICallbackUrl;
+import org.devocative.wickomp.opt.IHtmlId;
 import org.devocative.wickomp.opt.OComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class OBaseGrid<T> extends OComponent {
+public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallbackUrl {
 	private Boolean autoRowHeight = false;
 	private Boolean checkOnSelect;
 	private OColumnList<T> columns;
@@ -25,11 +27,12 @@ public abstract class OBaseGrid<T> extends OComponent {
 	private Boolean selectOnCheck;
 	private Boolean singleSelect;
 	private Boolean striped;
+	private String titleField;
 	private List<OButton<T>> toolbar;
 	private String url;
 
 	// ------
-	private String gridHTMLId;
+	private String htmlId;
 	private boolean selectionIndicator = false;
 	private String selectionJSHandler;
 
@@ -160,8 +163,17 @@ public abstract class OBaseGrid<T> extends OComponent {
 		return this;
 	}
 
+	public String getTitleField() {
+		return titleField;
+	}
+
+	public OBaseGrid<T> setTitleField(String titleField) {
+		this.titleField = titleField;
+		return this;
+	}
+
 	public String getToolbar() {
-		return toolbar != null ? String.format("#%s-tb", gridHTMLId) : null;
+		return toolbar != null ? String.format("#%s-tb", htmlId) : null;
 	}
 
 	@JsonIgnore
@@ -183,9 +195,9 @@ public abstract class OBaseGrid<T> extends OComponent {
 		return url;
 	}
 
-	public OBaseGrid<T> setUrl(String url) {
+	@Override
+	public void setUrl(String url) {
 		this.url = url;
-		return this;
 	}
 
 	// ---------------------- ACCESSORS FOR JS EVENTS
@@ -208,12 +220,13 @@ public abstract class OBaseGrid<T> extends OComponent {
 	// ---------------------- PUBLIC METHODS
 
 	@JsonIgnore
-	public String getGridHTMLId() {
-		return gridHTMLId;
+	public String getHtmlId() {
+		return htmlId;
 	}
 
-	public void setGridHTMLId(String gridHTMLId) {
-		this.gridHTMLId = gridHTMLId;
+	@Override
+	public void setHtmlId(String htmlId) {
+		this.htmlId = htmlId;
 	}
 
 	@JsonIgnore
@@ -234,8 +247,8 @@ public abstract class OBaseGrid<T> extends OComponent {
 	private String getSelectionJSFunc() {
 		if (selectionIndicator) {
 			return selectionJSHandler == null ?
-				String.format("function(data){handleSelectionIndicator('%s');}", gridHTMLId) :
-				String.format("function(data){handleSelectionIndicator('%s', %s);}", gridHTMLId, selectionJSHandler);
+				String.format("function(data){handleSelectionIndicator('%s');}", htmlId) :
+				String.format("function(data){handleSelectionIndicator('%s', %s);}", htmlId, selectionJSHandler);
 		}
 		return null;
 	}

@@ -90,8 +90,21 @@ function handleSelectionIndicator(gridId, selectionHandler) {
 			width: 25,
 			iconCls: "fa fa-paper-plane-o",
 			handler: function () {
-				var selData = grid.datagrid('getSelections');
-				selectionHandler(selData);
+				var idField = grid.datagrid('options')["idField"];
+				var titleField = grid.datagrid('options')["titleField"];
+				if (idField) {
+					var selData = grid.datagrid('getSelections');
+					var kvList = [];
+					for (var r = 0; r < selData.length; r++) {
+						var obj = {};
+						obj["key"] = selData[r][idField];
+						obj["value"] = selData[r][titleField];
+						kvList.push(obj);
+					}
+					selectionHandler(kvList);
+				} else {
+					alert('No idField!');
+				}
 			}
 		});
 	}
