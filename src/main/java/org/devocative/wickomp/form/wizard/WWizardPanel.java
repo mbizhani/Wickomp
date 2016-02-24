@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.form.WAjaxButton;
@@ -24,6 +25,8 @@ public class WWizardPanel extends WPanel {
 
 	private OWizard oWizard;
 	private WebMarkupContainer buttonBar, content;
+	private Label titleLbl;
+	private String title;
 
 	public WWizardPanel(String id, OWizard oWizard) {
 		this(id, oWizard, ButtonBarPlace.BOTTOM);
@@ -33,6 +36,8 @@ public class WWizardPanel extends WPanel {
 	public WWizardPanel(String id, OWizard oWizard, ButtonBarPlace place) {
 		super(id);
 		this.oWizard = oWizard;
+
+		add(titleLbl = new Label("title", new PropertyModel<>(this, "title")));
 
 		WebMarkupContainer top = new WebMarkupContainer("top");
 		add(top);
@@ -62,6 +67,24 @@ public class WWizardPanel extends WPanel {
 
 		add(new FontAwesomeBehavior());
 	}
+
+	// ------------- ACCESSORS
+
+	public String getTitle() {
+		return title;
+	}
+
+	public WWizardPanel setTitle(String title) {
+		this.title = title;
+		return this;
+	}
+
+	public WWizardPanel setTitleVisible(boolean visible) {
+		titleLbl.setVisible(visible);
+		return this;
+	}
+
+	// ------------- Protected Methods
 
 	protected void clearSkippedSteps() {
 		oWizard.clearSkippedSteps();

@@ -78,7 +78,7 @@ public class WSelectionInput extends WFormInputPanel {
 
 	public WSelectionInput updateChoices(AjaxRequestTarget target, List choiceList) {
 		setChoices(choiceList);
-		target.add(choices);
+		target.add(this);
 		target.appendJavaScript(getHandleScript());
 		return this;
 	}

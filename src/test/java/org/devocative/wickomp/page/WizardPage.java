@@ -62,7 +62,7 @@ public class WizardPage extends BasePage {
 			protected void onError(AjaxRequestTarget target, String stepId, List<Serializable> errors) {
 				WMessager.show("Error", errors, target);
 			}
-		});
+		}.setTitle("Gandolf"));
 
 		add(new EasyUIBehavior());
 	}

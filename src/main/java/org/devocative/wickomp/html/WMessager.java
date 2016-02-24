@@ -17,7 +17,6 @@ public class WMessager {
 		message = message.replaceAll("'", "\\\\'");
 		message = message.replaceAll("[\\r]", "");
 		message = message.replaceAll("[\\n]", "<br/>");
-		message = message.replaceAll(" ", "&nbsp;");
 		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
 
 		return String.format(
