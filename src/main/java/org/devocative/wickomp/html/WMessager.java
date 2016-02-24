@@ -13,9 +13,11 @@ public class WMessager {
 	public enum ShowType {slide, fade, show}
 
 	public static String getScript(String title, String message, ShowType showType) {
-		message = message.replace('\'', '"');
+		message = message.replaceAll("[\\\\]", "\\\\\\\\");
+		message = message.replaceAll("'", "\\\\'");
 		message = message.replaceAll("[\\r]", "");
 		message = message.replaceAll("[\\n]", "<br/>");
+		message = message.replaceAll(" ", "&nbsp;");
 		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
 
 		return String.format(
