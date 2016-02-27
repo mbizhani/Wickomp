@@ -97,7 +97,7 @@ public class WEasyLayout extends WebMarkupContainer {
 	}
 
 	private String getParentFitScript(WebMarkupContainer container) {
-		String max = String.format("(Math.max.apply(Math, $('#%s').find('table,div').map(function(){return $(this).width();}).get())+40)", container.getMarkupId());
-		return String.format("$('#%s').css('width', %s + 'px');", container.getMarkupId(), max);
+		String max = String.format("(Math.max.apply(Math, $('#%s').find('table,div').map(function(){return $(this).width();}).get())+20)", container.getMarkupId());
+		return String.format("$('#%s').width(%s);", container.getMarkupId(), max);
 	}
 }
