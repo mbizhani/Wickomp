@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class WBaseGrid<T> extends WCallbackComponent {
-	private static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
+	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
 
 	private OBaseGrid<T> options;
 	private WGridDataSource<T> dataSource;

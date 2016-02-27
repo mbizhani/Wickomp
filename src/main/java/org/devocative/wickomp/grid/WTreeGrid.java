@@ -83,13 +83,17 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 
 				if (parentIds.size() > 0) {
 					data = dataSource.listByIds(parentIds, sortFieldList);
+					if (data.size() < parentIds.size()) {
+						logger.warn("WTreeGrid -> finding parents -> missing some parent(s) = {} (parent ids = {}) ",
+							parentIds.size() - data.size(), parentIds);
+					}
 					convertBeansToRObjects(data, objectList);
 				}
 			} while (parentIds.size() > 0);
 
 			for (RObject rObject : objectList.getValue()) {
 				String parentId = rObject.getProperty(PARENT_ID_PROPERTY);
-				if (parentId != null) {
+				if (parentId != null && objectList.hasRObject(parentId)) {
 					objectList.getRObject(parentId).removeProperty(STATE_PROPERTY);
 				}
 			}
