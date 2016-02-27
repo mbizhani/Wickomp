@@ -35,7 +35,7 @@ public class OExportExcelButton<T> extends OButton<T> {
 			protected void handleStream(OutputStream stream) throws IOException {
 				List<String> columnsTitle = new ArrayList<>();
 
-				for (OColumn<T> column : gridInfo.getOptions().getColumns().getList()) {
+				for (OColumn<T> column : gridInfo.getOptions().getColumns().getVisibleColumns()) {
 					if (column instanceof OPropertyColumn) {
 						columnsTitle.add(column.getTitle());
 					}
@@ -48,7 +48,7 @@ public class OExportExcelButton<T> extends OButton<T> {
 				for (int rowNo = 0; rowNo < rawData.size(); rowNo++) {
 					T bean = rawData.get(rowNo);
 					List<String> rowResult = new ArrayList<>();
-					List<OColumn<T>> columns = gridInfo.getOptions().getColumns().getList();
+					List<OColumn<T>> columns = gridInfo.getOptions().getColumns().getVisibleColumns();
 					for (int colNo = 0; colNo < columns.size(); colNo++) {
 						OColumn<T> column = columns.get(colNo);
 						if (column instanceof OPropertyColumn) {

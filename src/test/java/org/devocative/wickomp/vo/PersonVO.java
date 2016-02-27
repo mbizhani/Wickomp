@@ -106,10 +106,10 @@ public class PersonVO implements Serializable {
 		for (int i = 0; i < 189; i++) {
 			list.add(new PersonVO()
 					.setCol01((i / 7) + "")
-					.setCol02(UUID.randomUUID().toString())
+					.setCol02("C2 " + UUID.randomUUID().toString())
 					.setCol03("سلام world خوبی؟")
-					.setCol04(UUID.randomUUID().toString())
-					.setCol05(UUID.randomUUID().toString())
+					.setCol04("C4 " + UUID.randomUUID().toString())
+					.setCol05("C5 " + UUID.randomUUID().toString())
 					.setBirthDate(new Timestamp((long) (time - Math.random() * 99999999999L)))
 					.setIncome((long) (Math.random() * 100000000))
 					.setAlive(((int) (Math.random() * 1000)) % 7 == 0)

@@ -25,7 +25,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 
 		builder.append(String.format("<option value=\"\">%s</option>", new ResourceModel("datagrid.groupField.none", "-- None --").getObject()));
 
-		for (OColumn<T> column : gridInfo.getOptions().getColumns().getList()) {
+		for (OColumn<T> column : gridInfo.getOptions().getColumns().getVisibleColumns()) {
 			if (column instanceof OPropertyColumn) {
 				builder.append(String.format("<option value=\"%s\">%s</option>", column.getField(), column.getTitle()));
 			}

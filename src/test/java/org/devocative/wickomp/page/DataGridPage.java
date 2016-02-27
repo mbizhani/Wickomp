@@ -14,6 +14,7 @@ import org.devocative.wickomp.grid.OGrid;
 import org.devocative.wickomp.grid.WDataGrid;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.OColumnList;
+import org.devocative.wickomp.grid.column.OHiddenColumn;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
@@ -88,7 +89,7 @@ public class DataGridPage extends BasePage {
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04"))
 
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 05"), "col05"))
+			.add(new OHiddenColumn<PersonVO>("col05"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "birthDate")
 				.setFormatter(ODateFormatter.prDateTime()))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "income")

@@ -13,9 +13,10 @@ public abstract class OColumn<T> extends Options {
 	private Boolean sortable;
 	private IModel<String> title;
 
+	// -----------------
 	private boolean dummyField = false;
-
 	protected OFormatter formatter;
+	private boolean visible = true;
 
 	public OColumn(IModel<String> title) {
 		this(title, null);
@@ -82,6 +83,16 @@ public abstract class OColumn<T> extends Options {
 
 	public void setDummyField(boolean dummyField) {
 		this.dummyField = dummyField;
+	}
+
+	@JsonIgnore
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public OColumn<T> setVisible(boolean visible) {
+		this.visible = visible;
+		return this;
 	}
 
 	public boolean onCellRender(T bean, String id) {

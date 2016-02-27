@@ -69,13 +69,15 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		super.onInitialize();
 
 		int i = 0;
-		for (OColumn<T> column : options.getColumns().getList()) {
+		for (OColumn<T> column : options.getColumns().getAllColumns()) {
 			if (column.getField() == null) {
 				column
 					.setField("f" + (i++))
 					.setDummyField(true);
 			}
 		}
+
+		options.getColumns().validate();
 	}
 
 	@Override
@@ -211,8 +213,9 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			}
 			pageData.put(id, dataSource.model(bean));
 
-			for (int colNo = 0; colNo < options.getColumns().getList().size(); colNo++) {
-				OColumn<T> column = options.getColumns().getList().get(colNo);
+			List<OColumn<T>> columns = options.getColumns().getAllColumns();
+			for (int colNo = 0; colNo < columns.size(); colNo++) {
+				OColumn<T> column = columns.get(colNo);
 				if (column.onCellRender(bean, id)) {
 					String url = String.format("%s&id=%s&cn=%s&tp=cl", getCallbackURL(), id, colNo);
 					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
@@ -230,7 +233,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	private void handleCellLinkClick(String id, Integer colNo) {
 		IModel<T> rowModel = pageData.get(id);
-		OColumn<T> column = options.getColumns().getList().get(colNo);
+		OColumn<T> column = options.getColumns().getVisibleColumns().get(colNo);
 		if (column instanceof OLinkColumn) {
 			OLinkColumn<T> linkColumn = (OLinkColumn<T>) column;
 			linkColumn.onClick(rowModel);
