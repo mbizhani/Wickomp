@@ -8,6 +8,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.html.window.OModalWindow;
 import org.devocative.wickomp.html.window.WModalWindow;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
@@ -46,6 +47,10 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 		});
 
 		add(new FontAwesomeBehavior());
+	}
+
+	public OModalWindow getModalWindowOptions() {
+		return modalWindow.getOptions();
 	}
 
 	@Override

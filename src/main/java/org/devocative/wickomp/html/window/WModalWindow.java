@@ -50,6 +50,14 @@ public class WModalWindow extends WPanel {
 		return "content";
 	}
 
+	public String getContainerMarkupId() {
+		return container.getMarkupId();
+	}
+
+	public OModalWindow getOptions() {
+		return options;
+	}
+
 	public final WModalWindow setContent(Component component) {
 		if (!component.getId().equals(getContentId())) {
 			throw new WicketRuntimeException("Modal window content id is wrong. Component ID:" +
@@ -84,10 +92,6 @@ public class WModalWindow extends WPanel {
 			getContainerMarkupId(),
 			JsonUtil.toJson(options)));
 		return this;
-	}
-
-	public String getContainerMarkupId() {
-		return container.getMarkupId();
 	}
 
 	protected void onClose(AjaxRequestTarget target) {
