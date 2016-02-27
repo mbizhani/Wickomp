@@ -1,5 +1,6 @@
 package org.devocative.wickomp.panel;
 
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WPanel;
@@ -14,8 +15,8 @@ import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
 import org.devocative.wickomp.grid.toolbar.OGridGroupingButton;
+import org.devocative.wickomp.html.WEasyLayout;
 import org.devocative.wickomp.html.icon.FontAwesome;
-import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.vo.PersonVO;
 
 import java.util.List;
@@ -25,6 +26,12 @@ public class SelectionPanel extends WPanel {
 
 	public SelectionPanel(String id) {
 		super(id);
+
+		WebMarkupContainer west = new WebMarkupContainer("west");
+
+		WEasyLayout layout = new WEasyLayout("layout");
+		layout.setWest(west);
+		add(layout);
 
 		final List<PersonVO> list = PersonVO.list();
 
@@ -52,11 +59,12 @@ public class SelectionPanel extends WPanel {
 			.setSelectionIndicator(true)
 				// .setGroupField("col01")
 			.addToolbarButton(new OExportExcelButton<PersonVO>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), "Export.xlsx", 1000))
-			.addToolbarButton(new OGridGroupingButton<PersonVO>());
-		grid1Opt.setHeight(OSize.fixed(300));
-		grid1Opt.setWidth(OSize.fixed(600));
+			.addToolbarButton(new OGridGroupingButton<PersonVO>())
+			.setFit(true)
+		;
+//		grid1Opt.setFit(true);
 
-		add(new WDataGrid<>("grid", grid1Opt, new WGridDataSource<PersonVO>() {
+		layout.add(new WDataGrid<>("grid", grid1Opt, new WGridDataSource<PersonVO>() {
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);
