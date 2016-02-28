@@ -1,21 +1,29 @@
 package org.devocative.wickomp.page;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Button;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.FeedbackMessagesModel;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.devocative.adroit.vo.KeyValueVO;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.form.code.OCode;
 import org.devocative.wickomp.form.code.OCodeMode;
 import org.devocative.wickomp.form.code.WCodeInput;
+import org.devocative.wickomp.html.WEasyLayout;
+import org.devocative.wickomp.html.WFloatTable;
+import org.devocative.wickomp.html.WMessager;
+import org.devocative.wickomp.opt.OSize;
+import org.devocative.wickomp.panel.SelectionPanel;
 import org.devocative.wickomp.vo.Field;
 import org.devocative.wickomp.vo.KeyValue;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
@@ -26,9 +34,19 @@ import java.util.*;
 
 public class FormPage extends BasePage {
 
+	private WEasyLayout layout;
+	private WebMarkupContainer west;
+
 	public FormPage() {
+		west = new WebMarkupContainer("west");
+		layout = new WEasyLayout("layout");
+		layout.setWest(west);
+		add(layout);
+
 		simpleForm();
 		dynamicForm();
+
+		add(new EasyUIBehavior());
 	}
 
 	private void dynamicForm() {
@@ -36,6 +54,8 @@ public class FormPage extends BasePage {
 		fields.add(new Field("Name", "name", Field.Type.String));
 		fields.add(new Field("Age", "age", Field.Type.Integer));
 		fields.add(new Field("Weight", "weight", Field.Type.Real));
+		fields.add(new Field("Date", "date", Field.Type.Date));
+		fields.add(new Field("Alive", "alive", Field.Type.Boolean));
 
 		final Map<String, Serializable> map = new HashMap<>();
 		map.put("name", "Joe");
@@ -43,44 +63,62 @@ public class FormPage extends BasePage {
 
 		Form<Map<String, Serializable>> dynamicForm = new Form<>("dynamicForm", new CompoundPropertyModel<>(map));
 
-		dynamicForm.add(new ListView<Field>("fields", fields) {
+		WFloatTable floatTable = new WFloatTable("floatTable");
+		dynamicForm.add(floatTable);
+
+		floatTable.add(new ListView<Field>("fields", fields) {
 			@Override
 			protected void populateItem(ListItem<Field> item) {
 				Field field = item.getModelObject();
-				item.add(new Label("label", field.getTitle()));
 				//item.add(new TextField<String>("field"));
 
 				RepeatingView view = new RepeatingView("field");
+				FormComponent fc = null;
 				switch (field.getType()) {
 
 					case String:
-						view.add(new WTextInput(field.getName()));
+						fc = new WTextInput(field.getName());
 						break;
 
 					case Integer:
-						view.add(new WNumberInput(field.getName(), Long.class).setThousandSeparator(","));
+						fc = new WNumberInput(field.getName(), Long.class)
+							.setThousandSeparator(",");
 						break;
 
 					case Real:
-						view.add(new WNumberInput(field.getName(), BigDecimal.class).setPrecision(4).setThousandSeparator(","));
+						fc = new WNumberInput(field.getName(), BigDecimal.class)
+							.setPrecision(4)
+							.setThousandSeparator(",");
 						break;
 
 					case Boolean:
+						fc = new WBooleanInput(field.getName());
 						break;
+
+					case Date:
+						fc = new WDateInput(field.getName());
 				}
+
+				fc.setLabel(new Model<>(field.getTitle()));
+				view.add(fc);
 
 				item.add(view);
 			}
 		});
 
-		dynamicForm.add(new Button("save") {
-
+		//dynamicForm.add(new Button("save") {
+		dynamicForm.add(new AjaxButton("save") {
 			@Override
-			public void onSubmit() {
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				System.out.println(map);
 			}
+
+			/*@Override
+			public void onSubmit() {
+				System.out.println(map);
+			}*/
 		});
-		add(dynamicForm);
+		layout.add(dynamicForm);
 	}
 
 	private String sql;
@@ -103,18 +141,18 @@ public class FormPage extends BasePage {
 			}
 			tables_cols.put(table, cols);
 		}
-		Map<String,Map> tables = new HashMap<>();
+		Map<String, Map> tables = new HashMap<>();
 		tables.put("tables", tables_cols);
 		oCode.setHintOptions(tables);
 
 
 		final WSelectionInput child, parentSI;
 		final Map<String, Serializable> map = new HashMap<>();
-		map.put("name", "Joe");
+//		map.put("name", "Joe");
 		map.put("child", "B.1");
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
-		form.add(new TextField<String>("name"));
+		form.add(new TextField<String>("name").setRequired(true));
 		form.add(new WNumberRangeInput("age", Integer.class).setThousandSeparator(","));
 		form.add(new WSelectionInput("eduSingle", list, false));
 		form.add(new WSelectionInput("eduMultiple", list, true));
@@ -125,10 +163,42 @@ public class FormPage extends BasePage {
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), oCode));
+		form.add(new WClientSearchableListInput<KeyValueVO<String, String>>("kvList") {
+			{
+				getModalWindowOptions().setWidth(OSize.percent(80));
+			}
+
+			@Override
+			protected Component createSelectionPanel(String selectionPanelId) {
+				SelectionPanel p = new SelectionPanel(selectionPanelId);
+				p.setJS(getJSCallback());
+				return p;
+			}
+
+			@Override
+			protected KeyValueVO<String, String> createServerObject(String key) {
+				return new KeyValueVO<>(key, null);
+			}
+		});
 		form.add(new Button("save") {
-			//		form.add(new AjaxButton("save") {
+			//		form.add(new WAjaxButton("save") {
 			public void onSubmit() {
 				theSubmit();
+			}
+
+			@Override
+			protected void onAfterRender() {
+				super.onAfterRender();
+				FeedbackMessagesModel feedbackMessagesModel = new FeedbackMessagesModel(this);
+				List<FeedbackMessage> messages = feedbackMessagesModel.getObject();
+				List<Serializable> errors = new ArrayList<>();
+				if (messages.size() > 0) {
+					for (FeedbackMessage message : messages) {
+						errors.add(message.getMessage());
+					}
+					String st = WMessager.getScript("Err", WMessager.getHtml(errors), WMessager.ShowType.show);
+					getWebResponse().write(String.format("<script>$(function(){%s});</script>", st));
+				}
 			}
 
 			public void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -146,7 +216,7 @@ public class FormPage extends BasePage {
 				System.out.println("sql = " + sql);
 			}
 		});
-		add(form);
+		west.add(form);
 
 		parentSI.addToChoices(new WSelectionInputAjaxUpdatingBehavior() {
 			@Override
@@ -159,7 +229,5 @@ public class FormPage extends BasePage {
 				));
 			}
 		});
-
-		add(new EasyUIBehavior());
 	}
 }
