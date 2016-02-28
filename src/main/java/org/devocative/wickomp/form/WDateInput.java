@@ -4,6 +4,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -24,6 +25,7 @@ public class WDateInput extends WFormInputPanel<Date> {
 	private static final HeaderItem DATE_JS = Resource.getCommonJS("form/date/date.js");
 	private static final HeaderItem DATE_POPUP_JS = Resource.getCommonJS("form/date/dtpopup.js");
 
+	private Label label;
 	private WebMarkupContainer mainTable, timePart, calOpener;
 	private TextField<Integer> year, month, day, hour, minute, second;
 	private OCalendar calendar;
@@ -44,6 +46,8 @@ public class WDateInput extends WFormInputPanel<Date> {
 	public WDateInput(String id, IModel<Date> model, OCalendar calendar) {
 		super(id, model);
 		this.calendar = calendar;
+
+		add(label = new Label("label"));
 
 		mainTable = new WebMarkupContainer("mainTable");
 		mainTable.setOutputMarkupId(true);
@@ -90,6 +94,10 @@ public class WDateInput extends WFormInputPanel<Date> {
 		return this;
 	}
 
+	public WDateInput setLabelVisible(boolean visible) {
+		label.setVisible(visible);
+		return this;
+	}
 	// ----------------------- INTERNAL METHODS
 
 	@Override
@@ -107,6 +115,13 @@ public class WDateInput extends WFormInputPanel<Date> {
 
 		if (calendar == null) {
 			calendar = getUserPreference().getCalendar();
+		}
+
+		IModel<String> labelModel = getLabel();
+		if (labelModel != null) {
+			label.setDefaultModel(labelModel);
+		} else {
+			label.setVisible(false);
 		}
 	}
 

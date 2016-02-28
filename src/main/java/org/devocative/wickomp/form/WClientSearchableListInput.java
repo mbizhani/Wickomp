@@ -6,6 +6,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.html.window.OModalWindow;
@@ -19,6 +20,7 @@ import java.util.List;
 public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List<T>> {
 	private static final HeaderItem JS = Resource.getCommonJS("form/clientSearchList/clientSearchList.js");
 
+	private Label label;
 	private WModalWindow modalWindow;
 	private WebMarkupContainer result;
 
@@ -29,6 +31,8 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 	// Main Constructor
 	public WClientSearchableListInput(String id, IModel<List<T>> model) {
 		super(id, model);
+
+		add(label = new Label("label"));
 
 		modalWindow = new WModalWindow("modalWindow");
 		add(modalWindow);
@@ -53,11 +57,28 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 		return modalWindow.getOptions();
 	}
 
+	public WClientSearchableListInput<T> setLabelVisible(boolean visible) {
+		label.setVisible(visible);
+		return this;
+	}
+
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		Resource.addJQueryReference(response);
 
 		response.render(JS);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		IModel<String> labelModel = getLabel();
+		if (labelModel != null) {
+			label.setDefaultModel(labelModel);
+		} else {
+			label.setVisible(false);
+		}
 	}
 
 	@Override

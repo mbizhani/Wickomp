@@ -8,6 +8,7 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -23,6 +24,7 @@ public class WSelectionInput extends WFormInputPanel {
 	private static final HeaderItem SEL_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
 	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 
+	private Label label;
 	private WSelectionList choices;
 	private WebMarkupContainer opener;
 	private WebComponent title;
@@ -34,6 +36,8 @@ public class WSelectionInput extends WFormInputPanel {
 	// Main Constructor
 	public WSelectionInput(String id, IModel model, List choiceList, boolean multipleSelection) {
 		super(id, model);
+
+		add(label = new Label("label"));
 
 		choices = new WSelectionList("choices", new Model(), choiceList, multipleSelection);
 		choices.setOutputMarkupId(true);
@@ -69,6 +73,11 @@ public class WSelectionInput extends WFormInputPanel {
 		return this;
 	}
 
+	public WSelectionInput setLabelVisible(boolean visible) {
+		label.setVisible(visible);
+		return this;
+	}
+
 	// --------------------- METHODS
 
 	public WSelectionInput addToChoices(Behavior... behaviors) {
@@ -84,6 +93,25 @@ public class WSelectionInput extends WFormInputPanel {
 	}
 
 	// --------------------- INTERNAL METHODS
+
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		Resource.addJQueryReference(response);
+		response.render(SEL_LIST_JS);
+		response.render(SEL_LIST_CSS);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		IModel<String> labelModel = getLabel();
+		if (labelModel != null) {
+			label.setDefaultModel(labelModel);
+		} else {
+			label.setVisible(false);
+		}
+	}
 
 	@Override
 	protected void onBeforeRender() {
@@ -132,12 +160,5 @@ public class WSelectionInput extends WFormInputPanel {
 			isEnabledInHierarchy(),
 			getString("label.select", null, "select"),
 			getString("label.noOfSelection", null, "selection"));
-	}
-
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		Resource.addJQueryReference(response);
-		response.render(SEL_LIST_JS);
-		response.render(SEL_LIST_CSS);
 	}
 }

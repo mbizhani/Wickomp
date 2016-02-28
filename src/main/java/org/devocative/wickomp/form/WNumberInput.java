@@ -2,6 +2,7 @@ package org.devocative.wickomp.form;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class WNumberInput extends WFormInputPanel<Number> {
 	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
 
+	private Label label;
 	private TextField<String> numberField;
 
 	private Map<String, Object> options = new HashMap<>();
@@ -29,6 +31,8 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	public WNumberInput(String id, IModel<Number> model, Class<? extends Number> type) {
 		super(id, model);
 		setType(type);
+
+		add(label = new Label("label"));
 
 		numberField = new TextField<>("numberField", new Model<String>());
 		numberField.setOutputMarkupId(true);
@@ -58,6 +62,18 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	public WNumberInput setMax(Integer max) {
 		options.put("vMin", max);
 		return this;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		IModel<String> labelModel = getLabel();
+		if (labelModel != null) {
+			label.setDefaultModel(labelModel);
+		} else {
+			label.setVisible(false);
+		}
 	}
 
 	@Override
