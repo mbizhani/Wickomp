@@ -12,7 +12,11 @@ public class OPropertyColumn<T> extends OColumn<T> {
 	public String cellValue(T bean, String id, int colNo, String url) {
 		Object value = PropertyResolver.getValue(getField(), bean);
 		if (value != null) {
-			return formatter != null ? formatter.format(value) : value.toString();
+			try {
+				return formatter != null ? formatter.format(value) : value.toString();
+			} catch (Exception e) {
+				throw new RuntimeException("Formatting Problem: field = " + getField(), e);
+			}
 		}
 		return null;
 	}
