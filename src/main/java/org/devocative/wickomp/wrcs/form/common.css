@@ -5,6 +5,14 @@
 	padding: 1px;
 }
 
+.w-input-bool {
+	width: 60px;
+	direction: ltr;
+	padding: 1px 5px;
+	text-align: left;
+	font-size: 12px !important;
+}
+
 .w-inner-input {
 	background-color: inherit !important;
 	border: 0 !important;
@@ -15,4 +23,10 @@
 	text-align: center;
 	cursor: pointer;
 	border-radius: 2px;
+}
+
+.w-float-cell {
+	display: inline-block;
+	vertical-align: top;
+	margin: 3px 2px;
 }
