@@ -32,6 +32,11 @@ public class WTextInput extends WFormInputPanel<String> {
 		return this;
 	}
 
+	public WTextInput setLabelVisible(boolean visible) {
+		label.setVisible(visible);
+		return this;
+	}
+
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();

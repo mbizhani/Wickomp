@@ -64,6 +64,11 @@ public class WNumberInput extends WFormInputPanel<Number> {
 		return this;
 	}
 
+	public WNumberInput setLabelVisible(boolean visible) {
+		label.setVisible(visible);
+		return this;
+	}
+
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
