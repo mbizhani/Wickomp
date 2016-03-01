@@ -112,6 +112,9 @@ public class WAjaxButton extends Button {
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
 				super.updateAjaxAttributes(attributes);
 
+				// do not allow normal form submit to happen
+				attributes.setPreventDefault(true);
+
 				if (confirmationMessage != null) {
 					AjaxCallListener myAjaxCallListener = new AjaxCallListener() {
 						@Override

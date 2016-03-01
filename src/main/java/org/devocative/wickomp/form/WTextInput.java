@@ -57,7 +57,7 @@ public class WTextInput extends WFormInputPanel<String> {
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		setConvertedInput(textField.getConvertedInput());
 	}
 }

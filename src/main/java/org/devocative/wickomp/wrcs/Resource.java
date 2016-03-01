@@ -10,7 +10,7 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 
 public abstract class Resource {
 	public static HeaderItem getCommonJS(String path) {
@@ -24,7 +24,7 @@ public abstract class Resource {
 	}
 
 	public static void addJQueryReference(IHeaderResponse response) {
-		IJavaScriptLibrarySettings settings = WebApplication.get().getJavaScriptLibrarySettings();
+		JavaScriptLibrarySettings settings = WebApplication.get().getJavaScriptLibrarySettings();
 
 		response.render(JavaScriptHeaderItem.forReference(settings.getJQueryReference()));
 		response.render(JavaScriptHeaderItem.forReference(settings.getWicketEventReference()));

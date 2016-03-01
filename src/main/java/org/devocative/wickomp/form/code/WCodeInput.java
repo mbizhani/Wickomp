@@ -39,7 +39,7 @@ public class WCodeInput extends WFormInputPanel<String> {
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		setConvertedInput(editor.getConvertedInput());
 	}
 

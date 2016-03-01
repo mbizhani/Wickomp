@@ -82,7 +82,7 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		List<T> list = new ArrayList<>();
 		String[] inputAsArray = getInputAsArray();
 		if (inputAsArray != null) {

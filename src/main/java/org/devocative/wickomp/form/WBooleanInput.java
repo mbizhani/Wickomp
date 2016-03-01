@@ -78,7 +78,7 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		String input = hidden.getConvertedInput();
 		setConvertedInput(input != null ? Boolean.valueOf(input) : null);
 	}

@@ -143,7 +143,7 @@ public class WSelectionInput extends WFormInputPanel {
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		setConvertedInput(choices.getConvertedInput());
 	}
 

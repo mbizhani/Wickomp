@@ -164,7 +164,7 @@ public class WDateInput extends WFormInputPanel<Date> {
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		Date date = null;
 
 		Integer yearValue = year.getConvertedInput();

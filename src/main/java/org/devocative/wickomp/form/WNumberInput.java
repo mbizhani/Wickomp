@@ -93,7 +93,7 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		String convertedInput = numberField.getConvertedInput();
 		if (convertedInput != null) {
 			if (options.get("aSep") != null) {

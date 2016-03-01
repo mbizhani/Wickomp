@@ -61,7 +61,7 @@ public abstract class WBaseRangeInput<T extends Serializable> extends WFormInput
 	}
 
 	@Override
-	protected void convertInput() {
+	public void convertInput() {
 		T lowerValue = lower.getConvertedInput();
 		T upperValue = upper.getConvertedInput();
 
