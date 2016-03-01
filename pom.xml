@@ -22,9 +22,9 @@
 	</licenses>
 
 	<properties>
-		<wicket.version>6.20.0</wicket.version>
+		<wicket.version>7.2.0</wicket.version>
+		<slf4j>1.7.18</slf4j>
 		<jetty.version>8.1.16.v20140903</jetty.version>
-		<slf4j>1.7.13</slf4j>
 	</properties>
 
 	<dependencies>
@@ -126,11 +126,13 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
+					<stopKey/>
+					<stopPort/>
 					<useTestClasspath>true</useTestClasspath>
 					<webAppSourceDirectory>src/test/webapp</webAppSourceDirectory>
 					<connectors>
 						<connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
-							<port>8080</port>
+							<port>8081</port>
 							<maxIdleTime>3600000</maxIdleTime>
 						</connector>
 					</connectors>
