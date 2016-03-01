@@ -1,5 +1,6 @@
 package org.devocative.wickomp.form.code;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -51,7 +52,7 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 		response.render(Resource.getCommonJS(String.format("codemirror/mode/%s.js", options.getMode().getJsFile())));
 
-		if(options.getMode().isHasHint()) {
+		if (options.getMode().isHasHint()) {
 			response.render(Resource.getCommonCSS("codemirror/hint/show-hint.css"));
 			response.render(Resource.getCommonJS("codemirror/hint/show-hint.js"));
 			response.render(Resource.getCommonJS(String.format("codemirror/hint/%s-hint.js", options.getMode().getJsFile())));
@@ -66,6 +67,11 @@ public class WCodeInput extends WFormInputPanel<String> {
 			editor.getMarkupId(),
 			JsonUtil.toJson(options));
 
-		getWebResponse().write("<script>" + script + "</script>");
+		AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
+		if (target == null) {
+			getResponse().write(String.format("<script>%s</script>", script));
+		} else {
+			target.appendJavaScript(script);
+		}
 	}
 }
