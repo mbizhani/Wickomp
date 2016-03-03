@@ -165,6 +165,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 				result.setRows(createRObjectList(data));
 				result.setTotal(count);
 			} catch (Exception e) {
+				logger.warn("Grid.DataSource: id=" + getId(), e);
 				result.setError(exceptionMessageHandler.handleMessage(this, e));
 			}
 			sendJSONResponse(JsonUtil.toJson(result));

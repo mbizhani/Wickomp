@@ -12,12 +12,15 @@ import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.html.WMessager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WAjaxButton extends Button {
+	private static final Logger logger = LoggerFactory.getLogger(WAjaxButton.class);
 
 	private HTMLBase icon;
 	private IModel<String> caption;
@@ -101,6 +104,8 @@ public class WAjaxButton extends Button {
 				try {
 					WAjaxButton.this.onSubmit(target);
 				} catch (Exception e) {
+					logger.warn("WAjaxButton.onSubmit: id=" + getId(), e);
+
 					WAjaxButton.this.onException(target, e);
 				}
 			}
