@@ -9,6 +9,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.IModel;
+import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.html.WMessager;
 
@@ -18,9 +19,10 @@ import java.util.List;
 
 public class WAjaxButton extends Button {
 
-	private IModel<String> confirmationMessage;
-	private IModel<String> caption;
 	private HTMLBase icon;
+	private IModel<String> caption;
+	private IModel<String> confirmationMessage;
+	private IExceptionToMessageHandler exceptionToMessageHandler = IExceptionToMessageHandler.DEFAULT;
 
 	public WAjaxButton(String id) {
 		this(id, null, null);
@@ -49,6 +51,11 @@ public class WAjaxButton extends Button {
 
 	public WAjaxButton setIcon(HTMLBase icon) {
 		this.icon = icon;
+		return this;
+	}
+
+	public WAjaxButton setExceptionToMessageHandler(IExceptionToMessageHandler exceptionToMessageHandler) {
+		this.exceptionToMessageHandler = exceptionToMessageHandler;
 		return this;
 	}
 
@@ -142,7 +149,7 @@ public class WAjaxButton extends Button {
 	protected void onException(AjaxRequestTarget target, Exception e) {
 		if (e.getMessage() != null) {
 			List<Serializable> error = new ArrayList<>();
-			error.add(getString(e.getMessage(), null, e.getMessage()));
+			error.add(exceptionToMessageHandler.handleMessage(this, e));
 			onError(target, error);
 		}
 	}

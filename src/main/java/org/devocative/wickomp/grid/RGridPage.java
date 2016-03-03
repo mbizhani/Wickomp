@@ -13,6 +13,8 @@ public class RGridPage extends Result {
 
 	private Long total;
 
+	private String error;
+
 	public RObjectList getRows() {
 		return rows;
 	}
@@ -37,6 +39,15 @@ public class RGridPage extends Result {
 
 	public RGridPage setTotal(Long total) {
 		this.total = total;
+		return this;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public RGridPage setError(String error) {
+		this.error = error;
 		return this;
 	}
 }

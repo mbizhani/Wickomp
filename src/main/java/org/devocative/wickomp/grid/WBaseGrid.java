@@ -4,6 +4,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestParameters;
+import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WCallbackComponent;
 import org.devocative.wickomp.data.RObject;
@@ -30,6 +31,8 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	private OBaseGrid<T> options;
 	private WGridDataSource<T> dataSource;
+	private IExceptionToMessageHandler exceptionMessageHandler = IExceptionToMessageHandler.DEFAULT;
+
 	protected List<WSortField> sortFieldList = new ArrayList<>();
 	protected Map<String, IModel<T>> pageData = new HashMap<>();
 
@@ -51,6 +54,11 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	public WGridDataSource<T> getDataSource() {
 		return dataSource;
+	}
+
+	public WBaseGrid<T> setExceptionMessageHandler(IExceptionToMessageHandler exceptionMessageHandler) {
+		this.exceptionMessageHandler = exceptionMessageHandler;
+		return this;
 	}
 
 	// ------------------------- METHODS
@@ -149,13 +157,16 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
 
-			List<T> data = dataSource.list(pageNum, pageSize, sortFieldList);
-			long count = dataSource.count();
-
 			RGridPage result = new RGridPage();
-			result.setRows(createRObjectList(data));
-			result.setTotal(count);
+			try {
+				List<T> data = dataSource.list(pageNum, pageSize, sortFieldList);
+				long count = dataSource.count();
 
+				result.setRows(createRObjectList(data));
+				result.setTotal(count);
+			} catch (Exception e) {
+				result.setError(exceptionMessageHandler.handleMessage(this, e));
+			}
 			sendJSONResponse(JsonUtil.toJson(result));
 		}
 	}

@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.form.WAjaxButton;
 import org.devocative.wickomp.html.icon.FontAwesome;
@@ -27,6 +28,7 @@ public class WWizardPanel extends WPanel {
 	private WebMarkupContainer buttonBar, content;
 	private Label titleLbl;
 	private String title;
+	private IExceptionToMessageHandler exceptionToMessageHandler = IExceptionToMessageHandler.DEFAULT;
 
 	public WWizardPanel(String id, OWizard oWizard) {
 		this(id, oWizard, ButtonBarPlace.BOTTOM);
@@ -84,6 +86,11 @@ public class WWizardPanel extends WPanel {
 		return this;
 	}
 
+	public WWizardPanel setExceptionToMessageHandler(IExceptionToMessageHandler exceptionToMessageHandler) {
+		this.exceptionToMessageHandler = exceptionToMessageHandler;
+		return this;
+	}
+
 	// ------------- Protected Methods
 
 	protected void clearSkippedSteps() {
@@ -109,7 +116,7 @@ public class WWizardPanel extends WPanel {
 	protected void onException(AjaxRequestTarget target, String stepId, Exception e) {
 		if (e.getMessage() != null) {
 			List<Serializable> error = new ArrayList<>();
-			error.add(getString(e.getMessage(), null, e.getMessage()));
+			error.add(exceptionToMessageHandler.handleMessage(this, e));
 			onError(target, stepId, error);
 		}
 	}

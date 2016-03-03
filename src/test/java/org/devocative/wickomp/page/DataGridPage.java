@@ -127,7 +127,7 @@ public class DataGridPage extends BasePage {
 
 			@Override
 			public long count() {
-				return list.size();
+				throw new RuntimeException("Error dari!");
 			}
 
 			@Override

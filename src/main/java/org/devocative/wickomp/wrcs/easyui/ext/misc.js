@@ -113,3 +113,10 @@ function handleSelectionIndicator(gridId, selectionHandler) {
 		buttons: butts
 	});
 }
+
+function handleError(data) {
+	if (data.error) {
+		$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
+	}
+	return data;
+}

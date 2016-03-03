@@ -86,6 +86,11 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
+	@JsonRawValue
+	public String getLoadFilter() {
+		return "handleError";
+	}
+
 	public String getLoadMsg() {
 		return "...";
 	}
