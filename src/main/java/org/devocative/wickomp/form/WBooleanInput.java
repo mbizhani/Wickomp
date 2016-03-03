@@ -31,7 +31,7 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 
 		add(label = new Label("label"));
 
-		hidden = new HiddenField<>("hidden", new Model<String>());
+		hidden = new HiddenField<>("hidden", new Model<String>(), String.class);
 		hidden.setOutputMarkupId(true);
 		add(hidden);
 

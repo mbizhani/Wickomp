@@ -21,7 +21,7 @@ public class WTextInput extends WFormInputPanel<String> {
 
 		add(label = new Label("label"));
 
-		textField = new TextField<>("textField", new Model<String>());
+		textField = new TextField<>("textField", new Model<String>(), String.class);
 		add(textField);
 
 		add(new CommonBehavior());
