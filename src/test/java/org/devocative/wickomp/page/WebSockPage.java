@@ -6,14 +6,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
-import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
-import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
-import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
-import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.devocative.wickomp.BasePage;
+import org.devocative.wickomp.async.BroadcastCaptureBehavior;
 import org.devocative.wickomp.form.WAsyncAjaxButton;
-import org.devocative.wickomp.vo.PushMessage;
 
 import java.io.Serializable;
 
@@ -47,7 +42,7 @@ public class WebSockPage extends BasePage {
 		});
 		add(form);
 
-		add(new WebSocketBehavior() {
+		/*add(new WebSocketBehavior() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -72,6 +67,17 @@ public class WebSockPage extends BasePage {
 					if (msg.getNo() % 5 == 0) {
 						handler.appendJavaScript(String.format("console.log('%s');", msg.getNo()));
 					}
+				}
+			}
+		});*/
+
+		add(new BroadcastCaptureBehavior<Integer>(Integer.class) {
+			@Override
+			protected void onMessage(IPartialPageRequestHandler handler, Integer message) {
+				label222.setDefaultModelObject(message);
+				handler.add(label222);
+				if (message % 5 == 0) {
+					handler.appendJavaScript(String.format("console.log('%s');", message));
 				}
 			}
 		});

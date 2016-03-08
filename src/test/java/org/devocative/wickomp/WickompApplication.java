@@ -3,9 +3,6 @@ package org.devocative.wickomp;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.ws.WebSocketSettings;
-import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
-import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
@@ -13,7 +10,6 @@ import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.async.AsyncToken;
 import org.devocative.wickomp.async.IAsyncRequestHandler;
 import org.devocative.wickomp.page.HomePage;
-import org.devocative.wickomp.vo.PushMessage;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +33,8 @@ public class WickompApplication extends WebApplication {
 
 		getResourceSettings().getStringResourceLoaders().add(0, new BundleStringResourceLoader("org.devocative.wickomp.Test"));
 
+		AsyncMediator.init(this);
+
 		Thread th = new Thread() {
 			private int no = 0;
 
@@ -46,10 +44,7 @@ public class WickompApplication extends WebApplication {
 					@Override
 					public void run() {
 						no++;
-						WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(WickompApplication.this);
-						IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
-						WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(registry);
-						broadcaster.broadcastAll(WickompApplication.this, new PushMessage(no));
+						AsyncMediator.broadcast(no);
 					}
 				}, 5000, 2000);
 			}
