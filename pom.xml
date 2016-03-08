@@ -24,7 +24,7 @@
 	<properties>
 		<wicket.version>7.2.0</wicket.version>
 		<slf4j>1.7.18</slf4j>
-		<jetty.version>8.1.16.v20140903</jetty.version>
+		<jetty.version>9.2.15.v20160210</jetty.version>
 	</properties>
 
 	<dependencies>
@@ -48,6 +48,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-native-websocket-javax</artifactId>
+			<version>${wicket.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.6.4</version>
@@ -67,8 +73,8 @@
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -111,7 +117,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.5.1</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
@@ -122,20 +128,15 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
-					<stopKey/>
-					<stopPort/>
-					<useTestClasspath>true</useTestClasspath>
+					<useTestScope>true</useTestScope>
 					<webAppSourceDirectory>src/test/webapp</webAppSourceDirectory>
-					<connectors>
-						<connector implementation="org.eclipse.jetty.server.bio.SocketConnector">
-							<port>8081</port>
-							<maxIdleTime>3600000</maxIdleTime>
-						</connector>
-					</connectors>
+					<httpConnector>
+						<port>8081</port>
+					</httpConnector>
 				</configuration>
 			</plugin>
 
