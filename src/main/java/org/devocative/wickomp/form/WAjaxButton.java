@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WAjaxButton extends Button {
+public abstract class WAjaxButton extends Button {
 	private static final Logger logger = LoggerFactory.getLogger(WAjaxButton.class);
 
 	private HTMLBase icon;
@@ -142,8 +142,7 @@ public class WAjaxButton extends Button {
 		};
 	}
 
-	protected void onSubmit(AjaxRequestTarget target) {
-	}
+	protected abstract void onSubmit(AjaxRequestTarget target);
 
 	protected void onAfterSubmit(AjaxRequestTarget target) {
 	}
