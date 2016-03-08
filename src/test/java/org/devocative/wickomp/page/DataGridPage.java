@@ -127,7 +127,7 @@ public class DataGridPage extends BasePage {
 
 			@Override
 			public long count() {
-				throw new RuntimeException("Error dari!");
+				return list.size();
 			}
 
 			@Override
@@ -184,8 +184,7 @@ public class DataGridPage extends BasePage {
 		add(new AjaxLink("showGrid") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				grid1.setVisible(true);
-				target.add(grid1);
+				grid1.makeVisible(target);
 			}
 		});
 	}

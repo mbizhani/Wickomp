@@ -63,11 +63,25 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	// ------------------------- METHODS
 
-	public void loadData(AjaxRequestTarget target) {
+	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
 		if (dataSource.isEnabled()) {
-			target.appendJavaScript(String.format("$(\"#%1$s\").%2$s(\"options\")[\"url\"]=\"%3$s\";$(\"#%1$s\").%2$s(\"reload\");",
-				getMarkupId(), getJQueryFunction(), getCallbackURL()));
+			RGridPage gridPage = getGridPage(1, options.getPageSize());
+
+			target.appendJavaScript(String.format(
+				"$(\"#%1$s\").%2$s(\"options\")[\"url\"]=\"%3$s\";" +
+					"$(\"#%1$s\").%2$s(\"loadData\", %4$s);",
+				getMarkupId(), getJQueryFunction(), getCallbackURL(),
+				JsonUtil.toJson(gridPage)));
 		}
+		return this;
+	}
+
+	public WBaseGrid<T> makeVisible(AjaxRequestTarget target) {
+		if (!isVisible()) {
+			setVisible(true);
+			target.add(this);
+		}
+		return this;
 	}
 
 	// ------------------------- INTERNAL METHODS
@@ -157,17 +171,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
 
-			RGridPage result = new RGridPage();
-			try {
-				List<T> data = dataSource.list(pageNum, pageSize, sortFieldList);
-				long count = dataSource.count();
-
-				result.setRows(createRObjectList(data));
-				result.setTotal(count);
-			} catch (Exception e) {
-				logger.warn("Grid.DataSource: id=" + getId(), e);
-				result.setError(exceptionMessageHandler.handleMessage(this, e));
-			}
+			RGridPage result = getGridPage(pageNum, pageSize);
 			sendJSONResponse(JsonUtil.toJson(result));
 		}
 	}
@@ -192,6 +196,21 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 				getResponse().write(builder.toString());
 			}
 		}
+	}
+
+	protected final RGridPage getGridPage(int pageNum, int pageSize) {
+		RGridPage result = new RGridPage();
+		try {
+			List<T> data = dataSource.list(pageNum, pageSize, sortFieldList);
+			long count = dataSource.count();
+
+			result.setRows(createRObjectList(data));
+			result.setTotal(count);
+		} catch (Exception e) {
+			logger.warn("Grid.DataSource: id=" + getId(), e);
+			result.setError(exceptionMessageHandler.handleMessage(this, e));
+		}
+		return result;
 	}
 
 	protected RObjectList createRObjectList(List<T> data) {
