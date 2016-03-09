@@ -196,10 +196,21 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		RGridPage result = new RGridPage();
 		try {
 			List<T> data = dataSource.list(pageNum, pageSize, sortFieldList);
-			long count = dataSource.count();
+			if (data != null) {
+				long count;
+				if (data.size() >= pageSize) {
+					count = dataSource.count();
+					if (data.size() > pageSize) {
+						logger.warn("DataSource.list returns collection(size={}) greater than pageSize={}!",
+							data.size(), pageSize);
+					}
+				} else {
+					count = (pageNum - 1) * pageSize + data.size();
+				}
 
-			result.setRows(createRObjectList(data));
-			result.setTotal(count);
+				result.setRows(createRObjectList(data));
+				result.setTotal(count);
+			}
 		} catch (Exception e) {
 			logger.warn("Grid.DataSource: id=" + getId(), e);
 			result.setError(exceptionMessageHandler.handleMessage(this, e));
