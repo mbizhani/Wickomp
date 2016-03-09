@@ -9,8 +9,6 @@ import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WCallbackComponent;
 import org.devocative.wickomp.data.RObject;
 import org.devocative.wickomp.data.RObjectList;
-import org.devocative.wickomp.data.WGridDataSource;
-import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
@@ -30,13 +28,13 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
 
 	private OBaseGrid<T> options;
-	private WGridDataSource<T> dataSource;
+	private IGridDataSource<T> dataSource;
 	private IExceptionToMessageHandler exceptionMessageHandler = IExceptionToMessageHandler.DEFAULT;
 
 	protected List<WSortField> sortFieldList = new ArrayList<>();
 	protected Map<String, IModel<T>> pageData = new HashMap<>();
 
-	public WBaseGrid(String id, OBaseGrid<T> options, WGridDataSource<T> dataSource) {
+	public WBaseGrid(String id, OBaseGrid<T> options, IGridDataSource<T> dataSource) {
 		super(id, options);
 
 		this.dataSource = dataSource;

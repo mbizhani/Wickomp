@@ -1,11 +1,11 @@
-package org.devocative.wickomp.data;
+package org.devocative.wickomp.grid;
 
 import org.apache.wicket.model.IModel;
 
 import java.io.Serializable;
 import java.util.List;
 
-public interface WGridDataSource<T> extends Serializable {
+public interface IGridDataSource<T> extends Serializable {
 	/**
 	 * This method returns a page of result
 	 *

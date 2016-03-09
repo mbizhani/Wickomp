@@ -5,13 +5,13 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
-import org.devocative.wickomp.data.WGridDataSource;
-import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.formatter.OBooleanFormatter;
 import org.devocative.wickomp.formatter.ODateFormatter;
 import org.devocative.wickomp.formatter.ONumberFormatter;
+import org.devocative.wickomp.grid.IGridDataSource;
 import org.devocative.wickomp.grid.OGrid;
 import org.devocative.wickomp.grid.WDataGrid;
+import org.devocative.wickomp.grid.WSortField;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OHiddenColumn;
@@ -117,7 +117,7 @@ public class DataGridPage extends BasePage {
 		grid2Opt.setHeight(OSize.fixed(400));
 
 		final WDataGrid<PersonVO> grid2;
-		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new WGridDataSource<PersonVO>() {
+		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new IGridDataSource<PersonVO>() {
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);
@@ -159,7 +159,7 @@ public class DataGridPage extends BasePage {
 		grid1Opt.setHeight(OSize.fixed(400));
 
 		final WDataGrid<PersonVO> grid1;
-		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new WGridDataSource<PersonVO>() {
+		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new IGridDataSource<PersonVO>() {
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);

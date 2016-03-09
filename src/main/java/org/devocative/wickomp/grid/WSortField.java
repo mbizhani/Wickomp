@@ -1,4 +1,4 @@
-package org.devocative.wickomp.data;
+package org.devocative.wickomp.grid;
 
 import java.io.Serializable;
 

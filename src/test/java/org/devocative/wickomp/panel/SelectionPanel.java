@@ -4,13 +4,13 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WPanel;
-import org.devocative.wickomp.data.WGridDataSource;
-import org.devocative.wickomp.data.WSortField;
 import org.devocative.wickomp.formatter.OBooleanFormatter;
 import org.devocative.wickomp.formatter.ODateFormatter;
 import org.devocative.wickomp.formatter.ONumberFormatter;
+import org.devocative.wickomp.grid.IGridDataSource;
 import org.devocative.wickomp.grid.OGrid;
 import org.devocative.wickomp.grid.WDataGrid;
+import org.devocative.wickomp.grid.WSortField;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
@@ -64,7 +64,7 @@ public class SelectionPanel extends WPanel {
 		;
 //		grid1Opt.setFit(true);
 
-		layout.add(new WDataGrid<>("grid", grid1Opt, new WGridDataSource<PersonVO>() {
+		layout.add(new WDataGrid<>("grid", grid1Opt, new IGridDataSource<PersonVO>() {
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);

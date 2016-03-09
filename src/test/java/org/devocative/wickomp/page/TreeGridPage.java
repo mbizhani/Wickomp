@@ -5,9 +5,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.WModel;
-import org.devocative.wickomp.data.WSortField;
-import org.devocative.wickomp.data.WTreeGridDataSource;
+import org.devocative.wickomp.grid.ITreeGridDataSource;
 import org.devocative.wickomp.grid.OTreeGrid;
+import org.devocative.wickomp.grid.WSortField;
 import org.devocative.wickomp.grid.WTreeGrid;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
@@ -53,7 +53,7 @@ public class TreeGridPage extends BasePage {
 			.setColumns(columnList)
 			.setHeight(OSize.fixed(300));
 
-		add(new WTreeGrid<>("treegrid", treeGrid, new WTreeGridDataSource<EmployeeVO>() {
+		add(new WTreeGrid<>("treegrid", treeGrid, new ITreeGridDataSource<EmployeeVO>() {
 			@Override
 			public List<EmployeeVO> listByParent(Serializable parentId, List<WSortField> sortFields) {
 				List<EmployeeVO> result = new ArrayList<>();

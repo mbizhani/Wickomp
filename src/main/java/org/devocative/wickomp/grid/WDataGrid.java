@@ -1,9 +1,7 @@
 package org.devocative.wickomp.grid;
 
-import org.devocative.wickomp.data.WGridDataSource;
-
 public class WDataGrid<T> extends WBaseGrid<T> {
-	public WDataGrid(String id, OGrid<T> options, WGridDataSource<T> dataSource) {
+	public WDataGrid(String id, OGrid<T> options, IGridDataSource<T> dataSource) {
 		super(id, options, dataSource);
 	}
 
