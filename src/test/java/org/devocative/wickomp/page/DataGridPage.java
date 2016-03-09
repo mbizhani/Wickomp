@@ -114,7 +114,7 @@ public class DataGridPage extends BasePage {
 			.setSelectionJSHandler("function(asd){alert(asd.toSource());}")
 			.addToolbarButton(new OGridGroupingButton<PersonVO>())
 		;
-		grid2Opt.setHeight(OSize.fixed(500));
+		grid2Opt.setHeight(OSize.fixed(400));
 
 		final WDataGrid<PersonVO> grid2;
 		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new WGridDataSource<PersonVO>() {
@@ -136,12 +136,12 @@ public class DataGridPage extends BasePage {
 			}
 
 		}));
-		grid2.getDataSource().setEnabled(false);
+		grid2.setEnabled(false);
 
 		add(new AjaxLink("enableGrid2") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				grid2.getDataSource().setEnabled(true);
+				grid2.setEnabled(true);
 				grid2.loadData(target);
 			}
 		});
@@ -156,7 +156,7 @@ public class DataGridPage extends BasePage {
 				// .setGroupField("col01")
 			.addToolbarButton(new OExportExcelButton<PersonVO>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), "Export.xlsx", 1000))
 			.addToolbarButton(new OGridGroupingButton<PersonVO>());
-		grid1Opt.setHeight(OSize.fixed(300));
+		grid1Opt.setHeight(OSize.fixed(400));
 
 		final WDataGrid<PersonVO> grid1;
 		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new WGridDataSource<PersonVO>() {

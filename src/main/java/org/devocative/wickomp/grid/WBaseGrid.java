@@ -52,10 +52,6 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		return options;
 	}
 
-	public WGridDataSource<T> getDataSource() {
-		return dataSource;
-	}
-
 	public WBaseGrid<T> setExceptionMessageHandler(IExceptionToMessageHandler exceptionMessageHandler) {
 		this.exceptionMessageHandler = exceptionMessageHandler;
 		return this;
@@ -64,7 +60,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	// ------------------------- METHODS
 
 	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
-		if (dataSource.isEnabled()) {
+		if (isEnabled()) {
 			RGridPage gridPage = getGridPage(1, options.getPageSize());
 
 			target.appendJavaScript(String.format(
@@ -107,7 +103,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		super.onBeforeRender();
 
 		// It should be called in onBeforeRender, not worked in onInitialize, causing StalePageException
-		if (!dataSource.isEnabled()) {
+		if (!isEnabled()) {
 			options.setUrl(null);
 		}
 		/*
@@ -129,7 +125,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	@Override
 	protected void onRequest(IRequestParameters parameters) {
 
-		if (!dataSource.isEnabled()) {
+		if (!isEnabled()) {
 			return;
 		}
 

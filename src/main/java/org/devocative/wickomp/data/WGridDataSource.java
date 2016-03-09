@@ -5,9 +5,7 @@ import org.apache.wicket.model.IModel;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class WGridDataSource<T> implements Serializable {
-	private boolean enabled = true;
-
+public interface WGridDataSource<T> extends Serializable {
 	/**
 	 * This method returns a page of result
 	 *
@@ -16,18 +14,9 @@ public abstract class WGridDataSource<T> implements Serializable {
 	 * @param sortFields list of fields for sorting the result (optional)
 	 * @return list of result
 	 */
-	public abstract List<T> list(long pageIndex, long pageSize, List<WSortField> sortFields);
+	List<T> list(long pageIndex, long pageSize, List<WSortField> sortFields);
 
-	public abstract long count();
+	long count();
 
-	public abstract IModel<T> model(T object);
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public WGridDataSource<T> setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		return this;
-	}
+	IModel<T> model(T object);
 }
