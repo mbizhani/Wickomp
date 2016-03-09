@@ -1,13 +1,9 @@
 package org.devocative.wickomp.form;
 
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.async.AsyncBehavior;
-import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.async.IAsyncAction;
 import org.devocative.wickomp.html.HTMLBase;
-
-import java.io.Serializable;
 
 public abstract class WAsyncAjaxButton extends WAjaxButton implements IAsyncAction {
 	private AsyncBehavior asyncBehavior;
@@ -31,10 +27,8 @@ public abstract class WAsyncAjaxButton extends WAjaxButton implements IAsyncActi
 		add(asyncBehavior = new AsyncBehavior(this));
 	}
 
-	public abstract void onAsyncResult(IPartialPageRequestHandler handler, Serializable result);
-
 	@Override
-	public void sendAsyncRequest(String handler, Object requestPayLoad) {
-		AsyncMediator.sendRequest(handler, asyncBehavior.getAsyncToken(), requestPayLoad);
+	public void sendAsyncRequest(String handlerId, Object requestPayLoad) {
+		asyncBehavior.sendAsyncRequest(handlerId, requestPayLoad);
 	}
 }

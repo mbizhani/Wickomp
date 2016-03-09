@@ -2,10 +2,17 @@ package org.devocative.wickomp.async;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 
-public class AsyncBehavior extends Behavior {
+import java.io.Serializable;
+
+public class AsyncBehavior extends Behavior implements IAsyncAction {
 	private WebSocketAsyncBehavior webSocketAsyncBehavior;
 	private IAsyncResponseHandler asyncResponseHandler;
+
+	public AsyncBehavior() {
+		asyncResponseHandler = this;
+	}
 
 	public AsyncBehavior(IAsyncResponseHandler asyncResponseHandler) {
 		this.asyncResponseHandler = asyncResponseHandler;
@@ -17,7 +24,12 @@ public class AsyncBehavior extends Behavior {
 		component.add(webSocketAsyncBehavior);
 	}
 
-	public AsyncToken getAsyncToken() {
-		return webSocketAsyncBehavior.getAsyncToken();
+	@Override
+	public void sendAsyncRequest(String handlerId, Object requestPayLoad) {
+		AsyncMediator.sendRequest(handlerId, webSocketAsyncBehavior.getAsyncToken(), requestPayLoad);
+	}
+
+	@Override
+	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
 	}
 }

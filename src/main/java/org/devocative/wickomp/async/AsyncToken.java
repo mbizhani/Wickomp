@@ -5,18 +5,18 @@ import java.util.UUID;
 
 public class AsyncToken implements Serializable {
 	private String id = UUID.randomUUID().toString();
-	private String handler;
+	private String handlerId;
 
 	public String getId() {
 		return id;
 	}
 
-	public String getHandler() {
-		return handler;
+	public String getHandlerId() {
+		return handlerId;
 	}
 
-	public AsyncToken setHandler(String handler) {
-		this.handler = handler;
+	public AsyncToken setHandlerId(String handlerId) {
+		this.handlerId = handlerId;
 		return this;
 	}
 

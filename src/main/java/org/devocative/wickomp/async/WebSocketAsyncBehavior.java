@@ -38,7 +38,7 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 		if (message instanceof AsyncResult) {
 			AsyncResult result = (AsyncResult) message;
 			if (result.getToken().equals(asyncToken)) {
-				responseHandler.onAsyncResult(handler, result.getResult());
+				responseHandler.onAsyncResult(asyncToken.getHandlerId(), handler, result.getResult());
 			}
 		}
 	}

@@ -35,7 +35,7 @@ public class WebSockPage extends BasePage {
 			}
 
 			@Override
-			public void onAsyncResult(IPartialPageRequestHandler handler, Serializable result) {
+			public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
 				label333.setDefaultModelObject(result);
 				handler.add(label333);
 			}
@@ -95,7 +95,7 @@ public class WebSockPage extends BasePage {
 			label222.setDefaultModelObject(msg.getNo());
 			wsEvent.getHandler().add(label222);
 			if (msg.getNo() % 5 == 0) {
-				wsEvent.getHandler().appendJavaScript(String.format("console.log('%s');", msg.getNo()));
+				wsEvent.getHandlerId().appendJavaScript(String.format("console.log('%s');", msg.getNo()));
 			}
 		}
 	}*/

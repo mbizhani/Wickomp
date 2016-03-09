@@ -26,7 +26,7 @@ public class AsyncMediator {
 	}
 
 	public synchronized static void sendRequest(String handlerId, AsyncToken asyncToken, Object requestPayLoad) {
-		asyncToken.setHandler(handlerId);
+		asyncToken.setHandlerId(handlerId);
 		HANDLERS_MAP.get(handlerId).onRequest(asyncToken, requestPayLoad);
 	}
 
