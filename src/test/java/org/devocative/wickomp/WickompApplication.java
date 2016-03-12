@@ -6,16 +6,20 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
+import org.devocative.adroit.ObjectBuilder;
 import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.async.AsyncToken;
 import org.devocative.wickomp.async.IAsyncRequestHandler;
 import org.devocative.wickomp.page.HomePage;
+import org.devocative.wickomp.vo.PersonVO;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import java.io.Serializable;
+import java.util.*;
 
 public class WickompApplication extends WebApplication {
+
+	private List<PersonVO> list;
+
 	@Override
 	public Class<? extends WebPage> getHomePage() {
 		return HomePage.class;
@@ -24,6 +28,8 @@ public class WickompApplication extends WebApplication {
 	@Override
 	public void init() {
 		super.init();
+
+		list = PersonVO.list();
 
 		getMarkupSettings()
 			.setStripWicketTags(true)
@@ -55,6 +61,38 @@ public class WickompApplication extends WebApplication {
 			@Override
 			public void onRequest(AsyncToken asyncToken, Object requestPayLoad) {
 				WTimer.start(asyncToken, (Integer) requestPayLoad);
+			}
+		});
+
+		AsyncMediator.registerHandler("GRID_PAGER", new IAsyncRequestHandler() {
+			@Override
+			public void onRequest(final AsyncToken token, Object requestPayLoad) {
+				Map<String, Object> map = (Map<String, Object>) requestPayLoad;
+				final long first = (long) map.get("first");
+				long size = (long) map.get("size");
+
+				int start = (int) ((first - 1) * size);
+				int end = (int) (first * size);
+				final List<PersonVO> result = list.subList(start, Math.min(end, list.size()));
+
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+						AsyncMediator.sendResponse(token, (Serializable) ObjectBuilder
+								.createMap(new HashMap<String, Object>())
+								.put("list", result)
+								.put("count", list.size())
+								.get()
+						);
+
+					}
+				}.start();
 			}
 		});
 	}

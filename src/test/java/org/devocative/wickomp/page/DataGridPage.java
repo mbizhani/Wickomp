@@ -2,16 +2,17 @@ package org.devocative.wickomp.page;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.devocative.adroit.ObjectBuilder;
 import org.devocative.wickomp.BasePage;
+import org.devocative.wickomp.async.AsyncBehavior;
+import org.devocative.wickomp.async.IAsyncResponseHandler;
 import org.devocative.wickomp.formatter.OBooleanFormatter;
 import org.devocative.wickomp.formatter.ODateFormatter;
 import org.devocative.wickomp.formatter.ONumberFormatter;
-import org.devocative.wickomp.grid.IGridDataSource;
-import org.devocative.wickomp.grid.OGrid;
-import org.devocative.wickomp.grid.WDataGrid;
-import org.devocative.wickomp.grid.WSortField;
+import org.devocative.wickomp.grid.*;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OHiddenColumn;
@@ -27,10 +28,15 @@ import org.devocative.wickomp.vo.PersonVO;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class DataGridPage extends BasePage {
+public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 	private List<PersonVO> list;
+	private AsyncBehavior asyncBehavior;
+	WDataGrid<PersonVO> grid2;
 
 	public DataGridPage() {
 		list = PersonVO.list();
@@ -98,12 +104,20 @@ public class DataGridPage extends BasePage {
 				.setFormatter(OBooleanFormatter.bool()))
 		;
 
-		initGrid1(columns);
+		add(asyncBehavior = new AsyncBehavior(this));
 
-		initGrid2(columns);
+		visibleGrid(columns);
+
+		enabledGrid(columns);
 	}
 
-	private void initGrid2(OColumnList<PersonVO> columns) {
+	@Override
+	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
+		Map<String, Object> map = (Map<String, Object>) result;
+		grid2.pushData(handler, (List) map.get("list"), (int) map.get("count"));
+	}
+
+	private void enabledGrid(OColumnList<PersonVO> columns) {
 		OGrid<PersonVO> grid2Opt = new OGrid<>();
 		grid2Opt
 			.setGroupStyle("background-color:#dddddd")
@@ -116,19 +130,26 @@ public class DataGridPage extends BasePage {
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
 
-		final WDataGrid<PersonVO> grid2;
-		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new IGridDataSource<PersonVO>() {
-			@Override
-			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
-				int start = (int) ((first - 1) * size);
-				int end = (int) (first * size);
-				return list.subList(start, Math.min(end, list.size()));
-			}
+		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new IGridAsyncDataSource<PersonVO>() {
 
 			@Override
+			public void list(long first, long size, List<WSortField> sortFields) {
+				/*int start = (int) ((first - 1) * size);
+				int end = (int) (first * size);
+				return list.subList(start, Math.min(end, list.size()));*/
+				asyncBehavior.sendAsyncRequest("GRID_PAGER",
+					ObjectBuilder
+						.createMap(new HashMap<String, Object>())
+						.put("first", first)
+						.put("size", size)
+						.get()
+				);
+			}
+
+			/*@Override
 			public long count() {
 				return list.size();
-			}
+			}*/
 
 			@Override
 			public IModel<PersonVO> model(PersonVO object) {
@@ -136,6 +157,7 @@ public class DataGridPage extends BasePage {
 			}
 
 		}));
+
 		grid2.setEnabled(false);
 
 		add(new AjaxLink("enableGrid2") {
@@ -147,7 +169,7 @@ public class DataGridPage extends BasePage {
 		});
 	}
 
-	private void initGrid1(OColumnList<PersonVO> columns) {
+	private void visibleGrid(OColumnList<PersonVO> columns) {
 		OGrid<PersonVO> grid1Opt = new OGrid<>();
 		grid1Opt
 			.setColumns(columns)
