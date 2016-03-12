@@ -86,11 +86,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
-	@JsonRawValue
-	public String getLoadFilter() {
-		return "handleError";
-	}
-
 	public String getLoadMsg() {
 		return "...";
 	}
@@ -209,17 +204,17 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	@JsonRawValue
 	public String getOnLoadSuccess() {
-		return getSelectionJSFunc();
+		return getSelectionJSFunc(String.format("handleLoaded('%s', data);", htmlId));
 	}
 
 	@JsonRawValue
 	public String getOnSelect() {
-		return getSelectionJSFunc();
+		return getSelectionJSFunc(null);
 	}
 
 	@JsonRawValue
 	public String getOnUnselect() {
-		return getSelectionJSFunc();
+		return getSelectionJSFunc(null);
 	}
 
 	// ---------------------- PUBLIC METHODS
@@ -249,11 +244,18 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
-	private String getSelectionJSFunc() {
-		if (selectionIndicator) {
-			return selectionJSHandler == null ?
-				String.format("function(data){handleSelectionIndicator('%s');}", htmlId) :
-				String.format("function(data){handleSelectionIndicator('%s', %s);}", htmlId, selectionJSHandler);
+	private String getSelectionJSFunc(String anotherFunction) {
+		if (selectionIndicator || anotherFunction != null) {
+			StringBuilder builder = new StringBuilder();
+			builder.append("function(data){");
+			builder.append(selectionJSHandler == null ?
+					String.format("handleSelectionIndicator('%s');", htmlId) :
+					String.format("handleSelectionIndicator('%s', %s);", htmlId, selectionJSHandler)
+			);
+			if(anotherFunction != null) {
+				builder.append(anotherFunction);
+			}
+			return builder.append("}").toString();
 		}
 		return null;
 	}

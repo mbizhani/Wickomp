@@ -5,6 +5,10 @@ public class WDataGrid<T> extends WBaseGrid<T> {
 		super(id, options, dataSource);
 	}
 
+	public WDataGrid(String id, OGrid<T> options, IGridAsyncDataSource<T> dataSource) {
+		super(id, options, dataSource);
+	}
+
 	@Override
 	protected String getJQueryFunction() {
 		return "datagrid";

@@ -114,9 +114,12 @@ function handleSelectionIndicator(gridId, selectionHandler) {
 	});
 }
 
-function handleError(data) {
+function handleLoaded(gridId, data) {
 	if (data.error) {
 		$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
+	} else if (data.async) {
+		$('#' + gridId).datagrid('loading');
+	} else {
+		$('#' + gridId).datagrid('loaded');
 	}
-	return data;
 }

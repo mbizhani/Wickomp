@@ -1,6 +1,7 @@
 package org.devocative.wickomp.grid;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestParameters;
@@ -28,20 +29,31 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
 
 	private OBaseGrid<T> options;
-	private IGridDataSource<T> dataSource;
 	private IExceptionToMessageHandler exceptionMessageHandler = IExceptionToMessageHandler.DEFAULT;
+
+	private IDataSource<T> dataSource;
+	private IGridDataSource<T> gridDataSource;
+	private IGridAsyncDataSource<T> gridAsyncDataSource;
 
 	protected List<WSortField> sortFieldList = new ArrayList<>();
 	protected Map<String, IModel<T>> pageData = new HashMap<>();
 
-	public WBaseGrid(String id, OBaseGrid<T> options, IGridDataSource<T> dataSource) {
+	// ------------------------- CONSTRUCTORS
+
+	public WBaseGrid(String id, OBaseGrid<T> options, IGridDataSource<T> gridDataSource) {
 		super(id, options);
 
-		this.dataSource = dataSource;
+		this.dataSource = gridDataSource;
+		this.gridDataSource = gridDataSource;
 		this.options = options;
+	}
 
-		add(new FontAwesomeBehavior());
-		add(new EasyUIBehavior());
+	public WBaseGrid(String id, OBaseGrid<T> options, IGridAsyncDataSource<T> gridAsyncDataSource) {
+		super(id, options);
+
+		this.dataSource = gridAsyncDataSource;
+		this.gridAsyncDataSource = gridAsyncDataSource;
+		this.options = options;
 	}
 
 	// ------------------------- ACCESSORS
@@ -61,11 +73,15 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		if (isEnabled()) {
 			RGridPage gridPage = getGridPage(1, options.getPageSize());
 
-			target.appendJavaScript(String.format(
-				"$(\"#%1$s\").%2$s(\"options\")[\"url\"]=\"%3$s\";" +
-					"$(\"#%1$s\").%2$s(\"loadData\", %4$s);",
+			String script = String.format(
+				"$('#%1$s').%2$s('options')['url']=\"%3$s\";" +
+					"$('#%1$s').%2$s('loadData', %4$s);",
 				getMarkupId(), getJQueryFunction(), getCallbackURL(),
-				JsonUtil.toJson(gridPage)));
+				JsonUtil.toJson(gridPage));
+
+			logger.debug("WBaseGrid.loadData(): {}", script);
+
+			target.appendJavaScript(script);
 		}
 		return this;
 	}
@@ -75,6 +91,19 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			setVisible(true);
 			target.add(this);
 		}
+		return this;
+	}
+
+	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list, long count) {
+		RGridPage gridPage = getGridPage(list, count);
+
+		String script = String.format("$('#%1$s').%2$s('loadData', %3$s);",
+			getMarkupId(), getJQueryFunction(), JsonUtil.toJson(gridPage));
+
+		logger.debug("WBaseGrid.pushData(): {}", script);
+
+		handler.appendJavaScript(script);
+
 		return this;
 	}
 
@@ -94,6 +123,9 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		}
 
 		options.getColumns().validate();
+
+		add(new FontAwesomeBehavior());
+		add(new EasyUIBehavior());
 	}
 
 	@Override
@@ -177,7 +209,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		if (isVisible()) {
 			List<OButton<T>> toolbarButtons = options.getToolbarButtons();
 			if (toolbarButtons != null) {
-				WGridInfo<T> info = new WGridInfo<>(options, dataSource, sortFieldList);
+				WGridInfo<T> info = new WGridInfo<>(options, gridDataSource, sortFieldList);
 				StringBuilder builder = new StringBuilder();
 				builder
 					.append(String.format("<div id=\"%s-tb\">", getMarkupId()))
@@ -193,13 +225,14 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	}
 
 	protected final RGridPage getGridPage(int pageNum, int pageSize) {
-		RGridPage result = new RGridPage();
+		RGridPage result;
 		try {
-			List<T> data = dataSource.list(pageNum, pageSize, sortFieldList);
-			if (data != null) {
+			if (gridDataSource != null) {
+				List<T> data = gridDataSource.list(pageNum, pageSize, sortFieldList);
+
 				long count;
 				if (data.size() >= pageSize) {
-					count = dataSource.count();
+					count = gridDataSource.count();
 					if (data.size() > pageSize) {
 						logger.warn("DataSource.list returns collection(size={}) greater than pageSize={}!",
 							data.size(), pageSize);
@@ -208,13 +241,29 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 					count = (pageNum - 1) * pageSize + data.size();
 				}
 
-				result.setRows(createRObjectList(data));
-				result.setTotal(count);
+				result = getGridPage(data, count);
+			} else if (gridAsyncDataSource != null) {
+				gridAsyncDataSource.list(pageNum, pageSize, sortFieldList);
+
+				result = getGridPage(null, pageNum * pageSize);
+				result.setAsync(true);
+			} else {
+				throw new RuntimeException("No DataSource for grid: " + getId());
 			}
 		} catch (Exception e) {
 			logger.warn("Grid.DataSource: id=" + getId(), e);
+			result = new RGridPage();
 			result.setError(exceptionMessageHandler.handleMessage(this, e));
 		}
+		return result;
+	}
+
+	protected final RGridPage getGridPage(List<T> data, long count) {
+		RGridPage result = new RGridPage();
+		if (data != null) {
+			result.setRows(createRObjectList(data));
+		}
+		result.setTotal(count);
 		return result;
 	}
 
@@ -264,7 +313,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	private void handleToolbarButtonClick(Integer colNo, IRequestParameters parameters) {
 		OButton<T> button = options.getToolbarButtons().get(colNo);
-		button.onClick(new WGridInfo<>(options, dataSource, sortFieldList), parameters);
+		button.onClick(new WGridInfo<>(options, gridDataSource, sortFieldList), parameters);
 	}
 
 	private void handleCellLinkClick(String id, Integer colNo) {
