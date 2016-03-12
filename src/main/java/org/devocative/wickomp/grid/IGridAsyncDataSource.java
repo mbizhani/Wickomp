@@ -2,7 +2,7 @@ package org.devocative.wickomp.grid;
 
 import java.util.List;
 
-public interface IGridDataSource<T> extends IDataSource<T> {
+public interface IGridAsyncDataSource<T> extends IDataSource<T> {
 	/**
 	 * This method returns a page of result
 	 *
@@ -11,7 +11,5 @@ public interface IGridDataSource<T> extends IDataSource<T> {
 	 * @param sortFields list of fields for sorting the result (optional)
 	 * @return list of result
 	 */
-	List<T> list(long pageIndex, long pageSize, List<WSortField> sortFields);
-
-	long count();
+	void list(long pageIndex, long pageSize, List<WSortField> sortFields);
 }
