@@ -2,16 +2,41 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 
 <wicket:head>
-    <title>Wickomp: DataGrid Page</title>
+	<title>Wickomp: DataGrid Page</title>
 </wicket:head>
 
 <wicket:extend>
-    <a wicket:id="showGrid">Show Grid1 by Ajax</a>
-    <div wicket:id="grid1"></div>
-    <hr/>
-    <a wicket:id="enableGrid2">Enable G2</a>
+	<a wicket:id="showGrid">Show Grid1 by Ajax</a>
 
-    <div wicket:id="grid2"></div>
+	<div wicket:id="grid1"></div>
+	<hr/>
+	<a wicket:id="enableGrid2">Enable G2</a>
+
+	<div wicket:id="grid2"></div>
+
+	<script type="text/javascript">
+		var intrvl;
+
+		Wicket.Event.subscribe("/websocket/open", function (jqEvent, message) {
+			alert('WS Opened!');
+			intrvl = setInterval(pingServer, 4.5 * 60 * 1000);
+		});
+
+		Wicket.Event.subscribe("/websocket/closed", function (jqEvent, message) {
+			alert('WS closed: ' + message);
+			window.clearInterval(intrvl);
+		});
+
+		Wicket.Event.subscribe("/websocket/error", function (jqEvent, message) {
+			alert('WS error: ' + message);
+			window.clearInterval(intrvl);
+		});
+
+		function pingServer() {
+			Wicket.WebSocket.send('{msg:"p"}');
+		}
+	</script>
+
 </wicket:extend>
 
 </html>

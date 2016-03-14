@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,6 +21,16 @@ public class AsyncMediator {
 
 	public static void init(Application application) {
 		AsyncMediator.application = application;
+	}
+
+	public static void handleSessionExpiration(String user, String sessionId) {
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
+		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
+		Collection<IWebSocketConnection> connections = registry.getConnections(application, sessionId);
+		logger.info("AsyncMediator.handleSessionExpiration: user={}, #webSockets={}", user, connections.size());
+		for (IWebSocketConnection connection : connections) {
+			connection.close(1, "-");
+		}
 	}
 
 	public static void registerHandler(String handlerId, IAsyncRequestHandler asyncHandler) {
