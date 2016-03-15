@@ -10,6 +10,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.IExceptionToMessageHandler;
+import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.html.WMessager;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public abstract class WAjaxButton extends Button {
 	private HTMLBase icon;
 	private IModel<String> caption;
 	private IModel<String> confirmationMessage;
-	private IExceptionToMessageHandler exceptionToMessageHandler = IExceptionToMessageHandler.DEFAULT;
+	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
 
 	public WAjaxButton(String id) {
 		this(id, null, null);

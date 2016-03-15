@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.devocative.wickomp.IExceptionToMessageHandler;
+import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.form.WAjaxButton;
 import org.devocative.wickomp.html.icon.FontAwesome;
@@ -28,7 +29,7 @@ public class WWizardPanel extends WPanel {
 	private WebMarkupContainer buttonBar, content;
 	private Label titleLbl;
 	private String title;
-	private IExceptionToMessageHandler exceptionToMessageHandler = IExceptionToMessageHandler.DEFAULT;
+	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
 
 	public WWizardPanel(String id, OWizard oWizard) {
 		this(id, oWizard, ButtonBarPlace.BOTTOM);

@@ -8,6 +8,7 @@ import org.apache.wicket.request.IRequestParameters;
 import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WCallbackComponent;
+import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.data.RObject;
 import org.devocative.wickomp.data.RObjectList;
 import org.devocative.wickomp.grid.column.OColumn;
@@ -29,7 +30,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
 
 	private OBaseGrid<T> options;
-	private IExceptionToMessageHandler exceptionMessageHandler = IExceptionToMessageHandler.DEFAULT;
+	private IExceptionToMessageHandler exceptionMessageHandler = WDefaults.getExceptionToMessageHandler();
 
 	private IDataSource<T> dataSource;
 	private IGridDataSource<T> gridDataSource;
@@ -338,5 +339,4 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			sortFieldList.add(new WSortField(sortList[i], orderList[i]));
 		}
 	}
-
 }
