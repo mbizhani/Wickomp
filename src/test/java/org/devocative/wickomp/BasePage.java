@@ -4,8 +4,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
-import org.devocative.wickomp.html.WExternalLink;
 import org.devocative.wickomp.html.WMessager;
 import org.devocative.wickomp.html.menu.OMenuItem;
 import org.devocative.wickomp.html.menu.WMenuBar;
@@ -25,8 +25,8 @@ public abstract class BasePage extends WebPage {
 				)
 			)
 		);
-		add(new WExternalLink("label", new Model<>("AAA")));
-		add(new WExternalLink("link", new Model<>("AAA"), "/test"));
+		add(new ExternalLink("label", new Model<>("AAA")));
+		add(new ExternalLink("link", new Model<>("/test"), new Model<>("AAA")));
 
 		final WModalWindow window = new WModalWindow("modal") {
 			@Override
