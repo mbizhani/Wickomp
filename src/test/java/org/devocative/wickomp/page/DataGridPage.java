@@ -5,7 +5,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.adroit.ObjectBuilder;
+import org.devocative.adroit.obuilder.ObjectBuilder;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.async.AsyncBehavior;
 import org.devocative.wickomp.async.IAsyncResponseHandler;
@@ -29,7 +29,6 @@ import org.devocative.wickomp.vo.PersonVO;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -134,12 +133,9 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 
 			@Override
 			public void list(long first, long size, List<WSortField> sortFields) {
-				/*int start = (int) ((first - 1) * size);
-				int end = (int) (first * size);
-				return list.subList(start, Math.min(end, list.size()));*/
 				asyncBehavior.sendAsyncRequest("GRID_PAGER",
 					ObjectBuilder
-						.createMap(new HashMap<String, Object>())
+						.<String, Object>createDefaultMap()
 						.put("first", first)
 						.put("size", size)
 						.get()
