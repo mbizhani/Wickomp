@@ -32,9 +32,9 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private String url;
 
 	// ------
-	private String htmlId;
-	private boolean selectionIndicator = false;
-	private String selectionJSHandler;
+	protected String htmlId;
+	protected boolean selectionIndicator = false;
+	protected String selectionJSHandler;
 
 	public OBaseGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
@@ -244,7 +244,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
-	private String getSelectionJSFunc(String anotherFunction) {
+	protected String getSelectionJSFunc(String anotherFunction) {
 		if (selectionIndicator || anotherFunction != null) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("function(data){");

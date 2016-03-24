@@ -1,5 +1,6 @@
 package org.devocative.wickomp.grid;
 
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.data.RObject;
@@ -14,15 +15,42 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 	private static final String PARENT_ID_PROPERTY = "_parentId";
 	private static final String STATE_PROPERTY = "state";
 
-	private ITreeGridDataSource<T> dataSource;
 	private OTreeGrid<T> options;
+	private ITreeGridDataSource<T> treeGridDataSource;
+	private ITreeGridAsyncDataSource<T> treeGridAsyncDataSource;
 
-	public WTreeGrid(String id, OTreeGrid<T> options, ITreeGridDataSource<T> dataSource) {
-		super(id, options, dataSource);
+	// Main Constructor 1
+	public WTreeGrid(String id, OTreeGrid<T> options, ITreeGridDataSource<T> treeGridDataSource) {
+		super(id, options, treeGridDataSource);
 
 		this.options = options;
-		this.dataSource = dataSource;
+		this.treeGridDataSource = treeGridDataSource;
 	}
+
+	// Main Constructor 2
+	public WTreeGrid(String id, OTreeGrid<T> options, ITreeGridAsyncDataSource<T> treeGridAsyncDataSource) {
+		super(id, options, treeGridAsyncDataSource);
+
+		this.options = options;
+		this.treeGridAsyncDataSource = treeGridAsyncDataSource;
+	}
+
+	//---------------- PUBLIC METHODS
+
+	public WTreeGrid<T> pushChildren(IPartialPageRequestHandler handler, String parentId, List<T> children) {
+		RObjectList subRow = new RObjectList();
+		convertBeansToRObjects(children, subRow);
+
+		String script = String.format("$('#%s').%s('append', {parent:'%s', data:%s});",
+			getMarkupId(), getJQueryFunction(), parentId, JsonUtil.toJson(subRow));
+
+		logger.debug("WTreeGrid.pushChildren: {}", script);
+
+		handler.appendJavaScript(script);
+		return this;
+	}
+
+	//---------------- PROTECTED METHODS
 
 	@Override
 	protected void onInitialize() {
@@ -41,15 +69,25 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 	@Override
 	protected void handleRowsById(String id) {
 		RObjectList subRow = new RObjectList();
-		List<T> listByParent = dataSource.listByParent(id, sortFieldList);
-		convertBeansToRObjects(listByParent, subRow);
+		if (treeGridDataSource != null) {
+			List<T> listByParent = treeGridDataSource.listByParent(id, sortFieldList);
+			convertBeansToRObjects(listByParent, subRow);
+		} else {
+			treeGridAsyncDataSource.listByParent(id, sortFieldList);
+		}
 		sendJSONResponse(JsonUtil.toJson(subRow));
 	}
 
 	@Override
 	protected void onAfterBeanToRObject(T bean, RObject rObject) {
-		if (dataSource.hasChildren(bean)) {
-			rObject.addProperty(STATE_PROPERTY, "closed");
+		if (treeGridDataSource != null) {
+			if (treeGridDataSource.hasChildren(bean)) {
+				rObject.addProperty(STATE_PROPERTY, "closed");
+			}
+		} else {
+			if (treeGridAsyncDataSource.hasChildren(bean)) {
+				rObject.addProperty(STATE_PROPERTY, "closed");
+			}
 		}
 
 		if (options.getParentIdField() != null) {
@@ -64,40 +102,40 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 	protected RObjectList createRObjectList(List<T> data) {
 		pageData.clear();
 
-		RObjectList objectList = new RObjectList();
-		convertBeansToRObjects(data, objectList);
+		RObjectList rObjectList = new RObjectList();
+		convertBeansToRObjects(data, rObjectList);
 
-		if (options.getParentIdField() != null) {
+		if (options.getParentIdField() != null && treeGridDataSource != null) {
 			Set<Serializable> parentIds;
 			do {
 				parentIds = new HashSet<>();
 				for (T bean : data) {
 					Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
 					if (parentId != null) {
-						if (!objectList.hasRObject(parentId.toString())) {
+						if (!rObjectList.hasRObject(parentId.toString())) {
 							parentIds.add(parentId);
 						}
 					}
 				}
 
 				if (parentIds.size() > 0) {
-					data = dataSource.listByIds(parentIds, sortFieldList);
+					data = treeGridDataSource.listByIds(parentIds, sortFieldList);
 					if (data.size() < parentIds.size()) {
 						logger.warn("WTreeGrid -> finding parents -> missing some parent(s) = {} (parent ids = {}) ",
 							parentIds.size() - data.size(), parentIds);
 					}
-					convertBeansToRObjects(data, objectList);
+					convertBeansToRObjects(data, rObjectList);
 				}
 			} while (parentIds.size() > 0);
 
-			for (RObject rObject : objectList.getValue()) {
+			for (RObject rObject : rObjectList.getValue()) {
 				String parentId = rObject.getProperty(PARENT_ID_PROPERTY);
-				if (parentId != null && objectList.hasRObject(parentId)) {
-					objectList.getRObject(parentId).removeProperty(STATE_PROPERTY);
+				if (parentId != null && rObjectList.hasRObject(parentId)) {
+					rObjectList.getRObject(parentId).removeProperty(STATE_PROPERTY);
 				}
 			}
 		}
 
-		return objectList;
+		return rObjectList;
 	}
 }

@@ -6,11 +6,12 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
-import org.devocative.adroit.ObjectBuilder;
+import org.devocative.adroit.obuilder.ObjectBuilder;
 import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.async.AsyncToken;
 import org.devocative.wickomp.async.IAsyncRequestHandler;
 import org.devocative.wickomp.page.HomePage;
+import org.devocative.wickomp.vo.EmployeeVO;
 import org.devocative.wickomp.vo.PersonVO;
 
 import java.io.Serializable;
@@ -18,7 +19,8 @@ import java.util.*;
 
 public class WickompApplication extends WebApplication {
 
-	private List<PersonVO> list;
+	private List<PersonVO> personVOList;
+	private List<EmployeeVO> employeeVOList;
 
 	@Override
 	public Class<? extends WebPage> getHomePage() {
@@ -29,7 +31,8 @@ public class WickompApplication extends WebApplication {
 	public void init() {
 		super.init();
 
-		list = PersonVO.list();
+		personVOList = PersonVO.list();
+		employeeVOList = EmployeeVO.list();
 
 		getMarkupSettings()
 			.setStripWicketTags(true)
@@ -64,6 +67,69 @@ public class WickompApplication extends WebApplication {
 			}
 		});
 
+		AsyncMediator.registerHandler("T_GRID_PAGER", new IAsyncRequestHandler() {
+			@Override
+			public void onRequest(final AsyncToken token, Object requestPayLoad) {
+				Map<String, Object> map = (Map<String, Object>) requestPayLoad;
+				final long first = (long) map.get("first");
+				long size = (long) map.get("size");
+
+				int start = (int) ((first - 1) * size);
+				int end = (int) (first * size);
+				final List<EmployeeVO> result = employeeVOList.subList(start, Math.min(end, employeeVOList.size()));
+
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						AsyncMediator.sendResponse(token, (Serializable) ObjectBuilder
+								.<String, Object>createDefaultMap()
+								.put("list", result)
+								.put("count", employeeVOList.size())
+								.get()
+						);
+					}
+				}.start();
+			}
+		});
+
+		AsyncMediator.registerHandler("T_GRID_CHILDREN", new IAsyncRequestHandler() {
+			@Override
+			public void onRequest(final AsyncToken asyncToken, Object requestPayLoad) {
+				final String parentId = (String) requestPayLoad;
+
+				final List<EmployeeVO> result = new ArrayList<>();
+				for (int i = 1; i < 6; i++) {
+					EmployeeVO emp = new EmployeeVO();
+					emp.setId(parentId + "." + i);
+					emp.setName("E" + parentId + "." + i);
+					emp.setAge((int) (Math.random() * 50));
+					result.add(emp);
+				}
+
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+						AsyncMediator.sendResponse(asyncToken, (Serializable) ObjectBuilder
+							.<String, Object>createDefaultMap()
+							.put("parentId", parentId)
+							.put("list", result)
+							.get());
+					}
+				}.start();
+			}
+		});
+
 		AsyncMediator.registerHandler("GRID_PAGER", new IAsyncRequestHandler() {
 			@Override
 			public void onRequest(final AsyncToken token, Object requestPayLoad) {
@@ -73,7 +139,7 @@ public class WickompApplication extends WebApplication {
 
 				int start = (int) ((first - 1) * size);
 				int end = (int) (first * size);
-				final List<PersonVO> result = list.subList(start, Math.min(end, list.size()));
+				final List<PersonVO> result = personVOList.subList(start, Math.min(end, personVOList.size()));
 
 				new Thread() {
 					@Override
@@ -85,9 +151,9 @@ public class WickompApplication extends WebApplication {
 						}
 
 						AsyncMediator.sendResponse(token, (Serializable) ObjectBuilder
-								.createMap(new HashMap<String, Object>())
+								.<String, Object>createDefaultMap()
 								.put("list", result)
-								.put("count", list.size())
+								.put("count", personVOList.size())
 								.get()
 						);
 

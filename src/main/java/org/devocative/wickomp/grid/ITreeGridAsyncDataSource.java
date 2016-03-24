@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface ITreeGridAsyncDataSource<T> extends IGridAsyncDataSource<T> {
 	void listByParent(Serializable parentId, List<WSortField> sortFields);
+
+	boolean hasChildren(T bean);
 }
