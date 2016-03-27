@@ -1,6 +1,7 @@
 package org.devocative.wickomp.grid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 
 public class OTreeGrid<T> extends OBaseGrid<T> {
 	private Boolean animate = true;
@@ -10,6 +11,7 @@ public class OTreeGrid<T> extends OBaseGrid<T> {
 
 	// -----
 	private String parentIdField;
+
 
 	public Boolean getAnimate() {
 		return animate;
@@ -58,6 +60,15 @@ public class OTreeGrid<T> extends OBaseGrid<T> {
 		this.parentIdField = parentIdField;
 		return this;
 	}
+
+	// ---------------------- ACCESSORS FOR JS EVENTS
+
+	@JsonRawValue
+	public String getOnBeforeLoad() {
+		return "function(row,param){if (!row) param.id = '';}";
+	}
+
+	// ---------------------- PROTECTED METHODS
 
 	@Override
 	protected String getSelectionJSFunc(String anotherFunction) {

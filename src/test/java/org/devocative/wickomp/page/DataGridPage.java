@@ -180,6 +180,9 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new IGridDataSource<PersonVO>() {
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
+				if (first == 3) {
+					throw new RuntimeException("Test Exception!");
+				}
 				int start = (int) ((first - 1) * size);
 				int end = (int) (first * size);
 				return list.subList(start, Math.min(end, list.size()));
