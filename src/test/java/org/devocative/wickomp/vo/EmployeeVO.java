@@ -5,17 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeVO implements Serializable {
-	private String id;
+	private String eid;
 	private String name;
 	private Integer age;
 	private String parentId;
 
-	public String getId() {
-		return id;
+	public String getEid() {
+		return eid;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setEid(String eid) {
+		this.eid = eid;
 	}
 
 	public String getName() {
@@ -48,7 +48,7 @@ public class EmployeeVO implements Serializable {
 	static {
 		for (int i = 1; i <= 10; i++) {
 			EmployeeVO e = new EmployeeVO();
-			e.setId(String.valueOf(i));
+			e.setEid(String.valueOf(i));
 			e.setName(String.format("M%03d", i));
 			e.setAge((int) (Math.random() * 100));
 			employeeVOs.add(e);
@@ -56,7 +56,7 @@ public class EmployeeVO implements Serializable {
 
 		for (int i = 50; i <= 100; i++) {
 			EmployeeVO e = new EmployeeVO();
-			e.setId(String.valueOf(i));
+			e.setEid(String.valueOf(i));
 			e.setName(String.format("M%03d", i));
 			e.setAge((int) (Math.random() * 100));
 

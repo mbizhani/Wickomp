@@ -86,6 +86,11 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
+	@JsonRawValue
+	public String getLoadFilter() {
+		return String.format("function(data){return handleLoaded('%s', data);}", htmlId);
+	}
+
 	public String getLoadMsg() {
 		return "...";
 	}
@@ -204,7 +209,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	@JsonRawValue
 	public String getOnLoadSuccess() {
-		return getSelectionJSFunc(String.format("handleLoaded('%s', data);", htmlId));
+		return getSelectionJSFunc(null);
 	}
 
 	@JsonRawValue

@@ -38,7 +38,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 
 		columnList = new OColumnList<>();
 		columnList
-			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Id"), "id"))
+			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Id"), "eid"))
 			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Name"), "name"))
 			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Age"), "age"))
 			.add(new OAjaxLinkColumn<EmployeeVO>(new Model<>(""), new HTMLBase("x")) {
@@ -69,7 +69,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 		treeGrid
 			.setTreeField("name")
 				//.setParentIdField("parentId")
-			.setIdField("id")
+			.setIdField("eid")
 			.setColumns(columnList)
 			.setHeight(OSize.fixed(400));
 
@@ -92,7 +92,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 
 			@Override
 			public boolean hasChildren(EmployeeVO bean) {
-				return !bean.getId().contains(".");
+				return !bean.getEid().contains(".");
 			}
 
 			@Override
@@ -118,7 +118,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			.setShowLines(true)
 			.setTreeField("name")
 				//.setParentIdField("parentId")
-			.setIdField("id")
+			.setIdField("eid")
 			.setColumns(columnList)
 			.setHeight(OSize.fixed(400));
 
@@ -126,9 +126,9 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			@Override
 			public List<EmployeeVO> listByParent(Serializable parentId, List<WSortField> sortFields) {
 				List<EmployeeVO> result = new ArrayList<>();
-				for (int i = 1; i < 6; i++) {
+				for (int i = 1; i < 26; i++) {
 					EmployeeVO emp = new EmployeeVO();
-					emp.setId(parentId + "." + i);
+					emp.setEid(parentId + "." + i);
 					emp.setName("E" + parentId + "." + i);
 					emp.setAge((int) (Math.random() * 50));
 					result.add(emp);
@@ -143,7 +143,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 
 			@Override
 			public boolean hasChildren(EmployeeVO bean) {
-				return !bean.getId().contains(".");
+				return !bean.getEid().contains(".");
 			}
 
 			@Override

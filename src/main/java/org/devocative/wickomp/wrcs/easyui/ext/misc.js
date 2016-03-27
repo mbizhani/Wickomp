@@ -115,11 +115,23 @@ function handleSelectionIndicator(gridId, selectionHandler) {
 }
 
 function handleLoaded(gridId, data) {
+	var result = data;
+
+	var async = data.async;
+	if (data instanceof Array && data.length == 1) {
+		if (data[0].async) {
+			async = data[0].async;
+			result = [];
+		}
+	}
+
 	if (data.error) {
 		$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
-	} else if (data.async) {
+	} else if (async) {
 		$('#' + gridId).datagrid('loading');
 	} else {
 		$('#' + gridId).datagrid('loaded');
 	}
+
+	return result;
 }

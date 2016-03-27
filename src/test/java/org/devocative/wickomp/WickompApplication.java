@@ -102,13 +102,22 @@ public class WickompApplication extends WebApplication {
 			public void onRequest(final AsyncToken asyncToken, Object requestPayLoad) {
 				final String parentId = (String) requestPayLoad;
 
+				boolean hasChildren = true;
+				try {
+					hasChildren = Integer.parseInt(parentId) % 2 == 0;
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+
 				final List<EmployeeVO> result = new ArrayList<>();
-				for (int i = 1; i < 6; i++) {
-					EmployeeVO emp = new EmployeeVO();
-					emp.setId(parentId + "." + i);
-					emp.setName("E" + parentId + "." + i);
-					emp.setAge((int) (Math.random() * 50));
-					result.add(emp);
+				if (hasChildren) {
+					for (int i = 1; i < 6; i++) {
+						EmployeeVO emp = new EmployeeVO();
+						emp.setEid(parentId + "." + i);
+						emp.setName("E" + parentId + "." + i);
+						emp.setAge((int) (Math.random() * 50));
+						result.add(emp);
+					}
 				}
 
 				new Thread() {

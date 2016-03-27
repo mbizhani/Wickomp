@@ -187,7 +187,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 				throw new RuntimeException("Null button index parameter!");
 			}
 			handleToolbarButtonClick(colNo, parameters);
-		} else if (id != null) {
+		} else if (id != null && id.length() > 0) {
 			handleRowsById(id);
 		} else {
 			if (sortList != null && orderList != null) {
@@ -254,6 +254,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		} catch (Exception e) {
 			logger.warn("Grid.DataSource: id=" + getId(), e);
 			result = new RGridPage();
+			result.setTotal((long) pageNum * pageSize);
 			result.setError(exceptionMessageHandler.handleMessage(this, e));
 		}
 		return result;

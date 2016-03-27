@@ -68,14 +68,18 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 
 	@Override
 	protected void handleRowsById(String id) {
-		RObjectList subRow = new RObjectList();
+
 		if (treeGridDataSource != null) {
 			List<T> listByParent = treeGridDataSource.listByParent(id, sortFieldList);
+
+			RObjectList subRow = new RObjectList();
 			convertBeansToRObjects(listByParent, subRow);
+			sendJSONResponse(JsonUtil.toJson(subRow));
 		} else {
 			treeGridAsyncDataSource.listByParent(id, sortFieldList);
+			sendJSONResponse("[{\"async\":true}]");
 		}
-		sendJSONResponse(JsonUtil.toJson(subRow));
+
 	}
 
 	@Override
