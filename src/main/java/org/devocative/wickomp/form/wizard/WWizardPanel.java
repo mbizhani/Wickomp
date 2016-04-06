@@ -150,7 +150,9 @@ public class WWizardPanel extends WPanel {
 			next = new WAjaxButton("next", new ResourceModel("label.wizard.next", "Next")) {
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
+					oWizard.getCurrentStep().onStepSubmit();
 					WWizardPanel.this.onNext(target, oWizard.getCurrentStepId());
+
 					WWizardStepPanel step = oWizard.getNextStep();
 					updateButtons(target);
 					WWizardPanel.this.updateStep(step, target);
@@ -158,29 +160,38 @@ public class WWizardPanel extends WPanel {
 
 				@Override
 				protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
-					WWizardPanel.this.onError(target, oWizard.getCurrentStepId(), errors);
+					if (oWizard.getCurrentStep().onError(target, errors)) {
+						WWizardPanel.this.onError(target, oWizard.getCurrentStepId(), errors);
+					}
 				}
 
 				@Override
 				protected void onException(AjaxRequestTarget target, Exception e) {
-					WWizardPanel.this.onException(target, oWizard.getCurrentStepId(), e);
+					if (oWizard.getCurrentStep().onException(target, e)) {
+						WWizardPanel.this.onException(target, oWizard.getCurrentStepId(), e);
+					}
 				}
 			};
 
 			finish = new WAjaxButton("finish", new ResourceModel("label.wizard.finish", "Finish"), new FontAwesome("check-circle")) {
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
+					oWizard.getCurrentStep().onStepSubmit();
 					WWizardPanel.this.onFinish(target, oWizard.getCurrentStepId());
 				}
 
 				@Override
 				protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
-					WWizardPanel.this.onError(target, oWizard.getCurrentStepId(), errors);
+					if (oWizard.getCurrentStep().onError(target, errors)) {
+						WWizardPanel.this.onError(target, oWizard.getCurrentStepId(), errors);
+					}
 				}
 
 				@Override
 				protected void onException(AjaxRequestTarget target, Exception e) {
-					WWizardPanel.this.onException(target, oWizard.getCurrentStepId(), e);
+					if (oWizard.getCurrentStep().onException(target, e)) {
+						WWizardPanel.this.onException(target, oWizard.getCurrentStepId(), e);
+					}
 				}
 			};
 

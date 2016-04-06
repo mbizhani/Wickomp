@@ -33,6 +33,10 @@ public class OWizard extends Options {
 		return panel;
 	}
 
+	public WWizardStepPanel getCurrentStep() {
+		return stepsPanels.get(stepIndex);
+	}
+
 	public WWizardStepPanel getNextStep() {
 		stepIndex++;
 		while (skippedSteps.contains(stepIds.get(stepIndex))) {

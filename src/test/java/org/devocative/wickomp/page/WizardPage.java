@@ -62,23 +62,29 @@ public class WizardPage extends BasePage {
 			protected void onError(AjaxRequestTarget target, String stepId, List<Serializable> errors) {
 				WMessager.show("Error", errors, target);
 			}
-		}.setTitle("Gandolf"));
+		}.setTitle("Gandalf"));
 
 		add(new EasyUIBehavior());
 	}
 
 	private class Step extends WWizardStepPanel {
 		private int i;
+		private WTextInput txt;
 
 		public Step(int i) {
-			super();
 			this.i = i;
 		}
 
 		@Override
 		protected void onInit() {
 			add(new Label("lbl", String.valueOf(i)));
-			add(new WTextInput("txt", new Model<String>()).setRequired(i == 3).setLabel(new Model<>("TXT " + i)));
+			add(txt = new WTextInput("txt", new Model<String>()));
+			txt.setRequired(i == 3).setLabel(new Model<>("TXT " + i));
+		}
+
+		@Override
+		public void onStepSubmit() {
+			System.out.printf("onStepSubmit(%s): txt = %s\n", i, txt.getModelObject());
 		}
 	}
 
