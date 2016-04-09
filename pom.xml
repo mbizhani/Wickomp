@@ -13,6 +13,7 @@
 
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Some components developed for Apache Wicket</description>
+	<url>https://github.com/mbizhani/Wickomp</url>
 
 	<licenses>
 		<license>
@@ -25,7 +26,7 @@
 	<developers>
 		<developer>
 			<id>mbizhani</id>
-			<name>Mehdi Bizhani</name>
+			<name>${project.owner}</name>
 			<email>mbizhani@gmail.com</email>
 			<organization>Devocative</organization>
 			<roles>
@@ -36,9 +37,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:mbizhani/Wickomp.git</connection>
-		<developerConnection>scm:git:git@github.com:mbizhani/Wickomp.git</developerConnection>
-		<url>git@github.com:mbizhani/Wickomp.git</url>
+		<connection>scm:git:https://github.com/mbizhani/Wickomp.git</connection>
+		<developerConnection>scm:git:https://github.com/mbizhani/Wickomp.git</developerConnection>
+		<url>https://github.com/mbizhani/Wickomp.git</url>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -55,6 +56,8 @@
 		<source.version>3.0.0</source.version>
 		<javadoc.version>2.10.3</javadoc.version>
 		<gpg.version>1.6</gpg.version>
+		<jar.version>2.6</jar.version>
+		<project.owner>Mehdi Bizhani</project.owner>
 	</properties>
 
 	<dependencies>
@@ -62,7 +65,7 @@
 		<dependency>
 			<groupId>org.devocative</groupId>
 			<artifactId>adroit</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 
 		<dependency>
@@ -172,16 +175,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- Release -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>${release.version}</version>
-				<configuration>
-					<goals>deploy</goals>
-				</configuration>
-			</plugin>
-
 			<!-- Source -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -197,24 +190,79 @@
 				</executions>
 			</plugin>
 
-			<!-- JavaDoc -->
+			<!-- Jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${javadoc.version}</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${jar.version}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Built-By>${project.owner}</Built-By>
+						</manifestEntries>
+					</archive>
+				</configuration>
 			</plugin>
 
+			<!-- Release -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>${release.version}</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<useReleaseProfile>false</useReleaseProfile>
+					<releaseProfiles>release</releaseProfiles>
+					<goals>deploy</goals>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<!-- JavaDoc -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${javadoc.version}</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- GPG -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${gpg.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -230,4 +278,5 @@
 	<prerequisites>
 		<maven>3.0</maven>
 	</prerequisites>
+
 </project>
