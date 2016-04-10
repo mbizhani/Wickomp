@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallbackUrl {
+	// ---------------------- JSON FIELDS
 	private Boolean autoRowHeight = false;
 	private Boolean checkOnSelect;
 	private OColumnList<T> columns;
@@ -25,21 +26,26 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private Integer pageSize;
 	private Boolean rowNumbers = true;
 	private Boolean selectOnCheck;
+	private Boolean showFooter;
 	private Boolean singleSelect;
 	private Boolean striped;
 	private String titleField;
 	private List<OButton<T>> toolbar;
 	private String url;
 
-	// ------
+	// ---------------------- MISC FIELDS
 	protected String htmlId;
 	protected boolean selectionIndicator = false;
 	protected String selectionJSHandler;
+
+	// ---------------------- CONSTRUCTORS
 
 	public OBaseGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
 		pageSize = pageList.get(0);
 	}
+
+	// ---------------------- ACCESSORS for JSON
 
 	public Boolean getAutoRowHeight() {
 		return autoRowHeight;
@@ -150,6 +156,15 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
+	public Boolean getShowFooter() {
+		return showFooter;
+	}
+
+	public OBaseGrid<T> setShowFooter(Boolean showFooter) {
+		this.showFooter = showFooter;
+		return this;
+	}
+
 	public Boolean getSingleSelect() {
 		return singleSelect;
 	}
@@ -181,21 +196,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return toolbar != null ? String.format("#%s-tb", htmlId) : null;
 	}
 
-	@JsonIgnore
-	public List<OButton<T>> getToolbarButtons() {
-		return toolbar;
-	}
-
-	public OBaseGrid<T> addToolbarButton(OButton<T> button) {
-		if (toolbar == null) {
-			toolbar = new ArrayList<>();
-		}
-
-		button.setIndex(toolbar.size());
-		toolbar.add(button);
-		return this;
-	}
-
 	public String getUrl() {
 		return url;
 	}
@@ -223,6 +223,21 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	}
 
 	// ---------------------- PUBLIC METHODS
+
+	@JsonIgnore
+	public List<OButton<T>> getToolbarButtons() {
+		return toolbar;
+	}
+
+	public OBaseGrid<T> addToolbarButton(OButton<T> button) {
+		if (toolbar == null) {
+			toolbar = new ArrayList<>();
+		}
+
+		button.setIndex(toolbar.size());
+		toolbar.add(button);
+		return this;
+	}
 
 	@JsonIgnore
 	public String getHtmlId() {

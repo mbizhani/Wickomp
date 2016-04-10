@@ -35,6 +35,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	private IDataSource<T> dataSource;
 	private IGridDataSource<T> gridDataSource;
 	private IGridAsyncDataSource<T> gridAsyncDataSource;
+	private IGridFooterDataSource<T> footerDataSource;
 
 	protected List<WSortField> sortFieldList = new ArrayList<>();
 	protected Map<String, IModel<T>> pageData = new HashMap<>();
@@ -65,6 +66,11 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	public WBaseGrid<T> setExceptionMessageHandler(IExceptionToMessageHandler exceptionMessageHandler) {
 		this.exceptionMessageHandler = exceptionMessageHandler;
+		return this;
+	}
+
+	public WBaseGrid<T> setFooterDataSource(IGridFooterDataSource<T> footerDataSource) {
+		this.footerDataSource = footerDataSource;
 		return this;
 	}
 
@@ -243,6 +249,10 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 				}
 
 				result = getGridPage(data, count);
+
+				if (options.getShowFooter() != null && options.getShowFooter() && footerDataSource != null) {
+					result.setFooter(getGridFooter(footerDataSource.footer(data)));
+				}
 			} else if (gridAsyncDataSource != null) {
 				gridAsyncDataSource.list(pageNum, pageSize, sortFieldList);
 
@@ -277,6 +287,24 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		return objectList;
 	}
 
+	protected List<RObject> getGridFooter(List<?> footerData) {
+		List<RObject> footer = new ArrayList<>();
+		List<OColumn<T>> columns = options.getColumns().getVisibleColumns();
+
+		for (Object bean : footerData) {
+			RObject rObject = new RObject();
+			for (int colNo = 0; colNo < columns.size(); colNo++) {
+				OColumn<T> column = columns.get(colNo);
+				if (column.isHasFooter()) {
+					String url = String.format("%s&cn=%s&tp=cl", getCallbackURL(), colNo);
+					rObject.addProperty(column.getField(), column.footerCellValue(bean, colNo, url));
+				}
+			}
+			footer.add(rObject);
+		}
+		return footer;
+	}
+
 	protected void handleRowsById(String id) {
 	}
 
@@ -284,6 +312,8 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	}
 
 	protected final void convertBeansToRObjects(List<T> list, RObjectList page) {
+		List<OColumn<T>> columns = options.getColumns().getAllColumns();
+
 		for (int rowNo = 0; rowNo < list.size(); rowNo++) {
 			T bean = list.get(rowNo);
 			RObject rObject = new RObject();
@@ -300,7 +330,6 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			}
 			pageData.put(id, dataSource.model(bean));
 
-			List<OColumn<T>> columns = options.getColumns().getAllColumns();
 			for (int colNo = 0; colNo < columns.size(); colNo++) {
 				OColumn<T> column = columns.get(colNo);
 				if (column.onCellRender(bean, id)) {

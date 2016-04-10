@@ -90,6 +90,11 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 				public String cellValue(PersonVO bean, String id, int colNo, String url) {
 					return String.format("<a href=\"#\" onclick=\"alert('%s')\">ANY</a>", bean.getCol01());
 				}
+
+				@Override
+				public String footerCellValue(Object bean, int colNo, String url) {
+					return null;
+				}
 			})
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04"))

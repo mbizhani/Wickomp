@@ -7,16 +7,20 @@ import org.devocative.wickomp.opt.OHorizontalAlign;
 import org.devocative.wickomp.opt.Options;
 
 public abstract class OColumn<T> extends Options {
+	// ---------------------- JSON FIELDS
 	private OHorizontalAlign align;
 	private String field;
 	private Boolean resizable;
 	private Boolean sortable;
 	private IModel<String> title;
 
-	// -----------------
+	// ---------------------- MISC FIELDS
 	private boolean dummyField = false;
-	protected OFormatter formatter;
 	private boolean visible = true;
+	private boolean hasFooter = false;
+	protected OFormatter formatter;
+
+	// ---------------------- CONSTRUCTORS
 
 	public OColumn(IModel<String> title) {
 		this(title, null);
@@ -27,7 +31,7 @@ public abstract class OColumn<T> extends Options {
 		this.field = field;
 	}
 
-	//----------------------- ACCESSORS
+	// ---------------------- ACCESSORS for JSON
 
 	public OHorizontalAlign getAlign() {
 		return align;
@@ -69,12 +73,18 @@ public abstract class OColumn<T> extends Options {
 		return title != null ? title.getObject() : "";
 	}
 
+	// ---------------------- PUBLIC ABSTRACT METHODS
+
+	public abstract String cellValue(T bean, String id, int colNo, String url);
+
+	public abstract String footerCellValue(Object bean, int colNo, String url);
+
+	// ---------------------- PUBLIC METHODS
+
 	public OColumn<T> setFormatter(OFormatter formatter) {
 		this.formatter = formatter;
 		return this;
 	}
-
-	//----------------------- PUBLIC METHODS
 
 	@JsonIgnore
 	public boolean isDummyField() {
@@ -95,9 +105,17 @@ public abstract class OColumn<T> extends Options {
 		return this;
 	}
 
+	@JsonIgnore
+	public boolean isHasFooter() {
+		return hasFooter;
+	}
+
+	public OColumn<T> setHasFooter(boolean hasFooter) {
+		this.hasFooter = hasFooter;
+		return this;
+	}
+
 	public boolean onCellRender(T bean, String id) {
 		return true;
 	}
-
-	public abstract String cellValue(T bean, String id, int colNo, String url);
 }

@@ -6,8 +6,8 @@ import org.devocative.wickomp.data.Result;
 
 import java.util.List;
 
-public class RGridPage extends Result {
-	private RObjectList rows = new RObjectList();
+class RGridPage extends Result {
+	private RObjectList rows;
 
 	private List<RObject> footer;
 
@@ -26,7 +26,7 @@ public class RGridPage extends Result {
 		return this;
 	}
 
-	public List<?> getFooter() {
+	public List<RObject> getFooter() {
 		return footer;
 	}
 

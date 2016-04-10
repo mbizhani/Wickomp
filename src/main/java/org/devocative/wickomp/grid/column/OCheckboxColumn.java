@@ -23,4 +23,9 @@ public class OCheckboxColumn<T> extends OColumn<T> {
 	public String cellValue(T bean, String id, int colNo, String url) {
 		return null;
 	}
+
+	@Override
+	public String footerCellValue(Object bean, int colNo, String url) {
+		throw new RuntimeException("Invalid footer for OCheckboxColumn");
+	}
 }

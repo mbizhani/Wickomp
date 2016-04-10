@@ -53,5 +53,10 @@ public abstract class OCallbackColumn<T> extends OColumn<T> {
 		return anchor.toString();
 	}
 
+	@Override
+	public String footerCellValue(Object bean, int colNo, String url) {
+		throw new RuntimeException("Footer not supported in OCallbackColumn!");
+	}
+
 	protected abstract void fillAnchor(Anchor anchor, T bean, String id, int colNo, String url);
 }
