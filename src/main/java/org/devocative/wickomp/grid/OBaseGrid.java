@@ -264,6 +264,10 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
+	public boolean hasFooter() {
+		return getShowFooter() != null && getShowFooter();
+	}
+
 	protected String getSelectionJSFunc(String anotherFunction) {
 		if (selectionIndicator || anotherFunction != null) {
 			StringBuilder builder = new StringBuilder();

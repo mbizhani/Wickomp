@@ -29,6 +29,7 @@ import org.devocative.wickomp.vo.PersonVO;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 		OColumnList<PersonVO> columns = new OColumnList<>();
 		columns
 			//.add(new OCheckboxColumn<PersonVO>())
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01"))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01").setHasFooter(true))
 
 			.add(new OAjaxLinkColumn<PersonVO>(new Model<>("Col 02"), "col02") {
 				@Override
@@ -103,7 +104,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "birthDate")
 				.setFormatter(ODateFormatter.prDateTime()))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "income")
-				.setFormatter(ONumberFormatter.integer()))
+				.setFormatter(ONumberFormatter.integer())
+				.setHasFooter(true))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
 				.setFormatter(OBooleanFormatter.bool()))
 		;
@@ -118,7 +120,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 	@Override
 	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
 		Map<String, Object> map = (Map<String, Object>) result;
-		grid2.pushData(handler, (List) map.get("list"), (int) map.get("count"));
+		grid2.pushData(handler, (List) map.get("list"), (int) map.get("count"), (List) map.get("footer"));
 	}
 
 	private void enabledGrid(OColumnList<PersonVO> columns) {
@@ -130,6 +132,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 			.setMultiSort(true)
 			.setSelectionIndicator(true)
 			.setSelectionJSHandler("function(asd){alert(asd.toSource());}")
+			.setShowFooter(true)
 			.addToolbarButton(new OGridGroupingButton<PersonVO>())
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
@@ -177,6 +180,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 			.setMultiSort(true)
 			.setIdField("col02")
 				// .setGroupField("col01")
+			.setShowFooter(true)
 			.addToolbarButton(new OExportExcelButton<PersonVO>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), "Export.xlsx", 1000))
 			.addToolbarButton(new OGridGroupingButton<PersonVO>());
 		grid1Opt.setHeight(OSize.fixed(400));
@@ -206,6 +210,17 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 		}));
 		grid1.setVisible(false);
 		grid1.setOutputMarkupPlaceholderTag(true);
+		grid1.setFooterDataSource(new IGridFooterDataSource<PersonVO>() {
+			@Override
+			public List<?> footer(List<PersonVO> pagedData) {
+				List list = new ArrayList<>();
+				PersonVO agg = new PersonVO();
+				agg.setCol01("Sum");
+				agg.setIncome(1000L);
+				list.add(agg);
+				return list;
+			}
+		});
 
 		add(new AjaxLink("showGrid") {
 			@Override

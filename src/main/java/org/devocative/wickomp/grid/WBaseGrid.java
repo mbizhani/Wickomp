@@ -71,6 +71,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	public WBaseGrid<T> setFooterDataSource(IGridFooterDataSource<T> footerDataSource) {
 		this.footerDataSource = footerDataSource;
+		options.setShowFooter(true);
 		return this;
 	}
 
@@ -102,7 +103,19 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 	}
 
 	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list, long count) {
+		return pushData(handler, list, count, null);
+	}
+
+	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list, long count, List footer) {
 		RGridPage gridPage = getGridPage(list, count);
+
+		if (options.hasFooter()) {
+			if (footer != null) {
+				gridPage.setFooter(getGridFooter(footer));
+			} else {
+				gridPage.setFooter(new ArrayList<RObject>());
+			}
+		}
 
 		String script = String.format("$('#%1$s').%2$s('loadData', %3$s);",
 			getMarkupId(), getJQueryFunction(), JsonUtil.toJson(gridPage));
@@ -250,13 +263,16 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 				result = getGridPage(data, count);
 
-				if (options.getShowFooter() != null && options.getShowFooter() && footerDataSource != null) {
+				if (options.hasFooter() && footerDataSource != null) {
 					result.setFooter(getGridFooter(footerDataSource.footer(data)));
 				}
 			} else if (gridAsyncDataSource != null) {
 				gridAsyncDataSource.list(pageNum, pageSize, sortFieldList);
 
 				result = getGridPage(null, pageNum * pageSize);
+				if (options.hasFooter()) {
+					result.setFooter(new ArrayList<RObject>());
+				}
 				result.setAsync(true);
 			} else {
 				throw new RuntimeException("No DataSource for grid: " + getId());
@@ -274,6 +290,8 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		RGridPage result = new RGridPage();
 		if (data != null) {
 			result.setRows(createRObjectList(data));
+		} else {
+			result.setRows(new RObjectList());
 		}
 		result.setTotal(count);
 		return result;
@@ -289,19 +307,22 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 
 	protected List<RObject> getGridFooter(List<?> footerData) {
 		List<RObject> footer = new ArrayList<>();
-		List<OColumn<T>> columns = options.getColumns().getVisibleColumns();
 
-		for (Object bean : footerData) {
-			RObject rObject = new RObject();
-			for (int colNo = 0; colNo < columns.size(); colNo++) {
-				OColumn<T> column = columns.get(colNo);
-				if (column.isHasFooter()) {
-					String url = String.format("%s&cn=%s&tp=cl", getCallbackURL(), colNo);
-					rObject.addProperty(column.getField(), column.footerCellValue(bean, colNo, url));
+		if (footerData != null) {
+			List<OColumn<T>> columns = options.getColumns().getVisibleColumns();
+			for (Object bean : footerData) {
+				RObject rObject = new RObject();
+				for (int colNo = 0; colNo < columns.size(); colNo++) {
+					OColumn<T> column = columns.get(colNo);
+					if (column.isHasFooter()) {
+						String url = String.format("%s&cn=%s&tp=cl", getCallbackURL(), colNo);
+						rObject.addProperty(column.getField(), column.footerCellValue(bean, colNo, url));
+					}
 				}
+				footer.add(rObject);
 			}
-			footer.add(rObject);
 		}
+
 		return footer;
 	}
 

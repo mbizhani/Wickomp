@@ -150,6 +150,17 @@ public class WickompApplication extends WebApplication {
 				int end = (int) (first * size);
 				final List<PersonVO> result = personVOList.subList(start, Math.min(end, personVOList.size()));
 
+				long sum = 0;
+				for (PersonVO personVO : result) {
+					sum += personVO.getIncome();
+				}
+
+				final List footer = new ArrayList<>();
+				PersonVO agg = new PersonVO();
+				agg.setCol01("Sum");
+				agg.setIncome(sum);
+				footer.add(agg);
+
 				new Thread() {
 					@Override
 					public void run() {
@@ -163,6 +174,7 @@ public class WickompApplication extends WebApplication {
 								.<String, Object>createDefaultMap()
 								.put("list", result)
 								.put("count", personVOList.size())
+								.put("footer", footer)
 								.get()
 						);
 
