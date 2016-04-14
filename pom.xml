@@ -57,6 +57,7 @@
 		<javadoc.version>2.10.3</javadoc.version>
 		<gpg.version>1.6</gpg.version>
 		<jar.version>2.6</jar.version>
+
 		<project.owner>Mehdi Bizhani</project.owner>
 	</properties>
 
@@ -66,6 +67,7 @@
 			<groupId>org.devocative</groupId>
 			<artifactId>adroit</artifactId>
 			<version>1.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
