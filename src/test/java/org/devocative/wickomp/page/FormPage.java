@@ -14,6 +14,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.devocative.adroit.vo.KeyValueVO;
+import org.devocative.adroit.vo.RangeVO;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.form.code.OCode;
@@ -150,6 +151,7 @@ public class FormPage extends BasePage {
 		final Map<String, Serializable> map = new HashMap<>();
 //		map.put("name", "Joe");
 		map.put("child", "B.1");
+		map.put("age", new RangeVO(100, 2000));
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 		form.add(new TextField<String>("name").setRequired(true));

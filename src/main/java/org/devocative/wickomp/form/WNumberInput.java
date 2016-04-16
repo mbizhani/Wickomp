@@ -83,13 +83,13 @@ public class WNumberInput extends WFormInputPanel<Number> {
 
 	@Override
 	protected void onBeforeRender() {
-		super.onBeforeRender();
-
 		if (getModelObject() != null) {
 			numberField.setModelObject(getModelObject().toString());
 		} else {
 			numberField.setModelObject(null);
 		}
+
+		super.onBeforeRender();
 	}
 
 	@Override
