@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.devocative.wickomp.WPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.wrcs.Resource;
@@ -74,7 +75,8 @@ public class WMenuBar extends WPanel {
 		super.onAfterRender();
 
 		String script = String.format("$(\"#%s\").smartmenus();", rootMenu.getMarkupId());
-		getResponse().write(String.format("<script type='text/javascript'>%s</script>", script));
+
+		WebUtil.writeJQueryCall(script, false);
 	}
 
 	private class MenuItemFragment extends Fragment {
