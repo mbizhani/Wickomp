@@ -6,6 +6,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
+import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.obuilder.ObjectBuilder;
 import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.async.AsyncToken;
@@ -59,6 +60,13 @@ public class WickompApplication extends WebApplication {
 			}
 		};
 		th.start();
+
+		AsyncMediator.registerHandler("NTP", new IAsyncRequestHandler() {
+			@Override
+			public void onRequest(AsyncToken asyncToken, Object requestPayLoad) {
+				AsyncMediator.sendResponse(asyncToken, CalendarUtil.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			}
+		});
 
 		AsyncMediator.registerHandler("COUNTER", new IAsyncRequestHandler() {
 			@Override

@@ -1,9 +1,12 @@
 package org.devocative.wickomp.async;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.*;
+import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,13 +27,21 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 	}
 
 	@Override
+	public void afterRender(Component component) {
+		asyncToken = new WebSocketAsyncToken()
+			.setAppKey(Application.get().getApplicationKey())
+			.setSessionId(WebSession.get().getId())
+			.setKey(new PageIdKey(component.getPage().getPageId()));
+	}
+
+	@Override
 	protected void onConnect(ConnectedMessage message) {
 		logger.info("WebSocketAsyncBehavior.onConnect: msg={}", message);
 
-		asyncToken = new WebSocketAsyncToken()
+		/*asyncToken = new WebSocketAsyncToken()
 			.setAppKey(Application.get().getApplicationKey())
 			.setKey(message.getKey())
-			.setSessionId(message.getSessionId());
+			.setSessionId(message.getSessionId());*/
 	}
 
 	@Override

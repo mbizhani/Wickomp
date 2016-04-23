@@ -1,14 +1,18 @@
 package org.devocative.wickomp.page;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
+import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.async.BroadcastCaptureBehavior;
 import org.devocative.wickomp.form.WAsyncAjaxButton;
+import org.devocative.wickomp.html.WAsyncAjaxLink;
+import org.devocative.wickomp.html.window.WModalWindow;
 
 import java.io.Serializable;
 
@@ -16,6 +20,7 @@ public class WebSockPage extends BasePage {
 	private Label label222;
 	private Label label333;
 	private NumberTextField<Integer> no;
+	private WModalWindow wsModal;
 
 	public WebSockPage() {
 		label222 = new Label("label222", "1");
@@ -28,6 +33,11 @@ public class WebSockPage extends BasePage {
 
 		Form form = new Form("form");
 		form.add(no = new NumberTextField<>("no", new Model<>(1), Integer.class));
+		/*form.add(new WAjaxButton("send") {
+			@Override
+			protected void onSubmit(AjaxRequestTarget target) {
+			}
+		});*/
 		form.add(new WAsyncAjaxButton("send") {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target) {
@@ -41,6 +51,17 @@ public class WebSockPage extends BasePage {
 			}
 		});
 		add(form);
+
+		wsModal = new WModalWindow("wsModal");
+		add(wsModal);
+
+		add(new AjaxLink("showTime") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				wsModal.setContent(new TimerPanel(wsModal.getContentId()));
+				wsModal.show(target);
+			}
+		});
 
 		/*add(new WebSocketBehavior() {
 			private static final long serialVersionUID = 1L;
@@ -99,4 +120,29 @@ public class WebSockPage extends BasePage {
 			}
 		}
 	}*/
+
+	public class TimerPanel extends WPanel {
+		private Label timeLabel;
+
+		public TimerPanel(String id) {
+			super(id);
+
+			timeLabel = new Label("timeLabel", "-");
+			timeLabel.setOutputMarkupId(true);
+			add(timeLabel);
+
+			add(new WAsyncAjaxLink("time") {
+				@Override
+				public void onClick(AjaxRequestTarget target) {
+					sendAsyncRequest("NTP", null);
+				}
+
+				@Override
+				public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
+					timeLabel.setDefaultModelObject(result);
+					handler.add(timeLabel);
+				}
+			});
+		}
+	}
 }
