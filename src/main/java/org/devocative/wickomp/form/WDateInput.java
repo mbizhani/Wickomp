@@ -12,6 +12,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.opt.OCalendar;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
@@ -223,7 +224,8 @@ public class WDateInput extends WFormInputPanel<Date> {
 			getMarkupId(), now.getYear(), now.getMonth(), now.getDay(),
 			calOpener.getMarkupId(), calType, year.getMarkupId(), month.getMarkupId(), day.getMarkupId(),
 			mainTable.getMarkupId());
-		getResponse().write(String.format("<script>%s</script>", script));
+
+		WebUtil.writeJQueryCall(script, false);
 	}
 
 	private TextField<Integer> createTextField(String compId) {

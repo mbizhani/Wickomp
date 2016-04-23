@@ -19,6 +19,7 @@ public class WNumberRangeInput extends WBaseRangeInput<Number> {
 	}
 
 	public WNumberRangeInput setPrecision(Integer precision) {
+		this.precision = precision;
 		return this;
 	}
 

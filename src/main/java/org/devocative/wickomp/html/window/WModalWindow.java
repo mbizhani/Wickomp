@@ -6,8 +6,8 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
 public class WModalWindow extends WPanel {
@@ -90,7 +90,7 @@ public class WModalWindow extends WPanel {
 		target.add(container);
 		target.appendJavaScript(String.format("$('#%s').window(%s);",
 			getContainerMarkupId(),
-			JsonUtil.toJson(options)));
+			WebUtil.toJson(options)));
 		return this;
 	}
 

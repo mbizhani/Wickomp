@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
@@ -87,9 +88,9 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		getResponse().write(
-			String.format("<script>$('#%s').candlestick({'on':'true','off':'false','nc':''});</script>",
-				hidden.getMarkupId()));
+		String script = String.format("$('#%s').candlestick({'on':'true','off':'false','nc':''});",
+			hidden.getMarkupId());
 
+		WebUtil.writeJQueryCall(script, false);
 	}
 }

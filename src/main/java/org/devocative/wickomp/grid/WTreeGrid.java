@@ -2,7 +2,7 @@ package org.devocative.wickomp.grid;
 
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.lang.PropertyResolver;
-import org.devocative.wickomp.JsonUtil;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.data.RObject;
 import org.devocative.wickomp.data.RObjectList;
 
@@ -42,7 +42,7 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 		convertBeansToRObjects(children, subRow);
 
 		String script = String.format("$('#%s').%s('append', {parent:'%s', data:%s});",
-			getMarkupId(), getJQueryFunction(), parentId, JsonUtil.toJson(subRow));
+			getMarkupId(), getJQueryFunction(), parentId, WebUtil.toJson(subRow));
 
 		logger.debug("WTreeGrid.pushChildren: {}", script);
 
@@ -74,7 +74,7 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 
 			RObjectList subRow = new RObjectList();
 			convertBeansToRObjects(listByParent, subRow);
-			sendJSONResponse(JsonUtil.toJson(subRow));
+			sendJSONResponse(WebUtil.toJson(subRow));
 		} else {
 			treeGridAsyncDataSource.listByParent(id, sortFieldList);
 			sendJSONResponse("[{\"async\":true}]");

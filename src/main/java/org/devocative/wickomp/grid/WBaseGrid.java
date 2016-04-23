@@ -6,9 +6,9 @@ import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestParameters;
 import org.devocative.wickomp.IExceptionToMessageHandler;
-import org.devocative.wickomp.JsonUtil;
-import org.devocative.wickomp.WCallbackComponent;
 import org.devocative.wickomp.WDefaults;
+import org.devocative.wickomp.WJqCallbackComponent;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.data.RObject;
 import org.devocative.wickomp.data.RObjectList;
 import org.devocative.wickomp.grid.column.OColumn;
@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class WBaseGrid<T> extends WCallbackComponent {
+public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
 
 	private OBaseGrid<T> options;
@@ -85,7 +85,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 				"$('#%1$s').%2$s('options')['url']=\"%3$s\";" +
 					"$('#%1$s').%2$s('loadData', %4$s);",
 				getMarkupId(), getJQueryFunction(), getCallbackURL(),
-				JsonUtil.toJson(gridPage));
+				WebUtil.toJson(gridPage));
 
 			logger.debug("WBaseGrid.loadData(): {}", script);
 
@@ -118,7 +118,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 		}
 
 		String script = String.format("$('#%1$s').%2$s('loadData', %3$s);",
-			getMarkupId(), getJQueryFunction(), JsonUtil.toJson(gridPage));
+			getMarkupId(), getJQueryFunction(), WebUtil.toJson(gridPage));
 
 		logger.debug("WBaseGrid.pushData(): {}", script);
 
@@ -218,7 +218,7 @@ public abstract class WBaseGrid<T> extends WCallbackComponent {
 			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
 
 			RGridPage result = getGridPage(pageNum, pageSize);
-			sendJSONResponse(JsonUtil.toJson(result));
+			sendJSONResponse(WebUtil.toJson(result));
 		}
 	}
 

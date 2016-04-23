@@ -3,6 +3,7 @@ package org.devocative.wickomp.html;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.Resource;
 
 public class WFloatTable extends WebMarkupContainer {
@@ -42,6 +43,6 @@ public class WFloatTable extends WebMarkupContainer {
 		}
 		script.append(";");
 
-		getResponse().write(String.format("<script>%s</script>", script.toString()));
+		WebUtil.writeJQueryCall(script.toString(), true);
 	}
 }

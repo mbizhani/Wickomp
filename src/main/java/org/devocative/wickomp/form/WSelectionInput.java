@@ -13,6 +13,7 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
@@ -151,7 +152,7 @@ public class WSelectionInput extends WFormInputPanel {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		getResponse().write(String.format("<script>%s</script>", getHandleScript()));
+		WebUtil.writeJQueryCall(getHandleScript(), false);
 	}
 
 	private String getHandleScript() {

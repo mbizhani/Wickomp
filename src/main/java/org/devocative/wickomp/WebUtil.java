@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -21,7 +24,7 @@ import java.io.StringWriter;
  *
  * @JsonValue
  */
-public class JsonUtil {
+public class WebUtil {
 	public static String toJson(Object obj) {
 		StringWriter sw = new StringWriter();
 		ObjectMapper mapper = new ObjectMapper();
@@ -51,6 +54,20 @@ public class JsonUtil {
 			return mapper.readValue(json, typeReference);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	public static void writeJQueryCall(String script, boolean decorateWithInit) {
+		AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
+		if(target != null) {
+			target.appendJavaScript(script);
+		} else {
+			Response response = RequestCycle.get().getResponse();
+			if (decorateWithInit) {
+				response.write(String.format("<script>$(function(){%s});</script>", script));
+			} else {
+				response.write(String.format("<script>%s</script>", script));
+			}
 		}
 	}
 }

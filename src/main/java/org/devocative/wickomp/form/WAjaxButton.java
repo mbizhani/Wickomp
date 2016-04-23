@@ -28,6 +28,8 @@ public abstract class WAjaxButton extends Button {
 	private IModel<String> confirmationMessage;
 	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
 
+	// ---------------------- CONSTRUCTORS
+
 	public WAjaxButton(String id) {
 		this(id, null, null);
 	}
@@ -42,6 +44,8 @@ public abstract class WAjaxButton extends Button {
 		this.caption = caption;
 		this.icon = icon;
 	}
+
+	// ---------------------- ACCESSORS
 
 	public WAjaxButton setConfirmationMessage(IModel<String> confirmationMessage) {
 		this.confirmationMessage = confirmationMessage;
@@ -63,22 +67,7 @@ public abstract class WAjaxButton extends Button {
 		return this;
 	}
 
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-
-		add(newAjaxFormSubmitBehavior("click"));
-	}
-
-	@Override
-	protected void onComponentTag(final ComponentTag tag) {
-		super.onComponentTag(tag);
-
-		tag.put("type", "submit");
-		if (caption != null && "input".equalsIgnoreCase(tag.getName())) {
-			tag.put("value", caption.getObject());
-		}
-	}
+	// ---------------------- PUBLIC METHODS
 
 	@Override
 	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
@@ -93,6 +82,29 @@ public abstract class WAjaxButton extends Button {
 			replaceComponentTagBody(markupStream, openTag, cap);
 		} else {
 			super.onComponentTagBody(markupStream, openTag);
+		}
+	}
+
+	// ---------------------- ABSTRACT METHODS
+
+	protected abstract void onSubmit(AjaxRequestTarget target);
+
+	// ---------------------- PROTECTED METHODS
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		add(newAjaxFormSubmitBehavior("click"));
+	}
+
+	@Override
+	protected void onComponentTag(final ComponentTag tag) {
+		super.onComponentTag(tag);
+
+		tag.put("type", "submit");
+		if (caption != null && "input".equalsIgnoreCase(tag.getName())) {
+			tag.put("value", caption.getObject());
 		}
 	}
 
@@ -142,8 +154,6 @@ public abstract class WAjaxButton extends Button {
 			}
 		};
 	}
-
-	protected abstract void onSubmit(AjaxRequestTarget target);
 
 	protected void onAfterSubmit(AjaxRequestTarget target) {
 	}

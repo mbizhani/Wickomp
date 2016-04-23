@@ -11,20 +11,20 @@ import org.devocative.wickomp.opt.OComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class WCallbackComponent extends WComponent {
-	private static final Logger logger = LoggerFactory.getLogger(WCallbackComponent.class);
+public abstract class WJqCallbackComponent extends WJqComponent {
+	private static final Logger logger = LoggerFactory.getLogger(WJqCallbackComponent.class);
 
 	private AbstractAjaxBehavior callbackAjaxBehavior;
 	private boolean isAutoJSRender = true;
 
-	protected WCallbackComponent(String id, OComponent options) {
+	protected WJqCallbackComponent(String id, OComponent options) {
 		super(id, options);
 
 		callbackAjaxBehavior = new AbstractAjaxBehavior() {
 			@Override
 			public void onRequest() {
 				RequestCycle requestCycle = RequestCycle.get();
-				WCallbackComponent.this.onRequest(requestCycle.getRequest().getRequestParameters());
+				WJqCallbackComponent.this.onRequest(requestCycle.getRequest().getRequestParameters());
 			}
 		};
 
@@ -70,7 +70,7 @@ public abstract class WCallbackComponent extends WComponent {
 		super.onAfterRender();
 
 		if (isAutoJSRender && isVisible()) {
-			getResponse().write(String.format("\n<script>\n$(function(){%s});\n</script>\n", getJQueryCall()));
+			WebUtil.writeJQueryCall(getJQueryCall(), true);
 		}
 	}
 }

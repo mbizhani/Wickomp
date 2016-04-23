@@ -7,8 +7,8 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
-import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
@@ -118,8 +118,8 @@ public class WNumberInput extends WFormInputPanel<Number> {
 		super.onAfterRender();
 
 		String script = String.format("$('#%1$s').autoNumeric('init', %2$s);",
-			numberField.getMarkupId(), JsonUtil.toJson(options));
+			numberField.getMarkupId(), WebUtil.toJson(options));
 
-		getResponse().write(String.format("<script>%s</script>", script));
+		WebUtil.writeJQueryCall(script, false);
 	}
 }

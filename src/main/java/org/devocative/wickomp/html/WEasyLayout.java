@@ -3,6 +3,7 @@ package org.devocative.wickomp.html;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.protocol.http.WebSession;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
@@ -93,7 +94,8 @@ public class WEasyLayout extends WebMarkupContainer {
 
 		}
 		builder.append(String.format("$('#%s').layout();", getMarkupId()));
-		getResponse().write(String.format("<script>%s</script>", builder.toString()));
+
+		WebUtil.writeJQueryCall(builder.toString(), false);
 	}
 
 	private String getParentFitScript(WebMarkupContainer container) {

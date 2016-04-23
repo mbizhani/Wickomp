@@ -1,13 +1,12 @@
 package org.devocative.wickomp.form.code;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.wickomp.JsonUtil;
 import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.Resource;
 
 public class WCodeInput extends WFormInputPanel<String> {
@@ -65,13 +64,8 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 		String script = String.format("$('#%s').codemirror(%s);",
 			editor.getMarkupId(),
-			JsonUtil.toJson(options));
+			WebUtil.toJson(options));
 
-		AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
-		if (target == null) {
-			getResponse().write(String.format("<script>%s</script>", script));
-		} else {
-			target.appendJavaScript(script);
-		}
+		WebUtil.writeJQueryCall(script, false);
 	}
 }
