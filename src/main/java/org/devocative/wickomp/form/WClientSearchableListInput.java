@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List<T>> {
+	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 	private static final HeaderItem SEL_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
-	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonJS("form/selList/selList.css");
 	private static final HeaderItem JS = Resource.getCommonJS("form/clientSearchList/clientSearchList.js");
 
 	private Label label;

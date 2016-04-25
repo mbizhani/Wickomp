@@ -24,7 +24,7 @@ function initClientSearchableList(selListPanelId) {
 	});
 
 	//overwrite the CSS 120px value
-	slTitle.css("width", "85px");
+	slTitle.css("width", "100px");
 }
 
 function handleClientSearchableList(modalWindowId, inputName, holderTableId, titleId, rows) {
@@ -46,7 +46,7 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 				var count = title.val();
 				title.val(count - 1);
 			});
-			var td2 = $('<td style="border-bottom: 2px solid #cccccc"></td>');
+			var td2 = $('<td style="border-bottom: 2px solid #cccccc;width:10px;"></td>');
 			td2.append(delAct);
 
 			var tr = $('<tr></tr>');

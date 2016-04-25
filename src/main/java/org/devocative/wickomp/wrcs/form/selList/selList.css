@@ -20,11 +20,19 @@ div.slDropDown {
 	margin: 0;
 	z-index: 1000;
 	box-shadow: 5px 5px 5px #cccccc;
+	min-width: 120px;
+	min-height: 20px;
 }
 
 div.slChoices {
 	max-height: 150px;
 	overflow: auto;
+}
+
+td.slSearchBut {
+	padding: 0 4px;
+	cursor: pointer;
+	border-radius: 3px;
 }
 
 /* this is for IE */
