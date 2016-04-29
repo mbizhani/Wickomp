@@ -6,7 +6,10 @@ public class WDefaults {
 	private static IExceptionToMessageHandler exceptionToMessageHandler = new IExceptionToMessageHandler() {
 		@Override
 		public String handleMessage(Component component, Exception e) {
-			return component.getString(e.getMessage(), null, e.getMessage());
+			if (e.getMessage() != null) {
+				return component.getString(e.getMessage(), null, e.getMessage());
+			}
+			return "[Error(?)]";
 		}
 	};
 

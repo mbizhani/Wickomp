@@ -127,7 +127,9 @@ function handleLoaded(gridId, data) {
 
 	if (data.error) {
 		$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
-	} else if (async) {
+	}
+
+	if (async) {
 		$('#' + gridId).datagrid('loading');
 	} else {
 		$('#' + gridId).datagrid('loaded');

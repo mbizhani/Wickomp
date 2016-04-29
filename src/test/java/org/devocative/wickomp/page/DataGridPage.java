@@ -120,7 +120,11 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 	@Override
 	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
 		Map<String, Object> map = (Map<String, Object>) result;
-		grid2.pushData(handler, (List) map.get("list"), (int) map.get("count"), (List) map.get("footer"));
+		if (grid2.getPageNum() == 3) {
+			grid2.pushError(handler, new RuntimeException());
+		} else {
+			grid2.pushData(handler, (List) map.get("list"), (int) map.get("count"), (List) map.get("footer"));
+		}
 	}
 
 	private void enabledGrid(OColumnList<PersonVO> columns) {

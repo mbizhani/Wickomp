@@ -37,6 +37,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	private IGridAsyncDataSource<T> gridAsyncDataSource;
 	private IGridFooterDataSource<T> footerDataSource;
 
+	protected Integer pageSize, pageNum;
 	protected List<WSortField> sortFieldList = new ArrayList<>();
 	protected Map<String, IModel<T>> pageData = new HashMap<>();
 
@@ -64,6 +65,18 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		return options;
 	}
 
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public List<WSortField> getSortFieldList() {
+		return sortFieldList;
+	}
+
 	public WBaseGrid<T> setExceptionMessageHandler(IExceptionToMessageHandler exceptionMessageHandler) {
 		this.exceptionMessageHandler = exceptionMessageHandler;
 		return this;
@@ -79,7 +92,15 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
 		if (isEnabled()) {
-			RGridPage gridPage = getGridPage(1, options.getPageSize());
+			if (pageNum == null) {
+				pageNum = 1;
+			}
+
+			if (pageSize == null) {
+				pageSize = options.getPageSize();
+			}
+
+			RGridPage gridPage = getGridPage();
 
 			String script = String.format(
 				"$('#%1$s').%2$s('options')['url']=\"%3$s\";" +
@@ -121,6 +142,22 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			getMarkupId(), getJQueryFunction(), WebUtil.toJson(gridPage));
 
 		logger.debug("WBaseGrid.pushData(): {}", script);
+
+		handler.appendJavaScript(script);
+
+		return this;
+	}
+
+	public WBaseGrid<T> pushError(IPartialPageRequestHandler handler, Exception e) {
+		RGridPage result = new RGridPage();
+		result.setTotal((long) pageNum * pageSize);
+		result.setRows(new RObjectList());
+		result.setError(exceptionMessageHandler.handleMessage(this, e));
+
+		String script = String.format("$('#%1$s').%2$s('loadData', %3$s);",
+			getMarkupId(), getJQueryFunction(), WebUtil.toJson(result));
+
+		logger.debug("WBaseGrid.pushError(): {}", script);
 
 		handler.appendJavaScript(script);
 
@@ -175,15 +212,14 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	@Override
 	protected void onRequest(IRequestParameters parameters) {
 
+		pageSize = parameters.getParameterValue("rows").toInt(options.getPageSize());
+		pageNum = parameters.getParameterValue("page").toInt(1);
+
 		if (!isEnabled()) {
 			return;
 		}
 
-		int pageSize = parameters.getParameterValue("rows").toInt(options.getPageSize());
-		int pageNum = parameters.getParameterValue("page").toInt(1);
 		String id = parameters.getParameterValue("id").toOptionalString();
-
-
 		String sortList = parameters.getParameterValue("sort").toOptionalString();
 		String orderList = parameters.getParameterValue("order").toOptionalString();
 
@@ -217,7 +253,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
 
-			RGridPage result = getGridPage(pageNum, pageSize);
+			RGridPage result = getGridPage();
 			sendJSONResponse(WebUtil.toJson(result));
 		}
 	}
@@ -244,7 +280,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		}
 	}
 
-	protected final RGridPage getGridPage(int pageNum, int pageSize) {
+	protected final RGridPage getGridPage() {
 		RGridPage result;
 		try {
 			if (gridDataSource != null) {
