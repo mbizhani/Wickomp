@@ -69,8 +69,18 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 		return "auth";
 	}
 
+	protected boolean isProcessAuth() {
+		return processAuth;
+	}
+
 	protected void setProcessAuth(boolean processAuth) {
 		this.processAuth = processAuth;
+	}
+
+	protected void onBeforeChainAuthenticated(WHttpAuthBean authBean) {
+	}
+
+	protected void onAfterChainAuthenticated(WHttpAuthBean authBean) {
 	}
 
 	// ------------------------------ PRIVATE METHODS
@@ -90,7 +100,11 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 				.setAuthType("DIGEST")
 				.setUserPrincipal(new WPrinciple(authBean.getUsername()));
 
+			onBeforeChainAuthenticated(authBean);
+
 			filterChain.doFilter(rqWrap, response);
+
+			onAfterChainAuthenticated(authBean);
 
 		} else {
 			String errorResultDesc = null;
