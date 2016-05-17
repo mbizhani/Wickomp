@@ -20,6 +20,8 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 
 	private enum EAuthResult {Ok, NoAuthHeader, NotDigest, InvalidNonce, InvalidUser, InvalidPassword}
 
+	private boolean processAuth = true;
+
 	public static final String RQ_AUTH_HEADER = "Authorization";
 	public static final String RS_AUTH_HEADER = "WWW-Authenticate";
 
@@ -28,11 +30,16 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) srvRq;
 		HttpServletResponse response = (HttpServletResponse) srvRsp;
 
-		try {
-			process(request, response, filterChain);
-		} catch (Exception e) {
-			logger.error("DigestAuthFilter: general error", e);
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "General Error");
+		if (processAuth) {
+			try {
+				process(request, response, filterChain);
+			} catch (Exception e) {
+				logger.error("DigestAuthFilter: general error", e);
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "General Error");
+			}
+		} else {
+			logger.warn("HttpDigestAuthFilter: Authentication Ignored!");
+			filterChain.doFilter(request, response);
 		}
 	}
 
@@ -62,6 +69,10 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 		return "auth";
 	}
 
+	protected void setProcessAuth(boolean processAuth) {
+		this.processAuth = processAuth;
+	}
+
 	// ------------------------------ PRIVATE METHODS
 
 	private void process(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -70,7 +81,8 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 
 		EAuthResult authResult = authenticate(request, authBean);
 
-		logger.info("DigestAuthFilter: User={}, AuthResult={}", authBean.getUsername(), authResult);
+		logger.info("DigestAuthFilter: RemoteAddr=[{}] User=[{}] AuthResult=[{}]",
+			request.getRemoteAddr(), authBean.getUsername(), authResult);
 
 		if (authResult == EAuthResult.Ok) {
 			WHttpServletRequest rqWrap = new WHttpServletRequest(request);
