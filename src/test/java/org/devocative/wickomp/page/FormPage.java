@@ -59,7 +59,7 @@ public class FormPage extends BasePage {
 		fields.add(new Field("Alive", "alive", Field.Type.Boolean));
 
 		final Map<String, Serializable> map = new HashMap<>();
-		map.put("name", "Joe");
+		map.put("name", "Joe%");
 		map.put("age", 123456);
 
 		Form<Map<String, Serializable>> dynamicForm = new Form<>("dynamicForm", new CompoundPropertyModel<>(map));
@@ -78,7 +78,7 @@ public class FormPage extends BasePage {
 				switch (field.getType()) {
 
 					case String:
-						fc = new WTextInput(field.getName());
+						fc = new WSqlStringInput(field.getName());
 						break;
 
 					case Integer:

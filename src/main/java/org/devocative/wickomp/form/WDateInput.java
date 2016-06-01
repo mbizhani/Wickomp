@@ -99,6 +99,7 @@ public class WDateInput extends WFormInputPanel<Date> {
 		label.setVisible(visible);
 		return this;
 	}
+
 	// ----------------------- INTERNAL METHODS
 
 	@Override
