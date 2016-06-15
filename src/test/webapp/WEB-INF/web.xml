@@ -9,6 +9,16 @@
 	<display-name>Wickomp</display-name>
 
 	<filter>
+		<filter-name>TestHttpAuthFilter</filter-name>
+		<filter-class>org.devocative.wickomp.TestHttpBasicAuthFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>TestHttpAuthFilter</filter-name>
+		<url-pattern>*.ba</url-pattern>
+	</filter-mapping>
+
+	<filter>
 		<filter-name>wicket.wickomp</filter-name>
 		<filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
 		<init-param>

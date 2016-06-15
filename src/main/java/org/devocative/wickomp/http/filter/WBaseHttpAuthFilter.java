@@ -15,15 +15,21 @@ import java.io.InputStreamReader;
 /**
  * Based on: https://en.wikipedia.org/wiki/Digest_access_authentication
  */
-public abstract class WBaseHttpDigestAuthFilter implements Filter {
-	private static final Logger logger = LoggerFactory.getLogger(WBaseHttpDigestAuthFilter.class);
+public abstract class WBaseHttpAuthFilter implements Filter {
+	private static final Logger logger = LoggerFactory.getLogger(WBaseHttpAuthFilter.class);
+	private static final String RQ_AUTH_HEADER = "Authorization";
+	private static final String RS_AUTH_HEADER = "WWW-Authenticate";
 
-	private enum EAuthResult {Ok, NoAuthHeader, NotDigest, InvalidNonce, InvalidUser, InvalidPassword}
+	// ------------------------------
+
+	private enum EAuthResult {Ok, NoAuthHeader, NoAuthMethod, InvalidNonce, InvalidUser, InvalidPassword}
+
+	// ------------------------------
 
 	private boolean processAuth = true;
+	private WAuthMethod desiredAuthMethod = WAuthMethod.BASIC;
 
-	public static final String RQ_AUTH_HEADER = "Authorization";
-	public static final String RS_AUTH_HEADER = "WWW-Authenticate";
+	// ------------------------------
 
 	@Override
 	public void doFilter(ServletRequest srvRq, ServletResponse srvRsp, FilterChain filterChain) throws IOException, ServletException {
@@ -34,18 +40,28 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 			try {
 				process(request, response, filterChain);
 			} catch (Exception e) {
-				logger.error("DigestAuthFilter: general error", e);
+				logger.error("HttpAuthFilter: general error", e);
 				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "General Error");
 			}
 		} else {
-			logger.warn("HttpDigestAuthFilter: Authentication Ignored!");
+			logger.warn("HttpAuthFilter: Authentication Ignored!");
 			filterChain.doFilter(request, response);
 		}
 	}
 
+	// ------------------------------
+
+	public WAuthMethod getDesiredAuthMethod() {
+		return desiredAuthMethod;
+	}
+
+	public void setDesiredAuthMethod(WAuthMethod desiredAuthMethod) {
+		this.desiredAuthMethod = desiredAuthMethod;
+	}
+
 	// ------------------------------ ABSTRACT METHODS
 
-	protected abstract String calculateNonce(WHttpAuthBean authBean);
+	protected abstract String calculateNonceForDigest(WHttpAuthBean authBean);
 
 	protected abstract String getRealm(WHttpAuthBean authBean);
 
@@ -55,7 +71,9 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 	 * @param authBean
 	 * @return
 	 */
-	protected abstract String generateUserHash(WHttpAuthBean authBean);
+	protected abstract String generateUserHashForDigest(WHttpAuthBean authBean);
+
+	protected abstract boolean authenticateByPasswordForBasic(String username, String password);
 
 	// ------------------------------ PROTECTED METHODS
 
@@ -91,13 +109,13 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 
 		EAuthResult authResult = authenticate(request, authBean);
 
-		logger.info("DigestAuthFilter: RemoteAddr=[{}] User=[{}] AuthResult=[{}]",
+		logger.info("HttpAuthFilter: RemoteAddr=[{}] User=[{}] AuthResult=[{}]",
 			request.getRemoteAddr(), authBean.getUsername(), authResult);
 
 		if (authResult == EAuthResult.Ok) {
 			WHttpServletRequest rqWrap = new WHttpServletRequest(request);
 			rqWrap
-				.setAuthType("DIGEST")
+				.setAuthType(authBean.getAuthMethod().name())
 				.setUserPrincipal(new WPrinciple(authBean.getUsername()));
 
 			onBeforeChainAuthenticated(authBean);
@@ -112,8 +130,8 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 				case NoAuthHeader:
 					response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
 					break;
-				case NotDigest:
-					errorResultDesc = "Only HTTP Digest authentication supported!";
+				case NoAuthMethod:
+					errorResultDesc = "Only HTTP Basic/Digest authentication supported!";
 					break;
 				case InvalidNonce:
 					errorResultDesc = "Invalid login state. Retry!";
@@ -135,11 +153,30 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 			return EAuthResult.NoAuthHeader;
 		}
 
-		if (!"Digest".equals(authBean.getAuthMethod())) {
-			return EAuthResult.NotDigest;
+		switch (authBean.getAuthMethod()) {
+			case BASIC:
+				return authenticateBasic(authBean);
+			case DIGEST:
+				return authenticateDigest(request, authBean);
+			default:
+				return EAuthResult.NoAuthMethod;
+		}
+	}
+
+	private EAuthResult authenticateBasic(WHttpAuthBean authBean) {
+		if (authBean.getUsername() == null) {
+			return EAuthResult.InvalidUser;
 		}
 
-		String ha1 = generateUserHash(authBean);
+		if (authenticateByPasswordForBasic(authBean.getUsername(), authBean.getPassword())) {
+			return EAuthResult.Ok;
+		}
+
+		return EAuthResult.InvalidPassword;
+	}
+
+	private EAuthResult authenticateDigest(HttpServletRequest request, WHttpAuthBean authBean) {
+		String ha1 = generateUserHashForDigest(authBean);
 
 		if (ha1 == null) {
 			return EAuthResult.InvalidUser;
@@ -154,7 +191,7 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 		}
 
 		String serverResponse;
-		String nonce = calculateNonce(authBean);
+		String nonce = calculateNonceForDigest(authBean);
 		if (authBean.hasQop()) {
 			serverResponse = DigestUtils.md5Hex(
 				ha1 + ":" +
@@ -180,12 +217,22 @@ public abstract class WBaseHttpDigestAuthFilter implements Filter {
 	}
 
 	private String getRsAuthHeader(WHttpAuthBean authBean) {
-		String nonce = calculateNonce(authBean);
-		String realm = getRealm(authBean);
-		String qop = getQop(authBean);
+		switch (getDesiredAuthMethod()) {
 
-		return String.format("Digest realm=\"%s\",qop=\"%s\",nonce=\"%s\",opaque=\"%s\"",
-			realm, qop, nonce, getOpaque(realm, nonce));
+			case BASIC:
+				return "Basic";
+
+			case DIGEST:
+				String nonce = calculateNonceForDigest(authBean);
+				String realm = getRealm(authBean);
+				String qop = getQop(authBean);
+
+				return String.format("Digest realm=\"%s\",qop=\"%s\",nonce=\"%s\",opaque=\"%s\"",
+					realm, qop, nonce, getOpaque(realm, nonce));
+
+			default:
+				throw new RuntimeException("Invalid desired authentication method: " + getDesiredAuthMethod());
+		}
 	}
 
 	private String getOpaque(String domain, String nonce) {
