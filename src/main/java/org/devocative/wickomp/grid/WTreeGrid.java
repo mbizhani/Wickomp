@@ -109,28 +109,30 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 		RObjectList rObjectList = new RObjectList();
 		convertBeansToRObjects(data, rObjectList);
 
-		if (options.getParentIdField() != null && treeGridDataSource != null) {
-			Set<Serializable> parentIds;
-			do {
-				parentIds = new HashSet<>();
-				for (T bean : data) {
-					Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
-					if (parentId != null) {
-						if (!rObjectList.hasRObject(parentId.toString())) {
-							parentIds.add(parentId);
+		if (options.getParentIdField() != null) {
+			if (treeGridDataSource != null) {
+				Set<Serializable> parentIds;
+				do {
+					parentIds = new HashSet<>();
+					for (T bean : data) {
+						Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
+						if (parentId != null) {
+							if (!rObjectList.hasRObject(parentId.toString())) {
+								parentIds.add(parentId);
+							}
 						}
 					}
-				}
 
-				if (parentIds.size() > 0) {
-					data = treeGridDataSource.listByIds(parentIds, sortFieldList);
-					if (data.size() < parentIds.size()) {
-						logger.warn("WTreeGrid -> finding parents -> missing some parent(s) = {} (parent ids = {}) ",
-							parentIds.size() - data.size(), parentIds);
+					if (parentIds.size() > 0) {
+						data = treeGridDataSource.listByIds(parentIds, sortFieldList);
+						if (data.size() < parentIds.size()) {
+							logger.warn("WTreeGrid -> finding parents -> missing some parent(s) = {} (parent ids = {}) ",
+								parentIds.size() - data.size(), parentIds);
+						}
+						convertBeansToRObjects(data, rObjectList);
 					}
-					convertBeansToRObjects(data, rObjectList);
-				}
-			} while (parentIds.size() > 0);
+				} while (parentIds.size() > 0);
+			}
 
 			for (RObject rObject : rObjectList.getValue()) {
 				String parentId = rObject.getProperty(PARENT_ID_PROPERTY);
