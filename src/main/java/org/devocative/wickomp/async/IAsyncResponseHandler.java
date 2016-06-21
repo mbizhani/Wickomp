@@ -6,4 +6,6 @@ import java.io.Serializable;
 
 public interface IAsyncResponseHandler {
 	void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result);
+
+	void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error);
 }

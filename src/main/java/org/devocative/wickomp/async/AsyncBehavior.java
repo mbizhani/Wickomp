@@ -32,4 +32,8 @@ public class AsyncBehavior extends Behavior implements IAsyncAction {
 	@Override
 	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
 	}
+
+	@Override
+	public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
+	}
 }

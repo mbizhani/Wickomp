@@ -5,6 +5,7 @@ import java.io.Serializable;
 class AsyncResult {
 	private AsyncToken token;
 	private Serializable result;
+	private Exception error;
 
 	public AsyncToken getToken() {
 		return token;
@@ -21,6 +22,15 @@ class AsyncResult {
 
 	public AsyncResult setResult(Serializable result) {
 		this.result = result;
+		return this;
+	}
+
+	public Exception getError() {
+		return error;
+	}
+
+	public AsyncResult setError(Exception error) {
+		this.error = error;
 		return this;
 	}
 

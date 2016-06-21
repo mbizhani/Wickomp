@@ -52,10 +52,33 @@ public class AsyncMediator {
 	}
 
 	public static void sendResponse(AsyncToken asyncToken, Serializable responsePayLoad) {
+		sendResponse(asyncToken, responsePayLoad, null);
+	}
+
+	public static void sendError(AsyncToken asyncToken, Exception error) {
+		sendResponse(asyncToken, null, error);
+	}
+
+	public static void broadcast(Object message) {
+		if (application == null) {
+			throw new RuntimeException("Call AsyncMediator.init() in Application.init()!");
+		}
+
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
+		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
+		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(registry);
+		broadcaster.broadcastAll(application, new WebSocketBroadcastMessage(message));
+	}
+
+	// ------------------------------
+
+	private static void sendResponse(AsyncToken asyncToken, Serializable responsePayLoad, Exception error) {
 		if (asyncToken instanceof WebSocketAsyncToken) {
 			WebSocketAsyncResult result = new WebSocketAsyncResult();
-			result.setToken(asyncToken)
-				.setResult(responsePayLoad);
+			result
+				.setToken(asyncToken)
+				.setResult(responsePayLoad)
+				.setError(error);
 
 			WebSocketAsyncToken wsat = (WebSocketAsyncToken) asyncToken;
 
@@ -70,16 +93,5 @@ public class AsyncMediator {
 			}
 		}
 
-	}
-
-	public static void broadcast(Object message) {
-		if (application == null) {
-			throw new RuntimeException("Call AsyncMediator.init() in Application.init()!");
-		}
-
-		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
-		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
-		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(registry);
-		broadcaster.broadcastAll(application, new WebSocketBroadcastMessage(message));
 	}
 }

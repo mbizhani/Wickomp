@@ -49,7 +49,11 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 		if (message instanceof AsyncResult) {
 			AsyncResult result = (AsyncResult) message;
 			if (result.getToken().equals(asyncToken)) {
-				responseHandler.onAsyncResult(asyncToken.getHandlerId(), handler, result.getResult());
+				if (result.getError() != null) {
+					responseHandler.onAsyncError(asyncToken.getHandlerId(), handler, result.getError());
+				} else {
+					responseHandler.onAsyncResult(asyncToken.getHandlerId(), handler, result.getResult());
+				}
 			}
 		}
 	}
