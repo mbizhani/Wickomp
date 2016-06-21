@@ -175,4 +175,8 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			atreegrid.pushChildren(handler, (String) map.get("parentId"), (List) map.get("list"));
 		}
 	}
+
+	@Override
+	public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
+	}
 }

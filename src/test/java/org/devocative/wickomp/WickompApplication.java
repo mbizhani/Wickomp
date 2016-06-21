@@ -178,13 +178,17 @@ public class WickompApplication extends WebApplication {
 							e.printStackTrace();
 						}
 
-						AsyncMediator.sendResponse(token, (Serializable) ObjectBuilder
-								.<String, Object>createDefaultMap()
-								.put("list", result)
-								.put("count", personVOList.size())
-								.put("footer", footer)
-								.get()
-						);
+						if (first == 3) {
+							AsyncMediator.sendError(token, new RuntimeException("AsyncMediator.sendError :)"));
+						} else {
+							AsyncMediator.sendResponse(token, (Serializable) ObjectBuilder
+									.<String, Object>createDefaultMap()
+									.put("list", result)
+									.put("count", personVOList.size())
+									.put("footer", footer)
+									.get()
+							);
+						}
 
 					}
 				}.start();

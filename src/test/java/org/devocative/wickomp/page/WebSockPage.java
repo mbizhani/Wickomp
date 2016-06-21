@@ -49,6 +49,10 @@ public class WebSockPage extends BasePage {
 				label333.setDefaultModelObject(result);
 				handler.add(label333);
 			}
+
+			@Override
+			public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
+			}
 		});
 		add(form);
 
@@ -141,6 +145,10 @@ public class WebSockPage extends BasePage {
 				public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
 					timeLabel.setDefaultModelObject(result);
 					handler.add(timeLabel);
+				}
+
+				@Override
+				public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
 				}
 			});
 		}
