@@ -12,11 +12,16 @@ public class OCode extends Options {
 	private Boolean lineNumbers = true;
 	private Boolean matchBrackets = true;
 	private OCodeMode mode;
+	private Boolean readOnly; //default is false
 	private Boolean smartIndent = true;
+
+	// ------------------------------ CONSTRUCTORS
 
 	public OCode(OCodeMode mode) {
 		this.mode = mode;
 	}
+
+	// ------------------------------ ACCESSORS
 
 	public Boolean getAutofocus() {
 		return autofocus;
@@ -72,6 +77,15 @@ public class OCode extends Options {
 		return this;
 	}
 
+	public Boolean getReadOnly() {
+		return readOnly;
+	}
+
+	public OCode setReadOnly(Boolean readOnly) {
+		this.readOnly = readOnly;
+		return this;
+	}
+
 	public Boolean getSmartIndent() {
 		return smartIndent;
 	}
@@ -81,7 +95,7 @@ public class OCode extends Options {
 		return this;
 	}
 
-
+	// ------------------------------
 
 	public Object getExtraKeys() {
 		if(mode.isHasHint()) {

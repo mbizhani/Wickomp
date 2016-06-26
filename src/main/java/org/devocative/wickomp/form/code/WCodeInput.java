@@ -29,11 +29,17 @@ public class WCodeInput extends WFormInputPanel<String> {
 		editor = new TextArea<>("editor", new Model<String>());
 		editor.setOutputMarkupId(true);
 		add(editor);
+
+		setOutputMarkupId(true);
 	}
 
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
+
+		if (!isEnabledInHierarchy()) {
+			options.setReadOnly(true);
+		}
 
 		editor.setModelObject(getModelObject());
 	}
@@ -65,6 +71,10 @@ public class WCodeInput extends WFormInputPanel<String> {
 		String script = String.format("$('#%s').codemirror(%s);",
 			editor.getMarkupId(),
 			WebUtil.toJson(options));
+
+		if (!isEnabledInHierarchy()) {
+			script += String.format("$('#%s').find('div.CodeMirror-scroll').css('background-color', '#eeeeee');", getMarkupId());
+		}
 
 		WebUtil.writeJQueryCall(script, false);
 	}
