@@ -5,11 +5,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.string.StringValue;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Some useful annotations:
@@ -69,5 +75,17 @@ public class WebUtil {
 				response.write(String.format("<script>%s</script>", script));
 			}
 		}
+	}
+
+	public static Map<String, List<String>> toMap(IRequestParameters parameters) {
+		Map<String, List<String>> result = new HashMap<>();
+		for (String param : parameters.getParameterNames()) {
+			List<String> values = new ArrayList<>();
+			for (StringValue stringValue : parameters.getParameterValues(param)) {
+				values.add(stringValue.toString());
+			}
+			result.put(param, values);
+		}
+		return result;
 	}
 }
