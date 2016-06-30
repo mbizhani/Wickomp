@@ -150,6 +150,8 @@ public class FormPage extends BasePage {
 		final WSelectionInput child, parentSI;
 		final Map<String, Serializable> map = new HashMap<>();
 //		map.put("name", "Joe");
+		map.put("eduSingle", new KeyValue("A"));
+		map.put("eduMultiple", (Serializable) Arrays.asList(new KeyValue("A"), new KeyValue("D")));
 		map.put("child", "B.1");
 		map.put("age", new RangeVO(100, 2000));
 

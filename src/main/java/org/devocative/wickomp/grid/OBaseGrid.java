@@ -27,7 +27,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private Boolean rowNumbers = true;
 	private Boolean selectOnCheck;
 	private Boolean showFooter;
-	private Boolean singleSelect;
+	private Boolean singleSelect = true;
 	private Boolean striped;
 	private String titleField;
 	private List<OButton<T>> toolbar;
