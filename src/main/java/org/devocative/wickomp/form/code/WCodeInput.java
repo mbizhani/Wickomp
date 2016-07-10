@@ -27,6 +27,7 @@ public class WCodeInput extends WFormInputPanel<String> {
 		this.options = options;
 
 		editor = new TextArea<>("editor", new Model<String>());
+		editor.setType(String.class);
 		editor.setOutputMarkupId(true);
 		add(editor);
 
