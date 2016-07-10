@@ -166,7 +166,8 @@ $(window).keyup(function (e) {
 				defaults.dtTable = $("<table cellpadding='5' cellspacing='0'></table>");
 				defaults.dtTHead = $("<thead></thead>");
 				defaults.dtTBody = $("<tbody></tbody>");
-				defaults.selectYear = $("<select></select>");
+				//defaults.selectYear = $("<select></select>");
+				defaults.selectYear = $("<input type='number'/>");
 				defaults.selectMonth = $("<select></select>");
 				defaults.trFirst = $("<tr></tr>");
 				defaults.tdFirst = $("<td colspan='7'></td>");
@@ -175,10 +176,10 @@ $(window).keyup(function (e) {
 				defaults.monthInput = $("#" + monthId);
 				defaults.dayInput = $("#" + dayId);
 
-				for (var j = defaults.calendars[configType].years() - 10; j <= defaults.calendars[configType].years() + 10; j++) {
+				/*for (var j = defaults.calendars[configType].years() - 10; j <= defaults.calendars[configType].years() + 10; j++) {
 					var txt1 = "<option class='op' value='" + j + "'>" + j + "</option>";
 					defaults.selectYear.append(txt1);
-				}
+				 }*/
 				defaults.selectYear.change(defaults.changeYearMonth);
 
 				for (var i = 0; i < defaults.calendars[configType]["months"].length; i++) {
