@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.validation.IValidator;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 
@@ -12,10 +13,13 @@ public class WTextInput extends WFormInputPanel<String> {
 	private Label label;
 	private TextField<String> textField;
 
+	// ------------------------------
+
 	public WTextInput(String id) {
 		this(id, null);
 	}
 
+	// Main Constructor
 	public WTextInput(String id, IModel<String> model) {
 		super(id, model);
 
@@ -27,15 +31,33 @@ public class WTextInput extends WFormInputPanel<String> {
 		add(new CommonBehavior());
 	}
 
-	public WTextInput add(Behavior... behavior) {
-		textField.add(behavior);
-		return this;
-	}
+	// ------------------------------
 
 	public WTextInput setLabelVisible(boolean visible) {
 		label.setVisible(visible);
 		return this;
 	}
+
+	// ------------------------------
+
+	@Override
+	public WTextInput add(Behavior... behavior) {
+		for (Behavior b : behavior) {
+			if (b instanceof IValidator) {
+				super.add(b);
+			} else {
+				textField.add(behavior);
+			}
+		}
+		return this;
+	}
+
+	@Override
+	public void convertInput() {
+		setConvertedInput(textField.getConvertedInput());
+	}
+
+	// ------------------------------
 
 	@Override
 	protected void onInitialize() {
@@ -54,10 +76,5 @@ public class WTextInput extends WFormInputPanel<String> {
 		super.onBeforeRender();
 
 		textField.setModelObject(getModelObject());
-	}
-
-	@Override
-	public void convertInput() {
-		setConvertedInput(textField.getConvertedInput());
 	}
 }
