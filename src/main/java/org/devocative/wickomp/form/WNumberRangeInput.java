@@ -7,7 +7,7 @@ import org.devocative.adroit.vo.RangeVO;
 public class WNumberRangeInput extends WBaseRangeInput<Number> {
 	private Class<? extends Number> type;
 	private Integer precision;
-	private String thousandSeparator;
+	private Character thousandSeparator;
 
 	public WNumberRangeInput(String id, Class<? extends Number> type) {
 		this(id, null, type);
@@ -23,7 +23,7 @@ public class WNumberRangeInput extends WBaseRangeInput<Number> {
 		return this;
 	}
 
-	public WNumberRangeInput setThousandSeparator(String thousandSeparator) {
+	public WNumberRangeInput setThousandSeparator(Character thousandSeparator) {
 		this.thousandSeparator = thousandSeparator;
 		return this;
 	}

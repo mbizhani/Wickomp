@@ -2,7 +2,7 @@
  * autoNumeric.js
  * @author: Bob Knothe
  * @author: Sokolov Yura
- * @version: 1.9.43 - 2015-12-19 GMT 4:00 PM / 16:00
+ * @version: 1.9.45 - 2016-06-13 GMT 5:00 PM / 19:00
  */
 (function (factory) {
     if (typeof define === "function" && define.amd) {
@@ -534,7 +534,6 @@
         this.settingsClone = autoCode(this.$that, this.settings);
         this.value = that.value;
     }
-
     AutoNumericHolder.prototype = {
         init: function (e) {
             this.value = this.that.value;
@@ -1027,7 +1026,7 @@
                         holder.init(e);
                         if (holder.skipAllways(e)) {
                             holder.processed = true;
-                            return true;
+                        return true;
                         }
                         if (holder.processAllways()) {
                             holder.processed = true;
@@ -1138,8 +1137,8 @@
         destroy: function () {
             return $(this).each(function () {
                 var $this = $(this);
-                $this.off('.autoNumeric');
                 $this.removeData('autoNumeric');
+                $this.off('autoNumeric');
             });
         },
 
@@ -1176,7 +1175,7 @@
          * must contain only numbers and one decimal (period) character
          */
         set: function (valueIn) {
-            if (valueIn === null) {
+            if (valueIn === null || isNaN(valueIn)) {
                 return;
             }
             return $(this).each(function () {
