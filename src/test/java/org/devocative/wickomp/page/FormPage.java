@@ -6,15 +6,18 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessagesModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.devocative.adroit.vo.KeyValueVO;
-import org.devocative.adroit.vo.RangeVO;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.form.code.OCode;
@@ -83,13 +86,13 @@ public class FormPage extends BasePage {
 
 					case Integer:
 						fc = new WNumberInput(field.getName(), Long.class)
-							.setThousandSeparator(",");
+							.setThousandSeparator(',');
 						break;
 
 					case Real:
 						fc = new WNumberInput(field.getName(), BigDecimal.class)
 							.setPrecision(4)
-							.setThousandSeparator(",");
+							.setThousandSeparator(',');
 						break;
 
 					case Boolean:
@@ -153,11 +156,13 @@ public class FormPage extends BasePage {
 		map.put("eduSingle", new KeyValue("A"));
 		map.put("eduMultiple", (Serializable) Arrays.asList(new KeyValue("A"), new KeyValue("D")));
 		map.put("child", "B.1");
-		map.put("age", new RangeVO(100, 2000));
+		//map.put("age", new RangeVO(100, 2000));
+		map.put("age", 2000);
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
-		form.add(new TextField<String>("name").setRequired(true));
-		form.add(new WNumberRangeInput("age", Integer.class).setThousandSeparator(","));
+		form.add(new WTextInput("name").setRequired(true).add(StringValidator.minimumLength(3)));
+		//form.add(new WNumberRangeInput("age", Integer.class).setThousandSeparator(","));
+		form.add(new WNumberInput("age", Integer.class).setThousandSeparator(','));
 		form.add(new WSelectionInput("eduSingle", list, false));
 		form.add(new WSelectionInput("eduMultiple", list, true));
 		form.add(new DropDownChoice<>("eduDD", list));
