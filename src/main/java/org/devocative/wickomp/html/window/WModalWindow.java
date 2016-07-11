@@ -16,6 +16,9 @@ public class WModalWindow extends WPanel {
 	private AbstractDefaultAjaxBehavior callbackAjaxBehavior;
 
 	private OModalWindow options;
+	private boolean closeOnEscape = true;
+
+	// ------------------------------
 
 	public WModalWindow(String id) {
 		this(id, new OModalWindow());
@@ -46,6 +49,8 @@ public class WModalWindow extends WPanel {
 		add(new EasyUIBehavior());
 	}
 
+	// ------------------------------
+
 	public String getContentId() {
 		return "content";
 	}
@@ -66,6 +71,13 @@ public class WModalWindow extends WPanel {
 		container.replace(content = component.setVisible(false));
 		return this;
 	}
+
+	public WModalWindow setCloseOnEscape(boolean closeOnEscape) {
+		this.closeOnEscape = closeOnEscape;
+		return this;
+	}
+
+	// ------------------------------
 
 	public final WModalWindow show(AjaxRequestTarget target) {
 		return show(null, null, target);
@@ -88,11 +100,22 @@ public class WModalWindow extends WPanel {
 		options.setUrl(callbackAjaxBehavior.getCallbackUrl().toString());
 		content.setVisible(true);
 		target.add(container);
-		target.appendJavaScript(String.format("$('#%s').window(%s);",
+
+		String script = String.format("$('#%s').window(%s)",
 			getContainerMarkupId(),
-			WebUtil.toJson(options)));
+			WebUtil.toJson(options));
+
+		if (closeOnEscape) {
+			script += String.format(".attr('tabindex','-1').focus().keydown(function(e){if(e.which == 27) $('#%s').window('close');})", getContainerMarkupId());
+		}
+
+		script += ";";
+
+		target.appendJavaScript(script);
 		return this;
 	}
+
+	// ------------------------------
 
 	protected void onClose(AjaxRequestTarget target) {
 	}
