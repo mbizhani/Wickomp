@@ -16,13 +16,13 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.validation.validator.StringValidator;
 import org.devocative.adroit.vo.KeyValueVO;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.form.code.OCode;
 import org.devocative.wickomp.form.code.OCodeMode;
 import org.devocative.wickomp.form.code.WCodeInput;
+import org.devocative.wickomp.form.validator.WPatternValidator;
 import org.devocative.wickomp.html.WEasyLayout;
 import org.devocative.wickomp.html.WFloatTable;
 import org.devocative.wickomp.html.WMessager;
@@ -160,7 +160,12 @@ public class FormPage extends BasePage {
 		map.put("age", 2000);
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
-		form.add(new WTextInput("name").setRequired(true).add(StringValidator.minimumLength(3)));
+
+//		form.add(new WTextInput("name").setRequired(true).add(new WAsciiIdentifierValidator()));
+//		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$")));
+		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$", "name.format")));
+//		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$").setCustomMessage("oops!")));
+
 		//form.add(new WNumberRangeInput("age", Integer.class).setThousandSeparator(","));
 		form.add(new WNumberInput("age", Integer.class).setThousandSeparator(','));
 		form.add(new WSelectionInput("eduSingle", list, false));
