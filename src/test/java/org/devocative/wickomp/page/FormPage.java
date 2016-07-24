@@ -210,7 +210,7 @@ public class FormPage extends BasePage {
 					for (FeedbackMessage message : messages) {
 						errors.add(message.getMessage());
 					}
-					String st = WMessager.getScript("Err", WMessager.getHtml(errors), WMessager.ShowType.show);
+					String st = WMessager.getScript("Err", WMessager.getHtml(errors));
 					getWebResponse().write(String.format("<script>$(function(){%s});</script>", st));
 				}
 			}
