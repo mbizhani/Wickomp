@@ -70,6 +70,7 @@ public class WizardPage extends BasePage {
 	private class Step extends WWizardStepPanel {
 		private int i;
 		private WTextInput txt;
+		private boolean warnOn4 = false;
 
 		public Step(int i) {
 			this.i = i;
@@ -83,8 +84,15 @@ public class WizardPage extends BasePage {
 		}
 
 		@Override
-		public void onStepSubmit() {
+		public boolean onStepSubmit(AjaxRequestTarget target) {
 			System.out.printf("onStepSubmit(%s): txt = %s\n", i, txt.getModelObject());
+			if (i == 4 && !warnOn4) {
+				warnOn4 = true;
+				WMessager.show("Warn", "Test warn", target);
+				return false;
+			}
+
+			return true;
 		}
 	}
 

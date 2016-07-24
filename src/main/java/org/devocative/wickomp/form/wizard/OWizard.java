@@ -12,10 +12,14 @@ import java.util.Set;
 public class OWizard extends Options {
 	private static Logger logger = LoggerFactory.getLogger(OWizard.class);
 
+	// ------------------------------
+
 	private List<String> stepIds = new ArrayList<>();
 	private List<WWizardStepPanel> stepsPanels = new ArrayList<>();
 	private Set<String> skippedSteps = new HashSet<>();
 	private int stepIndex = 0;
+
+	// ------------------------------
 
 	public OWizard addStep(String stepId, WWizardStepPanel stepPanel) {
 		stepIds.add(stepId);

@@ -25,11 +25,15 @@ import java.util.List;
 public class WWizardPanel extends WPanel {
 	public enum ButtonBarPlace {TOP, BOTTOM}
 
+	// ------------------------------
+
 	private OWizard oWizard;
 	private WebMarkupContainer buttonBar, content;
 	private Label titleLbl;
 	private String title;
 	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
+
+	// ------------------------------
 
 	public WWizardPanel(String id, OWizard oWizard) {
 		this(id, oWizard, ButtonBarPlace.BOTTOM);
@@ -71,7 +75,7 @@ public class WWizardPanel extends WPanel {
 		add(new FontAwesomeBehavior());
 	}
 
-	// ------------- ACCESSORS
+	// ------------------------------
 
 	public String getTitle() {
 		return title;
@@ -92,7 +96,7 @@ public class WWizardPanel extends WPanel {
 		return this;
 	}
 
-	// ------------- Protected Methods
+	// ------------------------------
 
 	protected void clearSkippedSteps() {
 		oWizard.clearSkippedSteps();
@@ -122,6 +126,8 @@ public class WWizardPanel extends WPanel {
 		}
 	}
 
+	// ------------------------------
+
 	private void updateStep(WWizardStepPanel stepPanel, AjaxRequestTarget target) {
 		content.replace(stepPanel);
 		target.add(content);
@@ -150,12 +156,13 @@ public class WWizardPanel extends WPanel {
 			next = new WAjaxButton("next", new ResourceModel("label.wizard.next", "Next")) {
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
-					oWizard.getCurrentStep().onStepSubmit();
-					WWizardPanel.this.onNext(target, oWizard.getCurrentStepId());
+					if (oWizard.getCurrentStep().onStepSubmit(target)) {
+						WWizardPanel.this.onNext(target, oWizard.getCurrentStepId());
 
-					WWizardStepPanel step = oWizard.getNextStep();
-					updateButtons(target);
-					WWizardPanel.this.updateStep(step, target);
+						WWizardStepPanel step = oWizard.getNextStep();
+						updateButtons(target);
+						WWizardPanel.this.updateStep(step, target);
+					}
 				}
 
 				@Override
@@ -176,8 +183,9 @@ public class WWizardPanel extends WPanel {
 			finish = new WAjaxButton("finish", new ResourceModel("label.wizard.finish", "Finish"), new FontAwesome("check-circle")) {
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
-					oWizard.getCurrentStep().onStepSubmit();
-					WWizardPanel.this.onFinish(target, oWizard.getCurrentStepId());
+					if (oWizard.getCurrentStep().onStepSubmit(target)) {
+						WWizardPanel.this.onFinish(target, oWizard.getCurrentStepId());
+					}
 				}
 
 				@Override

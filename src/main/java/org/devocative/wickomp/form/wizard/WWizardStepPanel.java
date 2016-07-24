@@ -20,7 +20,8 @@ public abstract class WWizardStepPanel extends WPanel {
 		onInit();
 	}
 
-	public void onStepSubmit() {
+	public boolean onStepSubmit(AjaxRequestTarget target) {
+		return true;
 	}
 
 	public boolean onError(AjaxRequestTarget target, List<Serializable> errors) {
