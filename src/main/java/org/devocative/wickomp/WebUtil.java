@@ -65,7 +65,7 @@ public class WebUtil {
 
 	public static void writeJQueryCall(String script, boolean decorateWithInit) {
 		AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-		if(target != null) {
+		if (target != null) {
 			target.appendJavaScript(script);
 		} else {
 			Response response = RequestCycle.get().getResponse();
@@ -77,14 +77,24 @@ public class WebUtil {
 		}
 	}
 
-	public static Map<String, List<String>> toMap(IRequestParameters parameters) {
+	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam) {
 		Map<String, List<String>> result = new HashMap<>();
 		for (String param : parameters.getParameterNames()) {
 			List<String> values = new ArrayList<>();
+
 			for (StringValue stringValue : parameters.getParameterValues(param)) {
 				values.add(stringValue.toString());
 			}
-			result.put(param, values);
+
+			if (lowercaseParam) {
+				param = param.toLowerCase();
+			}
+
+			if (result.containsKey(param)) {
+				result.get(param).addAll(values);
+			} else {
+				result.put(param, values);
+			}
 		}
 		return result;
 	}
