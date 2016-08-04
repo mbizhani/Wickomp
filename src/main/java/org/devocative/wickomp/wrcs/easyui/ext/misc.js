@@ -48,7 +48,7 @@ function collapseAllGroups(gridId) {
 	}
 }
 
-function handleSelectionIndicator(gridId, selectionHandler) {
+function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelection) {
 	var grid = $('#' + gridId);
 	var noOfSelected = grid.datagrid('getSelections').length.toString();
 	var butts = [
@@ -86,25 +86,19 @@ function handleSelectionIndicator(gridId, selectionHandler) {
 	];
 
 	if (selectionHandler) {
+		if (enableDblClickSelection) {
+			grid.datagrid('options').onDblClickRow = function (index, row) {
+				var arr = [];
+				arr.push(row);
+				handleSelection(grid, selectionHandler, arr);
+			};
+		}
+
 		butts.push({
 			width: 25,
 			iconCls: "fa fa-paper-plane-o",
 			handler: function () {
-				var idField = grid.datagrid('options')["idField"];
-				var titleField = grid.datagrid('options')["titleField"];
-				if (idField) {
-					var selData = grid.datagrid('getSelections');
-					var kvList = [];
-					for (var r = 0; r < selData.length; r++) {
-						var obj = {};
-						obj["key"] = selData[r][idField];
-						obj["value"] = selData[r][titleField];
-						kvList.push(obj);
-					}
-					selectionHandler(kvList);
-				} else {
-					alert('No idField!');
-				}
+				handleSelection(grid, selectionHandler, grid.datagrid('getSelections'));
 			}
 		});
 	}
@@ -112,6 +106,23 @@ function handleSelectionIndicator(gridId, selectionHandler) {
 	grid.datagrid('getPager').pagination({
 		buttons: butts
 	});
+}
+
+function handleSelection(grid, selectionHandler, selData) {
+	var idField = grid.datagrid('options')["idField"];
+	var titleField = grid.datagrid('options')["titleField"];
+	if (idField) {
+		var kvList = [];
+		for (var r = 0; r < selData.length; r++) {
+			var obj = {};
+			obj["key"] = selData[r][idField];
+			obj["value"] = selData[r][titleField];
+			kvList.push(obj);
+		}
+		selectionHandler(kvList);
+	} else {
+		alert('No idField!');
+	}
 }
 
 function handleLoaded(gridId, data) {

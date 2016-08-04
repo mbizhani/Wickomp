@@ -37,6 +37,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	protected String htmlId;
 	protected boolean selectionIndicator = false;
 	protected String selectionJSHandler;
+	protected boolean selectionDblClick = true;
 
 	// ---------------------- CONSTRUCTORS
 
@@ -264,6 +265,11 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
+	public OBaseGrid<T> setSelectionDblClick(boolean selectionDblClick) {
+		this.selectionDblClick = selectionDblClick;
+		return this;
+	}
+
 	public boolean hasFooter() {
 		return getShowFooter() != null && getShowFooter();
 	}
@@ -274,9 +280,10 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 			builder.append("function(data){");
 			builder.append(selectionJSHandler == null ?
 					String.format("handleSelectionIndicator('%s');", htmlId) :
-					String.format("handleSelectionIndicator('%s', %s);", htmlId, selectionJSHandler)
+					String.format("handleSelectionIndicator('%s', %s, %s);",
+						htmlId, selectionJSHandler, selectionDblClick)
 			);
-			if(anotherFunction != null) {
+			if (anotherFunction != null) {
 				builder.append(anotherFunction);
 			}
 			return builder.append("}").toString();

@@ -77,7 +77,8 @@ public class OTreeGrid<T> extends OBaseGrid<T> {
 			builder.append("function(row,data){");
 			builder.append(selectionJSHandler == null ?
 					String.format("handleSelectionIndicator('%s');", htmlId) :
-					String.format("handleSelectionIndicator('%s', %s);", htmlId, selectionJSHandler)
+					String.format("handleSelectionIndicator('%s', %s, %s);",
+						htmlId, selectionJSHandler, selectionDblClick)
 			);
 			if (anotherFunction != null) {
 				builder.append(anotherFunction);
