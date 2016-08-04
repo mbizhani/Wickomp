@@ -4,23 +4,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.formatter.OFormatter;
 import org.devocative.wickomp.opt.OHorizontalAlign;
+import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.opt.Options;
 
 public abstract class OColumn<T> extends Options {
-	// ---------------------- JSON FIELDS
+	// ------------------------------ JSON FIELDS
+
 	private OHorizontalAlign align;
 	private String field;
 	private Boolean resizable;
 	private Boolean sortable;
 	private IModel<String> title;
+	private OSize width;
 
-	// ---------------------- MISC FIELDS
+	// ------------------------------ MISC FIELDS
+
 	private boolean dummyField = false;
 	private boolean visible = true;
 	private boolean hasFooter = false;
 	protected OFormatter formatter;
 
-	// ---------------------- CONSTRUCTORS
+	// ------------------------------ CONSTRUCTORS
 
 	public OColumn(IModel<String> title) {
 		this(title, null);
@@ -31,7 +35,7 @@ public abstract class OColumn<T> extends Options {
 		this.field = field;
 	}
 
-	// ---------------------- ACCESSORS for JSON
+	// ------------------------------ ACCESSORS for JSON
 
 	public OHorizontalAlign getAlign() {
 		return align;
@@ -73,13 +77,22 @@ public abstract class OColumn<T> extends Options {
 		return title != null ? title.getObject() : "";
 	}
 
-	// ---------------------- PUBLIC ABSTRACT METHODS
+	public OSize getWidth() {
+		return width;
+	}
+
+	public OColumn<T> setWidth(OSize width) {
+		this.width = width;
+		return this;
+	}
+
+	// ------------------------------ PUBLIC ABSTRACT METHODS
 
 	public abstract String cellValue(T bean, String id, int colNo, String url);
 
 	public abstract String footerCellValue(Object bean, int colNo, String url);
 
-	// ---------------------- PUBLIC METHODS
+	// ------------------------------ PUBLIC METHODS
 
 	public OColumn<T> setFormatter(OFormatter formatter) {
 		this.formatter = formatter;

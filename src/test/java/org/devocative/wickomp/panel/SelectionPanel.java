@@ -17,6 +17,7 @@ import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
 import org.devocative.wickomp.grid.toolbar.OGridGroupingButton;
 import org.devocative.wickomp.html.WEasyLayout;
 import org.devocative.wickomp.html.icon.FontAwesome;
+import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.vo.PersonVO;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class SelectionPanel extends WPanel {
 
 		OColumnList<PersonVO> columns = new OColumnList<>();
 		columns
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col02"), "col02"))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Col02"), "col02").setWidth(OSize.fixed(50)))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 05"), "col05"))
