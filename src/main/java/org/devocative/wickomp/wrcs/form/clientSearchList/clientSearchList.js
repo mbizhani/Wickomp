@@ -33,21 +33,21 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 		var title = $('#' + titleId);
 		holder.empty();
 		for (var r = 0; r < rows.length; r++) {
-			var input = $('<input type="hidden" name="' + inputName + '" value="' + rows[r]["key"] + '"/>');
-			var span = $('<span>' + rows[r]["value"] + '</span>');
+			var input = $('<input id="' + inputName + r + '" type="checkbox" name="' + inputName + '" value="' + rows[r]["key"] + '" checked/>');
+			var span = $('<label for="' + inputName + r + '">' + rows[r]["value"] + '</label>');
 
-			var td1 = $('<td style="border-bottom: 2px solid #cccccc"></td>');
+			var td1 = $('<td></td>');
 			td1.append(input);
-			td1.append(span);
+			//td1.append(span);
 
-			var delAct = $('<i class="fa fa-times" style="color:red;cursor:pointer;"></i>');
+			/*var delAct = $('<i class="fa fa-times" style="color:red;cursor:pointer;"></i>');
 			delAct.bind("click", function () {
 				$(this).parentsUntil("tr").parent().remove();
 				var count = title.val();
 				title.val(count - 1);
-			});
-			var td2 = $('<td style="border-bottom: 2px solid #cccccc;width:10px;"></td>');
-			td2.append(delAct);
+			 });*/
+			var td2 = $('<td></td>');
+			td2.append(span);
 
 			var tr = $('<tr></tr>');
 			tr.append(td1);
@@ -57,5 +57,7 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 		}
 		title.val(rows.length);
 	}
-	$('#' + modalWindowId).window('close');
+	if (modalWindowId) {
+		$('#' + modalWindowId).window('close');
+	}
 }

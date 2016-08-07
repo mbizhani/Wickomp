@@ -159,6 +159,8 @@ public class FormPage extends BasePage {
 		//map.put("age", new RangeVO(100, 2000));
 		map.put("age", 2000);
 
+		map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
+
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 
 //		form.add(new WTextInput("name").setRequired(true).add(new WAsciiIdentifierValidator()));
@@ -193,7 +195,12 @@ public class FormPage extends BasePage {
 			protected KeyValueVO<String, String> createServerObject(String key) {
 				return new KeyValueVO<>(key, null);
 			}
-		});
+
+			@Override
+			protected List<KeyValueVO<String, String>> createClientOptions(List<KeyValueVO<String, String>> list) {
+				return list;
+			}
+		}.setOpenModalLinkVisible(true));
 		form.add(new Button("save") {
 			//		form.add(new WAjaxButton("save") {
 			public void onSubmit() {

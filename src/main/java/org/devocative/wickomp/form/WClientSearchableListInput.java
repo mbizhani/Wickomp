@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
+import org.devocative.adroit.vo.KeyValueVO;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.html.window.OModalWindow;
@@ -30,6 +31,7 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 	private WModalWindow modalWindow;
 	private WebMarkupContainer result;
 	private WebComponent title;
+	private AjaxLink openModal;
 
 	// ---------------------------- CONSTRUCTORS
 
@@ -53,7 +55,7 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 		add(title = new WebComponent("title"));
 		title.setOutputMarkupId(true);
 
-		add(new AjaxLink("openModal") {
+		add(openModal = new AjaxLink("openModal") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				modalWindow
@@ -79,11 +81,18 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 		return this;
 	}
 
+	public WClientSearchableListInput<T> setOpenModalLinkVisible(boolean visible) {
+		openModal.setVisible(visible);
+		return this;
+	}
+
 	// ---------------------------- ABSTRACT METHODS
 
 	protected abstract Component createSelectionPanel(String selectionPanelId);
 
 	protected abstract T createServerObject(String key);
+
+	protected abstract List<KeyValueVO<String, String>> createClientOptions(List<T> list);
 
 	// ---------------------------- PUBLIC METHODS
 
@@ -139,9 +148,23 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("initClientSearchableList('%s');", getMarkupId());
+		StringBuilder builder = new StringBuilder();
+		builder.append(String.format("initClientSearchableList('%s');", getMarkupId()));
 
-		WebUtil.writeJQueryCall(script, false);
+		List<T> modelObject = getModelObject();
+		if (modelObject != null && modelObject.size() > 0) {
+			String rows = WebUtil.toJson(createClientOptions(modelObject));
+			builder.append(String.format(
+					"handleClientSearchableList(null, '%s', '%s', '%s', %s);",
+					getInputName(),
+					result.getMarkupId(),
+					title.getMarkupId(),
+					rows
+				)
+			);
+		}
+
+		WebUtil.writeJQueryCall(builder.toString(), false);
 	}
 
 	protected String getJSCallback() {
