@@ -87,11 +87,19 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 
 	if (selectionHandler) {
 		if (enableDblClickSelection) {
-			grid.datagrid('options').onDblClickRow = function (index, row) {
-				var arr = [];
-				arr.push(row);
-				handleSelection(grid, selectionHandler, arr);
-			};
+			if (grid.datagrid('options')['treeField']) {
+				grid.datagrid('options').onDblClickRow = function (row) {
+					var arr = [];
+					arr.push(row);
+					handleSelection(grid, selectionHandler, arr);
+				};
+			} else {
+				grid.datagrid('options').onDblClickRow = function (index, row) {
+					var arr = [];
+					arr.push(row);
+					handleSelection(grid, selectionHandler, arr);
+				};
+			}
 		}
 
 		butts.push({
