@@ -77,23 +77,31 @@ public class WebUtil {
 		}
 	}
 
-	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam) {
+	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam, boolean ignoreEmpty) {
 		Map<String, List<String>> result = new HashMap<>();
 		for (String param : parameters.getParameterNames()) {
 			List<String> values = new ArrayList<>();
 
 			for (StringValue stringValue : parameters.getParameterValues(param)) {
-				values.add(stringValue.toString());
+				if (ignoreEmpty) {
+					if (!stringValue.isNull() && !stringValue.isEmpty()) {
+						values.add(stringValue.toString());
+					}
+				} else {
+					values.add(stringValue.toString());
+				}
 			}
 
-			if (lowercaseParam) {
-				param = param.toLowerCase();
-			}
+			if (values.size() > 0) {
+				if (lowercaseParam) {
+					param = param.toLowerCase();
+				}
 
-			if (result.containsKey(param)) {
-				result.get(param).addAll(values);
-			} else {
-				result.put(param, values);
+				if (result.containsKey(param)) {
+					result.get(param).addAll(values);
+				} else {
+					result.put(param, values);
+				}
 			}
 		}
 		return result;
