@@ -126,6 +126,9 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	public OBaseGrid<T> setPageList(List<Integer> pageList) {
 		this.pageList = pageList;
+		if (pageList != null && pageList.size() > 0) {
+			this.pageSize = pageList.get(0);
+		}
 		return this;
 	}
 
