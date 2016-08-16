@@ -139,7 +139,11 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 
 	@Override
 	protected void onBeforeRender() {
-		title.add(new AttributeModifier("value", "0"));
+		int size = 0;
+		if (getModelObject() != null) {
+			size = getModelObject().size();
+		}
+		title.add(new AttributeModifier("value", size));
 
 		super.onBeforeRender();
 	}

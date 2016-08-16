@@ -25,12 +25,17 @@ function initClientSearchableList(selListPanelId) {
 
 	//overwrite the CSS 120px value
 	slTitle.css("width", "100px");
+
+	selListPanel.closest("form").bind("reset", function () {
+		slDropDown.find("table:first").html(slTitle.data("oldContent"));
+	});
 }
 
 function handleClientSearchableList(modalWindowId, inputName, holderTableId, titleId, rows) {
+	var holder = $('#' + holderTableId);
+	var title = $('#' + titleId);
+
 	if (rows) {
-		var holder = $('#' + holderTableId);
-		var title = $('#' + titleId);
 		holder.empty();
 		for (var r = 0; r < rows.length; r++) {
 			var input = $('<input id="' + inputName + r + '" type="checkbox" name="' + inputName + '" value="' + rows[r]["key"] + '" checked/>');
@@ -38,14 +43,6 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 
 			var td1 = $('<td></td>');
 			td1.append(input);
-			//td1.append(span);
-
-			/*var delAct = $('<i class="fa fa-times" style="color:red;cursor:pointer;"></i>');
-			delAct.bind("click", function () {
-				$(this).parentsUntil("tr").parent().remove();
-				var count = title.val();
-				title.val(count - 1);
-			 });*/
 			var td2 = $('<td></td>');
 			td2.append(span);
 
@@ -56,6 +53,10 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 			holder.append(tr);
 		}
 		title.val(rows.length);
+	}
+
+	if (title.data("oldContent") == undefined) {
+		title.data("oldContent", holder.html());
 	}
 	if (modalWindowId) {
 		$('#' + modalWindowId).window('close');
