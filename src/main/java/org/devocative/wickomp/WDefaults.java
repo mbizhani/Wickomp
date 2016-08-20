@@ -7,7 +7,11 @@ public class WDefaults {
 		@Override
 		public String handleMessage(Component component, Exception e) {
 			if (e.getMessage() != null) {
-				return component.getString(e.getMessage(), null, e.getMessage());
+				if (component == null) {
+					return WebUtil.getStringOfResource(e.getMessage(), e.getMessage());
+				} else {
+					return component.getString(e.getMessage(), null, e.getMessage());
+				}
 			}
 			return "[Error(?)]";
 		}

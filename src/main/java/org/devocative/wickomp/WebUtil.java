@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.wicket.Application;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -105,5 +108,16 @@ public class WebUtil {
 			}
 		}
 		return result;
+	}
+
+	public static String getStringOfResource(String resourceKey, String defaultValue) {
+		return getStringOfResource(resourceKey, Model.of(defaultValue));
+	}
+
+	public static String getStringOfResource(String resourceKey, IModel<String> defaultValue) {
+		return Application.get()
+			.getResourceSettings()
+			.getLocalizer()
+			.getString(resourceKey, null, null, null, null, defaultValue);
 	}
 }
