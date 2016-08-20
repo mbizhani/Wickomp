@@ -2,6 +2,8 @@ package org.devocative.wickomp.grid.column.link;
 
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
+import org.devocative.wickomp.IExceptionToMessageHandler;
+import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.html.Anchor;
 import org.devocative.wickomp.html.HTMLBase;
@@ -10,6 +12,9 @@ public abstract class OCallbackColumn<T> extends OColumn<T> {
 	private IModel<String> tooltip;
 	private HTMLBase linkContent;
 	private String linkHTMLClass;
+	protected IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
+
+	// ------------------------------
 
 	protected OCallbackColumn(IModel<String> text, HTMLBase linkContent) {
 		super(text);
@@ -20,6 +25,8 @@ public abstract class OCallbackColumn<T> extends OColumn<T> {
 		super(text, field);
 	}
 
+	// ------------------------------
+
 	public OCallbackColumn<T> setTooltip(IModel<String> tooltip) {
 		this.tooltip = tooltip;
 		return this;
@@ -29,6 +36,13 @@ public abstract class OCallbackColumn<T> extends OColumn<T> {
 		this.linkHTMLClass = linkHTMLClass;
 		return this;
 	}
+
+	public OCallbackColumn setExceptionToMessageHandler(IExceptionToMessageHandler exceptionToMessageHandler) {
+		this.exceptionToMessageHandler = exceptionToMessageHandler;
+		return this;
+	}
+
+	// ------------------------------
 
 	@Override
 	public final String cellValue(T bean, String id, int colNo, String url) {
@@ -57,6 +71,8 @@ public abstract class OCallbackColumn<T> extends OColumn<T> {
 	public String footerCellValue(Object bean, int colNo, String url) {
 		throw new RuntimeException("Footer not supported in OCallbackColumn!");
 	}
+
+	// ------------------------------
 
 	protected abstract void fillAnchor(Anchor anchor, T bean, String id, int colNo, String url);
 }

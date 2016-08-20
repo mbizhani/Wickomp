@@ -21,6 +21,7 @@ import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
 import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
 import org.devocative.wickomp.grid.toolbar.OGridGroupingButton;
+import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.html.icon.FontAwesome;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.resource.OutputStreamResource;
@@ -52,6 +53,13 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 					target.appendJavaScript(String.format("alert(\"%s\");", rowData.getObject()));
 				}
 			}.setSortable(true))
+
+			.add(new OAjaxLinkColumn<PersonVO>(new Model<>("Err"), new HTMLBase("Err")) {
+				@Override
+				public void onClick(AjaxRequestTarget target, IModel<PersonVO> rowData) {
+					throw new RuntimeException("Oops!");
+				}
+			})
 
 			.add(new OLinkColumn<PersonVO>(new Model<>("Col 03"), "col03") {
 				@Override

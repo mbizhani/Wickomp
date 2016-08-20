@@ -414,7 +414,11 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			AjaxRequestTarget target = createAjaxResponse();
 
 			OAjaxLinkColumn<T> ajaxLinkColumn = (OAjaxLinkColumn<T>) column;
-			ajaxLinkColumn.onClick(target, rowModel);
+			try {
+				ajaxLinkColumn.onClick(target, rowModel);
+			} catch (Exception e) {
+				ajaxLinkColumn.onException(target, e, rowModel);
+			}
 
 		}
 	}
