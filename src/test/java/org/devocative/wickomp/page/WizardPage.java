@@ -36,33 +36,41 @@ public class WizardPage extends BasePage {
 
 		form.add(new WWizardPanel("wizard", oWizard, WWizardPanel.ButtonBarPlace.TOP) {
 
-			@Override
-			protected void onPrevious(AjaxRequestTarget target, String stepId) {
-				System.out.println("prev = " + stepId);
-			}
+				@Override
+				protected void onPrevious(AjaxRequestTarget target, String stepId) {
+					System.out.println("prev = " + stepId);
+				}
 
-			@Override
-			protected void onNext(AjaxRequestTarget target, String stepId) {
-				System.out.println("current = " + stepId);
-				if (skipThird) {
-					if (stepId.equals("B")) {
-						setStep("D");
+				@Override
+				protected void onNext(AjaxRequestTarget target, String stepId) {
+					System.out.println("current = " + stepId);
+					if (skipThird) {
+						if (stepId.equals("B")) {
+							setStep("D");
+						}
+					} else {
+						clearSkippedSteps();
 					}
-				} else {
-					clearSkippedSteps();
+				}
+
+				@Override
+				protected void onFinish(AjaxRequestTarget target, String stepId) {
+					target.appendJavaScript(String.format("alert('Finished: %s');", stepId));
+				}
+
+				@Override
+				protected void onError(AjaxRequestTarget target, String stepId, List<Serializable> errors) {
+					WMessager.show("Error", errors, target);
+				}
+
+				@Override
+				protected void onCancel(AjaxRequestTarget target, String stepId) {
+					WMessager.show("Msg", "Canceled: step = " + stepId, target);
 				}
 			}
-
-			@Override
-			protected void onFinish(AjaxRequestTarget target, String stepId) {
-				target.appendJavaScript(String.format("alert('Finished: %s');", stepId));
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, String stepId, List<Serializable> errors) {
-				WMessager.show("Error", errors, target);
-			}
-		}.setTitle("Gandalf"));
+				.setTitle("Gandalf")
+				.setCancelButtonVisible(true)
+		);
 
 		add(new EasyUIBehavior());
 	}

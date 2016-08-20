@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.devocative.wickomp.IExceptionToMessageHandler;
@@ -28,7 +29,8 @@ public class WWizardPanel extends WPanel {
 	// ------------------------------
 
 	private OWizard oWizard;
-	private WebMarkupContainer buttonBar, content;
+	private WizardButtonBar buttonBar;
+	private WebMarkupContainer buttonBarContainer, content;
 	private Label titleLbl;
 	private String title;
 	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
@@ -54,18 +56,18 @@ public class WWizardPanel extends WPanel {
 
 		switch (place) {
 			case TOP:
-				top.add(new WizardButtonBar("topButtonBar", "buttonBarFragment", this));
+				top.add(buttonBar = new WizardButtonBar("topButtonBar", "buttonBarFragment", this));
 				bottom.add(new WebMarkupContainer("bottomButtonBar"));
-				buttonBar = top;
+				buttonBarContainer = top;
 				break;
 
-			case BOTTOM:
+			default:
 				top.add(new WebMarkupContainer("topButtonBar"));
-				bottom.add(new WizardButtonBar("bottomButtonBar", "buttonBarFragment", this));
-				buttonBar = bottom;
+				bottom.add(buttonBar = new WizardButtonBar("bottomButtonBar", "buttonBarFragment", this));
+				buttonBarContainer = bottom;
 				break;
 		}
-		buttonBar.setOutputMarkupId(true);
+		buttonBarContainer.setOutputMarkupId(true);
 
 		content = new WebMarkupContainer("content");
 		content.setOutputMarkupId(true);
@@ -96,6 +98,16 @@ public class WWizardPanel extends WPanel {
 		return this;
 	}
 
+	public WWizardPanel setCancelButtonVisible(boolean visible) {
+		buttonBar.setCancelButtonVisible(visible);
+		return this;
+	}
+
+	public WWizardPanel setCancelButtonLabel(IModel<String> label) {
+		buttonBar.setCancelButtonLabel(label);
+		return this;
+	}
+
 	// ------------------------------
 
 	protected void clearSkippedSteps() {
@@ -118,6 +130,9 @@ public class WWizardPanel extends WPanel {
 	protected void onError(AjaxRequestTarget target, String stepId, List<Serializable> errors) {
 	}
 
+	protected void onCancel(AjaxRequestTarget target, String stepId) {
+	}
+
 	protected void onException(AjaxRequestTarget target, String stepId, Exception e) {
 		if (e.getMessage() != null) {
 			List<Serializable> error = new ArrayList<>();
@@ -137,8 +152,11 @@ public class WWizardPanel extends WPanel {
 	// ------------------------------ WIZARD BUTTON BAR FRAGMENT
 
 	private class WizardButtonBar extends Fragment {
-		private AjaxLink prev;
+		private AjaxLink prev, cancel;
 		private WAjaxButton next, finish;
+		private Label cancelLabel;
+
+		// ---------------
 
 		public WizardButtonBar(String id, String markupId, MarkupContainer markupProvider) {
 			super(id, markupId, markupProvider);
@@ -203,9 +221,18 @@ public class WWizardPanel extends WPanel {
 				}
 			};
 
+			cancel = new AjaxLink("cancel") {
+				@Override
+				public void onClick(AjaxRequestTarget target) {
+					WWizardPanel.this.onCancel(target, oWizard.getCurrentStepId());
+				}
+			};
+			cancel.add(cancelLabel = new Label("cancelLabel", new ResourceModel("label.cancel", "Cancel")));
+
 			add(prev.setEnabled(false));
 			add(next);
 			add(finish.setEnabled(false));
+			add(cancel.setVisible(false));
 
 			prev.add(new Label("prevLbl", new ResourceModel("label.wizard.previous", "Previous")));
 			if (getUserPreference().getLayoutDirection() == OLayoutDirection.RTL) {
@@ -217,13 +244,27 @@ public class WWizardPanel extends WPanel {
 			}
 		}
 
+		// ---------------
+
+		public WizardButtonBar setCancelButtonVisible(boolean visible) {
+			cancel.setVisible(visible);
+			return this;
+		}
+
+		public WizardButtonBar setCancelButtonLabel(IModel<String> label) {
+			cancelLabel.setDefaultModel(label);
+			return this;
+		}
+
+		// ---------------
+
 		private void updateButtons(AjaxRequestTarget target) {
 			prev.setEnabled(!oWizard.isFirst());
 			next.setEnabled(!oWizard.isLast());
 			if (!finish.isEnabled()) {
 				finish.setEnabled(oWizard.isLast());
 			}
-			target.add(buttonBar);
+			target.add(buttonBarContainer);
 		}
 	}
 }
