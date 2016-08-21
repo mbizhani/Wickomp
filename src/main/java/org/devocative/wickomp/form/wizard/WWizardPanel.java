@@ -32,6 +32,7 @@ public class WWizardPanel extends WPanel {
 	private WizardButtonBar buttonBar;
 	private WebMarkupContainer buttonBarContainer, content;
 	private Label titleLbl;
+	private boolean titleChanged = false;
 	private String title;
 	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
 
@@ -47,6 +48,9 @@ public class WWizardPanel extends WPanel {
 		this.oWizard = oWizard;
 
 		add(titleLbl = new Label("title", new PropertyModel<>(this, "title")));
+		titleLbl
+			.setOutputMarkupId(true)
+			.setOutputMarkupPlaceholderTag(true);
 
 		WebMarkupContainer top = new WebMarkupContainer("top");
 		add(top);
@@ -85,11 +89,13 @@ public class WWizardPanel extends WPanel {
 
 	public WWizardPanel setTitle(String title) {
 		this.title = title;
+		this.titleChanged = true;
 		return this;
 	}
 
 	public WWizardPanel setTitleVisible(boolean visible) {
 		titleLbl.setVisible(visible);
+		this.titleChanged = true;
 		return this;
 	}
 
@@ -146,6 +152,11 @@ public class WWizardPanel extends WPanel {
 	private void updateStep(WWizardStepPanel stepPanel, AjaxRequestTarget target) {
 		content.replace(stepPanel);
 		target.add(content);
+
+		if (titleChanged) {
+			target.add(titleLbl);
+			titleChanged = false;
+		}
 	}
 
 	// ---------------------------------------------------------

@@ -44,6 +44,12 @@ public class WizardPage extends BasePage {
 				@Override
 				protected void onNext(AjaxRequestTarget target, String stepId) {
 					System.out.println("current = " + stepId);
+
+					if ("A".equals(stepId)) {
+						setTitle("Gandalf, The Grey");
+					} else if ("B".equals(stepId)) {
+						setTitle("Gandalf, The White");
+					}
 					if (skipThird) {
 						if (stepId.equals("B")) {
 							setStep("D");
@@ -68,7 +74,7 @@ public class WizardPage extends BasePage {
 					WMessager.show("Msg", "Canceled: step = " + stepId, target);
 				}
 			}
-				.setTitle("Gandalf")
+				.setTitle("Gandalf, The Grey")
 				.setCancelButtonVisible(true)
 		);
 
