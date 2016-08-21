@@ -238,7 +238,7 @@ public class WWizardPanel extends WPanel {
 					WWizardPanel.this.onCancel(target, oWizard.getCurrentStepId());
 				}
 			};
-			cancel.add(cancelLabel = new Label("cancelLabel", new ResourceModel("label.cancel", "Cancel")));
+			cancel.add(cancelLabel = new Label("cancelLabel", new ResourceModel("label.wizard.cancel", "Cancel")));
 
 			add(prev.setEnabled(false));
 			add(next);
