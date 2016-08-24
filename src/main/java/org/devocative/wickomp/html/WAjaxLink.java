@@ -1,5 +1,8 @@
 package org.devocative.wickomp.html;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -10,6 +13,9 @@ public abstract class WAjaxLink extends AjaxLink {
 
 	private IModel<String> caption;
 	private HTMLBase icon;
+	private IModel<String> confirmationMessage;
+
+	// ------------------------------
 
 	public WAjaxLink(String id) {
 		this(id, null, null);
@@ -26,6 +32,15 @@ public abstract class WAjaxLink extends AjaxLink {
 		this.icon = icon;
 	}
 
+	// ------------------------------
+
+	public WAjaxLink setConfirmationMessage(IModel<String> confirmationMessage) {
+		this.confirmationMessage = confirmationMessage;
+		return this;
+	}
+
+	// ------------------------------
+
 	@Override
 	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
 		if ("button".equalsIgnoreCase(openTag.getName()) && (caption != null || icon != null)) {
@@ -39,6 +54,21 @@ public abstract class WAjaxLink extends AjaxLink {
 			replaceComponentTagBody(markupStream, openTag, cap);
 		} else {
 			super.onComponentTagBody(markupStream, openTag);
+		}
+	}
+
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+		if (confirmationMessage != null) {
+			AjaxCallListener myAjaxCallListener = new AjaxCallListener() {
+				private static final long serialVersionUID = 1915387331347087734L;
+
+				@Override
+				public CharSequence getPrecondition(Component component) {
+					return String.format("if(!confirm('%s')) return false;", confirmationMessage.getObject());
+				}
+			};
+			attributes.getAjaxCallListeners().add(myAjaxCallListener);
 		}
 	}
 }
