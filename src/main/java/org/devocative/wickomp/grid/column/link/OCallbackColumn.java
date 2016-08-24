@@ -9,6 +9,8 @@ import org.devocative.wickomp.html.Anchor;
 import org.devocative.wickomp.html.HTMLBase;
 
 public abstract class OCallbackColumn<T> extends OColumn<T> {
+	private static final long serialVersionUID = -3796159911756492443L;
+
 	private IModel<String> tooltip;
 	private HTMLBase linkContent;
 	private String linkHTMLClass;

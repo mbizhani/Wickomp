@@ -4,6 +4,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 class WebSocketAsyncToken extends AsyncToken {
+	private static final long serialVersionUID = 2447830252709170231L;
+
 	private String appKey;
 	private IKey key;
 	private String sessionId;

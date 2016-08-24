@@ -8,6 +8,8 @@ import org.devocative.wickomp.opt.OUserPreference;
 import java.util.Date;
 
 public class ODateFormatter implements OFormatter {
+	private static final long serialVersionUID = -4787636025532239614L;
+
 	private OCalendar calendar;
 	private String pattern;
 

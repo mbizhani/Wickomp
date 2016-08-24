@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OCode extends Options {
+	private static final long serialVersionUID = 711452574514745355L;
+
 	private Boolean autofocus = true;
 	private Object hintOptions;
 	private Boolean indentWithTabs = true;

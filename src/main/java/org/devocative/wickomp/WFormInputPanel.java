@@ -6,6 +6,8 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.wickomp.opt.OUserPreference;
 
 public abstract class WFormInputPanel<T> extends FormComponentPanel<T> {
+	private static final long serialVersionUID = 6476009650782023078L;
+
 	public WFormInputPanel(String id, IModel<T> model) {
 		super(id, model);
 	}

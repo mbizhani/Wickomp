@@ -11,6 +11,8 @@ import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
 public class WModalWindow extends WPanel {
+	private static final long serialVersionUID = 8033724982656671879L;
+
 	private Component content;
 	private WebMarkupContainer container;
 	private AbstractDefaultAjaxBehavior callbackAjaxBehavior;
@@ -36,6 +38,8 @@ public class WModalWindow extends WPanel {
 		container.add(content = new WebMarkupContainer("content").setVisible(false));
 
 		callbackAjaxBehavior = new AbstractDefaultAjaxBehavior() {
+			private static final long serialVersionUID = 8334609333513108892L;
+
 			@Override
 			protected void respond(AjaxRequestTarget target) {
 				content.setVisible(false);

@@ -10,6 +10,8 @@ import org.devocative.wickomp.WFormInputPanel;
 import java.io.Serializable;
 
 public abstract class WBaseRangeInput<T extends Serializable> extends WFormInputPanel<RangeVO<T>> {
+	private static final long serialVersionUID = 8954208501398056478L;
+
 	private Label label;
 
 	protected FormComponent<T> lower, upper;

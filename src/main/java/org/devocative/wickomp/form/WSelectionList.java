@@ -18,6 +18,8 @@ import org.apache.wicket.util.value.IValueMap;
 import java.util.*;
 
 class WSelectionList<T> extends AbstractChoice<Object, T> {
+	private static final long serialVersionUID = 3845967585500936689L;
+
 	private boolean multipleSelection;
 
 	static MetaDataKey<Boolean> RETAIN_DISABLED_META_KEY = new MetaDataKey<Boolean>() {

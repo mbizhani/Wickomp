@@ -3,6 +3,8 @@ package org.devocative.wickomp.formatter;
 import java.text.DecimalFormat;
 
 public class ONumberFormatter implements OFormatter {
+	private static final long serialVersionUID = 1089316680659774877L;
+
 	private String pattern;
 
 	public ONumberFormatter(String pattern) {

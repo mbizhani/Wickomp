@@ -10,6 +10,8 @@ import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.Resource;
 
 public class WCodeInput extends WFormInputPanel<String> {
+	private static final long serialVersionUID = 4501207922641028914L;
+
 	private static final HeaderItem MAIN_CSS = Resource.getCommonCSS("codemirror/codemirror.css");
 	private static final HeaderItem MAIN_JS = Resource.getCommonJS("codemirror/codemirror.js");
 	private static final HeaderItem JQ_JS = Resource.getCommonJS("codemirror/wcodemirror.js");

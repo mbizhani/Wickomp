@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 public class OColumnList<T> extends Options {
+	private static final long serialVersionUID = -5642305527886499710L;
+
 	private List<OColumn<T>> visibleColumns = new ArrayList<>();
 	private List<OColumn<T>> allColumns = new ArrayList<>();
 

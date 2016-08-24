@@ -3,6 +3,8 @@ package org.devocative.wickomp.opt;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public class OSize extends Options {
+	private static final long serialVersionUID = 7932881247437826860L;
+
 	public enum EType {Percent, Fixed}
 
 	private Integer size;

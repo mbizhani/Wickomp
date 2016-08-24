@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WWizardPanel extends WPanel {
+	private static final long serialVersionUID = 5674981873642697757L;
+
 	public enum ButtonBarPlace {TOP, BOTTOM}
 
 	// ------------------------------
@@ -163,6 +165,8 @@ public class WWizardPanel extends WPanel {
 	// ------------------------------ WIZARD BUTTON BAR FRAGMENT
 
 	private class WizardButtonBar extends Fragment {
+		private static final long serialVersionUID = -7432284770157489018L;
+
 		private AjaxLink prev, cancel;
 		private WAjaxButton next, finish;
 		private Label cancelLabel;
@@ -173,6 +177,8 @@ public class WWizardPanel extends WPanel {
 			super(id, markupId, markupProvider);
 
 			prev = new AjaxLink("prev") {
+				private static final long serialVersionUID = 8698300849201984560L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target) {
 					WWizardPanel.this.onPrevious(target, oWizard.getCurrentStepId());
@@ -183,6 +189,8 @@ public class WWizardPanel extends WPanel {
 			};
 
 			next = new WAjaxButton("next", new ResourceModel("label.wizard.next", "Next")) {
+				private static final long serialVersionUID = -4723527907345120965L;
+
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
 					if (oWizard.getCurrentStep().onStepSubmit(target)) {
@@ -210,6 +218,8 @@ public class WWizardPanel extends WPanel {
 			};
 
 			finish = new WAjaxButton("finish", new ResourceModel("label.wizard.finish", "Finish"), new FontAwesome("check-circle")) {
+				private static final long serialVersionUID = -5032119350215093190L;
+
 				@Override
 				protected void onSubmit(AjaxRequestTarget target) {
 					if (oWizard.getCurrentStep().onStepSubmit(target)) {
@@ -233,6 +243,8 @@ public class WWizardPanel extends WPanel {
 			};
 
 			cancel = new AjaxLink("cancel") {
+				private static final long serialVersionUID = 2912841408299541902L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target) {
 					WWizardPanel.this.onCancel(target, oWizard.getCurrentStepId());

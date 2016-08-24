@@ -5,6 +5,8 @@ import org.devocative.wickomp.async.AsyncBehavior;
 import org.devocative.wickomp.async.IAsyncAction;
 
 public abstract class WAsyncAjaxLink extends WAjaxLink implements IAsyncAction {
+	private static final long serialVersionUID = -2168310935082083900L;
+
 	private AsyncBehavior asyncBehavior;
 
 	public WAsyncAjaxLink(String id) {

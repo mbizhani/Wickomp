@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class AsyncToken implements Serializable {
+	private static final long serialVersionUID = -2444128118463747127L;
+
 	private String id = UUID.randomUUID().toString();
 	private String handlerId;
 

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class HTMLElement extends HTMLBase {
+	private static final long serialVersionUID = 9150994207417703095L;
+
 	private String name;
 	private Map<String, String> attributes = new HashMap<String, String>();
 	protected List<HTMLBase> children = new ArrayList<HTMLBase>();

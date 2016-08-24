@@ -9,6 +9,8 @@ import org.apache.wicket.request.resource.IResource;
 import org.devocative.wickomp.opt.Options;
 
 public abstract class OButton<T> extends Options {
+	private static final long serialVersionUID = 4808428345821267063L;
+
 	private int index;
 	private String url;
 

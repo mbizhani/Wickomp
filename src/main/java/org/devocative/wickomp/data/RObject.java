@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RObject extends Result {
+	private static final long serialVersionUID = -5062992658934621619L;
+
 	private Map<String, String> properties = new HashMap<String, String>();
 
 	public RObject addProperty(String property, String value) {

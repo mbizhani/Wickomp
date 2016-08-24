@@ -18,6 +18,8 @@ import org.devocative.wickomp.wrcs.Resource;
 import java.util.List;
 
 public class WMenuBar extends WPanel {
+	private static final long serialVersionUID = -2558846609610072069L;
+
 	private static final HeaderItem JS = Resource.getCommonJS("menu/jquery.smartmenus.min.js");
 	private static final HeaderItem CSS_CORE = Resource.getCommonCSS("menu/sm-core-css.css");
 	//	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-clean.css");
@@ -80,10 +82,14 @@ public class WMenuBar extends WPanel {
 	}
 
 	private class MenuItemFragment extends Fragment {
+		private static final long serialVersionUID = 1870498696384296613L;
+
 		public MenuItemFragment(String id, String markupId, MarkupContainer markupProvider, List<OMenuItem> menuItems) {
 			super(id, markupId, markupProvider);
 
 			add(new ListView<OMenuItem>("menuItem", menuItems) {
+				private static final long serialVersionUID = 8524413741007595434L;
+
 				@Override
 				protected void populateItem(ListItem<OMenuItem> item) {
 					final OMenuItem menuItem = item.getModelObject();

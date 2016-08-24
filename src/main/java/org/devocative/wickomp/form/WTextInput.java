@@ -10,6 +10,8 @@ import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 
 public class WTextInput extends WFormInputPanel<String> {
+	private static final long serialVersionUID = 7161394972946695203L;
+
 	private Label label;
 	private TextField<String> textField;
 

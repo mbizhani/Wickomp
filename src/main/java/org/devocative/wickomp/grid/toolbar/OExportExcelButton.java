@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OExportExcelButton<T> extends OButton<T> {
+	private static final long serialVersionUID = -8571985043735727439L;
+
 	private String fileName;
 	private Integer maxRowsCount;
 	private HTMLBase html;
@@ -31,6 +33,8 @@ public class OExportExcelButton<T> extends OButton<T> {
 	@Override
 	public void onClick(final WGridInfo<T> gridInfo, IRequestParameters parameters) {
 		sendResource(new OutputStreamResource("application/excel", fileName) {
+			private static final long serialVersionUID = 8680636627426356006L;
+
 			@Override
 			protected void handleStream(OutputStream stream) throws IOException {
 				List<String> columnsTitle = new ArrayList<>();

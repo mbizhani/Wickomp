@@ -4,6 +4,8 @@ import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.html.HTMLBase;
 
 public class FontAwesome extends HTMLBase {
+	private static final long serialVersionUID = 8571616115102148637L;
+
 	public enum Size {
 		lg("lg"), x2("2x"), x3("3x"), x4("4x"), x5("5x");
 

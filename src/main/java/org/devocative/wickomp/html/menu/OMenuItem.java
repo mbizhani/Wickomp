@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OMenuItem extends Options {
+	private static final long serialVersionUID = 1981474945554177773L;
+
 	private String href;
 
 	private IModel<String> label;

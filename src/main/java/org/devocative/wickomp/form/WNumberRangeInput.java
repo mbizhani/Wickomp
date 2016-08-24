@@ -5,6 +5,8 @@ import org.apache.wicket.model.IModel;
 import org.devocative.adroit.vo.RangeVO;
 
 public class WNumberRangeInput extends WBaseRangeInput<Number> {
+	private static final long serialVersionUID = -3084374441053594155L;
+
 	private Class<? extends Number> type;
 	private Integer precision;
 	private Character thousandSeparator;

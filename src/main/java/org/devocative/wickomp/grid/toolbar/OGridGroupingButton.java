@@ -6,6 +6,8 @@ import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.html.HTMLBase;
 
 public class OGridGroupingButton<T> extends OButton<T> {
+	private static final long serialVersionUID = -5807113340530435125L;
+
 	private HTMLBase expand, collapse;
 
 	public OGridGroupingButton() {

@@ -4,6 +4,8 @@ import org.apache.wicket.model.ResourceModel;
 import org.devocative.wickomp.html.HTMLBase;
 
 public class OTreeGridClientButton<T> extends OButton<T> {
+	private static final long serialVersionUID = 5728174607489192106L;
+
 	private HTMLBase expand, collapse;
 
 	public OTreeGridClientButton(HTMLBase collapse) {

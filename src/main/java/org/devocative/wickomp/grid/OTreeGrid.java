@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
 public class OTreeGrid<T> extends OBaseGrid<T> {
+	private static final long serialVersionUID = -1750260667606469185L;
+
 	private Boolean animate = true;
 	private Boolean lines;
 	private String treeField;

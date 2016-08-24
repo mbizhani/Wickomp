@@ -8,6 +8,8 @@ import org.devocative.wickomp.opt.OCalendar;
 import java.util.Date;
 
 public class WDateRangeInput extends WBaseRangeInput<Date> {
+	private static final long serialVersionUID = 6659364241951361411L;
+
 	private OCalendar calendar;
 	private Boolean timePartVisible;
 

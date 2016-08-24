@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class WBaseGrid<T> extends WJqCallbackComponent {
+	private static final long serialVersionUID = -2882882330275047801L;
+
 	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
 
 	private OBaseGrid<T> options;

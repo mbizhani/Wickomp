@@ -3,6 +3,8 @@ package org.devocative.wickomp.grid;
 import java.io.Serializable;
 
 public class WSortField implements Serializable {
+	private static final long serialVersionUID = 1179494288229379252L;
+
 	private String field;
 	private String order;
 

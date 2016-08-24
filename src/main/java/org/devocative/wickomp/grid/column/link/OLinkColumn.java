@@ -9,6 +9,8 @@ import org.devocative.wickomp.html.Anchor;
 import org.devocative.wickomp.html.HTMLBase;
 
 public abstract class OLinkColumn<T> extends OCallbackColumn<T> {
+	private static final long serialVersionUID = -2606040924929746007L;
+
 	private boolean targetBlank = false;
 
 	protected OLinkColumn(IModel<String> text, HTMLBase linkContent) {

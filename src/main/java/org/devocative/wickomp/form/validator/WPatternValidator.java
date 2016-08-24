@@ -7,6 +7,8 @@ import org.apache.wicket.validation.ValidationError;
 import java.util.regex.Pattern;
 
 public class WPatternValidator implements IValidator<String> {
+	private static final long serialVersionUID = -4722280690698540525L;
+
 	private static final int DEFAULT_FLAG = 0;
 	private Pattern pattern;
 	private String altKey;

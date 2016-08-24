@@ -7,6 +7,8 @@ import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.Resource;
 
 public class WFloatTable extends WebMarkupContainer {
+	private static final long serialVersionUID = -5899209300800478452L;
+
 	private static HeaderItem EQ_JS = Resource.getCommonJS("form/equalize.min.js");
 	private static HeaderItem CSS = Resource.getCommonCSS("form/common.css");
 

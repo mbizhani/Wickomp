@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public abstract class OutputStreamResource extends AbstractResource {
+	private static final long serialVersionUID = 1557169670709163599L;
+
 	private String contentType;
 	private String fileName;
 

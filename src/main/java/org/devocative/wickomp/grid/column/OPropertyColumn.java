@@ -4,6 +4,8 @@ import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
 
 public class OPropertyColumn<T> extends OColumn<T> {
+	private static final long serialVersionUID = -1837631056759898671L;
+
 	public OPropertyColumn(IModel<String> text, String property) {
 		super(text, property);
 	}

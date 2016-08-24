@@ -5,6 +5,8 @@ import org.devocative.wickomp.opt.ICallbackUrl;
 import org.devocative.wickomp.opt.OComponent;
 
 public class OModalWindow extends OComponent implements ICallbackUrl {
+	private static final long serialVersionUID = -1690151110434417397L;
+
 	private Boolean collapsible = false;
 	private Boolean maximizable = false;
 	private Boolean minimizable = false;

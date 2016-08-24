@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RObjectList extends Result {
+	private static final long serialVersionUID = 5486159742298202143L;
+
 	private Map<String, RObject> result = new LinkedHashMap<>();
 
 	public RObjectList addRObject(String id, RObject rObject) {

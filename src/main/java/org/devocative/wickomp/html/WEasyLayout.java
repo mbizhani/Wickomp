@@ -9,6 +9,8 @@ import org.devocative.wickomp.opt.OUserPreference;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
 public class WEasyLayout extends WebMarkupContainer {
+	private static final long serialVersionUID = 6610030199903497866L;
+
 	private WebMarkupContainer east, west;
 	private boolean eastFitToContent = true, westFitToContent = true;
 

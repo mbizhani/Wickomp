@@ -8,6 +8,8 @@ import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.opt.Options;
 
 public abstract class OColumn<T> extends Options {
+	private static final long serialVersionUID = -8318681492794608789L;
+
 	// ------------------------------ JSON FIELDS
 
 	private OHorizontalAlign align;

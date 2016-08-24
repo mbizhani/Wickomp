@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class WSelectionInput extends WFormInputPanel {
+	private static final long serialVersionUID = 2363610394629306064L;
+
 	private static final HeaderItem SEL_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
 	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 

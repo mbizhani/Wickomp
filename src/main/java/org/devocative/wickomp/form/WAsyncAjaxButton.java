@@ -6,6 +6,8 @@ import org.devocative.wickomp.async.IAsyncAction;
 import org.devocative.wickomp.html.HTMLBase;
 
 public abstract class WAsyncAjaxButton extends WAjaxButton implements IAsyncAction {
+	private static final long serialVersionUID = 3482548454365919143L;
+
 	private AsyncBehavior asyncBehavior;
 
 	// ---------------------- CONSTRUCTORS

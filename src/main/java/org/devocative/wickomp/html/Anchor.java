@@ -1,6 +1,8 @@
 package org.devocative.wickomp.html;
 
 public class Anchor extends HTMLElement {
+	private static final long serialVersionUID = 4262218185221880076L;
+
 	public enum ETarget {_blank, _parent, _self, _top}
 
 	public Anchor() {

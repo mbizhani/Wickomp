@@ -7,6 +7,8 @@ import org.devocative.wickomp.data.Result;
 import java.util.List;
 
 class RGridPage extends Result {
+	private static final long serialVersionUID = 1781193319558429155L;
+
 	private RObjectList rows;
 
 	private List<RObject> footer;

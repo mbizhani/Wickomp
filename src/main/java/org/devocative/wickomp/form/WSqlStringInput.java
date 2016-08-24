@@ -12,6 +12,8 @@ import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 
 public class WSqlStringInput extends WFormInputPanel<String> {
+	private static final long serialVersionUID = -8999139607839521593L;
+
 	private Label label;
 	private TextField<String> text;
 	private CheckBox leftBox, rightBox;

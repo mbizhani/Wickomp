@@ -21,6 +21,8 @@ import org.devocative.wickomp.wrcs.Resource;
 import java.util.Date;
 
 public class WDateInput extends WFormInputPanel<Date> {
+	private static final long serialVersionUID = -2348912362832020132L;
+
 	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
 	private static final HeaderItem DATE_CALC_JS = Resource.getCommonJS("form/date/dtjalali.js");
 	private static final HeaderItem DATE_JS = Resource.getCommonJS("form/date/date.js");

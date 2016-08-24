@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List<T>> {
+	private static final long serialVersionUID = 8131275251442491717L;
+
 	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 	private static final HeaderItem SEL_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
 	private static final HeaderItem JS = Resource.getCommonJS("form/clientSearchList/clientSearchList.js");
@@ -56,6 +58,8 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 		title.setOutputMarkupId(true);
 
 		add(openModal = new AjaxLink("openModal") {
+			private static final long serialVersionUID = 3599836029322960165L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				modalWindow

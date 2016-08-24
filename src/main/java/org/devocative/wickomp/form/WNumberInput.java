@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WNumberInput extends WFormInputPanel<Number> {
+	private static final long serialVersionUID = 3194204815848275324L;
+
 	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
 
 	private Label label;

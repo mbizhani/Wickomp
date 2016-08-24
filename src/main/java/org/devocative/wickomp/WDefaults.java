@@ -4,6 +4,8 @@ import org.apache.wicket.Component;
 
 public class WDefaults {
 	private static IExceptionToMessageHandler exceptionToMessageHandler = new IExceptionToMessageHandler() {
+		private static final long serialVersionUID = 4280611531970060923L;
+
 		@Override
 		public String handleMessage(Component component, Exception e) {
 			if (e.getMessage() != null) {

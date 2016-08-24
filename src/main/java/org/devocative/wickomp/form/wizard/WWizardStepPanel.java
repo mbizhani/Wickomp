@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public abstract class WWizardStepPanel extends WPanel {
+	private static final long serialVersionUID = -3820276087741941301L;
+
 	protected WWizardStepPanel() {
 		super("step");
 	}

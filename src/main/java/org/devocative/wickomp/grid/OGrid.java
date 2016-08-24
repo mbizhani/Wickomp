@@ -3,6 +3,8 @@ package org.devocative.wickomp.grid;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 
 public class OGrid<T> extends OBaseGrid<T> {
+	private static final long serialVersionUID = -5090764152549218606L;
+
 	private String groupField;
 	private String groupStyle;
 	private String groupStyler;

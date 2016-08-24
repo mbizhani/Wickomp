@@ -12,6 +12,8 @@ import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
 public class WBooleanInput extends WFormInputPanel<Boolean> {
+	private static final long serialVersionUID = 1557399571444957239L;
+
 	private static final HeaderItem MAIN_JS = Resource.getCommonJS("form/bool/candlestick.min.js");
 	private static final HeaderItem MAIN_CSS = Resource.getCommonCSS("form/bool/candlestick.min.css");
 	private static final HeaderItem FORM_CSS = Resource.getCommonCSS("form/common.css");

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class OAjaxLinkColumn<T> extends OCallbackColumn<T> {
+	private static final long serialVersionUID = 6520725348993447160L;
+
 	public OAjaxLinkColumn(IModel<String> text, HTMLBase linkContent) {
 		super(text, linkContent);
 	}

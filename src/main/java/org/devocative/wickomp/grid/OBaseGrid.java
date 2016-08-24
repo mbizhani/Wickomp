@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallbackUrl {
+	private static final long serialVersionUID = 1095555452051726851L;
+
 	// ---------------------- JSON FIELDS
 	private Boolean autoRowHeight = false;
 	private Boolean checkOnSelect;

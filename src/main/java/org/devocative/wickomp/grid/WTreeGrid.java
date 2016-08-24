@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 public class WTreeGrid<T> extends WBaseGrid<T> {
+	private static final long serialVersionUID = -1687156339596538069L;
+
 	private static final String PARENT_ID_PROPERTY = "_parentId";
 	private static final String STATE_PROPERTY = "state";
 

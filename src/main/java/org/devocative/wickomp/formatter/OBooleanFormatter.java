@@ -3,6 +3,8 @@ package org.devocative.wickomp.formatter;
 import org.apache.wicket.model.ResourceModel;
 
 public class OBooleanFormatter implements OFormatter {
+	private static final long serialVersionUID = -5789921480586802442L;
+
 	private static String stTrue, stFalse;
 
 	@Override

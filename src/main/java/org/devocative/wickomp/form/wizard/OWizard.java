@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 public class OWizard extends Options {
+	private static final long serialVersionUID = 8286372869101039276L;
+
 	private static Logger logger = LoggerFactory.getLogger(OWizard.class);
 
 	// ------------------------------

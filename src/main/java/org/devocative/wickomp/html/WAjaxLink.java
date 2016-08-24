@@ -6,6 +6,8 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 
 public abstract class WAjaxLink extends AjaxLink {
+	private static final long serialVersionUID = 4596376143569260289L;
+
 	private IModel<String> caption;
 	private HTMLBase icon;
 

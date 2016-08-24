@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class WAjaxButton extends Button {
+	private static final long serialVersionUID = -7669995504729974927L;
+
 	private static final Logger logger = LoggerFactory.getLogger(WAjaxButton.class);
 
 	private HTMLBase icon;
@@ -142,6 +144,8 @@ public abstract class WAjaxButton extends Button {
 
 				if (confirmationMessage != null) {
 					AjaxCallListener myAjaxCallListener = new AjaxCallListener() {
+						private static final long serialVersionUID = 8302847859100880597L;
+
 						@Override
 						public CharSequence getPrecondition(Component component) {
 							return String.format("if(!confirm('%s')) return false;", confirmationMessage.getObject());

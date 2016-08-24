@@ -1,6 +1,8 @@
 package org.devocative.wickomp.opt;
 
 public abstract class OComponent extends Options {
+	private static final long serialVersionUID = -2440914930844225509L;
+
 	private Boolean fit;
 	private OSize height;
 	private OSize width;
