@@ -3,7 +3,6 @@ package org.devocative.wickomp.form.wizard;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -15,6 +14,7 @@ import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.form.WAjaxButton;
+import org.devocative.wickomp.html.WAjaxLink;
 import org.devocative.wickomp.html.icon.FontAwesome;
 import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
@@ -106,6 +106,11 @@ public class WWizardPanel extends WPanel {
 		return this;
 	}
 
+	public WWizardPanel setFinishConfirmationMessage(IModel<String> msg) {
+		buttonBar.setFinishConfirmationMessage(msg);
+		return this;
+	}
+
 	public WWizardPanel setCancelButtonVisible(boolean visible) {
 		buttonBar.setCancelButtonVisible(visible);
 		return this;
@@ -113,6 +118,11 @@ public class WWizardPanel extends WPanel {
 
 	public WWizardPanel setCancelButtonLabel(IModel<String> label) {
 		buttonBar.setCancelButtonLabel(label);
+		return this;
+	}
+
+	public WWizardPanel setCancelConfirmationMessage(IModel<String> msg) {
+		buttonBar.setCancelConfirmationMessage(msg);
 		return this;
 	}
 
@@ -167,7 +177,7 @@ public class WWizardPanel extends WPanel {
 	private class WizardButtonBar extends Fragment {
 		private static final long serialVersionUID = -7432284770157489018L;
 
-		private AjaxLink prev, cancel;
+		private WAjaxLink prev, cancel;
 		private WAjaxButton next, finish;
 		private Label cancelLabel;
 
@@ -176,7 +186,7 @@ public class WWizardPanel extends WPanel {
 		public WizardButtonBar(String id, String markupId, MarkupContainer markupProvider) {
 			super(id, markupId, markupProvider);
 
-			prev = new AjaxLink("prev") {
+			prev = new WAjaxLink("prev") {
 				private static final long serialVersionUID = 8698300849201984560L;
 
 				@Override
@@ -242,7 +252,7 @@ public class WWizardPanel extends WPanel {
 				}
 			};
 
-			cancel = new AjaxLink("cancel") {
+			cancel = new WAjaxLink("cancel") {
 				private static final long serialVersionUID = 2912841408299541902L;
 
 				@Override
@@ -269,6 +279,11 @@ public class WWizardPanel extends WPanel {
 
 		// ---------------
 
+		public WizardButtonBar setFinishConfirmationMessage(IModel<String> msg) {
+			finish.setConfirmationMessage(msg);
+			return this;
+		}
+
 		public WizardButtonBar setCancelButtonVisible(boolean visible) {
 			cancel.setVisible(visible);
 			return this;
@@ -276,6 +291,11 @@ public class WWizardPanel extends WPanel {
 
 		public WizardButtonBar setCancelButtonLabel(IModel<String> label) {
 			cancelLabel.setDefaultModel(label);
+			return this;
+		}
+
+		public WizardButtonBar setCancelConfirmationMessage(IModel<String> msg) {
+			cancel.setConfirmationMessage(msg);
 			return this;
 		}
 

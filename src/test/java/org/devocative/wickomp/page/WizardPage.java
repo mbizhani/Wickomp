@@ -76,6 +76,8 @@ public class WizardPage extends BasePage {
 			}
 				.setTitle("Gandalf, The Grey")
 				.setCancelButtonVisible(true)
+				.setCancelConfirmationMessage(new Model<>("Cancel?"))
+				.setFinishConfirmationMessage(new Model<>("Finish?"))
 		);
 
 		add(new EasyUIBehavior());
