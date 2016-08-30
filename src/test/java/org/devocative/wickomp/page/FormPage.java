@@ -147,7 +147,10 @@ public class FormPage extends BasePage {
 		}
 		Map<String, Map> tables = new HashMap<>();
 		tables.put("tables", tables_cols);
-		oCode.setHintOptions(tables);
+		oCode
+			.setHintOptions(tables)
+		//.setShowMatchingBrackets(false)
+		;
 
 
 		final WSelectionInput child, parentSI;

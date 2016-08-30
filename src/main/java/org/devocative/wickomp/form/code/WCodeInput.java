@@ -65,6 +65,10 @@ public class WCodeInput extends WFormInputPanel<String> {
 			response.render(Resource.getCommonJS("codemirror/hint/show-hint.js"));
 			response.render(Resource.getCommonJS(String.format("codemirror/hint/%s-hint.js", options.getMode().getJsFile())));
 		}
+
+		if (options.getShowMatchingBrackets()) {
+			response.render(Resource.getCommonJS("codemirror/addon/matchbrackets.js"));
+		}
 	}
 
 	@Override

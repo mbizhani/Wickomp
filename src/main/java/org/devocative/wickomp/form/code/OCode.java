@@ -1,5 +1,6 @@
 package org.devocative.wickomp.form.code;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devocative.wickomp.opt.Options;
 
 import java.util.HashMap;
@@ -16,6 +17,8 @@ public class OCode extends Options {
 	private OCodeMode mode;
 	private Boolean readOnly; //default is false
 	private Boolean smartIndent = true;
+
+	private Boolean showMatchingBrackets = true;
 
 	// ------------------------------ CONSTRUCTORS
 
@@ -106,5 +109,17 @@ public class OCode extends Options {
 			return map;
 		}
 		return null;
+	}
+
+	// ------------------------------
+
+	@JsonIgnore
+	public Boolean getShowMatchingBrackets() {
+		return showMatchingBrackets;
+	}
+
+	public OCode setShowMatchingBrackets(Boolean showMatchingBrackets) {
+		this.showMatchingBrackets = showMatchingBrackets;
+		return this;
 	}
 }
