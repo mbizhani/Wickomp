@@ -5,6 +5,8 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.wickomp.opt.OUserPreference;
 
 public class WPanel extends Panel {
+	private static final long serialVersionUID = -5462515775771629113L;
+
 	public WPanel(String id) {
 		super(id);
 	}

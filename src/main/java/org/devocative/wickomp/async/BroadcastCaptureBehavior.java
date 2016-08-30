@@ -8,6 +8,8 @@ import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 
 public abstract class BroadcastCaptureBehavior<T> extends Behavior {
+	private static final long serialVersionUID = -3591878095465578332L;
+
 	private Class<T> messageType;
 
 	public BroadcastCaptureBehavior(Class<T> messageType) {
@@ -17,6 +19,8 @@ public abstract class BroadcastCaptureBehavior<T> extends Behavior {
 	@Override
 	public void bind(Component component) {
 		component.add(new WebSocketBehavior() {
+			private static final long serialVersionUID = 2389678561015559686L;
+
 			@Override
 			protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message) {
 				if (message instanceof WebSocketBroadcastMessage) {

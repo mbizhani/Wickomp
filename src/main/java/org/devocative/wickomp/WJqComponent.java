@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class WJqComponent extends WebMarkupContainer {
+	private static final long serialVersionUID = 2912973585141765388L;
+
 	private static final Logger logger = LoggerFactory.getLogger(WJqComponent.class);
 
 	//private boolean needHtmlBeside = false;

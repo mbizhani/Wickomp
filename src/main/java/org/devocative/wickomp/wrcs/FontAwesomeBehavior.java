@@ -6,6 +6,8 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 
 public class FontAwesomeBehavior extends Behavior {
+	private static final long serialVersionUID = 5411730158972972793L;
+
 	private static HeaderItem CSS = Resource.getCommonCSS("fontawesome/css/font-awesome.min.css");
 
 	public static void setCSS(HeaderItem CSS) {

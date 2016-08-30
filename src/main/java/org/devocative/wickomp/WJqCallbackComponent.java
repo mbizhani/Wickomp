@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class WJqCallbackComponent extends WJqComponent {
+	private static final long serialVersionUID = -1595120467139571552L;
+
 	private static final Logger logger = LoggerFactory.getLogger(WJqCallbackComponent.class);
 
 	private AbstractAjaxBehavior callbackAjaxBehavior;
@@ -21,6 +23,8 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 		super(id, options);
 
 		callbackAjaxBehavior = new AbstractAjaxBehavior() {
+			private static final long serialVersionUID = 1339255377058391445L;
+
 			@Override
 			public void onRequest() {
 				RequestCycle requestCycle = RequestCycle.get();

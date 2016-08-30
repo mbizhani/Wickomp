@@ -7,6 +7,8 @@ import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import java.io.Serializable;
 
 public class AsyncBehavior extends Behavior implements IAsyncAction {
+	private static final long serialVersionUID = -3225863270756629087L;
+
 	private WebSocketAsyncBehavior webSocketAsyncBehavior;
 	private IAsyncResponseHandler asyncResponseHandler;
 

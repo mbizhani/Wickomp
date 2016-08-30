@@ -9,6 +9,8 @@ import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
 
 public class EasyUIBehavior extends Behavior {
+	private static final long serialVersionUID = -1373990347234224329L;
+
 	private static HeaderItem THEME_CSS = Resource.getCommonCSS("easyui/themes/metroBlue.css");
 	private static HeaderItem MAIN_JS = Resource.getCommonJS("easyui/jquery.easyui.min.js");
 	private static HeaderItem GROUP_VIEW_JS = Resource.getCommonJS("easyui/ext/datagrid-groupview.js");
