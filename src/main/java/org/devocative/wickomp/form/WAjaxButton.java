@@ -26,7 +26,6 @@ public abstract class WAjaxButton extends Button {
 	private static final Logger logger = LoggerFactory.getLogger(WAjaxButton.class);
 
 	private HTMLBase icon;
-	private IModel<String> caption;
 	private IModel<String> confirmationMessage;
 	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
 
@@ -42,8 +41,7 @@ public abstract class WAjaxButton extends Button {
 
 	// Main Constructor
 	public WAjaxButton(String id, IModel<String> caption, HTMLBase icon) {
-		super(id);
-		this.caption = caption;
+		super(id, caption);
 		this.icon = icon;
 	}
 
@@ -55,7 +53,7 @@ public abstract class WAjaxButton extends Button {
 	}
 
 	public WAjaxButton setCaption(IModel<String> caption) {
-		this.caption = caption;
+		setModel(caption);
 		return this;
 	}
 
@@ -73,10 +71,10 @@ public abstract class WAjaxButton extends Button {
 
 	@Override
 	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
-		if ("button".equalsIgnoreCase(openTag.getName()) && (caption != null || icon != null)) {
+		if ("button".equalsIgnoreCase(openTag.getName()) && (getModel() != null || icon != null)) {
 			String cap = "";
-			if (caption != null) {
-				cap = caption.getObject();
+			if (getModel() != null) {
+				cap = getModelObject();
 			}
 			if (icon != null) {
 				cap += " " + icon.toString();
@@ -105,8 +103,8 @@ public abstract class WAjaxButton extends Button {
 		super.onComponentTag(tag);
 
 		tag.put("type", "submit");
-		if (caption != null && "input".equalsIgnoreCase(tag.getName())) {
-			tag.put("value", caption.getObject());
+		if (getModel() != null && "input".equalsIgnoreCase(tag.getName())) {
+			tag.put("value", getModelObject());
 		}
 	}
 
