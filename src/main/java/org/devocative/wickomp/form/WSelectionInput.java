@@ -127,16 +127,16 @@ public class WSelectionInput extends WFormInputPanel {
 		// The following snippet is added for input:reset HTML support in this component
 		String cap;
 		if (getModelObject() == null) {
-			cap = getString("label.select");
+			cap = getString("WSelectionInput.select");
 		} else if (choices.isMultipleSelection()) {
 			Collection col = (Collection) getModelObject();
-			cap = String.format("%s %s", col.size(), getString("label.noOfSelection"));
+			cap = String.format("%s %s", col.size(), getString("WSelectionInput.noOfSelection"));
 		} else {
 			int i = choices.getChoices().indexOf(getModelObject());
 			if (i > -1) {
 				cap = choices.getChoices().get(i).toString();
 			} else {
-				cap = getString("label.select");
+				cap = getString("WSelectionInput.select");
 			}
 		}
 
@@ -161,7 +161,7 @@ public class WSelectionInput extends WFormInputPanel {
 		return String.format("handleAllSelList('%s', %s, '%s', '%s');",
 			getMarkupId(),
 			isEnabledInHierarchy(),
-			getString("label.select", null, "select"),
-			getString("label.noOfSelection", null, "selection"));
+			getString("WSelectionInput.select"),
+			getString("WSelectionInput.noOfSelection"));
 	}
 }

@@ -198,7 +198,7 @@ public class WWizardPanel extends WPanel {
 				}
 			};
 
-			next = new WAjaxButton("next", new ResourceModel("label.wizard.next", "Next")) {
+			next = new WAjaxButton("next", new ResourceModel("WWizardPanel.next")) {
 				private static final long serialVersionUID = -4723527907345120965L;
 
 				@Override
@@ -227,7 +227,7 @@ public class WWizardPanel extends WPanel {
 				}
 			};
 
-			finish = new WAjaxButton("finish", new ResourceModel("label.wizard.finish", "Finish"), new FontAwesome("check-circle")) {
+			finish = new WAjaxButton("finish", new ResourceModel("WWizardPanel.finish"), new FontAwesome("check-circle")) {
 				private static final long serialVersionUID = -5032119350215093190L;
 
 				@Override
@@ -260,14 +260,14 @@ public class WWizardPanel extends WPanel {
 					WWizardPanel.this.onCancel(target, oWizard.getCurrentStepId());
 				}
 			};
-			cancel.add(cancelLabel = new Label("cancelLabel", new ResourceModel("label.wizard.cancel", "Cancel")));
+			cancel.add(cancelLabel = new Label("cancelLabel", new ResourceModel("WWizardPanel.cancel")));
 
 			add(prev.setEnabled(false));
 			add(next);
 			add(finish.setEnabled(false));
 			add(cancel.setVisible(false));
 
-			prev.add(new Label("prevLbl", new ResourceModel("label.wizard.previous", "Previous")));
+			prev.add(new Label("prevLbl", new ResourceModel("WWizardPanel.previous")));
 			if (getUserPreference().getLayoutDirection() == OLayoutDirection.RTL) {
 				prev.add(new WebComponent("prevIco").add(new AttributeModifier("class", "fa fa-chevron-right")));
 				next.setIcon(new FontAwesome("chevron-left"));
