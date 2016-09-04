@@ -11,9 +11,9 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.WebUtil;
+import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
@@ -52,9 +52,6 @@ public class WOrderedListInput<T> extends WFormInputPanel<List<T>> {
 		hiddenIds = new HiddenField<>("hiddenIds", new Model<String>());
 		hiddenIds.setOutputMarkupId(true);
 		add(hiddenIds);
-
-		add(new Label("srcLbl", new ResourceModel("OrderedListInput.source", "Source")));
-		add(new Label("destLbl", new ResourceModel("OrderedListInput.destination", "Destination")));
 
 		src = new WebMarkupContainer("src");
 		src.setOutputMarkupId(true);
@@ -95,6 +92,7 @@ public class WOrderedListInput<T> extends WFormInputPanel<List<T>> {
 		add(down);
 
 		add(new FontAwesomeBehavior());
+		add(new CommonBehavior());
 	}
 
 	// ------------------------------

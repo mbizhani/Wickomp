@@ -1,6 +1,5 @@
 package org.devocative.wickomp.form;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -8,7 +7,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.WFormInputPanel;
@@ -60,20 +58,12 @@ public class WDateInput extends WFormInputPanel<Date> {
 		mainTable.add(month = createTextField("month"));
 		mainTable.add(day = createTextField("day"));
 
-		year.add(new AttributeModifier("title", new ResourceModel("label.year", "Year")));
-		month.add(new AttributeModifier("title", new ResourceModel("label.month", "Month")));
-		day.add(new AttributeModifier("title", new ResourceModel("label.day", "Day")));
-
 		timePart = new WebMarkupContainer("timePart");
 		timePart.add(hour = createTextField("hour"));
 		timePart.add(minute = createTextField("minute"));
 		timePart.add(second = createTextField("second"));
 		timePart.setVisible(false);
 		mainTable.add(timePart);
-
-		hour.add(new AttributeModifier("title", new ResourceModel("label.hour", "Hour")));
-		minute.add(new AttributeModifier("title", new ResourceModel("label.minute", "Minute")));
-		second.add(new AttributeModifier("title", new ResourceModel("label.second", "Second")));
 
 		calOpener = new WebMarkupContainer("calOpener");
 		calOpener.setOutputMarkupId(true);

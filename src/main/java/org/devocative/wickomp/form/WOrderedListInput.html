@@ -3,10 +3,17 @@
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
 	<input type="hidden" wicket:id="hiddenIds"/>
 
-	<table class="orderedList">
+	<table class="orderedList w-input">
 		<tr>
-			<td wicket:id="srcLbl"></td>
-			<td wicket:id="destLbl"></td>
+			<td style="text-align: center">
+				<wicket:message key="WOrderedListInput.source"/>
+			</td>
+			<td wicket:message="title:WOrderedListInput.help" style="cursor:pointer;">
+				<i class="fa fa-question-circle"></i>
+			</td>
+			<td style="text-align: center">
+				<wicket:message key="WOrderedListInput.destination"/>
+			</td>
 			<td></td>
 		</tr>
 		<tr>
@@ -17,6 +24,7 @@
 					</wicket:container>
 				</select>
 			</td>
+			<td></td>
 			<td>
 				<select wicket:id="dest">
 					<wicket:container wicket:id="options">
@@ -25,10 +33,13 @@
 				</select>
 			</td>
 			<td valign="middle">
-				<div wicket:id="up"><i class="fa fa-chevron-circle-up"></i></div>
+				<div wicket:id="up" wicket:message="title:WOrderedListInput.move.up"><i
+					class="fa fa-chevron-circle-up"></i></div>
+
 				<br/>
 
-				<div wicket:id="down"><i class="fa fa-chevron-circle-down"></i></div>
+				<div wicket:id="down" wicket:message="title:WOrderedListInput.move.down"><i
+					class="fa fa-chevron-circle-down"></i></div>
 			</td>
 		</tr>
 	</table>

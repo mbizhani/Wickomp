@@ -1,12 +1,10 @@
 package org.devocative.wickomp.form;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.ResourceModel;
 import org.devocative.adroit.ObjectUtil;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.wrcs.CommonBehavior;
@@ -29,19 +27,34 @@ public class WSqlStringInput extends WFormInputPanel<String> {
 		super(id, model);
 
 		add(label = new Label("label"));
-
 		add(text = new TextField<>("text", new Model<String>(), String.class));
-
 		add(leftBox = new CheckBox("leftBox", new Model<>(true)));
-		leftBox.add(new AttributeModifier("title", new ResourceModel("WSqlStringInput.startWithAny", "Starts with any")));
-
 		add(rightBox = new CheckBox("rightBox", new Model<>(true)));
-		rightBox.add(new AttributeModifier("title", new ResourceModel("WSqlStringInput.endWithAny", "Ends with any")));
 
 		add(new CommonBehavior());
 	}
 
-	// ------------------------------ INTERNAL METHODS
+	// ------------------------------
+
+	@Override
+	public void convertInput() {
+		String str = text.getConvertedInput();
+
+		if (str != null) {
+
+			if (ObjectUtil.isTrue(leftBox.getConvertedInput())) {
+				str = "%" + str;
+			}
+
+			if (ObjectUtil.isTrue(rightBox.getConvertedInput())) {
+				str = str + "%";
+			}
+
+			setConvertedInput(str);
+		}
+	}
+
+	// ------------------------------
 
 	@Override
 	protected void onInitialize() {
@@ -76,24 +89,6 @@ public class WSqlStringInput extends WFormInputPanel<String> {
 			}
 
 			text.setDefaultModel(new Model<>(str));
-		}
-	}
-
-	@Override
-	public void convertInput() {
-		String str = text.getConvertedInput();
-
-		if (str != null) {
-
-			if (ObjectUtil.isTrue(leftBox.getConvertedInput())) {
-				str = "%" + str;
-			}
-
-			if (ObjectUtil.isTrue(rightBox.getConvertedInput())) {
-				str = str + "%";
-			}
-
-			setConvertedInput(str);
 		}
 	}
 }
