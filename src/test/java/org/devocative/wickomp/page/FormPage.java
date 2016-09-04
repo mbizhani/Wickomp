@@ -30,6 +30,7 @@ import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.panel.SelectionPanel;
 import org.devocative.wickomp.vo.Field;
 import org.devocative.wickomp.vo.KeyValue;
+import org.devocative.wickomp.vo.PersonVO;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
 
 import java.io.Serializable;
@@ -153,6 +154,8 @@ public class FormPage extends BasePage {
 		;
 
 
+		List<PersonVO> personVOs = PersonVO.list();
+
 		final WSelectionInput child, parentSI;
 		final Map<String, Serializable> map = new HashMap<>();
 //		map.put("name", "Joe");
@@ -161,6 +164,7 @@ public class FormPage extends BasePage {
 		map.put("child", "B.1");
 		//map.put("age", new RangeVO(100, 2000));
 		map.put("age", 2000);
+		map.put("orderedPerson", new ArrayList<>(personVOs.subList(4, 8)));
 
 		map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
 
@@ -204,6 +208,7 @@ public class FormPage extends BasePage {
 				return list;
 			}
 		}.setOpenModalLinkVisible(true));
+		form.add(new WOrderedListInput<>("orderedPerson", personVOs).setVisibleSize(10));
 		form.add(new Button("save") {
 			//		form.add(new WAjaxButton("save") {
 			public void onSubmit() {

@@ -94,9 +94,7 @@ public class PersonVO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PersonVO{" +
-			"col01='" + col01 + '\'' +
-			'}';
+		return col02;
 	}
 
 	public static List<PersonVO> list() {
@@ -106,7 +104,7 @@ public class PersonVO implements Serializable {
 		for (int i = 0; i < 189; i++) {
 			list.add(new PersonVO()
 					.setCol01((i / 7) + "")
-					.setCol02("C2 " + UUID.randomUUID().toString())
+					.setCol02(i + " - " + UUID.randomUUID().toString())
 					.setCol03("سلام world خوبی؟")
 					.setCol04("C4 " + UUID.randomUUID().toString())
 					.setCol05("C5 " + UUID.randomUUID().toString())
@@ -116,5 +114,21 @@ public class PersonVO implements Serializable {
 			);
 		}
 		return list;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PersonVO)) return false;
+
+		PersonVO personVO = (PersonVO) o;
+
+		return !(getCol02() != null ? !getCol02().equals(personVO.getCol02()) : personVO.getCol02() != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return getCol02() != null ? getCol02().hashCode() : 0;
 	}
 }

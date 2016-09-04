@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+	<input type="hidden" wicket:id="hiddenIds"/>
+
+	<table class="orderedList">
+		<tr>
+			<td wicket:id="srcLbl"></td>
+			<td wicket:id="destLbl"></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>
+				<select wicket:id="src">
+					<wicket:container wicket:id="options">
+						<option wicket:id="option"></option>
+					</wicket:container>
+				</select>
+			</td>
+			<td>
+				<select wicket:id="dest">
+					<wicket:container wicket:id="options">
+						<option wicket:id="option"></option>
+					</wicket:container>
+				</select>
+			</td>
+			<td valign="middle">
+				<div wicket:id="up"><i class="fa fa-chevron-circle-up"></i></div>
+				<br/>
+
+				<div wicket:id="down"><i class="fa fa-chevron-circle-down"></i></div>
+			</td>
+		</tr>
+	</table>
+</wicket:panel>
