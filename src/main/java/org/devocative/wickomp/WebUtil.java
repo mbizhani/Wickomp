@@ -15,10 +15,7 @@ import org.apache.wicket.util.string.StringValue;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
  * Some useful annotations:
@@ -106,6 +103,14 @@ public class WebUtil {
 					result.put(param, values);
 				}
 			}
+		}
+		return result;
+	}
+
+	public static Set<String> toSet(IRequestParameters parameters, boolean lowercaseParam) {
+		Set<String> result = new HashSet<>();
+		for (String param : parameters.getParameterNames()) {
+			result.add(lowercaseParam ? param.toLowerCase() : param);
 		}
 		return result;
 	}
