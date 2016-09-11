@@ -8,6 +8,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.ws.api.IWebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -124,5 +126,15 @@ public class WebUtil {
 			.getResourceSettings()
 			.getLocalizer()
 			.getString(resourceKey, null, null, null, null, defaultValue);
+	}
+
+	public static boolean isWebSocketRequest(RequestCycle cycle) {
+		IWebSocketRequestHandler webSocketRequestHandler = cycle.find(IWebSocketRequestHandler.class);
+		return webSocketRequestHandler != null;
+	}
+
+	public static boolean isWebSocketResponse(RequestCycle cycle) {
+		Response response = cycle.getResponse();
+		return response instanceof WebSocketResponse;
 	}
 }
