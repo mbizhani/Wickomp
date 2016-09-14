@@ -1,5 +1,6 @@
 package org.devocative.wickomp.grid;
 
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.lang.PropertyResolver;
@@ -43,7 +44,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	protected List<WSortField> sortFieldList = new ArrayList<>();
 	protected Map<String, IModel<T>> pageData = new HashMap<>();
 
-	// ------------------------- CONSTRUCTORS
+	// ------------------------------ CONSTRUCTORS
 
 	public WBaseGrid(String id, OBaseGrid<T> options, IGridDataSource<T> gridDataSource) {
 		super(id, options);
@@ -61,7 +62,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		this.options = options;
 	}
 
-	// ------------------------- ACCESSORS
+	// ------------------------------ ACCESSORS
 
 	public OBaseGrid<T> getOptions() {
 		return options;
@@ -90,29 +91,21 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		return this;
 	}
 
-	// ------------------------- METHODS
+	// ------------------------------ METHODS
 
 	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
-		if (isEnabled()) {
-			if (pageNum == null) {
-				pageNum = 1;
-			}
-
-			if (pageSize == null) {
-				pageSize = options.getPageSize();
-			}
-
+		if (isEnabledInHierarchy()) {
 			RGridPage gridPage = getGridPage();
 
-			String script = String.format(
-				"$('#%1$s').%2$s('options')['url']=\"%3$s\";" +
-					"$('#%1$s').%2$s('loadData', %4$s);",
-				getMarkupId(), getJQueryFunction(), getCallbackURL(),
-				WebUtil.toJson(gridPage));
+			if (gridDataSource != null) {
+				String script = createClientScript(gridPage);
 
-			logger.debug("WBaseGrid.loadData(): {}", script);
+				logger.debug("WBaseGrid.loadData(): {}", script);
 
-			target.appendJavaScript(script);
+				target.appendJavaScript(script);
+			}
+		} else {
+			throw new WicketRuntimeException("WBaseGrid is disabled: " + getId());
 		}
 		return this;
 	}
@@ -130,43 +123,49 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	}
 
 	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list, long count, List footer) {
-		RGridPage gridPage = getGridPage(list, count);
+		if (isEnabledInHierarchy()) {
+			RGridPage gridPage = getGridPage(list, count);
 
-		if (options.hasFooter()) {
-			if (footer != null) {
-				gridPage.setFooter(getGridFooter(footer));
-			} else {
-				gridPage.setFooter(new ArrayList<RObject>());
+			if (options.hasFooter()) {
+				if (footer != null) {
+					gridPage.setFooter(getGridFooter(footer));
+				} else {
+					gridPage.setFooter(new ArrayList<RObject>());
+				}
 			}
+
+			String script = createClientScript(gridPage);
+
+			logger.debug("WBaseGrid.pushData(): {}", script);
+
+			handler.appendJavaScript(script);
+		} else {
+			throw new WicketRuntimeException("WBaseGrid is disabled: " + getId());
 		}
-
-		String script = String.format("$('#%1$s').%2$s('loadData', %3$s);",
-			getMarkupId(), getJQueryFunction(), WebUtil.toJson(gridPage));
-
-		logger.debug("WBaseGrid.pushData(): {}", script);
-
-		handler.appendJavaScript(script);
 
 		return this;
 	}
 
 	public WBaseGrid<T> pushError(IPartialPageRequestHandler handler, Exception e) {
-		RGridPage result = new RGridPage();
-		result.setTotal((long) pageNum * pageSize);
-		result.setRows(new RObjectList());
-		result.setError(exceptionMessageHandler.handleMessage(this, e));
+		if (isEnabledInHierarchy()) {
+			RGridPage gridPage = new RGridPage();
+			gridPage.setTotal((long) pageNum * pageSize);
+			gridPage.setRows(new RObjectList());
+			gridPage.setError(exceptionMessageHandler.handleMessage(this, e));
 
-		String script = String.format("$('#%1$s').%2$s('loadData', %3$s);",
-			getMarkupId(), getJQueryFunction(), WebUtil.toJson(result));
+			String script = createClientScript(gridPage);
 
-		logger.debug("WBaseGrid.pushError(): {}", script);
+			logger.debug("WBaseGrid.pushError(): {}", script);
 
-		handler.appendJavaScript(script);
+			handler.appendJavaScript(script);
+		} else {
+			throw new WicketRuntimeException("WBaseGrid is disabled: " + getId());
+		}
 
 		return this;
 	}
 
-	// ------------------------- INTERNAL METHODS
+	// ------------------------------ INTERNAL METHODS
 
 	@Override
 	protected void onInitialize() {
@@ -182,9 +181,19 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		}
 
 		options.getColumns().validate();
+		pageNum = 1;
+		pageSize = options.getPageSize();
 
 		add(new FontAwesomeBehavior());
 		add(new EasyUIBehavior());
+
+		if (gridDataSource == null && gridAsyncDataSource == null) {
+			throw new WicketRuntimeException("WBaseGrid without datasource: " + getId());
+		}
+
+		if (gridDataSource != null && gridAsyncDataSource != null) {
+			throw new WicketRuntimeException("WBaseGrid has both dataSource & asyncDataSource: " + getId());
+		}
 	}
 
 	@Override
@@ -192,7 +201,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		super.onBeforeRender();
 
 		// It should be called in onBeforeRender, not worked in onInitialize, causing StalePageException
-		if (!isEnabled()) {
+		if (!isEnabledInHierarchy()) {
 			options.setUrl(null);
 		}
 		/*
@@ -217,7 +226,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		pageSize = parameters.getParameterValue("rows").toInt(options.getPageSize());
 		pageNum = parameters.getParameterValue("page").toInt(1);
 
-		if (!isEnabled()) {
+		if (!isEnabledInHierarchy()) {
 			return;
 		}
 
@@ -256,7 +265,11 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
 
 			RGridPage result = getGridPage();
-			sendJSONResponse(WebUtil.toJson(result));
+			if (gridDataSource != null) {
+				sendJSONResponse(WebUtil.toJson(result));
+			} else {
+				sendJSONResponse("");
+			}
 		}
 	}
 
@@ -282,6 +295,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		}
 	}
 
+	// ---------------
+
 	protected final RGridPage getGridPage() {
 		RGridPage result;
 		try {
@@ -304,7 +319,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				if (options.hasFooter() && footerDataSource != null) {
 					result.setFooter(getGridFooter(footerDataSource.footer(data)));
 				}
-			} else if (gridAsyncDataSource != null) {
+			} else {
 				gridAsyncDataSource.list(pageNum, pageSize, sortFieldList);
 
 				result = getGridPage(null, pageNum * pageSize);
@@ -312,8 +327,6 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 					result.setFooter(new ArrayList<RObject>());
 				}
 				result.setAsync(true);
-			} else {
-				throw new RuntimeException("No DataSource for grid: " + getId());
 			}
 		} catch (Exception e) {
 			logger.warn("Grid.DataSource: id=" + getId(), e);
@@ -401,6 +414,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		}
 	}
 
+	// ---------------
+
 	private void handleToolbarButtonClick(Integer colNo, IRequestParameters parameters) {
 		OButton<T> button = options.getToolbarButtons().get(colNo);
 		button.onClick(new WGridInfo<>(options, gridDataSource, sortFieldList), parameters);
@@ -431,5 +446,20 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		for (int i = 0; i < sortList.length; i++) {
 			sortFieldList.add(new WSortField(sortList[i], orderList[i]));
 		}
+	}
+
+	private String createClientScript(RGridPage gridPage) {
+		StringBuilder result = new StringBuilder();
+
+		if (options.getUrl() == null) {
+			options.setUrl(getCallbackURL());
+			result.append(String.format("$('#%s').%s('options')['url']=\"%s\";",
+				getMarkupId(), getJQueryFunction(), getCallbackURL()));
+		}
+
+		result.append(String.format("$('#%s').%s('loadData', %s);",
+			getMarkupId(), getJQueryFunction(), WebUtil.toJson(gridPage)));
+
+		return result.toString();
 	}
 }

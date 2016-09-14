@@ -89,11 +89,11 @@ public class WickompApplication extends WebApplication {
 				new Thread() {
 					@Override
 					public void run() {
-						try {
+						/*try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
-						}
+						}*/
 						AsyncMediator.sendResponse(token, (Serializable) ObjectBuilder
 								.<String, Object>createDefaultMap()
 								.put("list", result)
@@ -131,11 +131,11 @@ public class WickompApplication extends WebApplication {
 				new Thread() {
 					@Override
 					public void run() {
-						try {
+						/*try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
-						}
+						}*/
 
 						AsyncMediator.sendResponse(asyncToken, (Serializable) ObjectBuilder
 							.<String, Object>createDefaultMap()
@@ -172,11 +172,11 @@ public class WickompApplication extends WebApplication {
 				new Thread() {
 					@Override
 					public void run() {
-						try {
+						/*try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
-						}
+						}*/
 
 						if (first == 3) {
 							AsyncMediator.sendError(token, new RuntimeException("AsyncMediator.sendError :)"));
