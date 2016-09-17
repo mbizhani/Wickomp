@@ -117,14 +117,21 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 }
 
 function handleSelection(grid, selectionHandler, selData) {
-	var idField = grid.datagrid('options')["idField"];
-	var titleField = grid.datagrid('options')["titleField"];
+	var idField = grid.datagrid('options')["returnField"];
+	if (!idField) {
+		idField = grid.datagrid('options')["idField"];
+	}
 	if (idField) {
+		var titleField = grid.datagrid('options')["titleField"];
+		if (!titleField) {
+			titleField = idField;
+		}
 		var kvList = [];
 		for (var r = 0; r < selData.length; r++) {
 			var obj = {};
 			obj["key"] = selData[r][idField];
 			obj["value"] = selData[r][titleField];
+			obj["row"] = selData[r];
 			kvList.push(obj);
 		}
 		selectionHandler(kvList);

@@ -26,6 +26,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private Boolean pagination = true;
 	private List<Integer> pageList;
 	private Integer pageSize;
+	private String returnField;
 	private Boolean rowNumbers = true;
 	private Boolean selectOnCheck;
 	private Boolean showFooter;
@@ -140,6 +141,15 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	public OBaseGrid<T> setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+		return this;
+	}
+
+	public String getReturnField() {
+		return returnField;
+	}
+
+	public OBaseGrid<T> setReturnField(String returnField) {
+		this.returnField = returnField;
 		return this;
 	}
 
