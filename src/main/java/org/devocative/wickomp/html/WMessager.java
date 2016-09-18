@@ -1,12 +1,7 @@
 package org.devocative.wickomp.html;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.FeedbackMessagesModel;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,20 +57,6 @@ public class WMessager {
 	public static void show(String title, String message, OMessager options, AjaxRequestTarget target) {
 		String sc = getScript(title, message, options);
 		target.appendJavaScript(sc);
-	}
-
-	// ---------------
-
-	public static List<Serializable> collectMessages(Component component) {
-		FeedbackMessagesModel feedbackMessagesModel = new FeedbackMessagesModel(component);
-		List<FeedbackMessage> messages = feedbackMessagesModel.getObject();
-		List<Serializable> errors = new ArrayList<>();
-		if (messages.size() > 0) {
-			for (FeedbackMessage message : messages) {
-				errors.add(message.getMessage());
-			}
-		}
-		return errors;
 	}
 
 	// ------------------------------

@@ -11,8 +11,8 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.WDefaults;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.html.HTMLBase;
-import org.devocative.wickomp.html.WMessager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,7 +130,7 @@ public abstract class WAjaxButton extends Button {
 
 			@Override
 			protected void onError(AjaxRequestTarget target) {
-				WAjaxButton.this.onError(target, WMessager.collectMessages(WAjaxButton.this));
+				WAjaxButton.this.onError(target, WebUtil.collectAs(WAjaxButton.this, true));
 			}
 
 			@Override

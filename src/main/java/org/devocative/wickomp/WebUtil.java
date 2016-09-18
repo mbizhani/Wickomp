@@ -5,7 +5,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.ws.api.IWebSocketRequestHandler;
@@ -14,8 +19,11 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -136,5 +144,52 @@ public class WebUtil {
 	public static boolean isWebSocketResponse(RequestCycle cycle) {
 		Response response = cycle.getResponse();
 		return response instanceof WebSocketResponse;
+	}
+
+	public static List<FeedbackMessage> collect(Component component, final boolean clearAfter) {
+		final List<FeedbackMessage> messages = new ArrayList<>();
+
+		final IFeedbackMessageFilter filter = IFeedbackMessageFilter.ALL;
+
+		if (Session.exists()) {
+			messages.addAll(Session.get().getFeedbackMessages().messages(filter));
+			if (clearAfter) {
+				Session.get().getFeedbackMessages().clear(filter);
+			}
+		}
+
+		if (component != null && component.hasFeedbackMessage()) {
+			messages.addAll(component.getFeedbackMessages().messages(filter));
+			if (clearAfter) {
+				component.getFeedbackMessages().clear(filter);
+			}
+		}
+
+		if (component != null && component instanceof MarkupContainer) {
+			((MarkupContainer) component).visitChildren(new IVisitor<Component, Void>() {
+
+				@Override
+				public void component(Component object, IVisit<Void> visit) {
+					if (object.hasFeedbackMessage()) {
+						messages.addAll(object.getFeedbackMessages().messages(filter));
+						if (clearAfter) {
+							object.getFeedbackMessages().clear(filter);
+						}
+					}
+				}
+			});
+		}
+
+		return messages;
+	}
+
+	public static List<Serializable> collectAs(Component component, final boolean clearAfter) {
+		List<FeedbackMessage> collect = collect(component, clearAfter);
+
+		List<Serializable> result = new ArrayList<>();
+		for (FeedbackMessage message : collect) {
+			result.add(message.getMessage());
+		}
+		return result;
 	}
 }
