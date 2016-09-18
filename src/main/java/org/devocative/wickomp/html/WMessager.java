@@ -1,7 +1,10 @@
 package org.devocative.wickomp.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.devocative.wickomp.WebUtil;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,6 +28,16 @@ public class WMessager {
 		return String.format(
 			"$.messager.show({title:'%s',msg:'%s',showType:'%s',timeout:0,width:400,height:300,style:{right:'',bottom:''},draggable:%s,resizable:%s,modal:%s});",
 			title, message, options.getShowType(), options.isDraggable(), options.isResizable(), options.isModal());
+	}
+
+	public static void writeErrorsInAfterRender(Component component) {
+		List<Serializable> errors = WebUtil.collectAs(component, true);
+		if (errors.size() > 0) {
+			String st = WMessager.getScript(component.getString("label.error", null, "Error"),
+				WMessager.getHtml(errors));
+
+			WebUtil.writeJQueryCall(st, true);
+		}
 	}
 
 	// ---------------
