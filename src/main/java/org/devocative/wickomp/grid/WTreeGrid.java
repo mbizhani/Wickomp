@@ -79,7 +79,7 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 			sendJSONResponse(WebUtil.toJson(subRow));
 		} else {
 			treeGridAsyncDataSource.listByParent(id, sortFieldList);
-			sendJSONResponse("[{\"async\":true}]");
+			sendJSONResponse("");
 		}
 
 	}
