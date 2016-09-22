@@ -110,10 +110,12 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 
 			.add(new OHiddenColumn<PersonVO>("col05"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "birthDate")
-				.setFormatter(ODateFormatter.prDateTime()))
+				.setFormatter(ODateFormatter.prDateTime())
+				.setStyle("direction:ltr;"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "income")
 				.setFormatter(ONumberFormatter.integer())
-				.setHasFooter(true))
+				.setHasFooter(true)
+				.setStyle("direction:ltr;"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
 				.setFormatter(OBooleanFormatter.bool()))
 		;
