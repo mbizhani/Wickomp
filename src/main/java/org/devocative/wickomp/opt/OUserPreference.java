@@ -1,7 +1,11 @@
 package org.devocative.wickomp.opt;
 
+import java.util.TimeZone;
+
 public interface OUserPreference {
 	OCalendar getCalendar();
+
+	TimeZone getTimeZone();
 
 	String getDatePattern();
 
@@ -13,6 +17,11 @@ public interface OUserPreference {
 		@Override
 		public OCalendar getCalendar() {
 			return OCalendar.Gregorian;
+		}
+
+		@Override
+		public TimeZone getTimeZone() {
+			return TimeZone.getDefault();
 		}
 
 		@Override

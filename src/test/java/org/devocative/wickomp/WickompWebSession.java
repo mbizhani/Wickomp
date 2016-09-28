@@ -8,8 +8,11 @@ import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class WickompWebSession extends WebSession implements OUserPreference {
+	private static final long serialVersionUID = -667320819551579219L;
+
 	public WickompWebSession(Request request) {
 		super(request);
 
@@ -19,6 +22,11 @@ public class WickompWebSession extends WebSession implements OUserPreference {
 	@Override
 	public OCalendar getCalendar() {
 		return OCalendar.Persian;
+	}
+
+	@Override
+	public TimeZone getTimeZone() {
+		return TimeZone.getDefault();
 	}
 
 	@Override

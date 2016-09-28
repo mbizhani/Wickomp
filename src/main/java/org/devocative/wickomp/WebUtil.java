@@ -146,6 +146,11 @@ public class WebUtil {
 		return response instanceof WebSocketResponse;
 	}
 
+	public static boolean isAjaxRequest(RequestCycle cycle) {
+		AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
+		return target != null;
+	}
+
 	public static List<FeedbackMessage> collect(Component component, final boolean clearAfter) {
 		final List<FeedbackMessage> messages = new ArrayList<>();
 
