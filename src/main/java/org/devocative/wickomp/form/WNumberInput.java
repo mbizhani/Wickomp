@@ -3,13 +3,12 @@ package org.devocative.wickomp.form;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.validation.IValidator;
-import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.Resource;
@@ -17,12 +16,11 @@ import org.devocative.wickomp.wrcs.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WNumberInput extends WFormInputPanel<Number> {
+public class WNumberInput extends WLabeledFormInputPanel<Number> {
 	private static final long serialVersionUID = 3194204815848275324L;
 
 	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
 
-	private Label label;
 	private TextField<String> numberField;
 
 	private Map<String, Object> options = new HashMap<>();
@@ -37,8 +35,6 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	public WNumberInput(String id, IModel<Number> model, Class<? extends Number> type) {
 		super(id, model);
 		setType(type);
-
-		add(label = new Label("label"));
 
 		numberField = new TextField<>("numberField", new Model<String>(), String.class);
 		numberField.setOutputMarkupId(true);
@@ -69,11 +65,6 @@ public class WNumberInput extends WFormInputPanel<Number> {
 
 	public WNumberInput setMax(Integer max) {
 		options.put("vMin", max);
-		return this;
-	}
-
-	public WNumberInput setLabelVisible(boolean visible) {
-		label.setVisible(visible);
 		return this;
 	}
 
@@ -113,18 +104,6 @@ public class WNumberInput extends WFormInputPanel<Number> {
 	}
 
 	// ------------------------------
-
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-
-		IModel<String> labelModel = getLabel();
-		if (labelModel != null) {
-			label.setDefaultModel(labelModel);
-		} else {
-			label.setVisible(false);
-		}
-	}
 
 	@Override
 	protected void onBeforeRender() {

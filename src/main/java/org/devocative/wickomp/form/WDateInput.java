@@ -3,13 +3,12 @@ package org.devocative.wickomp.form;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.vo.DateFieldVO;
-import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.opt.OCalendar;
 import org.devocative.wickomp.wrcs.CommonBehavior;
@@ -18,7 +17,7 @@ import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.Date;
 
-public class WDateInput extends WFormInputPanel<Date> {
+public class WDateInput extends WLabeledFormInputPanel<Date> {
 	private static final long serialVersionUID = -2348912362832020132L;
 
 	private static final HeaderItem NUMERIC_JS = Resource.getCommonJS("form/autoNumeric.js");
@@ -26,7 +25,6 @@ public class WDateInput extends WFormInputPanel<Date> {
 	private static final HeaderItem DATE_JS = Resource.getCommonJS("form/date/date.js");
 	private static final HeaderItem DATE_POPUP_JS = Resource.getCommonJS("form/date/dtpopup.js");
 
-	private Label label;
 	private WebMarkupContainer mainTable, timePart, calOpener;
 	private TextField<Integer> year, month, day, hour, minute, second;
 	private OCalendar calendar;
@@ -47,8 +45,6 @@ public class WDateInput extends WFormInputPanel<Date> {
 	public WDateInput(String id, IModel<Date> model, OCalendar calendar) {
 		super(id, model);
 		this.calendar = calendar;
-
-		add(label = new Label("label"));
 
 		mainTable = new WebMarkupContainer("mainTable");
 		mainTable.setOutputMarkupId(true);
@@ -87,11 +83,6 @@ public class WDateInput extends WFormInputPanel<Date> {
 		return this;
 	}
 
-	public WDateInput setLabelVisible(boolean visible) {
-		label.setVisible(visible);
-		return this;
-	}
-
 	// ----------------------- INTERNAL METHODS
 
 	@Override
@@ -109,13 +100,6 @@ public class WDateInput extends WFormInputPanel<Date> {
 
 		if (calendar == null) {
 			calendar = getUserPreference().getCalendar();
-		}
-
-		IModel<String> labelModel = getLabel();
-		if (labelModel != null) {
-			label.setDefaultModel(labelModel);
-		} else {
-			label.setVisible(false);
 		}
 	}
 

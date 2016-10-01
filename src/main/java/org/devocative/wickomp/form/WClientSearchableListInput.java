@@ -8,10 +8,9 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.devocative.adroit.vo.KeyValueVO;
-import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.html.window.OModalWindow;
 import org.devocative.wickomp.html.window.WModalWindow;
@@ -22,14 +21,13 @@ import org.devocative.wickomp.wrcs.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List<T>> {
+public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPanel<List<T>> {
 	private static final long serialVersionUID = 8131275251442491717L;
 
 	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 	private static final HeaderItem SEL_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
 	private static final HeaderItem JS = Resource.getCommonJS("form/clientSearchList/clientSearchList.js");
 
-	private Label label;
 	private WModalWindow modalWindow;
 	private WebMarkupContainer result;
 	private WebComponent title;
@@ -44,8 +42,6 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 	// Main Constructor
 	public WClientSearchableListInput(String id, IModel<List<T>> model) {
 		super(id, model);
-
-		add(label = new Label("label"));
 
 		modalWindow = new WModalWindow("modalWindow");
 		add(modalWindow);
@@ -78,11 +74,6 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 
 	public OModalWindow getModalWindowOptions() {
 		return modalWindow.getOptions();
-	}
-
-	public WClientSearchableListInput<T> setLabelVisible(boolean visible) {
-		label.setVisible(visible);
-		return this;
 	}
 
 	public WClientSearchableListInput<T> setOpenModalLinkVisible(boolean visible) {
@@ -128,18 +119,6 @@ public abstract class WClientSearchableListInput<T> extends WFormInputPanel<List
 	}
 
 	// ---------------------------- PROTECTED METHODS
-
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-
-		IModel<String> labelModel = getLabel();
-		if (labelModel != null) {
-			label.setDefaultModel(labelModel);
-		} else {
-			label.setVisible(false);
-		}
-	}
 
 	@Override
 	protected void onBeforeRender() {

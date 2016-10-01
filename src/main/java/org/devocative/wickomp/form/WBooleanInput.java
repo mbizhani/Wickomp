@@ -2,17 +2,16 @@ package org.devocative.wickomp.form;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
-public class WBooleanInput extends WFormInputPanel<Boolean> {
+public class WBooleanInput extends WLabeledFormInputPanel<Boolean> {
 	private static final long serialVersionUID = 1557399571444957239L;
 
 	private static final HeaderItem MAIN_JS = Resource.getCommonJS("form/bool/candlestick.min.js");
@@ -21,8 +20,9 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 	private static final HeaderItem HAMMER_JS = Resource.getCommonJS("hammer/hammer.min.js");
 	private static final HeaderItem HAMMER_JQ_JS = Resource.getCommonJS("hammer/hammer.jquery.js");
 
-	private Label label;
 	private HiddenField<String> hidden;
+
+	// ------------------------------
 
 	public WBooleanInput(String id) {
 		this(id, null);
@@ -32,8 +32,6 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 	public WBooleanInput(String id, IModel<Boolean> model) {
 		super(id, model);
 
-		add(label = new Label("label"));
-
 		hidden = new HiddenField<>("hidden", new Model<String>(), String.class);
 		hidden.setOutputMarkupId(true);
 		add(hidden);
@@ -42,12 +40,7 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 		add(new CommonBehavior());
 	}
 
-	public WBooleanInput setLabelVisible(boolean visible) {
-		label.setVisible(visible);
-		return this;
-	}
-
-	// ----------------------- INTERNAL METHODS
+	// ------------------------------
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
@@ -58,18 +51,6 @@ public class WBooleanInput extends WFormInputPanel<Boolean> {
 
 		response.render(MAIN_CSS);
 		response.render(MAIN_JS);
-	}
-
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-
-		IModel<String> labelModel = getLabel();
-		if (labelModel != null) {
-			label.setDefaultModel(labelModel);
-		} else {
-			label.setVisible(false);
-		}
 	}
 
 	@Override

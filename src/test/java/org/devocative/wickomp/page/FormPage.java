@@ -2,7 +2,6 @@ package org.devocative.wickomp.page;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -35,6 +34,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class FormPage extends BasePage {
+	private static final long serialVersionUID = 5898646496431514878L;
 
 	private WEasyLayout layout;
 	private WebMarkupContainer west;
@@ -69,6 +69,8 @@ public class FormPage extends BasePage {
 		dynamicForm.add(floatTable);
 
 		floatTable.add(new ListView<Field>("fields", fields) {
+			private static final long serialVersionUID = -6710943314522675829L;
+
 			@Override
 			protected void populateItem(ListItem<Field> item) {
 				Field field = item.getModelObject();
@@ -79,12 +81,14 @@ public class FormPage extends BasePage {
 				switch (field.getType()) {
 
 					case String:
-						fc = new WSqlStringInput(field.getName());
+						fc = new WTextInput(field.getName())
+							.setRequired(true);
 						break;
 
 					case Integer:
 						fc = new WNumberInput(field.getName(), Long.class)
-							.setThousandSeparator(',');
+							.setThousandSeparator(',')
+							.setRequired(true);
 						break;
 
 					case Real:
@@ -94,11 +98,13 @@ public class FormPage extends BasePage {
 						break;
 
 					case Boolean:
-						fc = new WBooleanInput(field.getName());
+						fc = new WBooleanInput(field.getName())
+							.setRequired(true);
 						break;
 
 					case Date:
-						fc = new WDateInput(field.getName());
+						fc = new WDateInput(field.getName())
+							.setRequired(true);
 				}
 
 				fc.setLabel(new Model<>(field.getTitle()));
@@ -109,10 +115,17 @@ public class FormPage extends BasePage {
 		});
 
 		//dynamicForm.add(new Button("save") {
-		dynamicForm.add(new AjaxButton("save") {
+		dynamicForm.add(new WAjaxButton("save") {
+			private static final long serialVersionUID = -7991701558774150634L;
+
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+			protected void onSubmit(AjaxRequestTarget target) {
 				System.out.println(map);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
+				WMessager.show(getString("label.error", null, "Error"), errors, target);
 			}
 
 			/*@Override

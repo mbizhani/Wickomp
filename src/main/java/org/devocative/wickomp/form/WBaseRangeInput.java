@@ -1,45 +1,33 @@
 package org.devocative.wickomp.form;
 
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.adroit.vo.RangeVO;
-import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WLabeledFormInputPanel;
 
 import java.io.Serializable;
 
-public abstract class WBaseRangeInput<T extends Serializable> extends WFormInputPanel<RangeVO<T>> {
+public abstract class WBaseRangeInput<T extends Serializable> extends WLabeledFormInputPanel<RangeVO<T>> {
 	private static final long serialVersionUID = 8954208501398056478L;
-
-	private Label label;
 
 	protected FormComponent<T> lower, upper;
 
+	// ------------------------------
+
 	protected WBaseRangeInput(String id, IModel<RangeVO<T>> model) {
 		super(id, model);
-
-		add(label = new Label("label"));
 	}
 
-	public WBaseRangeInput<T> setLabelVisible(boolean visible) {
-		label.setVisible(visible);
-		return this;
-	}
+	// ------------------------------
 
 	protected abstract FormComponent<T> createFormComponent(String id, IModel<T> model);
+
+	// ------------------------------
 
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
-
-		IModel<String> labelModel = getLabel();
-		if (labelModel != null) {
-			label.setDefaultModel(labelModel);
-		} else {
-			label.setVisible(false);
-		}
-
 
 		lower = createFormComponent("lower", new Model<T>());
 		upper = createFormComponent("upper", new Model<T>());
@@ -61,6 +49,8 @@ public abstract class WBaseRangeInput<T extends Serializable> extends WFormInput
 
 		super.onBeforeRender();
 	}
+
+	// ------------------------------
 
 	@Override
 	public void convertInput() {

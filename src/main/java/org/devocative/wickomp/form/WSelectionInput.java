@@ -8,11 +8,10 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.wickomp.WFormInputPanel;
+import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
@@ -21,16 +20,17 @@ import org.devocative.wickomp.wrcs.Resource;
 import java.util.Collection;
 import java.util.List;
 
-public class WSelectionInput extends WFormInputPanel {
+public class WSelectionInput extends WLabeledFormInputPanel {
 	private static final long serialVersionUID = 2363610394629306064L;
 
 	private static final HeaderItem SEL_LIST_JS = Resource.getCommonJS("form/selList/selList.js");
 	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
 
-	private Label label;
 	private WSelectionList choices;
 	private WebMarkupContainer opener;
 	private WebComponent title;
+
+	// ------------------------------
 
 	public WSelectionInput(String id, List choiceList, boolean multipleSelection) {
 		this(id, null, choiceList, multipleSelection);
@@ -39,8 +39,6 @@ public class WSelectionInput extends WFormInputPanel {
 	// Main Constructor
 	public WSelectionInput(String id, IModel model, List choiceList, boolean multipleSelection) {
 		super(id, model);
-
-		add(label = new Label("label"));
 
 		choices = new WSelectionList("choices", new Model(), choiceList, multipleSelection);
 		choices.setOutputMarkupId(true);
@@ -55,7 +53,7 @@ public class WSelectionInput extends WFormInputPanel {
 		add(new CommonBehavior());
 	}
 
-	// --------------------- ACCESSORS
+	// ------------------------------
 
 	public boolean isMultipleSelection() {
 		return choices.isMultipleSelection();
@@ -76,12 +74,7 @@ public class WSelectionInput extends WFormInputPanel {
 		return this;
 	}
 
-	public WSelectionInput setLabelVisible(boolean visible) {
-		label.setVisible(visible);
-		return this;
-	}
-
-	// --------------------- METHODS
+	// ------------------------------
 
 	public WSelectionInput addToChoices(Behavior... behaviors) {
 		choices.add(behaviors);
@@ -95,7 +88,7 @@ public class WSelectionInput extends WFormInputPanel {
 		return this;
 	}
 
-	// --------------------- INTERNAL METHODS
+	// ------------------------------
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
@@ -105,16 +98,11 @@ public class WSelectionInput extends WFormInputPanel {
 	}
 
 	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-
-		IModel<String> labelModel = getLabel();
-		if (labelModel != null) {
-			label.setDefaultModel(labelModel);
-		} else {
-			label.setVisible(false);
-		}
+	public void convertInput() {
+		setConvertedInput(choices.getConvertedInput());
 	}
+
+	// ------------------------------
 
 	@Override
 	protected void onBeforeRender() {
@@ -146,16 +134,13 @@ public class WSelectionInput extends WFormInputPanel {
 	}
 
 	@Override
-	public void convertInput() {
-		setConvertedInput(choices.getConvertedInput());
-	}
-
-	@Override
 	protected void onAfterRender() {
 		super.onAfterRender();
 
 		WebUtil.writeJQueryCall(getHandleScript(), false);
 	}
+
+	// ------------------------------
 
 	private String getHandleScript() {
 		return String.format("handleAllSelList('%s', %s, '%s', '%s');",
