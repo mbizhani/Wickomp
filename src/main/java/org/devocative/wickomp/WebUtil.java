@@ -147,14 +147,27 @@ public class WebUtil {
 	}
 
 	public static boolean isAjaxRequest(RequestCycle cycle) {
-		AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
+		AjaxRequestTarget target = cycle.find(AjaxRequestTarget.class);
 		return target != null;
 	}
 
 	public static List<FeedbackMessage> collect(Component component, final boolean clearAfter) {
+
+		/*
+		The original solution:
+
+		FeedbackMessagesModel feedbackMessagesModel = new FeedbackMessagesModel(this);
+		List<FeedbackMessage> messages = feedbackMessagesModel.getObject();
+
+		In the previous line, the main method is:
+		return new FeedbackCollector(pageResolvingComponent.getPage()).collect(filter);
+
+		So we must search all the page's component for FeedbackMessage!
+		*/
+		component = component.getPage();
 		final List<FeedbackMessage> messages = new ArrayList<>();
 
-		final IFeedbackMessageFilter filter = IFeedbackMessageFilter.ALL;
+		final IFeedbackMessageFilter filter = null;
 
 		if (Session.exists()) {
 			messages.addAll(Session.get().getFeedbackMessages().messages(filter));
@@ -170,7 +183,11 @@ public class WebUtil {
 			}
 		}
 
-		if (component != null && component instanceof MarkupContainer) {
+		/*
+		There is "component = component.getPage();" in previous lines. So the following
+		"component instanceof MarkupContainer" is always true, and so commented!
+		*/
+		if (component != null /*&& component instanceof MarkupContainer*/) {
 			((MarkupContainer) component).visitChildren(new IVisitor<Component, Void>() {
 
 				@Override

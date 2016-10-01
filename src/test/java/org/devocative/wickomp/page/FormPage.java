@@ -3,10 +3,7 @@ package org.devocative.wickomp.page;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.feedback.FeedbackMessage;
-import org.apache.wicket.feedback.FeedbackMessagesModel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -209,13 +206,13 @@ public class FormPage extends BasePage {
 			}
 		}.setOpenModalLinkVisible(true));
 		form.add(new WOrderedListInput<>("orderedPerson", personVOs).setVisibleSize(10));
-		form.add(new Button("save") {
-			//		form.add(new WAjaxButton("save") {
+//		form.add(new Button("save") {
+		form.add(new WAjaxButton("save") {
 			public void onSubmit() {
 				theSubmit();
 			}
 
-			@Override
+			/*@Override
 			protected void onAfterRender() {
 				super.onAfterRender();
 				FeedbackMessagesModel feedbackMessagesModel = new FeedbackMessagesModel(this);
@@ -228,10 +225,16 @@ public class FormPage extends BasePage {
 					String st = WMessager.getScript("Err", WMessager.getHtml(errors));
 					getWebResponse().write(String.format("<script>$(function(){%s});</script>", st));
 				}
+			}*/
+
+			@Override
+			public void onSubmit(AjaxRequestTarget target) {
+				theSubmit();
 			}
 
-			public void onSubmit(AjaxRequestTarget target, Form<?> form) {
-				theSubmit();
+			@Override
+			protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
+				WMessager.show(getString("label.error", null, "Error"), errors, target);
 			}
 
 			private void theSubmit() {
