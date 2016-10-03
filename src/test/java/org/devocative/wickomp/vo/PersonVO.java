@@ -16,6 +16,7 @@ public class PersonVO implements Serializable {
 	private Date birthDate;
 	private Long income;
 	private boolean alive;
+	private String nullCol;
 
 	public PersonVO() {
 	}
@@ -89,6 +90,15 @@ public class PersonVO implements Serializable {
 
 	public PersonVO setAlive(boolean alive) {
 		this.alive = alive;
+		return this;
+	}
+
+	public String getNullCol() {
+		return nullCol;
+	}
+
+	public PersonVO setNullCol(String nullCol) {
+		this.nullCol = nullCol;
 		return this;
 	}
 

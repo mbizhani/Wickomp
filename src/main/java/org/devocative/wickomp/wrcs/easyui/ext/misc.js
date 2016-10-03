@@ -127,16 +127,23 @@ function handleSelection(grid, selectionHandler, selData) {
 			titleField = idField;
 		}
 		var kvList = [];
-		for (var r = 0; r < selData.length; r++) {
-			var obj = {};
-			obj["key"] = selData[r][idField];
-			obj["value"] = selData[r][titleField];
-			obj["row"] = selData[r];
-			kvList.push(obj);
+		try {
+			for (var r = 0; r < selData.length; r++) {
+				if (!selData[r][idField]) {
+					throw "Null value for '" + idField + "' column as return key in your '" + (r + 1) + "' selected row(s)!";
+				}
+				var obj = {};
+				obj["key"] = selData[r][idField];
+				obj["value"] = selData[r][titleField];
+				obj["row"] = selData[r];
+				kvList.push(obj);
+			}
+			selectionHandler(kvList);
+		} catch (e) {
+			$.messager.alert('Error', e);
 		}
-		selectionHandler(kvList);
 	} else {
-		alert('No idField!');
+		$.messager.alert('Error', 'No idField for grid!');
 	}
 }
 

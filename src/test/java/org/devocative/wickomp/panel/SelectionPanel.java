@@ -23,6 +23,8 @@ import org.devocative.wickomp.vo.PersonVO;
 import java.util.List;
 
 public class SelectionPanel extends WPanel {
+	private static final long serialVersionUID = -1489424904082756913L;
+
 	private OGrid<PersonVO> grid1Opt;
 
 	public SelectionPanel(String id) {
@@ -38,6 +40,7 @@ public class SelectionPanel extends WPanel {
 
 		OColumnList<PersonVO> columns = new OColumnList<>();
 		columns
+			.add(new OPropertyColumn<PersonVO>(new Model<>("nullCol"), "nullCol"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col02"), "col02").setWidth(OSize.fixed(50)))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04"))
@@ -56,6 +59,10 @@ public class SelectionPanel extends WPanel {
 			.setColumns(columns)
 			.setMultiSort(true)
 			.setIdField("col02")
+
+				//uncomment following line to see an error of null for idField
+				//.setReturnField("nullCol")
+
 			.setTitleField("col04")
 			.setSingleSelect(false)
 			.setSelectionIndicator(true)
@@ -68,6 +75,8 @@ public class SelectionPanel extends WPanel {
 //		grid1Opt.setFit(true);
 
 		layout.add(new WDataGrid<>("grid", grid1Opt, new IGridDataSource<PersonVO>() {
+			private static final long serialVersionUID = 5856979583351383200L;
+
 			@Override
 			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
 				int start = (int) ((first - 1) * size);
