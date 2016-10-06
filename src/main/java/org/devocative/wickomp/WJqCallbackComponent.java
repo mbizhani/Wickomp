@@ -19,6 +19,8 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 	private AbstractAjaxBehavior callbackAjaxBehavior;
 	private boolean isAutoJSRender = true;
 
+	// ------------------------------
+
 	protected WJqCallbackComponent(String id, OComponent options) {
 		super(id, options);
 
@@ -35,7 +37,11 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 		add(callbackAjaxBehavior);
 	}
 
+	// ------------------------------
+
 	protected abstract void onRequest(IRequestParameters parameters);
+
+	// ------------------------------
 
 	protected String getCallbackURL() {
 		return callbackAjaxBehavior.getCallbackUrl().toString();
@@ -44,6 +50,8 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 	protected void setIsAutoJSRender(boolean isAutoJSRender) {
 		this.isAutoJSRender = isAutoJSRender;
 	}
+
+	// ------------------------------
 
 	protected void sendJSONResponse(String json) {
 		logger.debug("JSON Response: {}", json);
@@ -59,6 +67,8 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 
 		return target;
 	}
+
+	// ------------------------------
 
 	@Override
 	protected void onBeforeRender() {

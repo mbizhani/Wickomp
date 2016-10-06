@@ -21,6 +21,8 @@ public abstract class WJqComponent extends WebMarkupContainer {
 	//private boolean needHtmlBeside = false;
 	protected Options options;
 
+	// ------------------------------
+
 	protected WJqComponent(String id, Options options) {
 		super(id);
 		this.options = options;
@@ -29,7 +31,11 @@ public abstract class WJqComponent extends WebMarkupContainer {
 		setVersioned(false);
 	}
 
+	// ------------------------------
+
 	protected abstract String getJQueryFunction();
+
+	// ------------------------------
 
 	protected String getJQueryCall() {
 		String opt = WebUtil.toJson(options);
@@ -46,6 +52,8 @@ public abstract class WJqComponent extends WebMarkupContainer {
 		return OUserPreference.DEFAULT;
 	}
 
+	// ------------------------------
+
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
@@ -59,19 +67,7 @@ public abstract class WJqComponent extends WebMarkupContainer {
 		}
 	}
 
-	/*@Override
-	protected IMarkupSourcingStrategy newMarkupSourcingStrategy() {
-		return needHtmlBeside ? new PanelMarkupSourcingStrategy(false) : null;
-	}
-
-	public boolean isNeedHtmlBeside() {
-		return needHtmlBeside;
-	}
-
-	public WComponent setNeedHtmlBeside(boolean needHtmlBeside) {
-		this.needHtmlBeside = needHtmlBeside;
-		return this;
-	}*/
+	// ------------------------------
 
 	@Override
 	public void renderHead(IHeaderResponse response) {

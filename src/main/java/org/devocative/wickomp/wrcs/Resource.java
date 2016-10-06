@@ -8,11 +8,12 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
 
 public abstract class Resource {
+	public static final String WICKOMP_DEBUG_ENABLED_JS = "WickompDebugEnabled";
+
 	public static HeaderItem getCommonJS(String path) {
 		ResourceReference reference = new JavaScriptResourceReference(Resource.class, path);
 		return JavaScriptHeaderItem.forReference(reference);
@@ -32,9 +33,6 @@ public abstract class Resource {
 		if (WebApplication.get().getConfigurationType() == RuntimeConfigurationType.DEVELOPMENT) {
 			response.render(JavaScriptHeaderItem.forReference(settings.getWicketAjaxDebugReference()));
 		}
-	}
-
-	public static ResourceReference getImageResourceReference(String path) {
-		return new PackageResourceReference(Resource.class, path);
+		response.render(JavaScriptHeaderItem.forScript(String.format("var %s = false;", WICKOMP_DEBUG_ENABLED_JS), WICKOMP_DEBUG_ENABLED_JS));
 	}
 }

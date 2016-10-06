@@ -48,6 +48,16 @@ function collapseAllGroups(gridId) {
 	}
 }
 
+function handleLoaded(gridId, data) {
+	if (data.error) {
+		$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
+	}
+
+	$('#' + gridId).datagrid('loaded');
+
+	return data;
+}
+
 function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelection) {
 	var grid = $('#' + gridId);
 	var noOfSelected = grid.datagrid('getSelections').length.toString();
@@ -91,13 +101,13 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 				grid.datagrid('options').onDblClickRow = function (row) {
 					var arr = [];
 					arr.push(row);
-					handleSelection(grid, selectionHandler, arr);
+					handleSelection(grid, selectionHandler, arr, true);
 				};
 			} else {
 				grid.datagrid('options').onDblClickRow = function (index, row) {
 					var arr = [];
 					arr.push(row);
-					handleSelection(grid, selectionHandler, arr);
+					handleSelection(grid, selectionHandler, arr, true);
 				};
 			}
 		}
@@ -106,9 +116,19 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 			width: 25,
 			iconCls: "fa fa-paper-plane-o",
 			handler: function () {
-				handleSelection(grid, selectionHandler, grid.datagrid('getSelections'));
+				handleSelection(grid, selectionHandler, grid.datagrid('getSelections'), true);
 			}
 		});
+
+		if (WickompDebugEnabled) {
+			butts.push({
+				width: 25,
+				iconCls: "fa fa-bug",
+				handler: function () {
+					handleSelection(grid, handleDebug, grid.datagrid('getSelections'), false);
+				}
+			})
+		}
 	}
 
 	grid.datagrid('getPager').pagination({
@@ -116,7 +136,8 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 	});
 }
 
-function handleSelection(grid, selectionHandler, selData) {
+// private
+function handleSelection(grid, selectionHandler, selData, alertOnError) {
 	var idField = grid.datagrid('options')["returnField"];
 	if (!idField) {
 		idField = grid.datagrid('options')["idField"];
@@ -129,8 +150,8 @@ function handleSelection(grid, selectionHandler, selData) {
 		var kvList = [];
 		try {
 			for (var r = 0; r < selData.length; r++) {
-				if (!selData[r][idField]) {
-					throw "Null value for '" + idField + "' column as return key in your '" + (r + 1) + "' selected row(s)!";
+				if (alertOnError && !selData[r][idField]) {
+					throw "Null value for '" + idField + "' column as return key in your '" + (r + 1) + "' selected row!";
 				}
 				var obj = {};
 				obj["key"] = selData[r][idField];
@@ -147,12 +168,22 @@ function handleSelection(grid, selectionHandler, selData) {
 	}
 }
 
-function handleLoaded(gridId, data) {
-	if (data.error) {
-		$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
+// private
+function handleDebug(kvList) {
+	if (kvList) {
+		var result = $("<ol>");
+		for (var i = 0; i < kvList.length; i++) {
+			result.append("<li>" + JSON.stringify(kvList[i]) + "</li>");
+		}
+		$.messager.show({
+			title: 'Rows',
+			msg: "<div style='direction: ltr;text-align: left;'>" + result.html() + "</div>",
+			showType: 'show',
+			style: {right: '', bottom: ''},
+			width: 400,
+			height: 300,
+			timeout: 0,
+			resizable: true
+		});
 	}
-
-	$('#' + gridId).datagrid('loaded');
-
-	return data;
 }
