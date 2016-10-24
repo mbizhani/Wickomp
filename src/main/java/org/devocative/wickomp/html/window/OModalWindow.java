@@ -13,7 +13,11 @@ public class OModalWindow extends OComponent implements ICallbackUrl {
 	private boolean modal = true;
 	private String title;
 
+	// ---------------
+
 	private String url;
+
+	// ------------------------------
 
 	public Boolean getCollapsible() {
 		return collapsible;
@@ -60,10 +64,14 @@ public class OModalWindow extends OComponent implements ICallbackUrl {
 		return this;
 	}
 
+	// ------------------------------
+
 	@JsonRawValue
 	public String getOnClose() {
 		return String.format("function(){Wicket.Ajax.get({u:'%s'});}", url);
 	}
+
+	// ------------------------------
 
 	@Override
 	public void setUrl(String url) {

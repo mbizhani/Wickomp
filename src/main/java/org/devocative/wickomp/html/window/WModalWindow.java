@@ -9,9 +9,12 @@ import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WModalWindow extends WPanel {
 	private static final long serialVersionUID = 8033724982656671879L;
+	private static final Logger logger = LoggerFactory.getLogger(WModalWindow.class);
 
 	private Component content;
 	private WebMarkupContainer container;
@@ -114,6 +117,8 @@ public class WModalWindow extends WPanel {
 		}
 
 		script += ";";
+
+		logger.debug("WModalWindow.show: {}", script);
 
 		target.appendJavaScript(script);
 		return this;
