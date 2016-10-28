@@ -1,9 +1,8 @@
 package org.devocative.wickomp.html.icon;
 
 import org.apache.wicket.model.IModel;
-import org.devocative.wickomp.html.HTMLBase;
 
-public class FontAwesome extends HTMLBase {
+public class FontAwesome extends IconFont {
 	private static final long serialVersionUID = 8571616115102148637L;
 
 	public enum Size {
@@ -24,8 +23,6 @@ public class FontAwesome extends HTMLBase {
 
 	public enum Flip {horizontal, vertical}
 
-	private String name;
-
 	private Size size;
 
 	private boolean spin = false;
@@ -36,9 +33,9 @@ public class FontAwesome extends HTMLBase {
 
 	private String color;
 
-	private IModel<String> tooltip;
-
 	private String styleClass;
+
+	// ------------------------------
 
 	public FontAwesome(String name) {
 		this(name, null);
@@ -46,9 +43,10 @@ public class FontAwesome extends HTMLBase {
 
 	// Main Constructor
 	public FontAwesome(String name, IModel<String> tooltip) {
-		this.name = name;
-		this.tooltip = tooltip;
+		super(name, tooltip);
 	}
+
+	// ------------------------------
 
 	public FontAwesome setSize(Size size) {
 		this.size = size;
@@ -82,7 +80,7 @@ public class FontAwesome extends HTMLBase {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder("<i class=\"fa fa-").append(name);
+		StringBuilder builder = new StringBuilder("<i class=\"fa fa-").append(getName());
 
 		if (size != null) {
 			builder.append(" fa-").append(size);
@@ -105,11 +103,16 @@ public class FontAwesome extends HTMLBase {
 			builder.append(" style=\"color:").append(color).append("\"");
 		}
 
-		if (tooltip != null) {
-			builder.append(" title=\"").append(tooltip.getObject()).append("\"");
+		if (getTooltip() != null) {
+			builder.append(" title=\"").append(getTooltip().getObject()).append("\"");
 		}
 
 		builder.append("></i>");
 		return builder.toString();
+	}
+
+	@Override
+	public FontAwesome copyTo() {
+		return new FontAwesome(getName(), getTooltip());
 	}
 }
