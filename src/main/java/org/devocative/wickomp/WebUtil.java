@@ -117,6 +117,34 @@ public class WebUtil {
 		return result;
 	}
 
+	public static Map<String, List<String>> toMap(String paramsAsUrl, boolean lowercaseParam, boolean ignoreEmpty) {
+		Map<String, List<String>> result = new HashMap<>();
+
+		String[] paramValueArr = paramsAsUrl.split("[&]");
+
+		for (String paramValue : paramValueArr) {
+			int i = paramValue.indexOf('=');
+			if (i > 0) {
+				String param = paramValue.substring(0, i).trim();
+				String value = paramValue.substring(i + 1).trim();
+
+				if (lowercaseParam) {
+					param = param.toLowerCase();
+				}
+
+				if (!result.containsKey(param)) {
+					result.put(param, new ArrayList<String>());
+				}
+
+				List<String> values = result.get(param);
+				if (ignoreEmpty || !value.isEmpty()) {
+					values.add(value);
+				}
+			}
+		}
+		return result;
+	}
+
 	public static Set<String> toSet(IRequestParameters parameters, boolean lowercaseParam) {
 		Set<String> result = new HashSet<>();
 		for (String param : parameters.getParameterNames()) {
