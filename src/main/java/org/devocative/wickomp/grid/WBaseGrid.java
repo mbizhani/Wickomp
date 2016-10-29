@@ -360,12 +360,12 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		List<RObject> footer = new ArrayList<>();
 
 		if (footerData != null) {
-			List<OColumn<T>> columns = options.getColumns().getVisibleColumns();
+			List<OColumn<T>> columns = options.getColumns().getAllColumns();
 			for (Object bean : footerData) {
 				RObject rObject = new RObject();
 				for (int colNo = 0; colNo < columns.size(); colNo++) {
 					OColumn<T> column = columns.get(colNo);
-					if (column.isHasFooter()) {
+					if (column.isHasFooter() && column.isVisible()) {
 						String url = String.format("%s&cn=%s&tp=cl", getCallbackURL(), colNo);
 						rObject.addProperty(column.getField(), column.footerCellValue(bean, colNo, url));
 					}
@@ -423,7 +423,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	private void handleCellLinkClick(String id, Integer colNo) {
 		IModel<T> rowModel = pageData.get(id);
-		OColumn<T> column = options.getColumns().getVisibleColumns().get(colNo);
+		OColumn<T> column = options.getColumns().getAllColumns().get(colNo);
 		if (column instanceof OLinkColumn) {
 			OLinkColumn<T> linkColumn = (OLinkColumn<T>) column;
 			linkColumn.onClick(rowModel);
