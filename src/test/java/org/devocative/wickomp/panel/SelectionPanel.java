@@ -1,5 +1,6 @@
 package org.devocative.wickomp.panel;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -15,8 +16,10 @@ import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
 import org.devocative.wickomp.grid.toolbar.OGridGroupingButton;
+import org.devocative.wickomp.html.WAjaxLink;
 import org.devocative.wickomp.html.WEasyLayout;
 import org.devocative.wickomp.html.icon.FontAwesome;
+import org.devocative.wickomp.html.window.WModalWindow;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.vo.PersonVO;
 
@@ -29,6 +32,16 @@ public class SelectionPanel extends WPanel {
 
 	public SelectionPanel(String id) {
 		super(id);
+
+		add(new WAjaxLink("closeWindow") {
+			private static final long serialVersionUID = 4220786828417030466L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				boolean b = WModalWindow.closeParentWindow(SelectionPanel.this, target);
+				System.out.println("Parent Window Closed = " + b);
+			}
+		});
 
 		WebMarkupContainer west = new WebMarkupContainer("west");
 

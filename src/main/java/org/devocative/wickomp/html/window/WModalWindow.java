@@ -124,6 +124,22 @@ public class WModalWindow extends WPanel {
 		return this;
 	}
 
+	public void close(AjaxRequestTarget target) {
+		target.appendJavaScript(String.format("$('#%s').window('close');", getContainerMarkupId()));
+	}
+
+	// ------------------------------
+
+	public static boolean closeParentWindow(Component component, AjaxRequestTarget target) {
+		WModalWindow parent = component.findParent(WModalWindow.class);
+		if(parent != null) {
+			parent.close(target);
+			return true;
+		}
+
+		return false;
+	}
+
 	// ------------------------------
 
 	protected void onClose(AjaxRequestTarget target) {
