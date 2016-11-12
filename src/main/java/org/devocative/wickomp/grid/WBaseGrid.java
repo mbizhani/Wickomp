@@ -28,6 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class WBaseGrid<T> extends WJqCallbackComponent {
+	public static final String URL_PARAM_ID = "$id";
+	public static final String URL_PARAM_CLICK_TYPE = "$tp";
+	public static final String URL_PARAM_COLUMN_NUMBER = "$cn";
+
+	public static final String CLICK_FROM_CELL = "cl";
+	public static final String CLICK_FROM_BUTTON = "bt";
+
 	private static final long serialVersionUID = -2882882330275047801L;
 
 	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
@@ -230,17 +237,17 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			return;
 		}
 
-		String id = parameters.getParameterValue("id").toOptionalString();
-		String sortList = parameters.getParameterValue("sort").toOptionalString();
-		String orderList = parameters.getParameterValue("order").toOptionalString();
+		String id = parameters.getParameterValue(URL_PARAM_ID).toOptionalString();
+		String sortList = parameters.getParameterValue("sort").toOptionalString(); //TODO $
+		String orderList = parameters.getParameterValue("order").toOptionalString(); // TODO $
 
-		String clickType = parameters.getParameterValue("tp").toString();
-		Integer colNo = parameters.getParameterValue("cn").toOptionalInteger();
+		String clickType = parameters.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
+		Integer colNo = parameters.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
 
 		logger.debug("WBaseGrid: onRequest.parameters: clickType={}, pageSize={}, pageNum={}, sort={}, order={}, id={}, colNo={}",
 			clickType, pageSize, pageNum, sortList, orderList, id, colNo);
 
-		if ("cl".equals(clickType)) {// click from cell (per row)
+		if (CLICK_FROM_CELL.equals(clickType)) {// click from cell (per row)
 			if (id == null) {
 				throw new RuntimeException("Null id parameter!");
 			}
@@ -248,7 +255,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				throw new RuntimeException("Null colNo parameter!");
 			}
 			handleCellLinkClick(id, colNo);
-		} else if ("bt".equals(clickType)) {// click from button in toolbar
+		} else if (CLICK_FROM_BUTTON.equals(clickType)) {// click from button in toolbar
 			if (colNo == null) {
 				throw new RuntimeException("Null button index parameter!");
 			}
@@ -366,7 +373,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				for (int colNo = 0; colNo < columns.size(); colNo++) {
 					OColumn<T> column = columns.get(colNo);
 					if (column.isHasFooter() && column.isVisible()) {
-						String url = String.format("%s&cn=%s&tp=cl", getCallbackURL(), colNo);
+						String url = String.format("%s&%s=%s&%s=%s", getCallbackURL(), URL_PARAM_COLUMN_NUMBER, colNo,
+							URL_PARAM_CLICK_TYPE, CLICK_FROM_CELL);
 						rObject.addProperty(column.getField(), column.footerCellValue(bean, colNo, url));
 					}
 				}
@@ -405,7 +413,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			for (int colNo = 0; colNo < columns.size(); colNo++) {
 				OColumn<T> column = columns.get(colNo);
 				if (column.onCellRender(bean, id)) {
-					String url = String.format("%s&id=%s&cn=%s&tp=cl", getCallbackURL(), id, colNo);
+					String url = String.format("%s&%s=%s&%s=%s&%s=%s", getCallbackURL(), URL_PARAM_ID, id,
+						URL_PARAM_COLUMN_NUMBER, colNo, URL_PARAM_CLICK_TYPE, CLICK_FROM_CELL);
 					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
 				}
 			}

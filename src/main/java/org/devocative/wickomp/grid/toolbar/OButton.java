@@ -6,6 +6,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
+import org.devocative.wickomp.grid.WBaseGrid;
 import org.devocative.wickomp.opt.Options;
 
 public abstract class OButton<T> extends Options {
@@ -33,7 +34,9 @@ public abstract class OButton<T> extends Options {
 	public abstract String getHTMLContent(WGridInfo<T> gridInfo);
 
 	protected final String getCallbackURL() {
-		return String.format("%s&cn=%s&tp=bt", url, index);
+		//return String.format("%s&cn=%s&tp=bt", url, index);
+		return String.format("%s&%s=%s&%s=%s", url, WBaseGrid.URL_PARAM_COLUMN_NUMBER, index,
+			WBaseGrid.URL_PARAM_CLICK_TYPE, WBaseGrid.CLICK_FROM_BUTTON);
 	}
 
 	////////////////////////////////////// HELPER
