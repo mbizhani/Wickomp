@@ -87,6 +87,12 @@ public class WebUtil {
 		}
 	}
 
+	// ---------------
+
+	public static Map<String, List<String>> toMap(boolean lowercaseParam, boolean ignoreEmpty) {
+		return toMap(getRequestParameters(), lowercaseParam, ignoreEmpty);
+	}
+
 	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam, boolean ignoreEmpty) {
 		Map<String, List<String>> result = new HashMap<>();
 		for (String param : parameters.getParameterNames()) {
@@ -145,6 +151,12 @@ public class WebUtil {
 		return result;
 	}
 
+	// ---------------
+
+	public static Set<String> toSet(boolean lowercaseParam) {
+		return toSet(getRequestParameters(), lowercaseParam);
+	}
+
 	public static Set<String> toSet(IRequestParameters parameters, boolean lowercaseParam) {
 		Set<String> result = new HashSet<>();
 		for (String param : parameters.getParameterNames()) {
@@ -152,6 +164,29 @@ public class WebUtil {
 		}
 		return result;
 	}
+
+	// ---------------
+
+	public static List<String> listOf(String param, boolean lowercaseValues) {
+		return listOf(getRequestParameters(), param, lowercaseValues);
+	}
+
+	public static List<String> listOf(IRequestParameters parameters, String param, boolean lowercaseValues) {
+		List<String> result = new ArrayList<>();
+
+		List<StringValue> parameterValues = parameters.getParameterValues(param);
+		if (parameterValues != null && parameterValues.size() > 0) {
+			for (StringValue parameterValue : parameterValues) {
+				if (!parameterValue.isEmpty()) {
+					result.add(lowercaseValues ? parameterValue.toString().toLowerCase() : parameterValue.toString());
+				}
+			}
+		}
+
+		return result;
+	}
+
+	// ---------------
 
 	public static String getStringOfResource(String resourceKey, String defaultValue) {
 		return getStringOfResource(resourceKey, Model.of(defaultValue));
@@ -163,6 +198,8 @@ public class WebUtil {
 			.getLocalizer()
 			.getString(resourceKey, null, null, null, null, defaultValue);
 	}
+
+	// ---------------
 
 	public static boolean isWebSocketRequest(RequestCycle cycle) {
 		IWebSocketRequestHandler webSocketRequestHandler = cycle.find(IWebSocketRequestHandler.class);
@@ -178,6 +215,8 @@ public class WebUtil {
 		AjaxRequestTarget target = cycle.find(AjaxRequestTarget.class);
 		return target != null;
 	}
+
+	// ---------------
 
 	public static List<FeedbackMessage> collect(Component component, final boolean clearAfter) {
 
@@ -241,5 +280,11 @@ public class WebUtil {
 			result.add(message.getMessage());
 		}
 		return result;
+	}
+
+	// ------------------------------
+
+	private static IRequestParameters getRequestParameters() {
+		return RequestCycle.get().getRequest().getRequestParameters();
 	}
 }

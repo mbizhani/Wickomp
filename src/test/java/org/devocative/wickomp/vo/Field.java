@@ -3,7 +3,7 @@ package org.devocative.wickomp.vo;
 import java.io.Serializable;
 
 public class Field implements Serializable {
-	public enum Type {String, Integer, Real, Boolean, Date}
+	public enum Type {String, Integer, Real, Boolean, Date, SQL}
 
 	private String title;
 	private String name;

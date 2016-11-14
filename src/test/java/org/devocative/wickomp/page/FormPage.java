@@ -53,7 +53,7 @@ public class FormPage extends BasePage {
 
 	private void dynamicForm() {
 		List<Field> fields = new ArrayList<>();
-		fields.add(new Field("Name", "name", Field.Type.String));
+		fields.add(new Field("Name", "name", Field.Type.SQL));
 		fields.add(new Field("Age", "age", Field.Type.Integer));
 		fields.add(new Field("Weight", "weight", Field.Type.Real));
 		fields.add(new Field("Date", "date", Field.Type.Date));
@@ -82,6 +82,11 @@ public class FormPage extends BasePage {
 
 					case String:
 						fc = new WTextInput(field.getName())
+							.setRequired(true);
+						break;
+
+					case SQL:
+						fc = new WSqlStringInput(field.getName())
 							.setRequired(true);
 						break;
 
