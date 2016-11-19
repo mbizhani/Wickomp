@@ -28,7 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class WBaseGrid<T> extends WJqCallbackComponent {
-	public static final String URL_PARAM_ID = "$id";
+	/*
+	NOTE: this field can't be changed!!!
+	the easyui grid sends this "id" as parameter,
+	and especially in the treegrid it is used for requesting children nodes of a clicked node!
+	 */
+	public static final String URL_PARAM_ID = "id";
 	public static final String URL_PARAM_CLICK_TYPE = "$tp";
 	public static final String URL_PARAM_COLUMN_NUMBER = "$cn";
 
