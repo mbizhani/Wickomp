@@ -2,7 +2,7 @@ package org.devocative.wickomp.form;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
-import org.devocative.adroit.vo.RangeVO;
+import org.devocative.adroit.vo.IRange;
 import org.devocative.wickomp.opt.OCalendar;
 
 import java.util.Date;
@@ -13,15 +13,17 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 	private OCalendar calendar;
 	private Boolean timePartVisible;
 
+	// ------------------------------
+
 	public WDateRangeInput(String id) {
 		this(id, null);
 	}
 
-	public WDateRangeInput(String id, IModel<RangeVO<Date>> model) {
+	public WDateRangeInput(String id, IModel<IRange<Date>> model) {
 		super(id, model);
 	}
 
-	// ---------------------- ACCESSORS
+	// ------------------------------ ACCESSORS
 
 	public WDateRangeInput setCalendar(OCalendar calendar) {
 		this.calendar = calendar;
@@ -33,7 +35,7 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 		return this;
 	}
 
-	// ----------------------- INTERNAL METHODS
+	// ------------------------------ INTERNAL METHODS
 
 	@Override
 	protected FormComponent<Date> createFormComponent(String id, IModel<Date> model) {

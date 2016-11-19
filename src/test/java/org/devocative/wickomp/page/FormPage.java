@@ -13,6 +13,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.devocative.adroit.vo.KeyValueVO;
+import org.devocative.adroit.vo.RangeVO;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.form.*;
 import org.devocative.wickomp.form.code.OCode;
@@ -177,7 +178,7 @@ public class FormPage extends BasePage {
 		map.put("eduSingle", new KeyValue("A"));
 		map.put("eduMultiple", (Serializable) Arrays.asList(new KeyValue("A"), new KeyValue("D")));
 		map.put("child", "B.1");
-		//map.put("age", new RangeVO(100, 2000));
+		map.put("dateRange", new RangeVO<>(null, new Date()));
 		map.put("age", 2000);
 		map.put("orderedPerson", new ArrayList<>(personVOs.subList(4, 8)));
 
@@ -197,7 +198,7 @@ public class FormPage extends BasePage {
 		form.add(new DropDownChoice<>("eduDD", list));
 		form.add(new WDateInput("birthdate").setTimePartVisible(true));
 		form.add(new WBooleanInput("alive"));
-		//form.add(new WDateRangeInput("dateRange"));
+		form.add(new WDateRangeInput("dateRange"));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), oCode));
