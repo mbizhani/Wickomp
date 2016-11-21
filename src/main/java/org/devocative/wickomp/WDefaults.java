@@ -15,7 +15,7 @@ public class WDefaults {
 					return component.getString(e.getMessage(), null, e.getMessage());
 				}
 			}
-			return "[Error(?)]";
+			return String.format("[Error(%s)]", e.getClass().getName());
 		}
 	};
 

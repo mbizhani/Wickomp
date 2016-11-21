@@ -2,6 +2,7 @@ package org.devocative.wickomp.html;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.WebUtil;
 
 import java.io.Serializable;
@@ -53,6 +54,18 @@ public class WMessager {
 	}
 
 	// ---------------
+
+	public static void show(Exception ex, AjaxRequestTarget target) {
+		show(ex, null, target);
+	}
+
+	public static void show(Exception ex, Component cmp, AjaxRequestTarget target) {
+		String msg = ex.getMessage();
+		if (WDefaults.getExceptionToMessageHandler() != null) {
+			msg = WDefaults.getExceptionToMessageHandler().handleMessage(cmp, ex);
+		}
+		show(WebUtil.getStringOfResource("label.error", "Error"), msg, target);
+	}
 
 	public static void show(String title, String message, AjaxRequestTarget target) {
 		show(title, message, new OMessager(), target);
