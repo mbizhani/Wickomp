@@ -25,9 +25,10 @@ import org.devocative.wickomp.vo.PersonVO;
 
 import java.util.List;
 
-public class SelectionPanel extends WPanel {
+public class SelectionPanel extends WPanel implements IGridDataSource<PersonVO> {
 	private static final long serialVersionUID = -1489424904082756913L;
 
+	private List<PersonVO> list;
 	private OGrid<PersonVO> grid1Opt;
 
 	public SelectionPanel(String id) {
@@ -49,7 +50,7 @@ public class SelectionPanel extends WPanel {
 		layout.setWest(west);
 		add(layout);
 
-		final List<PersonVO> list = PersonVO.list();
+		list = PersonVO.list();
 
 		OColumnList<PersonVO> columns = new OColumnList<>();
 		columns
@@ -81,8 +82,8 @@ public class SelectionPanel extends WPanel {
 			.setSelectionIndicator(true)
 				//.setSelectionDblClick(false)
 				//.setGroupField("col01")
-			.addToolbarButton(new OExportExcelButton<PersonVO>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), "Export.xlsx", 1000))
-			.addToolbarButton(new OGridGroupingButton<PersonVO>())
+			.addToolbarButton(new OExportExcelButton<>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), this))
+			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
 			.setFit(true)
 		;
 //		grid1Opt.setFit(true);
@@ -112,4 +113,24 @@ public class SelectionPanel extends WPanel {
 	public void setJS(String js) {
 		grid1Opt.setSelectionJSHandler(js);
 	}
+
+	// ------------------------------ IGridDataSource<PersonVO>
+
+	@Override
+	public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
+		int start = (int) ((first - 1) * size);
+		int end = (int) (first * size);
+		return list.subList(start, Math.min(end, list.size()));
+	}
+
+	@Override
+	public long count() {
+		return list.size();
+	}
+
+	@Override
+	public IModel<PersonVO> model(PersonVO object) {
+		return new Model<>(object);
+	}
+
 }

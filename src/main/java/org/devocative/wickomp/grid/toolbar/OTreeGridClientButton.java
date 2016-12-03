@@ -18,7 +18,7 @@ public class OTreeGridClientButton<T> extends OButton<T> {
 	}
 
 	@Override
-	public String getHTMLContent(WGridInfo<T> gridInfo) {
+	public String getHTMLContent() {
 		StringBuilder builder = new StringBuilder();
 
 		if (expand != null) {
@@ -26,7 +26,7 @@ public class OTreeGridClientButton<T> extends OButton<T> {
 				.append("<a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
 				.append(new ResourceModel("label.nodes.expand", "Expand All").getObject())
 				.append("\" onclick=\"")
-				.append(String.format("$('#%s').treegrid('expandAll');", gridInfo.getOptions().getHtmlId()))
+				.append(String.format("$('#%s').treegrid('expandAll');", getGridHtmlId()))
 				.append("\">")
 				.append(expand.toString())
 				.append("</a>")
@@ -37,7 +37,7 @@ public class OTreeGridClientButton<T> extends OButton<T> {
 			.append("<a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
 			.append(new ResourceModel("label.nodes.collapse", "Collapse All").getObject())
 			.append("\" onclick=\"")
-			.append(String.format("$('#%s').treegrid('collapseAll');", gridInfo.getOptions().getHtmlId()))
+			.append(String.format("$('#%s').treegrid('collapseAll');", getGridHtmlId()))
 			.append("\">")
 			.append(collapse.toString())
 			.append("</a>")

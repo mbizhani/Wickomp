@@ -1,12 +1,11 @@
 package org.devocative.wickomp.grid.toolbar;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.devocative.wickomp.grid.WBaseGrid;
+import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.opt.Options;
 
 public abstract class OButton<T> extends Options {
@@ -14,32 +13,37 @@ public abstract class OButton<T> extends Options {
 
 	private int index;
 	private String url;
+	private String gridHtmlId;
+	private OColumnList<T> columnList;
 
-	public final void setIndex(int index) {
-		this.index = index;
-	}
+	// ------------------------------
 
-	public final void setUrl(String url) {
+	public void init(String url, int index, String gridHtmlId, OColumnList<T> columnList) {
 		this.url = url;
+		this.index = index;
+		this.gridHtmlId = gridHtmlId;
+		this.columnList = columnList;
 	}
 
-	public void onClick(WGridInfo<T> gridInfo, IRequestParameters parameters) {
-		throw new RuntimeException("Called while no impl!");
+	public String getGridHtmlId() {
+		return gridHtmlId;
 	}
 
-	public void onClick(AjaxRequestTarget target, WGridInfo<T> gridInfo, IRequestParameters parameters) {
-		throw new RuntimeException("Called while no impl!");
+	public OColumnList<T> getColumnList() {
+		return columnList;
 	}
 
-	public abstract String getHTMLContent(WGridInfo<T> gridInfo);
+	// ------------------------------
+
+	public abstract String getHTMLContent();
+
+	// ------------------------------
 
 	protected final String getCallbackURL() {
 		//return String.format("%s&cn=%s&tp=bt", url, index);
 		return String.format("%s&%s=%s&%s=%s", url, WBaseGrid.URL_PARAM_COLUMN_NUMBER, index,
 			WBaseGrid.URL_PARAM_CLICK_TYPE, WBaseGrid.CLICK_FROM_BUTTON);
 	}
-
-	////////////////////////////////////// HELPER
 
 	protected final void sendResource(IResource resource) {
 		sendResource(resource, null);

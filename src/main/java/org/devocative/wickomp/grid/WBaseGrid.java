@@ -15,8 +15,9 @@ import org.devocative.wickomp.data.RObjectList;
 import org.devocative.wickomp.grid.column.OColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
+import org.devocative.wickomp.grid.toolbar.OAjaxLinkButton;
 import org.devocative.wickomp.grid.toolbar.OButton;
-import org.devocative.wickomp.grid.toolbar.WGridInfo;
+import org.devocative.wickomp.grid.toolbar.OLinkButton;
 import org.devocative.wickomp.wrcs.EasyUIBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.slf4j.Logger;
@@ -225,10 +226,9 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		options.setHtmlId(getMarkupId());
 		*/
 
-		if (options.getToolbarButtons() != null) {
-			for (OButton button : options.getToolbarButtons()) {
-				button.setUrl(getCallbackURL());
-			}
+		for (int i = 0; i < options.getToolbarButtons().size(); i++) {
+			OButton<T> button = options.getToolbarButtons().get(i);
+			button.init(getCallbackURL(), i, options.getHtmlId(), options.getColumns());
 		}
 	}
 
@@ -264,7 +264,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			if (colNo == null) {
 				throw new RuntimeException("Null button index parameter!");
 			}
-			handleToolbarButtonClick(colNo, parameters);
+			handleToolbarButtonClick(colNo);
 		} else if (id != null && id.length() > 0) {
 			handleRowsById(id);
 		} else {
@@ -291,14 +291,13 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 		if (isVisible()) {
 			List<OButton<T>> toolbarButtons = options.getToolbarButtons();
-			if (toolbarButtons != null) {
-				WGridInfo<T> info = new WGridInfo<>(options, gridDataSource, sortFieldList);
+			if (!toolbarButtons.isEmpty()) {
 				StringBuilder builder = new StringBuilder();
 				builder
 					.append(String.format("<div id=\"%s-tb\">", getMarkupId()))
 					.append("<table><tr>");
 				for (OButton<T> button : toolbarButtons) {
-					builder.append("<td>").append(button.getHTMLContent(info)).append("</td>");
+					builder.append("<td>").append(button.getHTMLContent()).append("</td>");
 				}
 				builder.append("</tr></table></div>");
 
@@ -430,9 +429,19 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	// ---------------
 
-	private void handleToolbarButtonClick(Integer colNo, IRequestParameters parameters) {
+	private void handleToolbarButtonClick(Integer colNo) {
 		OButton<T> button = options.getToolbarButtons().get(colNo);
-		button.onClick(new WGridInfo<>(options, gridDataSource, sortFieldList), parameters);
+		if (button instanceof OLinkButton) {
+			OLinkButton<T> linkButton = (OLinkButton<T>) button;
+			linkButton.onClick();
+		} else if (button instanceof OAjaxLinkButton) {
+			AjaxRequestTarget target = createAjaxResponse();
+
+			OAjaxLinkButton<T> ajaxLinkButton = (OAjaxLinkButton<T>) button;
+			ajaxLinkButton.onClick(target);
+		} else {
+			throw new RuntimeException("Invalid request from button click");
+		}
 	}
 
 	private void handleCellLinkClick(String id, Integer colNo) {
@@ -451,6 +460,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				ajaxLinkColumn.onException(target, e, rowModel);
 			}
 
+		} else {
+			throw new RuntimeException("Invalid request from cell click: " + column.getField());
 		}
 	}
 

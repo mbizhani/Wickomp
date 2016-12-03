@@ -19,6 +19,7 @@ import org.devocative.wickomp.grid.column.OHiddenColumn;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
+import org.devocative.wickomp.grid.toolbar.OAjaxLinkButton;
 import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
 import org.devocative.wickomp.grid.toolbar.OGridGroupingButton;
 import org.devocative.wickomp.html.HTMLBase;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DataGridPage extends BasePage implements IAsyncResponseHandler {
+public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGridDataSource<PersonVO> {
 	private List<PersonVO> list;
 	private AsyncBehavior asyncBehavior;
 	WDataGrid<PersonVO> grid2;
@@ -152,11 +153,12 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 			.setSelectionIndicator(true)
 			.setSelectionJSHandler("function(asd){alert(asd.toSource());}")
 			.setShowFooter(true)
-			.addToolbarButton(new OGridGroupingButton<PersonVO>())
+			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
 
 		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new IGridAsyncDataSource<PersonVO>() {
+			private static final long serialVersionUID = 6755559030282508782L;
 
 			@Override
 			public void list(long first, long size, List<WSortField> sortFields) {
@@ -184,6 +186,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 		grid2.setEnabled(false);
 
 		add(new AjaxLink("enableGrid2") {
+			private static final long serialVersionUID = 919206334855897779L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				grid2.setEnabled(true);
@@ -200,33 +204,20 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 			.setIdField("col02")
 				// .setGroupField("col01")
 			.setShowFooter(true)
-			.addToolbarButton(new OExportExcelButton<PersonVO>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), "Export.xlsx", 1000))
-			.addToolbarButton(new OGridGroupingButton<PersonVO>());
+			.addToolbarButton(new OExportExcelButton<>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), this))
+			.addToolbarButton(new OAjaxLinkButton<PersonVO>(new HTMLBase("Ajax")) {
+				private static final long serialVersionUID = -5973292922018513236L;
+
+				@Override
+				public void onClick(AjaxRequestTarget target) {
+					target.appendJavaScript("alert('Button');");
+				}
+			})
+			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")));
 		grid1Opt.setHeight(OSize.fixed(400));
 
 		final WDataGrid<PersonVO> grid1;
-		add(grid1 = new WDataGrid<>("grid1", grid1Opt, new IGridDataSource<PersonVO>() {
-			@Override
-			public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
-				if (first == 3) {
-					throw new RuntimeException("Test Exception!");
-				}
-				int start = (int) ((first - 1) * size);
-				int end = (int) (first * size);
-				return list.subList(start, Math.min(end, list.size()));
-			}
-
-			@Override
-			public long count() {
-				return list.size();
-			}
-
-			@Override
-			public IModel<PersonVO> model(PersonVO object) {
-				return new Model<>(object);
-			}
-
-		}));
+		add(grid1 = new WDataGrid<>("grid1", grid1Opt, this));
 		grid1.setVisible(false);
 		grid1.setOutputMarkupPlaceholderTag(true);
 		grid1.setFooterDataSource(new IGridFooterDataSource<PersonVO>() {
@@ -248,5 +239,28 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler {
 			}
 		});
 	}
+
+	// ------------------------------ IGridDataSource<PersonVO>
+
+	@Override
+	public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
+		if (first == 3) {
+			throw new RuntimeException("Test Exception!");
+		}
+		int start = (int) ((first - 1) * size);
+		int end = (int) (first * size);
+		return list.subList(start, Math.min(end, list.size()));
+	}
+
+	@Override
+	public long count() {
+		return list.size();
+	}
+
+	@Override
+	public IModel<PersonVO> model(PersonVO object) {
+		return new Model<>(object);
+	}
+
 
 }

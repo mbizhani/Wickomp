@@ -33,7 +33,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private Boolean singleSelect = true;
 	private Boolean striped;
 	private String titleField;
-	private List<OButton<T>> toolbar;
+	private List<OButton<T>> toolbar = new ArrayList<>();
 	private String url;
 
 	// ---------------------- MISC FIELDS
@@ -246,11 +246,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	}
 
 	public OBaseGrid<T> addToolbarButton(OButton<T> button) {
-		if (toolbar == null) {
-			toolbar = new ArrayList<>();
-		}
-
-		button.setIndex(toolbar.size());
 		toolbar.add(button);
 		return this;
 	}

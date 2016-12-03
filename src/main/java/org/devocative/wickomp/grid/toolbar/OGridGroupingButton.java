@@ -10,24 +10,25 @@ public class OGridGroupingButton<T> extends OButton<T> {
 
 	private HTMLBase expand, collapse;
 
-	public OGridGroupingButton() {
-	}
+	// ------------------------------
 
 	public OGridGroupingButton(HTMLBase expand, HTMLBase collapse) {
 		this.expand = expand;
 		this.collapse = collapse;
 	}
 
+	// ------------------------------
+
 	@Override
-	public String getHTMLContent(WGridInfo<T> gridInfo) {
+	public String getHTMLContent() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<table><tr>");
 		builder.append(String.format("<td>%s: </td><td><select onchange=\"changeGridGroupField(this, '%s')\">",
-			new ResourceModel("datagrid.groupField.select", "Group Field").getObject(), gridInfo.getOptions().getHtmlId()));
+			new ResourceModel("datagrid.groupField.select", "Group Field").getObject(), getGridHtmlId()));
 
 		builder.append(String.format("<option value=\"\">%s</option>", new ResourceModel("datagrid.groupField.none", "-- None --").getObject()));
 
-		for (OColumn<T> column : gridInfo.getOptions().getColumns().getVisibleColumns()) {
+		for (OColumn<T> column : getColumnList().getVisibleColumns()) {
 			if (column instanceof OPropertyColumn) {
 				builder.append(String.format("<option value=\"%s\">%s</option>", column.getField(), column.getTitle()));
 			}
@@ -38,7 +39,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 			builder.append("<td><a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
 				.append(new ResourceModel("label.nodes.expand", "Expand All").getObject())
 				.append("\" onclick=\"")
-				.append(String.format("expandAllGroups('%s');", gridInfo.getOptions().getHtmlId()))
+				.append(String.format("expandAllGroups('%s');", getGridHtmlId()))
 				.append("\">")
 				.append(expand.toString())
 				.append("</a></td>")
@@ -49,7 +50,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 			builder.append("<td><a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
 				.append(new ResourceModel("label.nodes.expand", "Collapse All").getObject())
 				.append("\" onclick=\"")
-				.append(String.format("collapseAllGroups('%s');", gridInfo.getOptions().getHtmlId()))
+				.append(String.format("collapseAllGroups('%s');", getGridHtmlId()))
 				.append("\">")
 				.append(collapse.toString())
 				.append("</a></td>")
