@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
+	private static final long serialVersionUID = 4726580534261868437L;
+
 	private List<EmployeeVO> list;
 
 	private AsyncBehavior asyncBehavior;
@@ -42,6 +44,8 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Name"), "name"))
 			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Age"), "age"))
 			.add(new OAjaxLinkColumn<EmployeeVO>(new Model<>(""), new HTMLBase("x")) {
+				private static final long serialVersionUID = -8145936659329291146L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target, IModel<EmployeeVO> rowData) {
 					target.appendJavaScript(String.format("alert('%s');", rowData.getObject().getName()));
@@ -74,8 +78,10 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			.setHeight(OSize.fixed(400));
 
 		add(atreegrid = new WTreeGrid<>("atreegrid", treeGrid, new ITreeGridAsyncDataSource<EmployeeVO>() {
+			private static final long serialVersionUID = 4245241591226574311L;
+
 			@Override
-			public void list(long pageIndex, long pageSize, List<WSortField> list) {
+			public void asyncList(long pageIndex, long pageSize, List<WSortField> list) {
 				asyncBehavior.sendAsyncRequest("T_GRID_PAGER",
 					ObjectBuilder
 						.<String, Object>createDefaultMap()
@@ -86,7 +92,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			}
 
 			@Override
-			public void listByParent(Serializable parentId, List<WSortField> list) {
+			public void asyncListByParent(Serializable parentId, List<WSortField> list) {
 				asyncBehavior.sendAsyncRequest("T_GRID_CHILDREN", parentId);
 			}
 
@@ -104,6 +110,8 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 		atreegrid.setEnabled(false);
 
 		add(new AjaxLink("enableTGrid") {
+			private static final long serialVersionUID = 5052194326107554173L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				atreegrid.setEnabled(true);
@@ -123,6 +131,8 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			.setHeight(OSize.fixed(400));
 
 		add(new WTreeGrid<>("treegrid", treeGrid, new ITreeGridDataSource<EmployeeVO>() {
+			private static final long serialVersionUID = 4913273886461477605L;
+
 			@Override
 			public List<EmployeeVO> listByParent(Serializable parentId, List<WSortField> sortFields) {
 				List<EmployeeVO> result = new ArrayList<>();

@@ -35,10 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGridDataSource<PersonVO> {
+public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGridDataSource<PersonVO>, IGridAsyncDataSource<PersonVO> {
+	private static final long serialVersionUID = 7457034189424340046L;
+
 	private List<PersonVO> list;
 	private AsyncBehavior asyncBehavior;
-	WDataGrid<PersonVO> grid2;
+	private WDataGrid<PersonVO> asyncDisabledGrid;
 
 	public DataGridPage() {
 		list = PersonVO.list();
@@ -49,6 +51,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01").setHasFooter(true))
 
 			.add(new OAjaxLinkColumn<PersonVO>(new Model<>("Col 02"), "col02") {
+				private static final long serialVersionUID = -5779390659947204393L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target, IModel<PersonVO> rowData) {
 					target.appendJavaScript(String.format("alert(\"%s\");", rowData.getObject()));
@@ -56,6 +60,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 			}.setSortable(true))
 
 			.add(new OAjaxLinkColumn<PersonVO>(new Model<>("Err"), new HTMLBase("Err")) {
+				private static final long serialVersionUID = -6638861337384724243L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target, IModel<PersonVO> rowData) {
 					throw new RuntimeException("Oops!");
@@ -63,6 +69,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 			})
 
 			.add(new OLinkColumn<PersonVO>(new Model<>("Col 03"), "col03") {
+				private static final long serialVersionUID = -1345514997907642145L;
+
 				@Override
 				public void onClick(IModel<PersonVO> rowData) {
 					System.out.println(rowData.getObject());
@@ -80,9 +88,13 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 			})
 
 			.add(new OLinkColumn<PersonVO>(new Model<>(""), new FontAwesome("arrows").spin()) {
+				private static final long serialVersionUID = -377768531033482382L;
+
 				@Override
 				public void onClick(final IModel<PersonVO> rowData) {
 					sendResource(new OutputStreamResource("text", rowData.getObject().getCol02() + ".txt") {
+						private static final long serialVersionUID = 5226293987632481972L;
+
 						@Override
 						protected void handleStream(OutputStream stream) {
 							try {
@@ -93,9 +105,11 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 						}
 					});
 				}
-			})
+			}.setField("cmd10")) // NOTE: it is ok for column with HTML content!
 
 			.add(new OColumn<PersonVO>(new Model<>("Any")) {
+				private static final long serialVersionUID = -7363343390885987603L;
+
 				@Override
 				public String cellValue(PersonVO bean, String id, int colNo, String url) {
 					return String.format("<a href=\"#\" onclick=\"alert('%s')\">ANY</a>", bean.getCol01());
@@ -123,6 +137,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 
 		add(asyncBehavior = new AsyncBehavior(this));
 
+		activeGrid(columns);
+
 		visibleGrid(columns);
 
 		enabledGrid(columns);
@@ -132,15 +148,32 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
 		Map<String, Object> map = (Map<String, Object>) result;
 		//if (grid2.getPageNum() == 3) {
-		//	grid2.pushError(handler, new RuntimeException("DataGridPage: Page 3 Error"));
+		//	asyncDisabledGrid.pushError(handler, new RuntimeException("DataGridPage: Page 3 Error"));
 		//} else {
-		grid2.pushData(handler, (List) map.get("list"), (int) map.get("count"), (List) map.get("footer"));
+		asyncDisabledGrid.pushData(handler, (List) map.get("list"), (int) map.get("count"), (List) map.get("footer"));
 		//}
 	}
 
 	@Override
 	public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
-		grid2.pushError(handler, error);
+		asyncDisabledGrid.pushError(handler, error);
+	}
+
+	private void activeGrid(OColumnList<PersonVO> columns) {
+		OGrid<PersonVO> grid2Opt = new OGrid<>();
+		grid2Opt
+			.setGroupStyle("background-color:#dddddd")
+			.setIdField("col02")
+			.setColumns(columns)
+			.setMultiSort(true)
+			.setSelectionIndicator(true)
+			.setSelectionJSHandler("function(asd){alert(asd.toSource());}")
+			.setShowFooter(true)
+			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
+		;
+		grid2Opt.setHeight(OSize.fixed(400));
+
+		add(new WDataGrid<>("activeAsyncGrid", grid2Opt, (IGridDataSource<PersonVO>) this));
 	}
 
 	private void enabledGrid(OColumnList<PersonVO> columns) {
@@ -157,41 +190,17 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
 
-		add(grid2 = new WDataGrid<>("grid2", grid2Opt, new IGridAsyncDataSource<PersonVO>() {
-			private static final long serialVersionUID = 6755559030282508782L;
+		add(asyncDisabledGrid = new WDataGrid<>("grid2", grid2Opt, (IGridAsyncDataSource<PersonVO>) this));
 
-			@Override
-			public void list(long first, long size, List<WSortField> sortFields) {
-				asyncBehavior.sendAsyncRequest("GRID_PAGER",
-					ObjectBuilder
-						.<String, Object>createDefaultMap()
-						.put("first", first)
-						.put("size", size)
-						.get()
-				);
-			}
-
-			/*@Override
-			public long count() {
-				return list.size();
-			}*/
-
-			@Override
-			public IModel<PersonVO> model(PersonVO object) {
-				return new Model<>(object);
-			}
-
-		}));
-
-		grid2.setEnabled(false);
+		asyncDisabledGrid.setEnabled(false);
 
 		add(new AjaxLink("enableGrid2") {
 			private static final long serialVersionUID = 919206334855897779L;
 
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				grid2.setEnabled(true);
-				grid2.loadData(target);
+				asyncDisabledGrid.setEnabled(true);
+				asyncDisabledGrid.loadData(target);
 			}
 		});
 	}
@@ -217,7 +226,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 		grid1Opt.setHeight(OSize.fixed(400));
 
 		final WDataGrid<PersonVO> grid1;
-		add(grid1 = new WDataGrid<>("grid1", grid1Opt, this));
+		add(grid1 = new WDataGrid<>("grid1", grid1Opt, (IGridDataSource<PersonVO>) this));
 		grid1.setVisible(false);
 		grid1.setOutputMarkupPlaceholderTag(true);
 		grid1.setFooterDataSource(new IGridFooterDataSource<PersonVO>() {
@@ -233,11 +242,25 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 		});
 
 		add(new AjaxLink("showGrid") {
+			private static final long serialVersionUID = 4096673362021657583L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				grid1.makeVisible(target);
 			}
 		});
+	}
+
+	// ------------------------------ IGridAsyncDataSource<PersonVO>
+
+	@Override
+	public void asyncList(long first, long size, List<WSortField> sortFields) {
+		asyncBehavior.sendAsyncRequest("GRID_PAGER",
+			ObjectBuilder
+				.<String, Object>createDefaultMap()
+				.put("first", first)
+				.put("size", size)
+				.get());
 	}
 
 	// ------------------------------ IGridDataSource<PersonVO>

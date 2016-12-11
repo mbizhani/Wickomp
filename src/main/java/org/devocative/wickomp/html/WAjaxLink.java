@@ -21,6 +21,10 @@ public abstract class WAjaxLink extends AjaxLink {
 		this(id, null, null);
 	}
 
+	public WAjaxLink(String id, HTMLBase icon) {
+		this(id, null, icon);
+	}
+
 	public WAjaxLink(String id, IModel<String> caption) {
 		this(id, caption, null);
 	}

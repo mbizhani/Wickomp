@@ -78,7 +78,7 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 			convertBeansToRObjects(listByParent, subRow);
 			sendJSONResponse(WebUtil.toJson(subRow));
 		} else {
-			treeGridAsyncDataSource.listByParent(id, sortFieldList);
+			treeGridAsyncDataSource.asyncListByParent(id, sortFieldList);
 			sendJSONResponse("");
 		}
 

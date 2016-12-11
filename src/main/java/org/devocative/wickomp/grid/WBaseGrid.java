@@ -331,7 +331,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 					result.setFooter(getGridFooter(footerDataSource.footer(data)));
 				}
 			} else {
-				gridAsyncDataSource.list(pageNum, pageSize, sortFieldList);
+				gridAsyncDataSource.asyncList(pageNum, pageSize, sortFieldList);
 
 				result = getGridPage(null, pageNum * pageSize);
 				if (options.hasFooter()) {

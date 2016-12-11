@@ -10,5 +10,5 @@ public interface IGridAsyncDataSource<T> extends IDataSource<T> {
 	 * @param pageSize   size of a page during pagination process
 	 * @param sortFields list of fields for sorting the result (optional)
 	 */
-	void list(long pageIndex, long pageSize, List<WSortField> sortFields);
+	void asyncList(long pageIndex, long pageSize, List<WSortField> sortFields);
 }
