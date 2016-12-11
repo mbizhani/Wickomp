@@ -54,6 +54,7 @@ function handleLoaded(gridId, data) {
 	}
 
 	$('#' + gridId).datagrid('loaded');
+	$('#' + gridId + '-tb').css('visibility', 'visible');
 
 	return data;
 }

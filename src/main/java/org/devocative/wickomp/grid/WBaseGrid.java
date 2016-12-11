@@ -53,6 +53,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	private IGridAsyncDataSource<T> gridAsyncDataSource;
 	private IGridFooterDataSource<T> footerDataSource;
 
+	private boolean hideToolbarFirstTime = true;
+
 	protected Integer pageSize, pageNum;
 	protected List<WSortField> sortFieldList = new ArrayList<>();
 	protected Map<String, IModel<T>> pageData = new HashMap<>();
@@ -101,6 +103,11 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	public WBaseGrid<T> setFooterDataSource(IGridFooterDataSource<T> footerDataSource) {
 		this.footerDataSource = footerDataSource;
 		options.setShowFooter(true);
+		return this;
+	}
+
+	public WBaseGrid<T> setHideToolbarFirstTime(boolean hideToolbarFirstTime) {
+		this.hideToolbarFirstTime = hideToolbarFirstTime;
 		return this;
 	}
 
@@ -293,9 +300,14 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			List<OButton<T>> toolbarButtons = options.getToolbarButtons();
 			if (!toolbarButtons.isEmpty()) {
 				StringBuilder builder = new StringBuilder();
-				builder
-					.append(String.format("<div id=\"%s-tb\">", getMarkupId()))
-					.append("<table><tr>");
+				if (hideToolbarFirstTime) {
+					builder
+						.append(String.format("<div id=\"%s-tb\" style=\"visibility:hidden\">", getMarkupId()));
+				} else {
+					builder
+						.append(String.format("<div id=\"%s-tb\">", getMarkupId()));
+				}
+				builder.append("<table><tr>");
 				for (OButton<T> button : toolbarButtons) {
 					builder.append("<td>").append(button.getHTMLContent()).append("</td>");
 				}

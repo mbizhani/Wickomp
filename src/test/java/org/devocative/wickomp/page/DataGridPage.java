@@ -192,7 +192,10 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 
 		add(asyncDisabledGrid = new WDataGrid<>("grid2", grid2Opt, (IGridAsyncDataSource<PersonVO>) this));
 
-		asyncDisabledGrid.setEnabled(false);
+		asyncDisabledGrid
+			.setHideToolbarFirstTime(false)
+			.setEnabled(false)
+		;
 
 		add(new AjaxLink("enableGrid2") {
 			private static final long serialVersionUID = 919206334855897779L;
