@@ -4,6 +4,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.WPanel;
@@ -38,7 +39,7 @@ public class WModalWindow extends WPanel {
 		container.setOutputMarkupId(true);
 		add(container);
 
-		container.add(content = new WebMarkupContainer("content").setVisible(false));
+		container.add(content = checkContentOnAdd(new WebMarkupContainer("content")));
 
 		callbackAjaxBehavior = new AbstractDefaultAjaxBehavior() {
 			private static final long serialVersionUID = 8334609333513108892L;
@@ -75,7 +76,7 @@ public class WModalWindow extends WPanel {
 			throw new WicketRuntimeException("Modal window content id is wrong. Component ID:" +
 				component.getId() + "; content ID: " + getContentId());
 		}
-		container.replace(content = component.setVisible(false));
+		container.replace(content = checkContentOnAdd(component));
 		return this;
 	}
 
@@ -143,5 +144,13 @@ public class WModalWindow extends WPanel {
 	// ------------------------------
 
 	protected void onClose(AjaxRequestTarget target) {
+	}
+
+	// ------------------------------
+
+	private Component checkContentOnAdd(Component content) {
+		content.setVisible(false);
+		content.add(new AttributeAppender("style", "width:100%;height:100%;"));
+		return content;
 	}
 }
