@@ -46,4 +46,21 @@ public class OColumnList<T> extends Options {
 			fields.add(oColumn.getField());
 		}
 	}
+
+	public void removeColumn(String field) {
+
+		for (int i = 0; i < visibleColumns.size(); i++) {
+			if (visibleColumns.get(i).getField().equals(field)) {
+				visibleColumns.remove(i);
+				break;
+			}
+		}
+
+		for (int i = 0; i < allColumns.size(); i++) {
+			if (allColumns.get(i).getField().equals(field)) {
+				allColumns.remove(i);
+				break;
+			}
+		}
+	}
 }
