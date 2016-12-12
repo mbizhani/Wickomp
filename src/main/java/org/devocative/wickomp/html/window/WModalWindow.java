@@ -4,7 +4,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.WPanel;
@@ -150,7 +149,6 @@ public class WModalWindow extends WPanel {
 
 	private Component checkContentOnAdd(Component content) {
 		content.setVisible(false);
-		content.add(new AttributeAppender("style", "width:100%;height:100%;"));
 		return content;
 	}
 }
