@@ -1,8 +1,9 @@
-package org.devocative.wickomp.form;
+package org.devocative.wickomp.form.range;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.devocative.adroit.vo.IRange;
+import org.devocative.wickomp.form.WNumberInput;
 
 public class WNumberRangeInput extends WBaseRangeInput<Number> {
 	private static final long serialVersionUID = -3084374441053594155L;

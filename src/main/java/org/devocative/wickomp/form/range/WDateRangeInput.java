@@ -1,8 +1,9 @@
-package org.devocative.wickomp.form;
+package org.devocative.wickomp.form.range;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.devocative.adroit.vo.IRange;
+import org.devocative.wickomp.form.WDateInput;
 import org.devocative.wickomp.opt.OCalendar;
 
 import java.util.Date;

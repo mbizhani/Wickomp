@@ -1,4 +1,4 @@
-package org.devocative.wickomp.form;
+package org.devocative.wickomp.form.range;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
