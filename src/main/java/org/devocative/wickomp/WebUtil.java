@@ -90,16 +90,44 @@ public class WebUtil {
 	// ---------------
 
 	public static Map<String, List<String>> toMap(boolean lowercaseParam, boolean ignoreEmpty) {
-		return toMap(getRequestParameters(), lowercaseParam, ignoreEmpty);
+		return toMap(lowercaseParam, Collections.<String>emptyList(), ignoreEmpty, Collections.<String>emptyList());
 	}
 
-	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam, boolean ignoreEmpty) {
+	public static Map<String, List<String>> toMap(boolean lowercaseParam, boolean ignoreEmpty, List<String> ignoreValues) {
+		return toMap(lowercaseParam, Collections.<String>emptyList(), ignoreEmpty, ignoreValues);
+	}
+
+	public static Map<String, List<String>> toMap(boolean lowercaseParam, List<String> ignoreParams, boolean ignoreEmpty) {
+		return toMap(lowercaseParam, ignoreParams, ignoreEmpty, Collections.<String>emptyList());
+	}
+
+	// Main toMap without IRequestParameters
+	public static Map<String, List<String>> toMap(boolean lowercaseParam, List<String> ignoreParams, boolean ignoreEmpty, List<String> ignoreValues) {
+		return toMap(getRequestParameters(), lowercaseParam, ignoreParams, ignoreEmpty, ignoreValues);
+	}
+
+	// Main toMap with IRequestParameters
+	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam, List<String> ignoreParams, boolean ignoreEmptyValue, List<String> ignoreValues) {
 		Map<String, List<String>> result = new HashMap<>();
 		for (String param : parameters.getParameterNames()) {
+			if (lowercaseParam) {
+				param = param.toLowerCase();
+			}
+
+			List<StringValue> parameterValues = parameters.getParameterValues(param);
+
+			if (parameterValues == null || ignoreParams.contains(param)) {
+				continue;
+			}
+
 			List<String> values = new ArrayList<>();
 
-			for (StringValue stringValue : parameters.getParameterValues(param)) {
-				if (ignoreEmpty) {
+			for (StringValue stringValue : parameterValues) {
+				if (ignoreValues.contains(stringValue.toString())) {
+					continue;
+				}
+
+				if (ignoreEmptyValue) {
 					if (!stringValue.isNull() && !stringValue.isEmpty()) {
 						values.add(stringValue.toString());
 					}
@@ -109,15 +137,7 @@ public class WebUtil {
 			}
 
 			if (values.size() > 0) {
-				if (lowercaseParam) {
-					param = param.toLowerCase();
-				}
-
-				if (result.containsKey(param)) {
-					result.get(param).addAll(values);
-				} else {
-					result.put(param, values);
-				}
+				result.put(param, values);
 			}
 		}
 		return result;
