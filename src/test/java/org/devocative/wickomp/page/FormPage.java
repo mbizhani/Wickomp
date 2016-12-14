@@ -20,7 +20,7 @@ import org.devocative.wickomp.form.code.OCode;
 import org.devocative.wickomp.form.code.OCodeMode;
 import org.devocative.wickomp.form.code.WCodeInput;
 import org.devocative.wickomp.form.range.WDateRangeInput;
-import org.devocative.wickomp.form.range.WStringRangeInput;
+import org.devocative.wickomp.form.range.WTextRangeInput;
 import org.devocative.wickomp.form.validator.WPatternValidator;
 import org.devocative.wickomp.html.WEasyLayout;
 import org.devocative.wickomp.html.WFloatTable;
@@ -201,7 +201,7 @@ public class FormPage extends BasePage {
 		form.add(new WDateInput("birthdate").setTimePartVisible(true));
 		form.add(new WBooleanInput("alive"));
 		form.add(new WDateRangeInput("dateRange"));
-		form.add(new WStringRangeInput("stringRange"));
+		form.add(new WTextRangeInput("stringRange"));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), oCode));

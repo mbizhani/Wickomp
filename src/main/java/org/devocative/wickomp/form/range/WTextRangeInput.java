@@ -5,16 +5,16 @@ import org.apache.wicket.model.IModel;
 import org.devocative.adroit.vo.IRange;
 import org.devocative.wickomp.form.WTextInput;
 
-public class WStringRangeInput extends WBaseRangeInput<String> {
+public class WTextRangeInput extends WBaseRangeInput<String> {
 	private static final long serialVersionUID = 6127097391007670937L;
 
 	// ------------------------------
 
-	public WStringRangeInput(String id) {
+	public WTextRangeInput(String id) {
 		this(id, null);
 	}
 
-	public WStringRangeInput(String id, IModel<IRange<String>> model) {
+	public WTextRangeInput(String id, IModel<IRange<String>> model) {
 		super(id, model);
 	}
 
