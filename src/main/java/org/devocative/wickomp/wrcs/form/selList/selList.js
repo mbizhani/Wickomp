@@ -29,8 +29,11 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 
 	slTitle.focusin(function (event) {
 		closeHandler_SelList(event);
-		slDropDown.css("display", "inline");
-		slDropDown.css("visibility", "visible");
+		slDropDown.css({
+			"display": "inline",
+			"visibility": "visible",
+			"top": $(slOpener).position().top + $(slOpener).outerHeight(true)
+		});
 		lastOpenedSelList = slDropDown;
 		preventEvent(event)
 	});
@@ -41,8 +44,11 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 
 	slOpener.click(function (event) {
 		closeHandler_SelList(event);
-		slDropDown.css("display", "inline");
-		slDropDown.css("visibility", "visible");
+		slDropDown.css({
+			"display": "inline",
+			"visibility": "visible",
+			"top": $(slOpener).position().top + $(slOpener).outerHeight(true)
+		});
 		lastOpenedSelList = slDropDown;
 	});
 

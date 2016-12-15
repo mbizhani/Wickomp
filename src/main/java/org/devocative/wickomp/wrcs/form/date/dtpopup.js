@@ -296,17 +296,16 @@ $(window).keyup(function (e) {
 			}
 			defaults.init();
 			var parent = $('#' + parentId);
+			parent.after(defaults.divPopup);
 			defaults.divPopup.css({
 				position: "absolute",
 				zIndex: 1100,
 				backgroundColor: "#ffffff",
 				border: "1px solid #888888",
 				boxShadow: "5px 5px 5px #cccccc",
-				top: parent.position().top + parent.outerHeight(true),
-				left: parent.position().left
+				top: parent.position().top + parent.outerHeight(true)
 			});
 			defaults.dtTable.addClass("dtPopup");
-			$(this).after(defaults.divPopup);
 			if (lastOpenDiv == null) {
 				lastOpenDiv = defaults.divPopup;
 				defaults.renderCalendar();

@@ -1,13 +1,17 @@
 function initClientSearchableList(selListPanelId) {
 	var selListPanel = $("#" + selListPanelId);
+	var slTable = selListPanel.find(".w-input:first");
 	var slOpener = selListPanel.find(".slOpener:first");
 	var slTitle = selListPanel.find(".slTitle:first");
 	var slDropDown = selListPanel.find(".slDropDown:first");
 
 	slTitle.focusin(function (event) {
 		closeHandler_SelList(event);
-		slDropDown.css("display", "inline");
-		slDropDown.css("visibility", "visible");
+		slDropDown.css({
+			"display": "inline",
+			"visibility": "visible",
+			"top": $(slTable).position().top + $(slTable).outerHeight(true)
+		});
 		lastOpenedSelList = slDropDown;
 		preventEvent(event)
 	});
@@ -18,8 +22,11 @@ function initClientSearchableList(selListPanelId) {
 
 	slOpener.click(function (event) {
 		closeHandler_SelList(event);
-		slDropDown.css("display", "inline");
-		slDropDown.css("visibility", "visible");
+		slDropDown.css({
+			"display": "inline",
+			"visibility": "visible",
+			"top": $(slTable).position().top + $(slTable).outerHeight(true)
+		});
 		lastOpenedSelList = slDropDown;
 	});
 
