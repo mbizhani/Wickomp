@@ -19,9 +19,10 @@ import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPanel<List<T>> {
+public abstract class WClientSearchableListInput extends WLabeledFormInputPanel {
 	private static final long serialVersionUID = 8131275251442491717L;
 
 	private static final HeaderItem SEL_LIST_CSS = Resource.getCommonCSS("form/selList/selList.css");
@@ -33,15 +34,19 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 	private WebComponent title;
 	private AjaxLink openModal;
 
+	private boolean multipleSelection;
+
 	// ---------------------------- CONSTRUCTORS
 
-	public WClientSearchableListInput(String id) {
-		this(id, null);
+	public WClientSearchableListInput(String id, boolean multipleSelection) {
+		this(id, null, multipleSelection);
 	}
 
 	// Main Constructor
-	public WClientSearchableListInput(String id, IModel<List<T>> model) {
+	public WClientSearchableListInput(String id, IModel model, boolean multipleSelection) {
 		super(id, model);
+
+		this.multipleSelection = multipleSelection;
 
 		modalWindow = new WModalWindow("modalWindow");
 		add(modalWindow);
@@ -76,7 +81,7 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 		return modalWindow.getOptions();
 	}
 
-	public WClientSearchableListInput<T> setOpenModalLinkVisible(boolean visible) {
+	public WClientSearchableListInput setOpenModalLinkVisible(boolean visible) {
 		openModal.setVisible(visible);
 		return this;
 	}
@@ -85,9 +90,9 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 
 	protected abstract Component createSelectionPanel(String selectionPanelId);
 
-	protected abstract T createServerObject(String key);
+	protected abstract Object createServerObject(String key);
 
-	protected abstract List<KeyValueVO<String, String>> createClientOptions(List<T> list);
+	protected abstract List<KeyValueVO<String, String>> createClientOptions(List list);
 
 	// ---------------------------- PUBLIC METHODS
 
@@ -103,7 +108,7 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 
 	@Override
 	public void convertInput() {
-		List<T> list = new ArrayList<>();
+		List list = new ArrayList<>();
 		String[] inputAsArray = getInputAsArray();
 		if (inputAsArray != null) {
 			for (String input : inputAsArray) {
@@ -112,7 +117,11 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 		}
 
 		if (list.size() > 0) {
-			setConvertedInput(list);
+			if (multipleSelection) {
+				setConvertedInput(list);
+			} else {
+				setConvertedInput(list.get(0));
+			}
 		} else {
 			setConvertedInput(null);
 		}
@@ -124,7 +133,11 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 	protected void onBeforeRender() {
 		int size = 0;
 		if (getModelObject() != null) {
-			size = getModelObject().size();
+			if (multipleSelection) {
+				size = ((List) getModelObject()).size();
+			} else {
+				size = 1;
+			}
 		}
 		title.add(new AttributeModifier("value", size));
 
@@ -138,15 +151,22 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 		StringBuilder builder = new StringBuilder();
 		builder.append(String.format("initClientSearchableList('%s');", getMarkupId()));
 
-		List<T> modelObject = getModelObject();
-		if (modelObject != null && modelObject.size() > 0) {
-			String rows = WebUtil.toJson(createClientOptions(modelObject));
+		Object modelObject = getModelObject();
+		if (modelObject != null) {
+			List objectRows;
+			if (multipleSelection) {
+				objectRows = (List) modelObject;
+			} else {
+				objectRows = Collections.singletonList(modelObject);
+			}
+			String rows = WebUtil.toJson(createClientOptions(objectRows));
 			builder.append(String.format(
-					"handleClientSearchableList(null, '%s', '%s', '%s', %s);",
+					"handleClientSearchableList(null, '%s', '%s', '%s', %s, %s);",
 					getInputName(),
 					result.getMarkupId(),
 					title.getMarkupId(),
-					rows
+					rows,
+					multipleSelection
 				)
 			);
 		}
@@ -155,10 +175,11 @@ public abstract class WClientSearchableListInput<T> extends WLabeledFormInputPan
 	}
 
 	protected String getJSCallback() {
-		return String.format("function(rows){handleClientSearchableList('%s', '%s', '%s', '%s', rows);}",
+		return String.format("function(rows){handleClientSearchableList('%s', '%s', '%s', '%s', rows, %s);}",
 			modalWindow.getContainerMarkupId(),
 			getInputName(),
 			result.getMarkupId(),
-			title.getMarkupId());
+			title.getMarkupId(),
+			multipleSelection);
 	}
 }

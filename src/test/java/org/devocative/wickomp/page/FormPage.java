@@ -184,7 +184,10 @@ public class FormPage extends BasePage {
 		map.put("age", 2000);
 		map.put("orderedPerson", new ArrayList<>(personVOs.subList(4, 8)));
 
-		map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
+		// Multiple
+		//map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
+		// Single
+		map.put("kvList", new KeyValueVO<>("A", "A"));
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 
@@ -205,7 +208,9 @@ public class FormPage extends BasePage {
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), oCode));
-		form.add(new WClientSearchableListInput<KeyValueVO<String, String>>("kvList") {
+		form.add(new WClientSearchableListInput("kvList", false) {
+			private static final long serialVersionUID = 4542301240930720140L;
+
 			{
 				getModalWindowOptions().setWidth(OSize.percent(80));
 			}
@@ -223,13 +228,15 @@ public class FormPage extends BasePage {
 			}
 
 			@Override
-			protected List<KeyValueVO<String, String>> createClientOptions(List<KeyValueVO<String, String>> list) {
+			protected List<KeyValueVO<String, String>> createClientOptions(List list) {
 				return list;
 			}
 		}.setOpenModalLinkVisible(true));
 		form.add(new WOrderedListInput<>("orderedPerson", personVOs).setVisibleSize(10));
 //		form.add(new Button("save") {
 		form.add(new WAjaxButton("save") {
+			private static final long serialVersionUID = -8861063203041673554L;
+
 			public void onSubmit() {
 				theSubmit();
 			}

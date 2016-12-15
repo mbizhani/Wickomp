@@ -31,14 +31,23 @@ function initClientSearchableList(selListPanelId) {
 	});
 }
 
-function handleClientSearchableList(modalWindowId, inputName, holderTableId, titleId, rows) {
+function handleClientSearchableList(modalWindowId, inputName, holderTableId, titleId, rows, multipleSelection) {
 	var holder = $('#' + holderTableId);
 	var title = $('#' + titleId);
 
 	if (rows) {
 		holder.empty();
 		for (var r = 0; r < rows.length; r++) {
-			var input = $('<input id="' + inputName + r + '" type="checkbox" name="' + inputName + '" value="' + rows[r]["key"] + '" checked/>');
+			var input;
+			if (multipleSelection) {
+				input = $('<input id="' + inputName + r + '" type="checkbox" name="' + inputName + '" value="' + rows[r]["key"] + '" checked/>');
+			} else {
+				if (r == 0) {
+					input = $('<input id="' + inputName + r + '" type="radio" name="' + inputName + '" value="' + rows[r]["key"] + '" checked/>');
+				} else {
+					input = $('<input id="' + inputName + r + '" type="radio" name="' + inputName + '" value="' + rows[r]["key"] + '"/>');
+				}
+			}
 			var span = $('<label for="' + inputName + r + '">' + rows[r]["value"] + '</label>');
 
 			var td1 = $('<td></td>');
