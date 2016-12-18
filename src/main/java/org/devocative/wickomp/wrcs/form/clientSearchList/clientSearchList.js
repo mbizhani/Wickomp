@@ -5,6 +5,9 @@ function initClientSearchableList(selListPanelId) {
 	var slTitle = selListPanel.find(".slTitle:first");
 	var slDropDown = selListPanel.find(".slDropDown:first");
 
+	// NOTE: the parent of popup-div must have relative position, so on parent scroll, popup-div also moves up/down!
+	selListPanel.css("position", "relative");
+
 	slTitle.focusin(function (event) {
 		closeHandler_SelList(event);
 		slDropDown.css({

@@ -23,6 +23,9 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 	var slShowFiltered = selListPanel.find(".slShowFiltered:first");
 	var slClearFilter = selListPanel.find(".fa-times:first");
 
+	// NOTE: the parent of popup-div must have relative position, so on parent scroll, popup-div also moves up/down!
+	selListPanel.css("position", "relative");
+
 	if (slChoices.find("input[type='checkbox']").size() == 0) {
 		slSelectAll.css("display", "none");
 	}
