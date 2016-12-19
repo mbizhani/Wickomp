@@ -71,7 +71,12 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 
 			holder.append(tr);
 		}
-		title.val(rows.length);
+		holder.find("input").bind('change', function (event) {
+			var nos = holder.find('input:checked').size();
+			title.val(nos);
+		});
+
+		title.val(multipleSelection ? rows.length : 1);
 	}
 
 	if (title.data("oldContent") == undefined) {
