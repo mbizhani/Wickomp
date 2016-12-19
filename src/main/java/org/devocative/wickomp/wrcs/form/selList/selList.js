@@ -2,14 +2,16 @@ var lastOpenedSelList = null;
 
 var closeHandler_SelList = function (event) {
 	if (lastOpenedSelList != null) {
-		lastOpenedSelList.css("display", "none");
-		lastOpenedSelList.css("visibility", "hidden");
+		lastOpenedSelList.css({
+			"display": "none",
+			"visibility": "hidden"
+		});
 		lastOpenedSelList = null;
 	}
 };
 
-$(document).mouseup(closeHandler_SelList);
-$(document).focusin(closeHandler_SelList);
+// keydown and click on other side of page results to hide popup
+$(document).on("click keydown", closeHandler_SelList);
 
 function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionLabel) {
 	var selListPanel = $("#" + selListPanelId);
@@ -30,7 +32,9 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 		slSelectAll.css("display", "none");
 	}
 
-	slTitle.focusin(function (event) {
+	slTitle.on("focus click", function (event) {
+		console.log("slTitle.on");
+
 		closeHandler_SelList(event);
 		slDropDown.css({
 			"display": "inline",
@@ -38,14 +42,17 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 			"top": $(slOpener).position().top + $(slOpener).outerHeight(true)
 		});
 		lastOpenedSelList = slDropDown;
-		preventEvent(event)
+
+		preventEvent(event);
 	});
 
-	slDropDown.bind('focusin mouseup', function (event) {
+	slDropDown.on("click keydown", function (event) {
 		preventEvent(event);
 	});
 
 	slOpener.click(function (event) {
+		console.log("slOpener.click", event);
+
 		closeHandler_SelList(event);
 		slDropDown.css({
 			"display": "inline",
@@ -53,6 +60,12 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 			"top": $(slOpener).position().top + $(slOpener).outerHeight(true)
 		});
 		lastOpenedSelList = slDropDown;
+
+		preventEvent(event);
+	});
+
+	slOpener.keydown(function (event) {
+		preventEvent(event);
 	});
 
 	slFilter.keydown(function (event) {
@@ -70,30 +83,43 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 	});
 
 	if (isEnabled) {
-		slChoices.find("input[type='radio']").bind('change', function (event) {
+		slChoices.find("input[type='radio']").on('change', function (event) {
 			slTitle.val(slChoices.find('label[for="' + event.target.id + '"]:first').html());
 		});
 
-		slChoices.find("input[type='checkbox']").bind('change', function (event) {
+		slChoices.find("input[type='checkbox']").on('change', function (event) {
 			var nos = slDropDown.find('input:checked').size();
-			if (nos > 0)
+			if (nos > 0) {
 				slTitle.val(nos + " " + noOfSelectionLabel);
-			else
+			} else {
 				slTitle.val(selectLabel);
+			}
 		});
 
-		slSelectAll.click(function () {
+		slSelectAll.click(function (event) {
+			console.log("slSelectAll.click");
+
 			var checkboxes = slDropDown.find("tr:visible").find("input[type='checkbox']").prop("checked", true);
 			slTitle.val(checkboxes.size() + " " + noOfSelectionLabel);
+
+			preventEvent(event);
+			event.preventDefault();
 		});
 
-		slClear.click(function () {
+		slClear.click(function (event) {
+			console.log("slClear.click");
+
 			slDropDown.find("input[type='checkbox']").prop("checked", false);
 			slDropDown.find("input[type='radio']").prop("checked", false);
 			slTitle.val(selectLabel);
+
+			preventEvent(event);
+			event.preventDefault();
 		});
 
-		slShowFiltered.click(function () {
+		slShowFiltered.click(function (event) {
+			console.log("slShowFiltered.click");
+
 			if (!$(this).attr("clicked")) {
 				slChoices.find("input:not(:checked)").parentsUntil("tr").parent().css("display", "none");
 				$(this).attr("clicked", "t");
@@ -101,13 +127,21 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 				$(this).attr("clicked", null);
 				slChoices.find("input:not(:checked)").parentsUntil("tr").parent().css("display", "");
 			}
+
+			preventEvent(event);
+			event.preventDefault();
 		});
 	}
 }
 
 function preventEvent(event) {
-	if (event.stopPropagation)
+	if (event.stopPropagation) {
 		event.stopPropagation();
-	else
+	} else {
 		event.cancelBubble = true;
+	}
+
+	if (event.preventBubble) {
+		event.preventBubble();
+	}
 }

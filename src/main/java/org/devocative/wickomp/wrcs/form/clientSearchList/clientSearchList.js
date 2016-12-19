@@ -8,7 +8,7 @@ function initClientSearchableList(selListPanelId) {
 	// NOTE: the parent of popup-div must have relative position, so on parent scroll, popup-div also moves up/down!
 	selListPanel.css("position", "relative");
 
-	slTitle.focusin(function (event) {
+	slTitle.on("focus click", function (event) {
 		closeHandler_SelList(event);
 		slDropDown.css({
 			"display": "inline",
@@ -16,10 +16,11 @@ function initClientSearchableList(selListPanelId) {
 			"top": $(slTable).position().top + $(slTable).outerHeight(true)
 		});
 		lastOpenedSelList = slDropDown;
+
 		preventEvent(event)
 	});
 
-	slDropDown.bind('focusin mouseup', function (event) {
+	slDropDown.on("click keydown", function (event) {
 		preventEvent(event);
 	});
 
@@ -31,6 +32,12 @@ function initClientSearchableList(selListPanelId) {
 			"top": $(slTable).position().top + $(slTable).outerHeight(true)
 		});
 		lastOpenedSelList = slDropDown;
+
+		preventEvent(event);
+	});
+
+	slOpener.keydown(function (event) {
+		preventEvent(event);
 	});
 
 	//overwrite the CSS 120px value

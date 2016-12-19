@@ -185,9 +185,9 @@ public class FormPage extends BasePage {
 		map.put("orderedPerson", new ArrayList<>(personVOs.subList(4, 8)));
 
 		// Multiple
-		//map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
+		map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
 		// Single
-		map.put("kvList", new KeyValueVO<>("A", "A"));
+//		map.put("kvList", new KeyValueVO<>("A", "A"));
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 
@@ -208,7 +208,7 @@ public class FormPage extends BasePage {
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), oCode));
-		form.add(new WClientSearchableListInput("kvList", false) {
+		form.add(new WClientSearchableListInput("kvList", true) {
 			private static final long serialVersionUID = 4542301240930720140L;
 
 			{

@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WPanel;
+import org.devocative.wickomp.form.WSelectionInput;
 import org.devocative.wickomp.formatter.OBooleanFormatter;
 import org.devocative.wickomp.formatter.ODateFormatter;
 import org.devocative.wickomp.formatter.ONumberFormatter;
@@ -23,6 +24,7 @@ import org.devocative.wickomp.html.window.WModalWindow;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.vo.PersonVO;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SelectionPanel extends WPanel implements IGridDataSource<PersonVO> {
@@ -45,6 +47,8 @@ public class SelectionPanel extends WPanel implements IGridDataSource<PersonVO> 
 		});
 
 		WebMarkupContainer west = new WebMarkupContainer("west");
+
+		west.add(new WSelectionInput("selection", new Model(), Arrays.asList("A", "B"), true));
 
 		WEasyLayout layout = new WEasyLayout("layout");
 		layout.setWest(west);
