@@ -43,8 +43,9 @@ function initClientSearchableList(selListPanelId) {
 	//overwrite the CSS 120px value
 	slTitle.css("width", "100px");
 
-	selListPanel.closest("form").bind("reset", function () {
-		slDropDown.find("table:first").html(slTitle.data("oldContent"));
+	selListPanel.closest("form").on("reset", function () {
+		//console.log("ClientSearch: Reset", slTitle.data("oldContent"));
+		slDropDown.html(slTitle.data("oldContent"));
 	});
 }
 
@@ -78,7 +79,7 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 
 			holder.append(tr);
 		}
-		holder.find("input").bind('change', function (event) {
+		holder.find("input").on('change', function (event) {
 			var nos = holder.find('input:checked').size();
 			title.val(nos);
 		});
@@ -87,7 +88,8 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 	}
 
 	if (title.data("oldContent") == undefined) {
-		title.data("oldContent", holder.html());
+		//console.log("ClientSearch: First!");
+		title.data("oldContent", holder[0].outerHTML);
 	}
 	if (modalWindowId) {
 		$('#' + modalWindowId).window('close');

@@ -151,25 +151,28 @@ public abstract class WClientSearchableListInput extends WLabeledFormInputPanel 
 		StringBuilder builder = new StringBuilder();
 		builder.append(String.format("initClientSearchableList('%s');", getMarkupId()));
 
+		List objectRows;
 		Object modelObject = getModelObject();
 		if (modelObject != null) {
-			List objectRows;
 			if (multipleSelection) {
 				objectRows = (List) modelObject;
 			} else {
 				objectRows = Collections.singletonList(modelObject);
 			}
-			String rows = WebUtil.toJson(createClientOptions(objectRows));
-			builder.append(String.format(
-					"handleClientSearchableList(null, '%s', '%s', '%s', %s, %s);",
-					getInputName(),
-					result.getMarkupId(),
-					title.getMarkupId(),
-					rows,
-					multipleSelection
-				)
-			);
+		} else {
+			objectRows = Collections.emptyList();
 		}
+
+		String rows = WebUtil.toJson(createClientOptions(objectRows));
+		builder.append(String.format(
+				"handleClientSearchableList(null, '%s', '%s', '%s', %s, %s);",
+				getInputName(),
+				result.getMarkupId(),
+				title.getMarkupId(),
+				rows,
+				multipleSelection
+			)
+		);
 
 		WebUtil.writeJQueryCall(builder.toString(), false);
 	}
