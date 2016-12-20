@@ -46,6 +46,11 @@ function initClientSearchableList(selListPanelId) {
 	selListPanel.closest("form").on("reset", function () {
 		//console.log("ClientSearch: Reset", slTitle.data("oldContent"));
 		slDropDown.html(slTitle.data("oldContent"));
+
+		slDropDown.find("input").on('change', function (event) {
+			var nos = slDropDown.find('input:checked').size();
+			slTitle.val(nos);
+		});
 	});
 }
 
