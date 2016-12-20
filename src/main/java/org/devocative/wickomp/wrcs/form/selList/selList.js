@@ -33,8 +33,6 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 	}
 
 	slTitle.on("focus click", function (event) {
-		console.log("slTitle.on");
-
 		closeHandler_SelList(event);
 		slDropDown.css({
 			"display": "inline",
@@ -51,8 +49,6 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 	});
 
 	slOpener.click(function (event) {
-		console.log("slOpener.click", event);
-
 		closeHandler_SelList(event);
 		slDropDown.css({
 			"display": "inline",
@@ -97,8 +93,6 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 		});
 
 		slSelectAll.click(function (event) {
-			console.log("slSelectAll.click");
-
 			var checkboxes = slDropDown.find("tr:visible").find("input[type='checkbox']").prop("checked", true);
 			slTitle.val(checkboxes.size() + " " + noOfSelectionLabel);
 
@@ -107,8 +101,6 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 		});
 
 		slClear.click(function (event) {
-			console.log("slClear.click");
-
 			slDropDown.find("input[type='checkbox']").prop("checked", false);
 			slDropDown.find("input[type='radio']").prop("checked", false);
 			slTitle.val(selectLabel);
@@ -118,8 +110,6 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 		});
 
 		slShowFiltered.click(function (event) {
-			console.log("slShowFiltered.click");
-
 			if (!$(this).attr("clicked")) {
 				slChoices.find("input:not(:checked)").parentsUntil("tr").parent().css("display", "none");
 				$(this).attr("clicked", "t");
