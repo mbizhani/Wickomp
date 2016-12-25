@@ -10,7 +10,7 @@ import java.util.Map;
 public class HeaderBehavior extends EasyUIBehavior {
 	private static final long serialVersionUID = 2448549737676497644L;
 
-	private static HeaderItem LOG_JS = Resource.getCommonJS("main/wLog.js");
+	private static HeaderItem LOG_JS = Resource.getCommonJS("main/wLogger.js");
 	private static HeaderItem MSG_JS = Resource.getCommonJS("main/wMsg.js");
 
 	private static final Map<String, HeaderItem> HEADER_ITEM_MAP = new HashMap<>();
