@@ -26,19 +26,21 @@ public class TabbedPage extends BasePage {
 			public void onClick(AjaxRequestTarget target) {
 				no++;
 				if (no % 3 != 0) {
-					tabs.addTab(target, new Label(WTabbedPanel.TAB_ID, UUID.randomUUID().toString()), new OTab(new Model<>("T-" + no), true));
+					tabs.addTab(target, new Label(tabs.getTabContentId(), UUID.randomUUID().toString()), new OTab(new Model<>("T-" + no), true));
 				} else {
-					tabs.addTab(target, new SelectionPanel(WTabbedPanel.TAB_ID), new Model<>("T-" + no));
+					tabs.addTab(target, new SelectionPanel(tabs.getTabContentId()), new Model<>("T-" + no));
 				}
 
-				/*tabs.addTab(new OTab(new Label(WTabbedPanel.TAB_ID, UUID.randomUUID().toString()), new Model<>("T-" + no)).setClosable(true));
-				target.add(tabs);*/
+				/*
+				tabs.addTab(new OTab(new Label(WTabbedPanel.TAB_ID, UUID.randomUUID().toString()), new Model<>("T-" + no)).setClosable(true));
+				target.add(tabs);
+				*/
 			}
 		});
 
 		tabs = new WTabbedPanel("tabs");
-		tabs.addTab(new Label(WTabbedPanel.TAB_ID, "Salam"), new Model<>("A"));
-		tabs.addTab(new Label(WTabbedPanel.TAB_ID, "How r u?"), new Model<>("B"));
+		tabs.addTab(new Label(tabs.getTabContentId(), "Salam"), new Model<>("A"));
+		tabs.addTab(new Label(tabs.getTabContentId(), "How r u?"), new Model<>("B"));
 
 		add(tabs);
 	}

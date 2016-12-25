@@ -2,46 +2,59 @@ package org.devocative.wickomp.html.tab;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.IRequestParameters;
 import org.devocative.adroit.ObjectUtil;
-import org.devocative.wickomp.WPanel;
+import org.devocative.wickomp.WJqCallbackPanel;
 import org.devocative.wickomp.WebUtil;
-import org.devocative.wickomp.wrcs.MainBehavior;
+import org.devocative.wickomp.opt.OLayoutDirection;
+import org.devocative.wickomp.wrcs.HeaderBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class WTabbedPanel extends WPanel {
+public class WTabbedPanel extends WJqCallbackPanel {
 	private static final long serialVersionUID = -6158080713080205336L;
 	private static final Logger logger = LoggerFactory.getLogger(WTabbedPanel.class);
-
-	public static final String TAB_ID = "tab";
 
 	// ------------------------------
 
 	private RepeatingView tabs;
-	private WebMarkupContainer tabbedPanel;
-	private AbstractDefaultAjaxBehavior callbackAjaxBehavior;
 
+	private OTabbedPanel oTabbedPanel;
 	private List<OTab> oTabList = new ArrayList<>();
 	private transient List<Component> tabsList = new ArrayList<>();
 
 	// ------------------------------
 
 	public WTabbedPanel(String id) {
-		super(id);
+		this(id, new OTabbedPanel());
+	}
 
-		setOutputMarkupId(true);
-		add(new MainBehavior());
+	// Main Constructor
+	public WTabbedPanel(String id, OTabbedPanel oTabbedPanel) {
+		super(id, oTabbedPanel);
+
+		this.oTabbedPanel = oTabbedPanel;
+
+		add(new HeaderBehavior("main/wTabbedPanel.js").setNeedEasyUI(true));
 	}
 
 	// ------------------------------
+
+	public String getTabContentId() {
+		return "tab";
+	}
+
+	public OTabbedPanel getOptions() {
+		return oTabbedPanel;
+	}
 
 	public WTabbedPanel addTab(Component tab, IModel<String> title) {
 		return addTab(tab, new OTab(title, false));
@@ -60,19 +73,15 @@ public class WTabbedPanel extends WPanel {
 	public WTabbedPanel addTab(AjaxRequestTarget target, Component tab, OTab oTab) {
 		oTabList.add(oTab);
 
-		WebMarkupContainer newTab = appendTab(tab, oTab);
-		StringBuilder opt = new StringBuilder();
-		opt.append("{")
-			.append("htmlId:'").append(newTab.getMarkupId()).append("'")
-			.append(",title:'").append(oTab.getTitle().getObject()).append("'");
-		if (ObjectUtil.isTrue(oTab.getClosable())) {
-			opt.append(",closable:").append(oTab.getClosable());
-		}
-		opt.append("}");
+		WebMarkupContainer newTab = appendTab(tab);
+		oTab.setHtmlId(newTab.getMarkupId());
+
 		target.prependJavaScript(
 			String.format("$('#%s').wTabbedPanel('add', %s);",
-				tabbedPanel.getMarkupId(),
-				opt.toString()));
+				getMarkupId(),
+				WebUtil.toJson(oTab)
+			)
+		);
 		target.add(newTab);
 
 		return this;
@@ -80,53 +89,63 @@ public class WTabbedPanel extends WPanel {
 
 	// ------------------------------
 
+	protected List<OTab> getTabList() {
+		return Collections.unmodifiableList(oTabList);
+	}
+
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
-
-		tabbedPanel = new WebMarkupContainer("tabbedPanel");
-		tabbedPanel.setOutputMarkupId(true);
-		add(tabbedPanel);
 
 		tabs = new RepeatingView("tabs");
 		for (int i = 0; i < oTabList.size(); i++) {
 			appendTab(tabsList.get(i), oTabList.get(i));
 		}
-		tabbedPanel.add(tabs);
+		add(tabs);
 
-		callbackAjaxBehavior = new AbstractDefaultAjaxBehavior() {
-			private static final long serialVersionUID = 7824230483172079039L;
-
-			@Override
-			protected void respond(AjaxRequestTarget target) {
-				Integer index = getRequest().getRequestParameters().getParameterValue("index").toOptionalInteger();
-				logger.debug("WTabbedPanel.TabClosed: index=[{}]", index);
-				if (index != null) {
-					OTab removed = oTabList.remove(index.intValue());
-					logger.debug("WTabbedPanel.TabClosed: removed=[{}] oTabList={}", removed, oTabList);
-				}
-			}
-		};
-		add(callbackAjaxBehavior);
+		if (oTabbedPanel.getTabPosition() != null && oTabbedPanel.getTabPosition() == OTabbedPanel.OPosition.side) {
+			oTabbedPanel.setTabPosition(
+				getUserPreference().getLayoutDirection() == OLayoutDirection.LTR ?
+					OTabbedPanel.OPosition.left :
+					OTabbedPanel.OPosition.right);
+		}
 	}
 
 	@Override
-	protected void onAfterRender() {
-		super.onAfterRender();
+	protected void onRequest(IRequestParameters parameters) {
+		Integer index = getRequest().getRequestParameters().getParameterValue("index").toOptionalInteger();
+		logger.debug("WTabbedPanel.TabClosed: index=[{}]", index);
+		if (index != null) {
+			OTab removed = oTabList.remove(index.intValue());
+			logger.debug("WTabbedPanel.TabClosed: removed=[{}] oTabList={}", removed, oTabList);
+			AjaxRequestTarget target = createAjaxResponse();
+			onTabClose(target, removed);
+		} else {
+			sendJSONResponse("");
+		}
+	}
 
-		String script = String.format("$('#%s').wTabbedPanel({url:'%s'});",
-			tabbedPanel.getMarkupId(),
-			callbackAjaxBehavior.getCallbackUrl());
-		WebUtil.writeJQueryCall(script, true);
+	@Override
+	protected String getJQueryFunction() {
+		return "wTabbedPanel";
+	}
+
+	protected void onTabClose(AjaxRequestTarget target, OTab closedTab) {
 	}
 
 	// ------------------------------
 
+	private WebMarkupContainer appendTab(Component tab) {
+		return appendTab(tab, null);
+	}
+
 	private WebMarkupContainer appendTab(Component tab, OTab oTab) {
 		WebMarkupContainer tabContainer = new WebMarkupContainer(tabs.newChildId());
-		tabContainer.add(new AttributeModifier("title", oTab.getTitle()));
-		if (ObjectUtil.isTrue(oTab.getClosable())) {
-			tabContainer.add(new AttributeModifier("closable", "true"));
+		if (oTab != null) {
+			tabContainer.add(new AttributeModifier("title", oTab.getTitle()));
+			if (ObjectUtil.isTrue(oTab.getClosable())) {
+				tabContainer.add(new AttributeModifier("closable", "true"));
+			}
 		}
 		tabContainer.add(tab);
 		tabs.add(tabContainer);

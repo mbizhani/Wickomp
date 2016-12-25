@@ -1,6 +1,10 @@
 package org.devocative.wickomp.html.tab;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.apache.wicket.model.IModel;
+import org.devocative.wickomp.json.JsonUseProperty;
+import org.devocative.wickomp.json.UsePropertySerializer;
 import org.devocative.wickomp.opt.Options;
 
 public class OTab extends Options {
@@ -8,6 +12,9 @@ public class OTab extends Options {
 
 	private IModel<String> title;
 	private Boolean closable;
+
+	private String htmlId;
+	private String tabId;
 
 	// ------------------------------
 
@@ -19,6 +26,8 @@ public class OTab extends Options {
 
 	// ------------------------------
 
+	@JsonUseProperty("object")
+	@JsonSerialize(using = UsePropertySerializer.class)
 	public IModel<String> getTitle() {
 		return title;
 	}
@@ -27,8 +36,23 @@ public class OTab extends Options {
 		return closable;
 	}
 
-	public OTab setClosable(Boolean closable) {
-		this.closable = closable;
+
+	public String getHtmlId() {
+		return htmlId;
+	}
+
+	public OTab setHtmlId(String htmlId) {
+		this.htmlId = htmlId;
+		return this;
+	}
+
+	@JsonIgnore
+	public String getTabId() {
+		return tabId;
+	}
+
+	public OTab setTabId(String tabId) {
+		this.tabId = tabId;
 		return this;
 	}
 
