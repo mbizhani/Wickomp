@@ -12,6 +12,7 @@ import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.async.AsyncToken;
 import org.devocative.wickomp.async.IAsyncRequestHandler;
 import org.devocative.wickomp.page.HomePage;
+import org.devocative.wickomp.page.MountedPage;
 import org.devocative.wickomp.vo.EmployeeVO;
 import org.devocative.wickomp.vo.PersonVO;
 
@@ -194,6 +195,8 @@ public class WickompApplication extends WebApplication {
 				}.start();
 			}
 		});
+
+		mountPage("/mount", MountedPage.class);
 	}
 
 	@Override

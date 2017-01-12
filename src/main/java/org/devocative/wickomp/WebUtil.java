@@ -109,35 +109,48 @@ public class WebUtil {
 	// Main toMap with IRequestParameters
 	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam, List<String> ignoreParams, boolean ignoreEmptyValue, List<String> ignoreValues) {
 		Map<String, List<String>> result = new HashMap<>();
+
+		if(lowercaseParam && !ignoreParams.isEmpty()) {
+			List<String> list = new ArrayList<>();
+			for (String ignoreParam : ignoreParams) {
+				list.add(ignoreParam.toLowerCase());
+			}
+			ignoreParams = list;
+		}
+
 		for (String param : parameters.getParameterNames()) {
+			List<StringValue> parameterValues = parameters.getParameterValues(param);
+
 			if (lowercaseParam) {
 				param = param.toLowerCase();
 			}
 
-			List<StringValue> parameterValues = parameters.getParameterValues(param);
-
-			if (parameterValues == null || ignoreParams.contains(param)) {
+			if (ignoreParams.contains(param)) {
 				continue;
 			}
 
 			List<String> values = new ArrayList<>();
 
-			for (StringValue stringValue : parameterValues) {
-				if (ignoreValues.contains(stringValue.toString())) {
+			for (StringValue paramValue : parameterValues) {
+				if (ignoreValues.contains(paramValue.toString())) {
 					continue;
 				}
 
 				if (ignoreEmptyValue) {
-					if (!stringValue.isNull() && !stringValue.isEmpty()) {
-						values.add(stringValue.toString());
+					if (!paramValue.isEmpty()) {
+						values.add(paramValue.toString());
 					}
 				} else {
-					values.add(stringValue.toString());
+					values.add(paramValue.toString());
 				}
 			}
 
 			if (values.size() > 0) {
-				result.put(param, values);
+				if (!result.containsKey(param)) {
+					result.put(param, values);
+				} else {
+					result.get(param).addAll(values);
+				}
 			}
 		}
 		return result;
