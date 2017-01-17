@@ -21,6 +21,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.devocative.adroit.AdroitList;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -89,47 +90,47 @@ public class WebUtil {
 
 	// ---------------
 
-	public static Map<String, List<String>> toMap(boolean lowercaseParam, boolean ignoreEmpty) {
-		return toMap(lowercaseParam, Collections.<String>emptyList(), ignoreEmpty, Collections.<String>emptyList());
+	public static Map<String, List<String>> toMap(boolean ignoreCase, boolean ignoreEmpty) {
+		return toMap(ignoreCase, Collections.<String>emptyList(), ignoreEmpty, Collections.<String>emptyList());
 	}
 
-	public static Map<String, List<String>> toMap(boolean lowercaseParam, boolean ignoreEmpty, List<String> ignoreValues) {
-		return toMap(lowercaseParam, Collections.<String>emptyList(), ignoreEmpty, ignoreValues);
+	public static Map<String, List<String>> toMap(boolean ignoreCase, boolean ignoreEmpty, List<String> ignoreValues) {
+		return toMap(ignoreCase, Collections.<String>emptyList(), ignoreEmpty, ignoreValues);
 	}
 
-	public static Map<String, List<String>> toMap(boolean lowercaseParam, List<String> ignoreParams, boolean ignoreEmpty) {
-		return toMap(lowercaseParam, ignoreParams, ignoreEmpty, Collections.<String>emptyList());
+	public static Map<String, List<String>> toMap(boolean ignoreCase, List<String> ignoreParams, boolean ignoreEmpty) {
+		return toMap(ignoreCase, ignoreParams, ignoreEmpty, Collections.<String>emptyList());
 	}
 
 	// Main toMap without IRequestParameters
-	public static Map<String, List<String>> toMap(boolean lowercaseParam, List<String> ignoreParams, boolean ignoreEmpty, List<String> ignoreValues) {
-		return toMap(getRequestParameters(), lowercaseParam, ignoreParams, ignoreEmpty, ignoreValues);
+	public static Map<String, List<String>> toMap(boolean ignoreCase, List<String> ignoreParams, boolean ignoreEmpty, List<String> ignoreValues) {
+		return toMap(getRequestParameters(), ignoreCase, ignoreParams, ignoreEmpty, ignoreValues);
 	}
 
 	// Main toMap with IRequestParameters
-	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean lowercaseParam, List<String> ignoreParams, boolean ignoreEmptyValue, List<String> ignoreValues) {
-		Map<String, List<String>> result = new HashMap<>();
+	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean ignoreCase, List<String> ignoreParams, boolean ignoreEmptyValue, List<String> ignoreValues) {
+		Map<String, List<String>> result = ignoreCase ?
+			new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER) :
+			new HashMap<String, List<String>>();
 
-		if(lowercaseParam && !ignoreParams.isEmpty()) {
-			List<String> list = new ArrayList<>();
-			for (String ignoreParam : ignoreParams) {
-				list.add(ignoreParam.toLowerCase());
-			}
-			ignoreParams = list;
+		if (ignoreCase) {
+			ignoreParams = new AdroitList<>(ignoreParams)
+				.setComparator(String.CASE_INSENSITIVE_ORDER);
+
+			ignoreValues = new AdroitList<>(ignoreValues)
+				.setComparator(String.CASE_INSENSITIVE_ORDER);
 		}
 
 		for (String param : parameters.getParameterNames()) {
 			List<StringValue> parameterValues = parameters.getParameterValues(param);
 
-			if (lowercaseParam) {
-				param = param.toLowerCase();
-			}
-
 			if (ignoreParams.contains(param)) {
 				continue;
 			}
 
-			List<String> values = new ArrayList<>();
+			List<String> values = ignoreCase ?
+				new AdroitList<>(String.CASE_INSENSITIVE_ORDER) :
+				new ArrayList<String>();
 
 			for (StringValue paramValue : parameterValues) {
 				if (ignoreValues.contains(paramValue.toString())) {
@@ -146,38 +147,48 @@ public class WebUtil {
 			}
 
 			if (values.size() > 0) {
-				if (!result.containsKey(param)) {
-					result.put(param, values);
-				} else {
+				if (result.containsKey(param)) {
 					result.get(param).addAll(values);
+				} else {
+					result.put(param, values);
 				}
 			}
 		}
 		return result;
 	}
 
-	public static Map<String, List<String>> toMap(String paramsAsUrl, boolean lowercaseParam, boolean ignoreEmpty) {
-		Map<String, List<String>> result = new HashMap<>();
+	public static Map<String, List<String>> toMap(String paramsAsUrl, boolean ignoreCase, boolean ignoreEmpty) {
+		Map<String, List<String>> result = ignoreCase ?
+			new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER) :
+			new HashMap<String, List<String>>();
 
 		String[] paramValueArr = paramsAsUrl.split("[&]");
 
 		for (String paramValue : paramValueArr) {
 			int i = paramValue.indexOf('=');
 			if (i > 0) {
-				String param = paramValue.substring(0, i).trim();
-				String value = paramValue.substring(i + 1).trim();
-
-				if (lowercaseParam) {
-					param = param.toLowerCase();
-				}
+				String param = paramValue.substring(0, i);
+				String value = paramValue.substring(i + 1);
 
 				if (!result.containsKey(param)) {
-					result.put(param, new ArrayList<String>());
+					ArrayList<String> list = ignoreCase ?
+						new AdroitList<>(String.CASE_INSENSITIVE_ORDER) :
+						new ArrayList<String>();
+					result.put(param, list);
 				}
 
 				List<String> values = result.get(param);
-				if (ignoreEmpty || !value.isEmpty()) {
+				if (!ignoreEmpty || !value.isEmpty()) {
 					values.add(value);
+				}
+			}
+		}
+
+		if (ignoreEmpty) {
+			HashSet<String> keys = new HashSet<>(result.keySet());
+			for (String key : keys) {
+				if (result.get(key).size() == 0) {
+					result.remove(key);
 				}
 			}
 		}
@@ -186,32 +197,37 @@ public class WebUtil {
 
 	// ---------------
 
-	public static Set<String> toSet(boolean lowercaseParam) {
-		return toSet(getRequestParameters(), lowercaseParam);
+	public static Set<String> toSet(boolean ignoreCase) {
+		return toSet(getRequestParameters(), ignoreCase);
 	}
 
-	public static Set<String> toSet(IRequestParameters parameters, boolean lowercaseParam) {
-		Set<String> result = new HashSet<>();
+	public static Set<String> toSet(IRequestParameters parameters, boolean ignoreCase) {
+		Set<String> result = ignoreCase ?
+			new TreeSet<>(String.CASE_INSENSITIVE_ORDER) :
+			new HashSet<String>();
+
 		for (String param : parameters.getParameterNames()) {
-			result.add(lowercaseParam ? param.toLowerCase() : param);
+			result.add(param);
 		}
 		return result;
 	}
 
 	// ---------------
 
-	public static List<String> listOf(String param, boolean lowercaseValues) {
-		return listOf(getRequestParameters(), param, lowercaseValues);
+	public static List<String> listOf(String param, boolean ignoreCase) {
+		return listOf(getRequestParameters(), param, ignoreCase);
 	}
 
-	public static List<String> listOf(IRequestParameters parameters, String param, boolean lowercaseValues) {
-		List<String> result = new ArrayList<>();
+	public static List<String> listOf(IRequestParameters parameters, String param, boolean ignoreCase) {
+		List<String> result = ignoreCase ?
+			new AdroitList<>(String.CASE_INSENSITIVE_ORDER) :
+			new ArrayList<String>();
 
 		List<StringValue> parameterValues = parameters.getParameterValues(param);
 		if (parameterValues != null && parameterValues.size() > 0) {
 			for (StringValue parameterValue : parameterValues) {
 				if (!parameterValue.isEmpty()) {
-					result.add(lowercaseValues ? parameterValue.toString().toLowerCase() : parameterValue.toString());
+					result.add(parameterValue.toString());
 				}
 			}
 		}
