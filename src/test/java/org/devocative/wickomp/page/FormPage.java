@@ -95,7 +95,7 @@ public class FormPage extends BasePage {
 
 					case Integer:
 						fc = new WNumberInput(field.getName(), Long.class)
-							.setThousandSeparator(',')
+							.removeThousandSeparator()
 							.setRequired(true);
 						break;
 

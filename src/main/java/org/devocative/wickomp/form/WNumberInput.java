@@ -40,7 +40,7 @@ public class WNumberInput extends WLabeledFormInputPanel<Number> {
 		numberField.setOutputMarkupId(true);
 		add(numberField);
 
-		//options.put("aSep", "");
+		options.put("aSep", ",");
 		options.put("mDec", "0");
 
 		add(new CommonBehavior());
@@ -54,7 +54,9 @@ public class WNumberInput extends WLabeledFormInputPanel<Number> {
 	}
 
 	public WNumberInput setThousandSeparator(Character thousandSeparator) {
-		options.put("aSep", thousandSeparator);
+		if (thousandSeparator != null) {
+			options.put("aSep", thousandSeparator);
+		}
 		return this;
 	}
 
@@ -69,6 +71,11 @@ public class WNumberInput extends WLabeledFormInputPanel<Number> {
 	}
 
 	// ------------------------------
+
+	public WNumberInput removeThousandSeparator() {
+		options.put("aSep", "");
+		return this;
+	}
 
 	@Override
 	public WNumberInput add(Behavior... behavior) {
@@ -86,7 +93,7 @@ public class WNumberInput extends WLabeledFormInputPanel<Number> {
 	public void convertInput() {
 		String convertedInput = numberField.getConvertedInput();
 		if (convertedInput != null) {
-			if (options.get("aSep") != null) {
+			if (!options.get("aSep").toString().isEmpty()) {
 				String reg = String.format("[%s]", options.get("aSep"));
 				convertedInput = convertedInput.replaceAll(reg, "");
 			}
