@@ -238,6 +238,16 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return getSelectionJSFunc(null);
 	}
 
+	@JsonRawValue
+	public String getOnSelectAll() {
+		return getSelectionJSFunc(null);
+	}
+
+	@JsonRawValue
+	public String getOnUnselectAll() {
+		return getSelectionJSFunc(null);
+	}
+
 	// ---------------------- PUBLIC METHODS
 
 	@JsonIgnore

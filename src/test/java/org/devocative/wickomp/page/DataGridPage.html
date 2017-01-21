@@ -24,7 +24,7 @@
 		var intrvl;
 
 		Wicket.Event.subscribe("/websocket/open", function (jqEvent, message) {
-			alert('WS Opened!');
+			//alert('WS Opened!');
 			intrvl = setInterval(pingServer, 4.5 * 60 * 1000);
 		});
 

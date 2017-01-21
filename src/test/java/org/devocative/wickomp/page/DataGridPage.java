@@ -166,8 +166,9 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 			.setIdField("col02")
 			.setColumns(columns)
 			.setMultiSort(true)
+			.setSingleSelect(false)
 			.setSelectionIndicator(true)
-			.setSelectionJSHandler("function(asd){alert(asd.toSource());}")
+			.setSelectionJSHandler("function(rows){alert(rows.toSource());}")
 			.setShowFooter(true)
 			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
 		;
@@ -270,7 +271,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 
 	@Override
 	public List<PersonVO> list(long first, long size, List<WSortField> sortFields) {
-		if (first == 3) {
+		if (first == 4) {
 			throw new RuntimeException("Test Exception!");
 		}
 		int start = (int) ((first - 1) * size);

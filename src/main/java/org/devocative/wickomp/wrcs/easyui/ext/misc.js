@@ -93,8 +93,25 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 					style: {right: '', bottom: ''}
 				});
 			}
+		},
+		{
+			width: 25,
+			iconCls: 'fa fa-eraser',
+			handler: function () {
+				grid.datagrid('clearSelections');
+			}
 		}
 	];
+
+	if (!grid.datagrid('options').singleSelect) {
+		butts.push({
+			width: 25,
+			iconCls: 'fa fa-bars',
+			handler: function () {
+				grid.datagrid('selectAll');
+			}
+		});
+	}
 
 	if (selectionHandler) {
 		if (enableDblClickSelection) {
@@ -115,7 +132,7 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 
 		butts.push({
 			width: 25,
-			iconCls: "fa fa-paper-plane-o",
+			iconCls: 'fa fa-paper-plane-o',
 			handler: function () {
 				handleSelection(grid, selectionHandler, grid.datagrid('getSelections'), true);
 			}
@@ -124,7 +141,7 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 		if (WickompDebugEnabled) {
 			butts.push({
 				width: 25,
-				iconCls: "fa fa-bug",
+				iconCls: 'fa fa-bug',
 				handler: function () {
 					handleSelection(grid, handleDebug, grid.datagrid('getSelections'), false);
 				}
@@ -135,10 +152,34 @@ function handleSelectionIndicator(gridId, selectionHandler, enableDblClickSelect
 	grid.datagrid('getPager').pagination({
 		buttons: butts
 	});
+
+	grid.datagrid('getPager').pagination().find('span.fa').closest('a.l-btn')
+		.each(function () {
+			var cls = $(this).find('span.fa').attr('class');
+			var title = "";
+			if (cls.indexOf('fa-check-square-o') > -1) {
+				title = 'انتخاب شده(ها)';
+			} else if (cls.indexOf('fa-eraser') > -1) {
+				title = 'حذف تمامی انتخاب شده(ها)';
+			} else if (cls.indexOf('fa-bars') > -1) {
+				title = 'انتخاب رکوردهای صفحه';
+			} else if (cls.indexOf('fa-paper-plane-o') > -1) {
+				title = 'ارسال';
+			} else if(cls.indexOf('fa-bug') > -1) {
+				title = 'نمایش آنچه ارسال می شود';
+			}
+			$(this).attr('title', title);
+		});
 }
 
 // private
 function handleSelection(grid, selectionHandler, selData, alertOnError) {
+
+	if (selData.length > 100) {
+		$.messager.alert('خطا', 'تا 100 رکورد امکان ارسال است');
+		return;
+	}
+
 	var idField = grid.datagrid('options')["returnField"];
 	if (!idField) {
 		idField = grid.datagrid('options')["idField"];
