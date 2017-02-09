@@ -4,16 +4,13 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.WebUtil;
+import org.devocative.wickomp.opt.OAnimation;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 public class WMessager {
-	public enum ShowType {slide, fade, show}
-
-	// ---------------
-
 	public static String getScript(String title, String message) {
 		return getScript(title, message, new OMessager());
 	}
@@ -88,16 +85,16 @@ public class WMessager {
 	// ------------------------------
 
 	public static class OMessager {
-		private ShowType showType = ShowType.show;
+		private OAnimation showType = OAnimation.show;
 		private boolean draggable = true;
 		private boolean resizable = true;
 		private boolean modal = false;
 
-		public ShowType getShowType() {
+		public OAnimation getShowType() {
 			return showType;
 		}
 
-		public OMessager setShowType(ShowType showType) {
+		public OMessager setShowType(OAnimation showType) {
 			this.showType = showType;
 			return this;
 		}
