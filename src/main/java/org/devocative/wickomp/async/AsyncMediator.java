@@ -41,6 +41,10 @@ public class AsyncMediator {
 		logger.info("AsyncMediator.registerHandler: {}", handlerId);
 	}
 
+	public static boolean hasHandler() {
+		return !HANDLERS_MAP.isEmpty();
+	}
+
 	public synchronized static void sendRequest(String handlerId, AsyncToken asyncToken, Object requestPayLoad) {
 		asyncToken.setHandlerId(handlerId);
 		HANDLERS_MAP.get(handlerId).onRequest(asyncToken, requestPayLoad);
