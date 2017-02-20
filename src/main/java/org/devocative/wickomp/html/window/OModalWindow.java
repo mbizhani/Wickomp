@@ -22,6 +22,7 @@ public class OModalWindow extends OComponent implements ICallbackUrl {
 	// ---------------
 
 	private String url;
+	private boolean callBackOnClose = false;
 
 	// ------------------------------
 
@@ -110,7 +111,7 @@ public class OModalWindow extends OComponent implements ICallbackUrl {
 
 	@JsonRawValue
 	public String getOnClose() {
-		return String.format("function(){Wicket.Ajax.get({u:'%s'});}", url);
+		return callBackOnClose ? String.format("function(){Wicket.Ajax.get({u:'%s'});}", url) : null;
 	}
 
 	// ------------------------------
@@ -118,5 +119,10 @@ public class OModalWindow extends OComponent implements ICallbackUrl {
 	@Override
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public OModalWindow setCallBackOnClose(boolean callBackOnClose) {
+		this.callBackOnClose = callBackOnClose;
+		return this;
 	}
 }

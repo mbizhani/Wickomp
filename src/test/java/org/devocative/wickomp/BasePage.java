@@ -38,6 +38,9 @@ public abstract class BasePage extends WebPage {
 				WMessager.show("Win", " Closed !@#$%^&*()_+}{[]'\";;::.,<>?//\\=+-", target);
 			}
 		};
+		window
+			.getOptions()
+			.setCallBackOnClose(true);
 		add(window);
 
 		add(new AjaxLink("showModal") {
