@@ -68,8 +68,8 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 	/**
 	 * DigestUtils.md5Hex(userName + ":" + realm + ":" + password);
 	 *
-	 * @param authBean
-	 * @return
+	 * param authBean
+	 * return
 	 */
 	protected abstract String generateUserHashForDigest(WHttpAuthBean authBean);
 
@@ -80,8 +80,8 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 	/**
 	 * quality of protection
 	 *
-	 * @param authBean
-	 * @return
+	 * param authBean
+	 * return
 	 */
 	protected String getQop(WHttpAuthBean authBean) {
 		return "auth";
@@ -109,8 +109,8 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 
 		EAuthResult authResult = authenticate(request, authBean);
 
-		logger.info("HttpAuthFilter: RemoteAddr=[{}] User=[{}] AuthResult=[{}]",
-			request.getRemoteAddr(), authBean.getUsername(), authResult);
+		logger.info("HttpAuthFilter: User=[{}] RemoteAddress=[{}] AuthResult=[{}] AuthMethod=[{}]",
+			authBean.getUsername(), request.getRemoteAddr(), authResult, authBean.getAuthMethod());
 
 		if (authResult == EAuthResult.Ok) {
 			WHttpServletRequest rqWrap = new WHttpServletRequest(request);
