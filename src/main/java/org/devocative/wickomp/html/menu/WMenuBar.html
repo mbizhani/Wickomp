@@ -2,14 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 
 <wicket:panel>
-    <ul wicket:id="menu" class="sm sm-rtl sm-clean"></ul>
+	<wicket:container wicket:id="toggleButton">
+		<input id="main-menu-state" type="checkbox"/>
+		<label class="main-menu-btn" for="main-menu-state">
+			<span class="main-menu-btn-icon"></span>
+		</label>
+	</wicket:container>
 
-    <wicket:fragment wicket:id="menuItemFragment">
-        <li wicket:id="menuItem">
-            <a wicket:id="link"></a>
-            <ul wicket:id="subMenuItem"></ul>
-        </li>
-    </wicket:fragment>
+	<ul wicket:id="menu" id="main-menu" class="sm sm-rtl sm-clean"></ul>
+
+	<wicket:fragment wicket:id="menuItemFragment">
+		<li wicket:id="menuItem">
+			<a wicket:id="link"></a>
+			<ul wicket:id="subMenuItem"></ul>
+		</li>
+	</wicket:fragment>
 </wicket:panel>
 
 </html>

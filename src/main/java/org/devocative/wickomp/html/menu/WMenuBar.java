@@ -5,6 +5,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -25,8 +26,16 @@ public class WMenuBar extends WPanel {
 	//	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-clean.css");
 	private static final HeaderItem CSS_THEME = Resource.getCommonCSS("menu/sm-mint.css");
 
+	private static final HeaderItem CSS_EXT = Resource.getCommonCSS("menu/sm-ext.css");
+	private static final HeaderItem JS_EXT = Resource.getCommonJS("menu/sm-ext.js");
+
+	// ------------------------------
+
 	private MenuItemFragment rootMenu;
 	private boolean contextRelativeLink = false;
+	private boolean enableToggleButton = true;
+
+	// ------------------------------
 
 	public WMenuBar(String id, List<OMenuItem> menuItems) {
 		super(id);
@@ -34,6 +43,8 @@ public class WMenuBar extends WPanel {
 		rootMenu.setOutputMarkupId(true);
 		add(rootMenu);
 	}
+
+	// ------------------------------
 
 	public boolean isContextRelativeLink() {
 		return contextRelativeLink;
@@ -44,10 +55,16 @@ public class WMenuBar extends WPanel {
 		return this;
 	}
 
-	protected Component newMenuItemLink(String compId, OMenuItem item) {
-		return new ExternalLink(compId, item.getHref(), item.getLabel().getObject())
-			.setContextRelative(contextRelativeLink);
+	public boolean isEnableToggleButton() {
+		return enableToggleButton;
 	}
+
+	public WMenuBar setEnableToggleButton(boolean enableToggleButton) {
+		this.enableToggleButton = enableToggleButton;
+		return this;
+	}
+
+	// ------------------------------
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
@@ -57,7 +74,14 @@ public class WMenuBar extends WPanel {
 		response.render(CSS_THEME);
 
 		response.render(JS);
+
+		if (enableToggleButton) {
+			response.render(CSS_EXT);
+			response.render(JS_EXT);
+		}
 	}
+
+	// ------------------------------
 
 	@Override
 	protected void onInitialize() {
@@ -67,9 +91,14 @@ public class WMenuBar extends WPanel {
 
 		if (OLayoutDirection.RTL.equals(userPreference.getLayoutDirection())) {
 			rootMenu.add(new AttributeModifier("class", "sm sm-rtl sm-mint"));
+			if (enableToggleButton) {
+				add(new AttributeModifier("style", "text-align:left"));
+			}
 		} else {
 			rootMenu.add(new AttributeModifier("class", "sm sm-mint"));
 		}
+
+		add(new WebMarkupContainer("toggleButton").setVisible(enableToggleButton));
 	}
 
 	@Override
@@ -80,6 +109,13 @@ public class WMenuBar extends WPanel {
 
 		WebUtil.writeJQueryCall(script, false);
 	}
+
+	protected Component newMenuItemLink(String compId, OMenuItem item) {
+		return new ExternalLink(compId, item.getHref(), item.getLabel().getObject())
+			.setContextRelative(contextRelativeLink);
+	}
+
+	// ------------------------------
 
 	private class MenuItemFragment extends Fragment {
 		private static final long serialVersionUID = 1870498696384296613L;
