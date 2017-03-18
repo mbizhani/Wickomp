@@ -24,8 +24,9 @@ public class WMessager {
 		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
 
 		return String.format(
-			"$.messager.show({title:'%s',msg:'%s',showType:'%s',timeout:0,width:400,height:300,style:{right:'',bottom:''},draggable:%s,resizable:%s,modal:%s});",
-			title, message, options.getShowType(), options.isDraggable(), options.isResizable(), options.isModal());
+			"$.messager.show({title:'%s',msg:'%s',showType:'%s',timeout:%d,width:'%s',height:'%s',style:{right:'',bottom:''},draggable:%s,resizable:%s,modal:%s});",
+			title, message, options.getShowType(), options.getTimeout(), options.getWidth(), options.getHeight(),
+			options.isDraggable(), options.isResizable(), options.isModal());
 	}
 
 	public static void writeErrorsInAfterRender(Component component) {
@@ -86,9 +87,12 @@ public class WMessager {
 
 	public static class OMessager {
 		private OAnimation showType = OAnimation.show;
+		private int timeout = 0;
 		private boolean draggable = true;
 		private boolean resizable = true;
 		private boolean modal = false;
+		private String width = "";
+		private String height = "";
 
 		public OAnimation getShowType() {
 			return showType;
@@ -96,6 +100,15 @@ public class WMessager {
 
 		public OMessager setShowType(OAnimation showType) {
 			this.showType = showType;
+			return this;
+		}
+
+		public int getTimeout() {
+			return timeout;
+		}
+
+		public OMessager setTimeout(int timeout) {
+			this.timeout = timeout;
 			return this;
 		}
 
@@ -123,6 +136,24 @@ public class WMessager {
 
 		public OMessager setModal(boolean modal) {
 			this.modal = modal;
+			return this;
+		}
+
+		public String getWidth() {
+			return width;
+		}
+
+		public OMessager setWidth(String width) {
+			this.width = width;
+			return this;
+		}
+
+		public String getHeight() {
+			return height;
+		}
+
+		public OMessager setHeight(String height) {
+			this.height = height;
 			return this;
 		}
 	}

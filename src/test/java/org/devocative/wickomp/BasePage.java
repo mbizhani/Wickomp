@@ -35,7 +35,8 @@ public abstract class BasePage extends WebPage {
 
 			@Override
 			protected void onClose(AjaxRequestTarget target) {
-				WMessager.show("Win", " Closed !@#$%^&*()_+}{[]'\";;::.,<>?//\\=+-", target);
+				WMessager.show("Win", " Closed !@#$%^&*()_+}{[]'\";;::.,<>?//\\=+-<br/>A<br/>A<br/>A<br/>A<br/>A<br/>A<br/>A<br/>A<br/>A<br/>A<br/>A",
+					new WMessager.OMessager().setTimeout(3000).setWidth("500"), target);
 			}
 		};
 		window
