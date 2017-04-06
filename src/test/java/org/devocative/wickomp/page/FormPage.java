@@ -146,6 +146,8 @@ public class FormPage extends BasePage {
 
 	private String sql;
 
+	final Map<String, Serializable> map = new HashMap<>();
+
 	private void simpleForm() {
 		List<KeyValue> list = new ArrayList<>();
 		list.add(new KeyValue("A", "Alef"));
@@ -175,7 +177,6 @@ public class FormPage extends BasePage {
 		List<PersonVO> personVOs = PersonVO.list();
 
 		final WSelectionInput child, parentSI;
-		final Map<String, Serializable> map = new HashMap<>();
 //		map.put("name", "Joe");
 		map.put("eduSingle", new KeyValue("A"));
 		map.put("eduMultiple", (Serializable) Arrays.asList(new KeyValue("A"), new KeyValue("D")));
@@ -194,6 +195,7 @@ public class FormPage extends BasePage {
 //		form.add(new WTextInput("name").setRequired(true).add(new WAsciiIdentifierValidator()));
 //		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$")));
 		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$", "name.format")));
+		form.add(new WTextInput("password", true));
 //		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$").setCustomMessage("oops!")));
 
 		//form.add(new WNumberRangeInput("age", Integer.class).setThousandSeparator(","));
@@ -233,15 +235,15 @@ public class FormPage extends BasePage {
 			}
 		}.setOpenModalLinkVisible(true));
 		form.add(new WOrderedListInput<>("orderedPerson", personVOs).setVisibleSize(10));
-//		form.add(new Button("save") {
-		form.add(new WAjaxButton("save") {
+
+		/*form.add(new Button("save") {
 			private static final long serialVersionUID = -8861063203041673554L;
 
 			public void onSubmit() {
 				theSubmit();
 			}
 
-			/*@Override
+			@Override
 			protected void onAfterRender() {
 				super.onAfterRender();
 				FeedbackMessagesModel feedbackMessagesModel = new FeedbackMessagesModel(this);
@@ -254,7 +256,12 @@ public class FormPage extends BasePage {
 					String st = WMessager.getScript("Err", WMessager.getHtml(errors));
 					getWebResponse().write(String.format("<script>$(function(){%s});</script>", st));
 				}
-			}*/
+			}
+
+		});*/
+
+		form.add(new WAjaxButton("save") {
+			private static final long serialVersionUID = -5778189211832263083L;
 
 			@Override
 			public void onSubmit(AjaxRequestTarget target) {
@@ -265,18 +272,8 @@ public class FormPage extends BasePage {
 			protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
 				WMessager.show(getString("label.error", null, "Error"), errors, target);
 			}
-
-			private void theSubmit() {
-				System.out.println("MAP {{");
-				for (Map.Entry<String, Serializable> entry : map.entrySet()) {
-					System.out.printf("\t%s = %s (%s)\n", entry.getKey(), entry.getValue(),
-						entry.getValue() != null ? entry.getValue().getClass().getName() : "-");
-				}
-				System.out.println("}}");
-
-				System.out.println("sql = " + sql);
-			}
 		});
+
 		west.add(form);
 
 		parentSI.addToChoices(new WSelectionInputAjaxUpdatingBehavior() {
@@ -290,5 +287,16 @@ public class FormPage extends BasePage {
 				));
 			}
 		});
+	}
+
+	private void theSubmit() {
+		System.out.println("MAP {{");
+		for (Map.Entry<String, Serializable> entry : map.entrySet()) {
+			System.out.printf("\t%s = %s (%s)\n", entry.getKey(), entry.getValue(),
+				entry.getValue() != null ? entry.getValue().getClass().getName() : "-");
+		}
+		System.out.println("}}");
+
+		System.out.println("sql = " + sql);
 	}
 }
