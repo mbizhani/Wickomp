@@ -1,5 +1,6 @@
 package org.devocative.wickomp.html;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -18,6 +19,8 @@ public class WFloatTable extends WebMarkupContainer {
 		super(id);
 
 		add(new CommonBehavior());
+		add(new AttributeModifier("class", "w-float-table"));
+
 		setOutputMarkupId(true);
 	}
 
@@ -38,10 +41,10 @@ public class WFloatTable extends WebMarkupContainer {
 		super.onAfterRender();
 
 		StringBuilder script = new StringBuilder()
-			.append(String.format("$('#%s').children().addClass('w-float-cell');", getMarkupId()))
-			.append(String.format("$('#%s').equalize('height')", getMarkupId()));
+			.append(String.format("$('#%s').children('div').addClass('w-float-cell');", getMarkupId()))
+			.append(String.format("$('#%s').equalize({children:'div.w-float-cell', equalize:'height'})", getMarkupId()));
 		if (equalWidth) {
-			script.append(".equalize('width')");
+			script.append(".equalize({children:'div.w-float-cell', equalize:'width'})");
 		}
 		script.append(";");
 

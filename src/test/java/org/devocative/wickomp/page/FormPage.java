@@ -66,11 +66,8 @@ public class FormPage extends BasePage {
 		map.put("name", "Joe%");
 		map.put("age", 123456);
 
-		Form<Map<String, Serializable>> dynamicForm = new Form<>("dynamicForm", new CompoundPropertyModel<>(map));
-
 		WFloatTable floatTable = new WFloatTable("floatTable");
-		dynamicForm.add(floatTable);
-
+		floatTable.setEqualWidth(true);
 		floatTable.add(new ListView<Field>("fields", fields) {
 			private static final long serialVersionUID = -6710943314522675829L;
 
@@ -121,7 +118,11 @@ public class FormPage extends BasePage {
 				item.add(view);
 			}
 		});
+		floatTable.add(new WTextInput("text1").setLabel(new Model<>("Txt1")).setVisible(false));
+		floatTable.add(new WTextInput("text2").setLabel(new Model<>("Txt2")));
 
+		Form<Map<String, Serializable>> dynamicForm = new Form<>("dynamicForm", new CompoundPropertyModel<>(map));
+		dynamicForm.add(floatTable);
 		//dynamicForm.add(new Button("save") {
 		dynamicForm.add(new WAjaxButton("save") {
 			private static final long serialVersionUID = -7991701558774150634L;

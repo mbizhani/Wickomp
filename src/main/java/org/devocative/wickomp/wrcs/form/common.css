@@ -25,7 +25,7 @@
 	border-radius: 2px;
 }
 
-.w-float-cell {
+div.w-float-table > div {
 	display: inline-block;
 	vertical-align: top;
 	margin: 3px 2px;
