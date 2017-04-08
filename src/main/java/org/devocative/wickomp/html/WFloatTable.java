@@ -1,19 +1,16 @@
 package org.devocative.wickomp.html;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.CommonBehavior;
-import org.devocative.wickomp.wrcs.Resource;
 
 public class WFloatTable extends WebMarkupContainer {
 	private static final long serialVersionUID = -5899209300800478452L;
 
+	/*
 	private static HeaderItem EQ_JS = Resource.getCommonJS("form/equalize.min.js");
-
 	private boolean equalWidth = false;
+	*/
 
 	public WFloatTable(String id) {
 		super(id);
@@ -24,6 +21,7 @@ public class WFloatTable extends WebMarkupContainer {
 		setOutputMarkupId(true);
 	}
 
+	/*
 	public WFloatTable setEqualWidth(boolean equalWidth) {
 		this.equalWidth = equalWidth;
 		return this;
@@ -50,4 +48,5 @@ public class WFloatTable extends WebMarkupContainer {
 
 		WebUtil.writeJQueryCall(script.toString(), true);
 	}
+	*/
 }

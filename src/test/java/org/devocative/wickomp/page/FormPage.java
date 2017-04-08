@@ -67,7 +67,6 @@ public class FormPage extends BasePage {
 		map.put("age", 123456);
 
 		WFloatTable floatTable = new WFloatTable("floatTable");
-		floatTable.setEqualWidth(true);
 		floatTable.add(new ListView<Field>("fields", fields) {
 			private static final long serialVersionUID = -6710943314522675829L;
 

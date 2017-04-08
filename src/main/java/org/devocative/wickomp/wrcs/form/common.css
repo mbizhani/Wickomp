@@ -29,4 +29,6 @@ div.w-float-table > div {
 	display: inline-block;
 	vertical-align: top;
 	margin: 3px 2px;
+	min-height: 85px;
+	min-width: 150px;
 }
