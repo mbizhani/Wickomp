@@ -15,11 +15,12 @@ $(window).keyup(function (e) {
 });
 
 (function ($) {
-	$.fn.showDtPopup = function (configType, yearId, monthId, dayId, parentId) {
+	$.fn.wDateInput = function (configType, yearId, monthId, dayId, parentId) {
 		var defaults = {
-			yearInput: null,
-			monthInput: null,
-			dayInput: null,
+			yearInput: $("#" + yearId),
+			monthInput: $("#" + monthId),
+			dayInput: $("#" + dayId),
+
 			divPopup: null,
 			dtTable: null,
 			selectYear: null,
@@ -48,8 +49,8 @@ $(window).keyup(function (e) {
 						var dateJalali = Date.jalaliConverter.jalaliToGregorian(dj);
 						var newDate = new Date(dateJalali[0], dateJalali[1] - 1, dateJalali[2]);
 						var firstDay;
-						var noOfday = newDate.getDay();
-						switch (noOfday) {
+						var noOfDay = newDate.getDay();
+						switch (noOfDay) {
 							case 0:
 							case 1:
 							case 2:
@@ -62,7 +63,7 @@ $(window).keyup(function (e) {
 								firstDay = 0;
 								break;
 						}
-						var noInmonth;
+						var noInMonth;
 						switch (monthIndex) {
 							case '1':
 							case '2':
@@ -70,17 +71,17 @@ $(window).keyup(function (e) {
 							case '4':
 							case '5':
 							case '6':
-								noInmonth = 31;
+								noInMonth = 31;
 								break;
 							case '7':
 							case '8':
 							case '9':
 							case '10':
 							case '11':
-								noInmonth = 30;
+								noInMonth = 30;
 								break;
 							case '12':
-								noInmonth = 29;
+								noInMonth = 29;
 						}
 						var reminder = year - Math.floor(year / 33) * 33;
 						if (monthIndex == 12) {
@@ -93,10 +94,10 @@ $(window).keyup(function (e) {
 								case 22:
 								case 26:
 								case 30:
-									noInmonth = 30;
+									noInMonth = 30;
 							}
 						}
-						return {firstDayOfWeekIdx: firstDay, noOfDays: noInmonth}
+						return {firstDayOfWeekIdx: firstDay, noOfDays: noInMonth}
 					},
 					getTodayHandler: function () {
 						var currentDate = new Date();
@@ -167,18 +168,14 @@ $(window).keyup(function (e) {
 				defaults.dtTHead = $("<thead></thead>");
 				defaults.dtTBody = $("<tbody></tbody>");
 				//defaults.selectYear = $("<select></select>");
-				defaults.selectYear = $("<input type='number'/>");
+				defaults.selectYear = $("<input type='number' style='width:50px;margin:0 5px;'/>");
 				defaults.selectMonth = $("<select></select>");
 				defaults.trFirst = $("<tr></tr>");
 				defaults.tdFirst = $("<td colspan='7'></td>");
 
-				defaults.yearInput = $("#" + yearId);
-				defaults.monthInput = $("#" + monthId);
-				defaults.dayInput = $("#" + dayId);
-
 				/*for (var j = defaults.calendars[configType].years() - 10; j <= defaults.calendars[configType].years() + 10; j++) {
-					var txt1 = "<option class='op' value='" + j + "'>" + j + "</option>";
-					defaults.selectYear.append(txt1);
+				 var txt1 = "<option class='op' value='" + j + "'>" + j + "</option>";
+				 defaults.selectYear.append(txt1);
 				 }*/
 				defaults.selectYear.change(defaults.changeYearMonth);
 
@@ -194,15 +191,17 @@ $(window).keyup(function (e) {
 					defaults.trWeek.append(txt2);
 				}
 
-				if (defaults.yearInput.val() == "")
+				if (defaults.yearInput.val() == "") {
 					defaults.selectYear.val(defaults.calendars[configType].getTodayHandler().year);
-				else
+				} else {
 					defaults.selectYear.val(defaults.yearInput.val());
+				}
 
-				if (defaults.monthInput.val() == "")
+				if (defaults.monthInput.val() == "") {
 					defaults.selectMonth.val(defaults.calendars[configType].getTodayHandler().month);
-				else
+				} else {
 					defaults.selectMonth.val(defaults.monthInput.val());
+				}
 
 				defaults.dayHandlerResult = defaults.calendars[configType].dayHandler(defaults.selectYear.val(), defaults.selectMonth.val());
 				defaults.dayOfRow = defaults.dayHandlerResult.noOfDays - (6 - defaults.dayHandlerResult.firstDayOfWeekIdx + 1);
@@ -230,7 +229,7 @@ $(window).keyup(function (e) {
 					for (var n = 0; n <= 6; n++) {
 						if (n == defaults.dayHandlerResult.firstDayOfWeekIdx) {
 							if (t <= defaults.dayHandlerResult.noOfDays) {
-								defaults.dtTable.find("tr").last().append("<td style='cursor: pointer'>" + t + "</td>").click(function (e) {
+								defaults.dtTable.find("tr").last().append("<td style='cursor:pointer'>" + t + "</td>").click(function (e) {
 									defaults.dayClick(e);
 								});
 								defaults.dayHandlerResult.firstDayOfWeekIdx++;
@@ -254,6 +253,11 @@ $(window).keyup(function (e) {
 					defaults.yearInput.val(defaults.selectYear.val());
 					defaults.monthInput.val(defaults.selectMonth.val());
 					defaults.dayInput.val(day);
+
+					if (lastOpenDiv) {
+						lastOpenDiv.remove();
+						lastOpenDiv = null;
+					}
 				}
 			},
 
@@ -274,7 +278,7 @@ $(window).keyup(function (e) {
 					for (var n = 0; n <= 6; n++) {
 						if (n == defaults.dayHandlerResult.firstDayOfWeekIdx) {
 							if (t <= defaults.dayHandlerResult.noOfDays) {
-								defaults.dtTable.find("tr").last().append("<td>" + t + "</td>").click(function (e) {
+								defaults.dtTable.find("tr").last().append("<td style='cursor:pointer'>" + t + "</td>").click(function (e) {
 									defaults.dayClick(e);
 								});
 								defaults.dayHandlerResult.firstDayOfWeekIdx++;
@@ -306,16 +310,36 @@ $(window).keyup(function (e) {
 				top: parent.position().top + parent.outerHeight(true)
 			});
 			defaults.dtTable.addClass("dtPopup");
-			if (lastOpenDiv == null) {
-				lastOpenDiv = defaults.divPopup;
-				defaults.renderCalendar();
-				e.stopPropagation();
-			} else {
+			if (lastOpenDiv != null) {
 				$(lastOpenDiv).remove();
-				lastOpenDiv = defaults.divPopup;
-				defaults.renderCalendar();
-				e.stopPropagation();
 			}
+			lastOpenDiv = defaults.divPopup;
+			defaults.renderCalendar();
+			e.stopPropagation();
 		});
+
+		$('#' + parentId + ' .yr').autoNumeric('init', {aSep: '', mDec: 0, vMax: 9999});
+		$('#' + parentId + ' .mo').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 12});
+		$('#' + parentId + ' .dy').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 31});
+		$('#' + parentId + ' .hr').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 23});
+		$('#' + parentId + ' .mi').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 59});
+		$('#' + parentId + ' .sc').autoNumeric('init', {aSep: '', mDec: '0', vMin: 0, vMax: 59});
+
+		if (currentDate) {
+			$('#' + parentId + " input[type='text']")
+				.bind('keydown', function (event) {
+					if (event.which == 32) {
+						if ($(event.target).val() == '') {
+							defaults.yearInput.val(currentDate.year);
+							defaults.monthInput.val(currentDate.month);
+							defaults.dayInput.val(currentDate.day);
+						} else {
+							defaults.yearInput.val('');
+							defaults.monthInput.val('');
+							defaults.dayInput.val('');
+						}
+					}
+				});
+		}
 	}
 })(jQuery);

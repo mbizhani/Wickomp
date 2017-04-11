@@ -32,3 +32,12 @@ div.w-float-table > div {
 	min-height: 85px;
 	min-width: 150px;
 }
+
+.yr, .mo, .dy, .hr, .mi, .sc {
+	text-align: center;
+	width: 22px;
+}
+
+.yr {
+	width: 32px;
+}
