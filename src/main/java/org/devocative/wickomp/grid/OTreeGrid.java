@@ -1,19 +1,20 @@
 package org.devocative.wickomp.grid;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonRawValue;
 
 public class OTreeGrid<T> extends OBaseGrid<T> {
 	private static final long serialVersionUID = -1750260667606469185L;
 
-	private Boolean animate = true;
+	private Boolean animate;
 	private Boolean lines;
 	private String treeField;
 	private Boolean showLines;
 
-	// -----
+	// ---------------
+
 	private String parentIdField;
 
+	// ------------------------------
 
 	public Boolean getAnimate() {
 		return animate;
@@ -51,7 +52,7 @@ public class OTreeGrid<T> extends OBaseGrid<T> {
 		return this;
 	}
 
-	// -----
+	// ---------------
 
 	@JsonIgnore
 	public String getParentIdField() {
@@ -62,32 +63,4 @@ public class OTreeGrid<T> extends OBaseGrid<T> {
 		this.parentIdField = parentIdField;
 		return this;
 	}
-
-	// ---------------------- ACCESSORS FOR JS EVENTS
-
-	@JsonRawValue
-	public String getOnBeforeLoad() {
-		return "function(row,param){if (!row) param.id = '';}";
-	}
-
-	// ---------------------- PROTECTED METHODS
-
-	@Override
-	protected String getSelectionJSFunc(String anotherFunction) {
-		if (selectionIndicator || anotherFunction != null) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("function(row,data){");
-			builder.append(selectionJSHandler == null ?
-					String.format("handleSelectionIndicator('%s');", htmlId) :
-					String.format("handleSelectionIndicator('%s', %s, %s);",
-						htmlId, selectionJSHandler, selectionDblClick)
-			);
-			if (anotherFunction != null) {
-				builder.append(anotherFunction);
-			}
-			return builder.append("}").toString();
-		}
-		return null;
-	}
-
 }

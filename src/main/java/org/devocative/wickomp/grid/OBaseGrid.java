@@ -17,32 +17,34 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private static final long serialVersionUID = 1095555452051726851L;
 
 	// ---------------------- JSON FIELDS
-	private Boolean autoRowHeight = false;
+
+	private Boolean autoRowHeight;
 	private Boolean checkOnSelect;
 	private OColumnList<T> columns;
 	private List<T> data;
 	private String idField;
-	private Boolean multiSort = false;
-	private Boolean pagination = true;
+	private Boolean multiSort;
+	private Boolean pagination;
 	private List<Integer> pageList;
 	private Integer pageSize;
 	private String returnField;
-	private Boolean rowNumbers = true;
+	private Boolean rowNumbers;
 	private Boolean selectOnCheck;
 	private Boolean showFooter;
-	private Boolean singleSelect = true;
+	private Boolean singleSelect;
 	private Boolean striped;
 	private String titleField;
 	private List<OButton<T>> toolbar = new ArrayList<>();
 	private String url;
 
-	// ---------------------- MISC FIELDS
-	protected String htmlId;
-	protected boolean selectionIndicator = false;
-	protected String selectionJSHandler;
-	protected boolean selectionDblClick = true;
+	// --------------- EXTRA FIELDS
 
-	// ---------------------- CONSTRUCTORS
+	protected String htmlId;
+	protected Boolean selectionIndicator;
+	protected String selectionJSHandler;
+	protected Boolean selectionDblClick;
+
+	// ---------------------- CONSTRUCTOR
 
 	public OBaseGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
@@ -94,15 +96,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	public OBaseGrid<T> setIdField(String idField) {
 		this.idField = idField;
 		return this;
-	}
-
-	@JsonRawValue
-	public String getLoadFilter() {
-		return String.format("function(data){return handleLoaded('%s', data);}", htmlId);
-	}
-
-	public String getLoadMsg() {
-		return "...";
 	}
 
 	public Boolean getMultiSort() {
@@ -221,34 +214,37 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		this.url = url;
 	}
 
-	// ---------------------- ACCESSORS FOR JS EVENTS
+	// --------------- EXTRA FIELDS
 
-	@JsonRawValue
-	public String getOnLoadSuccess() {
-		return getSelectionJSFunc(null);
+	public Boolean getSelectionIndicator() {
+		return selectionIndicator;
+	}
+
+	public OBaseGrid<T> setSelectionIndicator(boolean selectionIndicator) {
+		this.selectionIndicator = selectionIndicator;
+		return this;
 	}
 
 	@JsonRawValue
-	public String getOnSelect() {
-		return getSelectionJSFunc(null);
+	public String getSelectionJSHandler() {
+		return selectionJSHandler;
 	}
 
-	@JsonRawValue
-	public String getOnUnselect() {
-		return getSelectionJSFunc(null);
+	public OBaseGrid<T> setSelectionJSHandler(String selectionJSHandler) {
+		this.selectionJSHandler = selectionJSHandler;
+		return this;
 	}
 
-	@JsonRawValue
-	public String getOnSelectAll() {
-		return getSelectionJSFunc(null);
+	public Boolean getSelectionDblClick() {
+		return selectionDblClick;
 	}
 
-	@JsonRawValue
-	public String getOnUnselectAll() {
-		return getSelectionJSFunc(null);
+	public OBaseGrid<T> setSelectionDblClick(boolean selectionDblClick) {
+		this.selectionDblClick = selectionDblClick;
+		return this;
 	}
 
-	// ---------------------- PUBLIC METHODS
+	// --------------- PUBLIC METHODS
 
 	@JsonIgnore
 	public List<OButton<T>> getToolbarButtons() {
@@ -270,44 +266,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		this.htmlId = htmlId;
 	}
 
-	@JsonIgnore
-	public boolean isSelectionIndicator() {
-		return selectionIndicator;
-	}
-
-	public OBaseGrid<T> setSelectionIndicator(boolean selectionIndicator) {
-		this.selectionIndicator = selectionIndicator;
-		return this;
-	}
-
-	public OBaseGrid<T> setSelectionJSHandler(String selectionJSHandler) {
-		this.selectionJSHandler = selectionJSHandler;
-		return this;
-	}
-
-	public OBaseGrid<T> setSelectionDblClick(boolean selectionDblClick) {
-		this.selectionDblClick = selectionDblClick;
-		return this;
-	}
-
 	public boolean hasFooter() {
 		return getShowFooter() != null && getShowFooter();
-	}
-
-	protected String getSelectionJSFunc(String anotherFunction) {
-		if (selectionIndicator || anotherFunction != null) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("function(data){");
-			builder.append(selectionJSHandler == null ?
-					String.format("handleSelectionIndicator('%s');", htmlId) :
-					String.format("handleSelectionIndicator('%s', %s, %s);",
-						htmlId, selectionJSHandler, selectionDblClick)
-			);
-			if (anotherFunction != null) {
-				builder.append(anotherFunction);
-			}
-			return builder.append("}").toString();
-		}
-		return null;
 	}
 }

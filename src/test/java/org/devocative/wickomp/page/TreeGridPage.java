@@ -73,6 +73,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 		treeGrid
 			.setTreeField("name")
 				//.setParentIdField("parentId")
+			.setSelectionJSHandler("function(rows){console.log(rows);}")
 			.setIdField("eid")
 			.setColumns(columnList)
 			.setHeight(OSize.fixed(400));
@@ -125,6 +126,8 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 		treeGrid
 			.setShowLines(true)
 			.setTreeField("name")
+			.setSelectionJSHandler("function(rows){console.log(rows);}")
+			.setSingleSelect(false)
 				//.setParentIdField("parentId")
 			.setIdField("eid")
 			.setColumns(columnList)

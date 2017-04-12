@@ -13,6 +13,6 @@ public class WDataGrid<T> extends WBaseGrid<T> {
 
 	@Override
 	protected String getJQueryFunction() {
-		return "datagrid";
+		return "wDataGrid";
 	}
 }

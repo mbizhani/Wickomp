@@ -22,11 +22,6 @@ public class OGrid<T> extends OBaseGrid<T> {
 		return this;
 	}
 
-	@JsonRawValue
-	public String getGroupFormatter() {
-		return getGroupField() != null ? "function(value,rows){return value + ' (' + rows.length + ')';}" : null;
-	}
-
 	public String getGroupStyle() {
 		return groupStyle;
 	}

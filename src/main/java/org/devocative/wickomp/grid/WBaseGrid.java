@@ -18,8 +18,8 @@ import org.devocative.wickomp.grid.column.link.OLinkColumn;
 import org.devocative.wickomp.grid.toolbar.OAjaxLinkButton;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.grid.toolbar.OLinkButton;
-import org.devocative.wickomp.wrcs.EasyUIBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
+import org.devocative.wickomp.wrcs.HeaderBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -205,7 +205,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		pageSize = options.getPageSize();
 
 		add(new FontAwesomeBehavior());
-		add(new EasyUIBehavior());
+		//add(new EasyUIBehavior());
+		add(new HeaderBehavior("main/wGrid.js").setNeedEasyUI(true));
 
 		if (gridDataSource == null && gridAsyncDataSource == null) {
 			throw new WicketRuntimeException("WBaseGrid without datasource: " + getId());

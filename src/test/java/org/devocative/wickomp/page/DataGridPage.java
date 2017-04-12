@@ -167,8 +167,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 			.setColumns(columns)
 			.setMultiSort(true)
 			.setSingleSelect(false)
-			.setSelectionIndicator(true)
-			.setSelectionJSHandler("function(rows){alert(rows.toSource());}")
+				//.setSelectionIndicator(true)
+				//.setSelectionJSHandler("function(rows){console.log(rows);}")
 			.setShowFooter(true)
 			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
 		;
@@ -184,8 +184,8 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 			.setIdField("col02")
 			.setColumns(columns)
 			.setMultiSort(true)
-			.setSelectionIndicator(true)
-			.setSelectionJSHandler("function(asd){alert(asd.toSource());}")
+				//.setSelectionIndicator(true)
+			.setSelectionJSHandler("function(asd){console.log(asd);}")
 			.setShowFooter(true)
 			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
 		;

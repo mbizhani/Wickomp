@@ -65,7 +65,7 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 
 	@Override
 	protected String getJQueryFunction() {
-		return "treegrid";
+		return "wTreeGrid";
 	}
 
 	@Override
