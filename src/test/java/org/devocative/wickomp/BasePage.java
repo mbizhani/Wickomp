@@ -41,7 +41,8 @@ public abstract class BasePage extends WebPage {
 		};
 		window
 			.getOptions()
-			.setCallBackOnClose(true);
+			.setCloseOnEscape(false)
+			.setCallbackOnClose(true);
 		add(window);
 
 		add(new AjaxLink("showModal") {

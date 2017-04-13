@@ -1,6 +1,6 @@
 package org.devocative.wickomp.html.window;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.devocative.wickomp.opt.ICallbackUrl;
 import org.devocative.wickomp.opt.OAnimation;
 import org.devocative.wickomp.opt.OComponent;
@@ -8,21 +8,22 @@ import org.devocative.wickomp.opt.OComponent;
 public class OModalWindow extends OComponent implements ICallbackUrl {
 	private static final long serialVersionUID = -1690151110434417397L;
 
-	private Boolean collapsible = false;
-	private Boolean maximizable = false;
-	private Boolean minimizable = false;
-	private boolean modal = true;
+	private Boolean collapsible;
+	private Boolean maximizable;
+	private Boolean minimizable;
+	private Boolean modal;
 	private String title;
 
-	private OAnimation openAnimation = OAnimation.fade;
-	private Integer openDuration = 800;
-	private OAnimation closeAnimation = OAnimation.fade;
-	private Integer closeDuration = 800;
+	private OAnimation openAnimation;
+	private Integer openDuration;
+	private OAnimation closeAnimation;
+	private Integer closeDuration;
 
 	// ---------------
 
 	private String url;
-	private boolean callBackOnClose = false;
+	private Boolean callbackOnClose;
+	private Boolean closeOnEscape;
 
 	// ------------------------------
 
@@ -53,7 +54,7 @@ public class OModalWindow extends OComponent implements ICallbackUrl {
 		return this;
 	}
 
-	public boolean isModal() {
+	public Boolean getModal() {
 		return modal;
 	}
 
@@ -107,22 +108,33 @@ public class OModalWindow extends OComponent implements ICallbackUrl {
 		return this;
 	}
 
-	// ------------------------------
+	// ---------------
 
-	@JsonRawValue
-	public String getOnClose() {
-		return callBackOnClose ? String.format("function(){Wicket.Ajax.get({u:'%s'});}", url) : null;
+	@JsonProperty("closeCallbackUrl")
+	public String getUrl() {
+		return url;
 	}
-
-	// ------------------------------
 
 	@Override
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
-	public OModalWindow setCallBackOnClose(boolean callBackOnClose) {
-		this.callBackOnClose = callBackOnClose;
+	public Boolean getCallbackOnClose() {
+		return callbackOnClose;
+	}
+
+	public OModalWindow setCallbackOnClose(Boolean callbackOnClose) {
+		this.callbackOnClose = callbackOnClose;
+		return this;
+	}
+
+	public Boolean getCloseOnEscape() {
+		return closeOnEscape;
+	}
+
+	public OModalWindow setCloseOnEscape(Boolean closeOnEscape) {
+		this.closeOnEscape = closeOnEscape;
 		return this;
 	}
 }

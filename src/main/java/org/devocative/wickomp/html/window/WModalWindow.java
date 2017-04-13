@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.WebUtil;
-import org.devocative.wickomp.wrcs.EasyUIBehavior;
+import org.devocative.wickomp.wrcs.HeaderBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,6 @@ public class WModalWindow extends WPanel {
 	private AbstractDefaultAjaxBehavior callbackAjaxBehavior;
 
 	private OModalWindow options;
-	private boolean closeOnEscape = true;
 
 	// ------------------------------
 
@@ -53,7 +52,7 @@ public class WModalWindow extends WPanel {
 
 		add(callbackAjaxBehavior);
 
-		add(new EasyUIBehavior());
+		add(new HeaderBehavior("main/wWindow.js").setNeedEasyUI(true));
 	}
 
 	// ------------------------------
@@ -76,11 +75,6 @@ public class WModalWindow extends WPanel {
 				component.getId() + "; content ID: " + getContentId());
 		}
 		container.replace(content = checkContentOnAdd(component));
-		return this;
-	}
-
-	public WModalWindow setCloseOnEscape(boolean closeOnEscape) {
-		this.closeOnEscape = closeOnEscape;
 		return this;
 	}
 
@@ -108,15 +102,9 @@ public class WModalWindow extends WPanel {
 		content.setVisible(true);
 		target.add(container);
 
-		String script = String.format("$('#%s').window(%s)",
+		String script = String.format("$('#%s').wWindow(%s);",
 			getContainerMarkupId(),
 			WebUtil.toJson(options));
-
-		if (closeOnEscape) {
-			script += String.format(".attr('tabindex','-1').focus().keydown(function(e){if(e.which == 27) $('#%s').window('close');})", getContainerMarkupId());
-		}
-
-		script += ";";
 
 		logger.debug("WModalWindow.show: {}", script);
 
@@ -125,14 +113,14 @@ public class WModalWindow extends WPanel {
 	}
 
 	public void close(AjaxRequestTarget target) {
-		target.appendJavaScript(String.format("$('#%s').window('close');", getContainerMarkupId()));
+		target.appendJavaScript(String.format("$('#%s').wWindow('close');", getContainerMarkupId()));
 	}
 
 	// ------------------------------
 
 	public static boolean closeParentWindow(Component component, AjaxRequestTarget target) {
 		WModalWindow parent = component.findParent(WModalWindow.class);
-		if(parent != null) {
+		if (parent != null) {
 			parent.close(target);
 			return true;
 		}
