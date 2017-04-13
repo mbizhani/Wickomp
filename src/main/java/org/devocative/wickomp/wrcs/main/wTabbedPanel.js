@@ -12,7 +12,7 @@
 					wLog.debug('wTabbedPanel: onBeforeClose: t=' + title + ', i=' + index);
 
 					//this section is copied from its doc on the site
-					$.messager.confirm(wMsg.warning, wMsg.wTabbedPanel.sureToClose + title, function (r) {
+					$.messager.confirm(wMsg.warning, wMsg.wTabbedPanel.sureToClose + '"' + title + '"?', function (r) {
 						if (r) {
 							var opts = ctx.target.tabs('options');
 							var bc = opts.onBeforeClose;

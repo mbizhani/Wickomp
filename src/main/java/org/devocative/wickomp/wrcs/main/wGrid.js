@@ -49,6 +49,7 @@
 			var selectionHandler = grid.datagrid('options')['selectionJSHandler'];
 
 			if (!selectionIndicator && !selectionHandler) {
+				wLog.debug('wGrid: no selection indicator & handler');
 				return;
 			}
 
@@ -142,6 +143,19 @@
 				}
 			}
 
+			wBaseGridDefaults.updateButtonsOfPager(grid, butts);
+		},
+
+		selectionChanged: function (grid) {
+			var butts = grid.datagrid('getPager').pagination('options')['buttons'];
+			if (butts) {
+				butts[0].text = grid.datagrid('getSelections').length.toString();
+
+				wBaseGridDefaults.updateButtonsOfPager(grid, butts);
+			}
+		},
+
+		updateButtonsOfPager: function (grid, butts) {
 			grid.datagrid('getPager').pagination({
 				buttons: butts
 			});
@@ -151,34 +165,23 @@
 					var cls = $(this).find('span.fa').attr('class');
 					var title = "";
 					if (cls.indexOf('fa-check-square-o') > -1) {
-						title = 'انتخاب شده(ها)';
+						title = wMsg.wGrid.pager.showAllSelections;
 					} else if (cls.indexOf('fa-eraser') > -1) {
-						title = 'حذف تمامی انتخاب شده(ها)';
+						title = wMsg.wGrid.pager.deselectAll;
 					} else if (cls.indexOf('fa-bars') > -1) {
-						title = 'انتخاب رکوردهای صفحه';
+						title = wMsg.wGrid.pager.selectAll;
 					} else if (cls.indexOf('fa-paper-plane-o') > -1) {
-						title = 'ارسال';
+						title = wMsg.wGrid.pager.sendSelections;
 					} else if (cls.indexOf('fa-bug') > -1) {
-						title = 'نمایش آنچه ارسال می شود';
+						title = wMsg.wGrid.pager.debugSelections;
 					}
 					$(this).attr('title', title);
 				});
 		},
 
-		selectionChanged: function (grid) {
-			var butts = grid.datagrid('getPager').pagination('options')['buttons'];
-			if (butts) {
-				butts[0].text = grid.datagrid('getSelections').length.toString();
-
-				grid.datagrid('getPager').pagination({
-					buttons: butts
-				});
-			}
-		},
-
 		handleSelection: function (grid, selectionHandler, selData, alertOnError) {
 			if (selData.length > 100) {
-				$.messager.alert('خطا', 'تا 100 رکورد امکان ارسال است');
+				$.messager.alert(wMsg.error, wMsg.wGrid.selectionLimit);
 				return;
 			}
 
@@ -238,7 +241,7 @@
 		if (typeof(cmdOrOpts) === 'object') {
 			var extOpt = $.extend(wBaseGridDefaults, cmdOrOpts);
 			extOpt = $.extend(gridSpecific, extOpt);
-			//console.log("extOpt", extOpt);
+			wLog.debug('wDataGrid init', extOpt);
 			return $(this).datagrid(extOpt);
 		} else {
 			return $(this).datagrid(cmdOrOpts, options);
@@ -256,7 +259,7 @@
 		if (typeof(cmdOrOpts) === 'object') {
 			var extOpt = $.extend(wBaseGridDefaults, cmdOrOpts);
 			extOpt = $.extend(treeGridSpecific, extOpt);
-			//console.log("extOpt", extOpt);
+			wLog.debug('wTreeGrid init', extOpt);
 			return $(this).treegrid(extOpt);
 		} else {
 			return $(this).treegrid(cmdOrOpts, options);

@@ -3,6 +3,8 @@ package org.devocative.wickomp.wrcs;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.protocol.http.WebSession;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +58,13 @@ public class HeaderBehavior extends EasyUIBehavior {
 
 		for (String resource : resources) {
 			response.render(HEADER_ITEM_MAP.get(resource));
+		}
+
+		String language = WebSession.get().getLocale().getLanguage();
+		if (language != null) {
+			response.render(JavaScriptHeaderItem.forScript(
+				String.format("wMsg = wSetLocale('%s');", language),
+				"MSG_BUNDLE_LOCALE"));
 		}
 	}
 
