@@ -26,7 +26,7 @@
 
 	$.fn.wWindow = function (cmdOrOpts, options) {
 		if (typeof(cmdOrOpts) === 'object') {
-			var extOpt = $.extend(wWindowDefaults, cmdOrOpts);
+			var extOpt = $.extend({}, wWindowDefaults, cmdOrOpts);
 			wLog.debug('wWindow: init', extOpt);
 			var window = $(this).window(extOpt);
 			if (extOpt.closeOnEscape) {

@@ -72,13 +72,14 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 		OTreeGrid<EmployeeVO> treeGrid = new OTreeGrid<>();
 		treeGrid
 			.setTreeField("name")
-				//.setParentIdField("parentId")
+			.setParentIdField("parentId")
+			.setSingleSelect(true)
 			.setSelectionJSHandler("function(rows){console.log(rows);}")
 			.setIdField("eid")
 			.setColumns(columnList)
 			.setHeight(OSize.fixed(400));
 
-		add(atreegrid = new WTreeGrid<>("atreegrid", treeGrid, new ITreeGridAsyncDataSource<EmployeeVO>() {
+		atreegrid = new WTreeGrid<>("atreegrid", treeGrid, new ITreeGridAsyncDataSource<EmployeeVO>() {
 			private static final long serialVersionUID = 4245241591226574311L;
 
 			@Override
@@ -106,9 +107,9 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			public IModel<EmployeeVO> model(EmployeeVO object) {
 				return new WModel<>(object);
 			}
-		}));
-
+		});
 		atreegrid.setEnabled(false);
+		add(atreegrid);
 
 		add(new AjaxLink("enableTGrid") {
 			private static final long serialVersionUID = 5052194326107554173L;
@@ -124,6 +125,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 	private void syncTreeGrid() {
 		OTreeGrid<EmployeeVO> treeGrid = new OTreeGrid<>();
 		treeGrid
+			.setAnimate(true)
 			.setShowLines(true)
 			.setTreeField("name")
 			.setSelectionJSHandler("function(rows){console.log(rows);}")

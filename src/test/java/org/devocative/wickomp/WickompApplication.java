@@ -125,6 +125,7 @@ public class WickompApplication extends WebApplication {
 						emp.setEid(parentId + "." + i);
 						emp.setName("E" + parentId + "." + i);
 						emp.setAge((int) (Math.random() * 50));
+						emp.setParentId(parentId);
 						result.add(emp);
 					}
 				}

@@ -63,7 +63,7 @@
 		if (!cmdOrOpts && !options) {
 			ctx.init(defaults);
 		} else if (typeof(cmdOrOpts) === 'object') {
-			var opt = $.extend(defaults, cmdOrOpts);
+			var opt = $.extend({}, defaults, cmdOrOpts);
 			ctx.init(opt);
 		} else if (typeof(cmdOrOpts) === 'string') {
 			switch (cmdOrOpts) {

@@ -6,12 +6,16 @@
 		pagination: true,
 		rownumbers: true,
 		singleSelect: true,
+		scrollOnSelect: false, // since 1.5.2
+		striped: true,
 
 		// --------------- custom fields
 		selectionIndicator: false,
 		selectionDblClick: true,
 
 		loadFilter: function (data) {
+			wLog.debug('wBaseGridDefaults.loadFilter', data);
+
 			if (data.error) {
 				$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
 			}
@@ -23,7 +27,10 @@
 		},
 
 		onLoadSuccess: function (data) {
+			wLog.debug('wBaseGridDefaults.onLoadSuccess');
+
 			wBaseGridDefaults.initSelection($(this));
+			//TODO wBaseGridDefaults.selectionChanged($(this));
 		},
 
 		onSelect: function (data) {
@@ -45,6 +52,10 @@
 		// --------------- custom methods
 
 		initSelection: function (grid) {
+			if (grid.datagrid('options')['selectionInited']) {
+				return;
+			}
+
 			var selectionIndicator = grid.datagrid('options')['selectionIndicator'];
 			var selectionHandler = grid.datagrid('options')['selectionJSHandler'];
 
@@ -144,6 +155,8 @@
 			}
 
 			wBaseGridDefaults.updateButtonsOfPager(grid, butts);
+			wLog.debug('wBaseGridDefaults.initSelection: butts', butts);
+			grid.datagrid('options')['selectionInited'] = true;
 		},
 
 		selectionChanged: function (grid) {
@@ -156,6 +169,8 @@
 		},
 
 		updateButtonsOfPager: function (grid, butts) {
+			wLog.debug('wBaseGridDefaults.updateButtonsOfPager: no of selection but text=', butts[0].text);
+
 			grid.datagrid('getPager').pagination({
 				buttons: butts
 			});
@@ -239,8 +254,7 @@
 		var gridSpecific = {};
 
 		if (typeof(cmdOrOpts) === 'object') {
-			var extOpt = $.extend(wBaseGridDefaults, cmdOrOpts);
-			extOpt = $.extend(gridSpecific, extOpt);
+			var extOpt = $.extend({}, gridSpecific, wBaseGridDefaults, cmdOrOpts);
 			wLog.debug('wDataGrid init', extOpt);
 			return $(this).datagrid(extOpt);
 		} else {
@@ -250,15 +264,26 @@
 
 	$.fn.wTreeGrid = function (cmdOrOpts, options) {
 		var treeGridSpecific = {
-			animate: true,
+			animate: false,
+
 			onBeforeLoad: function (row, param) {
-				if (!row) param.id = '';
+				if (!row) {
+					param.id = '';
+				}
+			},
+
+			onBeforeExpand:function(row) {
+				wLog.debug('treeGridSpecific.onBeforeExpand', row);
+			},
+
+			onExpand:function(row) {
+				wLog.debug('treeGridSpecific.onExpand', row);
 			}
+
 		};
 
 		if (typeof(cmdOrOpts) === 'object') {
-			var extOpt = $.extend(wBaseGridDefaults, cmdOrOpts);
-			extOpt = $.extend(treeGridSpecific, extOpt);
+			var extOpt = $.extend({}, treeGridSpecific, wBaseGridDefaults, cmdOrOpts);
 			wLog.debug('wTreeGrid init', extOpt);
 			return $(this).treegrid(extOpt);
 		} else {
@@ -266,3 +291,55 @@
 		}
 	}
 })(jQuery);
+
+// TODO: the following must be merged to the upper part!
+
+var gridDefaultView;
+
+function changeGridGroupField(select, gridId) {
+	var opt = $('#' + gridId).datagrid('options');
+
+	if (!gridDefaultView) {
+		gridDefaultView = opt.view;
+	}
+
+	if (select.value != "") {
+		//TODO: checking !opt.groupStyler is based on unknown bug where opt.groupStyler is null using in Metis project!
+		if (opt.groupStyle || !opt.groupStyler) {
+			opt.groupStyler = function (value, rows) {
+				return (opt.groupStyle) ? opt.groupStyle : '';
+			};
+		}
+		opt.view = groupview;
+		opt.groupField = select.value;
+		opt.groupFormatter = function (value, rows) {
+			//return value + " (" + rows.length + ")";
+			return "<table><tr><td>" + value + " </td><td> #[</td><td>" + rows.length + "</td><td>]</td></tr></table>"
+		};
+		$('#' + gridId).datagrid('sort', {sortName: select.value, sortOrder: 'asc'});
+	} else {
+		opt.view = gridDefaultView;
+		opt.groupField = '';
+		$('#' + gridId).datagrid('reload');
+	}
+}
+
+function expandAllGroups(gridId) {
+	var grid = $('#' + gridId);
+	if (grid.datagrid('options').view.groups) {
+		var groupsCount = grid.datagrid('options').view.groups.length;
+		for (var i = 0; i < groupsCount; i++) {
+			grid.datagrid('expandGroup', i);
+		}
+	}
+}
+
+function collapseAllGroups(gridId) {
+	var grid = $('#' + gridId);
+	if (grid.datagrid('options').view.groups) {
+		var groupsCount = grid.datagrid('options').view.groups.length;
+		for (var i = 0; i < groupsCount; i++) {
+			grid.datagrid('collapseGroup', i);
+		}
+	}
+}
