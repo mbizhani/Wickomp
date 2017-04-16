@@ -10,8 +10,13 @@
 		striped: true,
 
 		// --------------- custom fields
+
+		columnReorder: true,
+		callbackOnColumnReorder: false,
 		selectionIndicator: false,
 		selectionDblClick: true,
+
+		// ------------------------------
 
 		loadFilter: function (data) {
 			wLog.debug('wBaseGridDefaults.loadFilter', data);
@@ -30,7 +35,6 @@
 			wLog.debug('wBaseGridDefaults.onLoadSuccess');
 
 			wBaseGridDefaults.initSelection($(this));
-			//TODO wBaseGridDefaults.selectionChanged($(this));
 		},
 
 		onSelect: function (data) {
@@ -49,13 +53,37 @@
 			wBaseGridDefaults.selectionChanged($(this));
 		},
 
+		// --------------- columns-ext
+
+		onDropColumn: function (toField, fromField, point) {
+			wLog.debug('wBaseGridDefaults.onDropColumn', toField, fromField, point, $(this).datagrid('getColumnFields'));
+			var options = $(this).datagrid('options');
+			if (options['url'] && options['callbackOnColumnReorder']) {
+				var cols = $(this).datagrid('getColumnFields');
+				var colName = cols[0];
+				for (var i = 1; i < cols.length; i++) {
+					colName += "," + cols[i];
+				}
+				Wicket.Ajax.get({u: options['url'] + '&$cr=' + colName});
+			}
+		},
+
 		// --------------- custom methods
 
-		initSelection: function (grid) {
-			if (grid.datagrid('options')['selectionInited']) {
-				return;
+		onInit: function (options) {
+			wLog.debug('wBaseGridDefaults.onInit');
+			wBaseGridDefaults.initSelection($(this));
+
+			if (options['reorderColumns']) {
+				$(this).datagrid('reorderColumns', options['reorderColumns']);
 			}
 
+			if (options['columnReorder']) {
+				$(this).datagrid('columnMoving');
+			}
+		},
+
+		initSelection: function (grid) {
 			var selectionIndicator = grid.datagrid('options')['selectionIndicator'];
 			var selectionHandler = grid.datagrid('options')['selectionJSHandler'];
 
@@ -156,7 +184,6 @@
 
 			wBaseGridDefaults.updateButtonsOfPager(grid, butts);
 			wLog.debug('wBaseGridDefaults.initSelection: butts', butts);
-			grid.datagrid('options')['selectionInited'] = true;
 		},
 
 		selectionChanged: function (grid) {
@@ -256,7 +283,9 @@
 		if (typeof(cmdOrOpts) === 'object') {
 			var extOpt = $.extend({}, gridSpecific, wBaseGridDefaults, cmdOrOpts);
 			wLog.debug('wDataGrid init', extOpt);
-			return $(this).datagrid(extOpt);
+			var datagrid = $(this).datagrid(extOpt);
+			extOpt.onInit.call(this, extOpt);
+			return datagrid
 		} else {
 			return $(this).datagrid(cmdOrOpts, options);
 		}
@@ -272,11 +301,11 @@
 				}
 			},
 
-			onBeforeExpand:function(row) {
+			onBeforeExpand: function (row) {
 				wLog.debug('treeGridSpecific.onBeforeExpand', row);
 			},
 
-			onExpand:function(row) {
+			onExpand: function (row) {
 				wLog.debug('treeGridSpecific.onExpand', row);
 			}
 
@@ -285,7 +314,9 @@
 		if (typeof(cmdOrOpts) === 'object') {
 			var extOpt = $.extend({}, treeGridSpecific, wBaseGridDefaults, cmdOrOpts);
 			wLog.debug('wTreeGrid init', extOpt);
-			return $(this).treegrid(extOpt);
+			var treegrid = $(this).treegrid(extOpt);
+			extOpt.onInit.call(this, extOpt);
+			return treegrid;
 		} else {
 			return $(this).treegrid(cmdOrOpts, options);
 		}

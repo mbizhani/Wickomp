@@ -39,10 +39,14 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	// --------------- EXTRA FIELDS
 
-	protected String htmlId;
+	protected Boolean callbackOnColumnReorder;
+	protected Boolean columnReorder;
+	protected List<String> reorderColumns;
 	protected Boolean selectionIndicator;
 	protected String selectionJSHandler;
 	protected Boolean selectionDblClick;
+
+	protected String htmlId;
 
 	// ---------------------- CONSTRUCTOR
 
@@ -215,6 +219,33 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	}
 
 	// --------------- EXTRA FIELDS
+
+	public Boolean getCallbackOnColumnReorder() {
+		return callbackOnColumnReorder;
+	}
+
+	public OBaseGrid setCallbackOnColumnReorder(Boolean callbackOnColumnReorder) {
+		this.callbackOnColumnReorder = callbackOnColumnReorder;
+		return this;
+	}
+
+	public Boolean getColumnReorder() {
+		return columnReorder;
+	}
+
+	public OBaseGrid setColumnReorder(Boolean columnReorder) {
+		this.columnReorder = columnReorder;
+		return this;
+	}
+
+	public List<String> getReorderColumns() {
+		return reorderColumns;
+	}
+
+	public OBaseGrid setReorderColumns(List<String> reorderColumns) {
+		this.reorderColumns = reorderColumns;
+		return this;
+	}
 
 	public Boolean getSelectionIndicator() {
 		return selectionIndicator;

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -171,6 +172,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 				//.setSelectionJSHandler("function(rows){console.log(rows);}")
 			.setShowFooter(true)
 			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
+			.setColumnReorder(false) //NOTE
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
 
@@ -226,11 +228,21 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 					target.appendJavaScript("alert('Button');");
 				}
 			})
-			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")));
+			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
+			.setReorderColumns(Arrays.asList("col02", "col01")) //NOTE
+			.setCallbackOnColumnReorder(true) //NOTE
+		;
 		grid1Opt.setHeight(OSize.fixed(400));
 
 		final WDataGrid<PersonVO> grid1;
-		add(grid1 = new WDataGrid<>("grid1", grid1Opt, (IGridDataSource<PersonVO>) this));
+		add(grid1 = new WDataGrid<PersonVO>("grid1", grid1Opt, (IGridDataSource<PersonVO>) this) {
+			private static final long serialVersionUID = 2821125315479982045L;
+
+			@Override
+			protected void onColumnReorder(List<String> columns) {
+				logger.info("Visible Grid Column Reorder: {}", columns);
+			}
+		});
 		grid1.setVisible(false);
 		grid1.setOutputMarkupPlaceholderTag(true);
 		grid1.setFooterDataSource(new IGridFooterDataSource<PersonVO>() {

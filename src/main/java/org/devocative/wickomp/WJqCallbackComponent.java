@@ -59,6 +59,12 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 		requestCycle.replaceAllRequestHandlers(new TextRequestHandler("text/json", "UTF-8", json));
 	}
 
+	protected void sendEmptyResponse() {
+		logger.debug("Empty Response");
+		RequestCycle requestCycle = RequestCycle.get();
+		requestCycle.replaceAllRequestHandlers(new TextRequestHandler("<ajax-response/>"));
+	}
+
 	protected AjaxRequestTarget createAjaxResponse() {
 		WebApplication app = (WebApplication) getApplication();
 		AjaxRequestTarget target = app.newAjaxRequestTarget(getPage());

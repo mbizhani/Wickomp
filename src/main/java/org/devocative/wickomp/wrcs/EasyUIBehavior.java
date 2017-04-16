@@ -17,6 +17,8 @@ public class EasyUIBehavior extends Behavior {
 	private static HeaderItem EXT_GROUP_VIEW_JS = Resource.getCommonJS("easyui/ext/datagrid-groupview.js");
 	private static HeaderItem EXT_RTL_CSS = Resource.getCommonCSS("easyui/ext/rtl.css");
 	private static HeaderItem EXT_RTL_JS = Resource.getCommonJS("easyui/ext/rtl.js");
+	private static HeaderItem EXT_COLUMNS = Resource.getCommonJS("easyui/ext/columns-ext.js");
+	private static HeaderItem EXT_COLUMNS_RTL = Resource.getCommonJS("easyui/ext/columns-ext-rtl.js");
 
 	public static void setThemeCSS(HeaderItem THEME_CSS) {
 		EasyUIBehavior.THEME_CSS = THEME_CSS;
@@ -48,8 +50,12 @@ public class EasyUIBehavior extends Behavior {
 		}
 
 		if (OLayoutDirection.RTL.equals(userPreference.getLayoutDirection())) {
+			response.render(EXT_COLUMNS_RTL);
+
 			response.render(EXT_RTL_CSS);
 			response.render(EXT_RTL_JS);
+		} else {
+			response.render(EXT_COLUMNS);
 		}
 	}
 }

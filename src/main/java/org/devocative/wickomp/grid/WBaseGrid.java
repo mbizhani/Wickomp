@@ -23,10 +23,7 @@ import org.devocative.wickomp.wrcs.HeaderBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	/*
@@ -37,6 +34,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	public static final String URL_PARAM_ID = "id";
 	public static final String URL_PARAM_CLICK_TYPE = "$tp";
 	public static final String URL_PARAM_COLUMN_NUMBER = "$cn";
+	public static final String URL_PARAM_COLUMN_REORDER = "$cr";
 
 	public static final String CLICK_FROM_CELL = "cl";
 	public static final String CLICK_FROM_BUTTON = "bt";
@@ -256,6 +254,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 		String clickType = parameters.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
 		Integer colNo = parameters.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
+		String columnReorder = parameters.getParameterValue(URL_PARAM_COLUMN_REORDER).toOptionalString();
 
 		logger.debug("WBaseGrid: onRequest.parameters: clickType={}, pageSize={}, pageNum={}, sort={}, order={}, id={}, colNo={}",
 			clickType, pageSize, pageNum, sortList, orderList, id, colNo);
@@ -273,6 +272,11 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				throw new RuntimeException("Null button index parameter!");
 			}
 			handleToolbarButtonClick(colNo);
+		} else if (columnReorder != null) {
+			logger.debug("Column Reorder: {}", columnReorder);
+			String[] columns = columnReorder.split("[,]");
+			onColumnReorder(Arrays.asList(columns));
+			sendEmptyResponse();
 		} else if (id != null && id.length() > 0) {
 			handleRowsById(id);
 		} else {
@@ -406,6 +410,9 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	}
 
 	protected void onAfterBeanToRObject(T bean, RObject rObject) {
+	}
+
+	protected void onColumnReorder(List<String> columns) {
 	}
 
 	protected final void convertBeansToRObjects(List<T> list, RObjectList page) {
