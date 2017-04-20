@@ -14,7 +14,8 @@
 
 			init: function (options) {
 				wLog.info('wTerminal Init: ', options);
-				if(!Wicket && !Wicket.Event && !Wicket.Event.subscribe) {
+
+				if (!Wicket && !Wicket.Event && !Wicket.Event.subscribe) {
 					alert('No Wicket.Event.subscribe!');
 					return;
 				}
@@ -22,6 +23,22 @@
 				ctx.term = new Terminal(options);
 				ctx.term.open(ctx.target[0]);
 				ctx.term.write("connecting ...\n");
+
+				try {
+					ctx.term.textarea.onpaste = function (e) {
+						wLog.debug('wTerminal: term.textarea.onpaste');
+
+						if (e.clipboardData && e.clipboardData.getData) {
+							var clipData = e.clipboardData.getData('text/plain');
+							if (clipData) {
+								wLog.debug('wTerminal: term.textarea.onpaste -> event.clipboardData', clipData);
+								Wicket.WebSocket.send("key:" + clipData);
+							}
+						}
+					};
+				} catch (err) {
+					wLog.error("wTerminal: can't assign onpaste event", err);
+				}
 
 				Wicket.Event.subscribe("/websocket/open", function (jqEvent, message) {
 					wLog.info('wTerminal: websocket/open!, ' + message);
@@ -53,7 +70,7 @@
 					}
 					isSpecialKey = false;
 
-					if(msg) {
+					if (msg) {
 						Wicket.WebSocket.send(msg);
 					}
 				});
