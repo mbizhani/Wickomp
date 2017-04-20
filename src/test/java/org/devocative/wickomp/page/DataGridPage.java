@@ -58,7 +58,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 				public void onClick(AjaxRequestTarget target, IModel<PersonVO> rowData) {
 					target.appendJavaScript(String.format("alert(\"%s\");", rowData.getObject()));
 				}
-			}.setSortable(true))
+			}.setConfirmMessage("R u sure?").setSortable(true))
 
 			.add(new OAjaxLinkColumn<PersonVO>(new Model<>("Err"), new HTMLBase("Err")) {
 				private static final long serialVersionUID = -6638861337384724243L;
