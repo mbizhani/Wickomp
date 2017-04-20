@@ -1,5 +1,6 @@
 package org.devocative.wickomp.html;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.devocative.wickomp.WDefaults;
@@ -23,10 +24,8 @@ public class WMessager {
 		message = message.replaceAll("[\\n]", "<br/>");
 		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
 
-		return String.format(
-			"$.messager.show({title:'%s',msg:'%s',showType:'%s',timeout:%d,width:'%s',height:'%s',style:{right:'',bottom:''},draggable:%s,resizable:%s,modal:%s});",
-			title, message, options.getShowType(), options.getTimeout(), options.getWidth(), options.getHeight(),
-			options.isDraggable(), options.isResizable(), options.isModal());
+		options.setTitle(title).setMsg(message);
+		return String.format("wTools.show(%s);", WebUtil.toJson(options));
 	}
 
 	public static void writeErrorsInAfterRender(Component component) {
@@ -83,16 +82,72 @@ public class WMessager {
 		target.appendJavaScript(sc);
 	}
 
+	// ---------------
+
+	public static void copyToClipboard(String text, AjaxRequestTarget target) {
+		target.appendJavaScript(String.format("wTools.copyToClipboard(\"%s\");", text));
+	}
+
 	// ------------------------------
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	public static class OMessager {
-		private OAnimation showType = OAnimation.show;
-		private int timeout = 0;
-		private boolean draggable = true;
-		private boolean resizable = true;
-		private boolean modal = false;
-		private String width = "";
-		private String height = "";
+		private Boolean draggable;
+		private String height;
+		private Boolean modal;
+		private String msg;
+		private Boolean resizable;
+		private OAnimation showType;
+		private Integer timeout;
+		private String title;
+		private String width;
+
+		// ---------------
+
+		public Boolean getDraggable() {
+			return draggable;
+		}
+
+		public OMessager setDraggable(Boolean draggable) {
+			this.draggable = draggable;
+			return this;
+		}
+
+		public String getHeight() {
+			return height;
+		}
+
+		public OMessager setHeight(String height) {
+			this.height = height;
+			return this;
+		}
+
+		public Boolean getModal() {
+			return modal;
+		}
+
+		public OMessager setModal(Boolean modal) {
+			this.modal = modal;
+			return this;
+		}
+
+		public String getMsg() {
+			return msg;
+		}
+
+		public OMessager setMsg(String msg) {
+			this.msg = msg;
+			return this;
+		}
+
+		public Boolean getResizable() {
+			return resizable;
+		}
+
+		public OMessager setResizable(Boolean resizable) {
+			this.resizable = resizable;
+			return this;
+		}
 
 		public OAnimation getShowType() {
 			return showType;
@@ -103,39 +158,21 @@ public class WMessager {
 			return this;
 		}
 
-		public int getTimeout() {
+		public Integer getTimeout() {
 			return timeout;
 		}
 
-		public OMessager setTimeout(int timeout) {
+		public OMessager setTimeout(Integer timeout) {
 			this.timeout = timeout;
 			return this;
 		}
 
-		public boolean isDraggable() {
-			return draggable;
+		public String getTitle() {
+			return title;
 		}
 
-		public OMessager setDraggable(boolean draggable) {
-			this.draggable = draggable;
-			return this;
-		}
-
-		public boolean isResizable() {
-			return resizable;
-		}
-
-		public OMessager setResizable(boolean resizable) {
-			this.resizable = resizable;
-			return this;
-		}
-
-		public boolean isModal() {
-			return modal;
-		}
-
-		public OMessager setModal(boolean modal) {
-			this.modal = modal;
+		public OMessager setTitle(String title) {
+			this.title = title;
 			return this;
 		}
 
@@ -145,15 +182,6 @@ public class WMessager {
 
 		public OMessager setWidth(String width) {
 			this.width = width;
-			return this;
-		}
-
-		public String getHeight() {
-			return height;
-		}
-
-		public OMessager setHeight(String height) {
-			this.height = height;
 			return this;
 		}
 	}

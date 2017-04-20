@@ -14,6 +14,7 @@ public class HeaderBehavior extends EasyUIBehavior {
 
 	private static HeaderItem LOG_JS = Resource.getCommonJS("main/wLogger.js");
 	private static HeaderItem MSG_JS = Resource.getCommonJS("main/wMsg.js");
+	private static HeaderItem TOOLS_JS = Resource.getCommonJS("main/wTools.js");
 
 	private static final Map<String, HeaderItem> HEADER_ITEM_MAP = new HashMap<>();
 
@@ -55,6 +56,7 @@ public class HeaderBehavior extends EasyUIBehavior {
 
 		response.render(LOG_JS);
 		response.render(MSG_JS);
+		response.render(TOOLS_JS);
 
 		for (String resource : resources) {
 			response.render(HEADER_ITEM_MAP.get(resource));

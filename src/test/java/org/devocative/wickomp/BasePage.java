@@ -12,6 +12,7 @@ import org.devocative.wickomp.html.window.WModalWindow;
 import org.devocative.wickomp.panel.SelectionPanel;
 
 import java.util.Arrays;
+import java.util.Date;
 
 public abstract class BasePage extends WebPage {
 	private static final long serialVersionUID = 4633952971700734823L;
@@ -54,6 +55,14 @@ public abstract class BasePage extends WebPage {
 				/*window.setContent(new Label(window.getContentId(), "<p>Hello Window</p><br/><br/><br/><br/>")
 					.setEscapeModelStrings(false));*/
 				window.show(target);
+			}
+		});
+		add(new AjaxLink("copyToClipboard") {
+			private static final long serialVersionUID = 6059293605971268711L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				WMessager.copyToClipboard(new Date().toString(), target);
 			}
 		});
 	}

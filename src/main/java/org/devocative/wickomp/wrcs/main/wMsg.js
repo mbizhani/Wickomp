@@ -4,15 +4,16 @@ _wMsgBundle['fa'] = {
 	info: 'اطلاع',
 	warning: 'اخطار',
 	error: 'خطا',
+	copy2clip: 'دکمه ok را برای انتقال به کلیپبورد فشار دهید',
 
 	wGrid: {
-		selectionLimit:'تا 100 رکورد امکان ارسال است',
+		selectionLimit: 'تا 100 رکورد امکان ارسال است',
 		pager: {
-			showAllSelections:'انتخاب شده(ها)',
-			deselectAll:'حذف تمامی انتخاب شده(ها)',
-			selectAll:'انتخاب رکوردهای صفحه',
-			sendSelections:'ارسال',
-			debugSelections:'نمایش آنچه ارسال می شود'
+			showAllSelections: 'انتخاب شده(ها)',
+			deselectAll: 'حذف تمامی انتخاب شده(ها)',
+			selectAll: 'انتخاب رکوردهای صفحه',
+			sendSelections: 'ارسال',
+			debugSelections: 'نمایش آنچه ارسال می شود'
 		}
 	},
 
@@ -25,15 +26,16 @@ _wMsgBundle['en'] = {
 	info: 'Info',
 	warning: 'Warning',
 	error: 'Error',
+	copy2clip: 'Press ok to copy to clipboard',
 
 	wGrid: {
-		selectionLimit:'Only maximum 100 records to send',
+		selectionLimit: 'Only maximum 100 records to send',
 		pager: {
-			showAllSelections:'Show selection(s)',
-			deselectAll:'Deselect all',
-			selectAll:'Select all records in this page',
-			sendSelections:'Send',
-			debugSelections:'Show sent selections (for debug)'
+			showAllSelections: 'Show selection(s)',
+			deselectAll: 'Deselect all',
+			selectAll: 'Select all records in this page',
+			sendSelections: 'Send',
+			debugSelections: 'Show sent selections (for debug)'
 		}
 	},
 
@@ -43,7 +45,7 @@ _wMsgBundle['en'] = {
 };
 
 function wSetLocale(locale) {
-	if(_wMsgBundle[locale]) {
+	if (_wMsgBundle[locale]) {
 		return _wMsgBundle[locale];
 	} else {
 		wLog.error('Unavailable locale: ', locale);
