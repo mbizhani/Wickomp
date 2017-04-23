@@ -1,11 +1,9 @@
 (function ($) {
 	$.fn.wTerminal = function (cmdOrOpts, options) {
 		var defaults = {
-			screenKeys: false,
-			useStyle: true,
 			cursorBlink: true,
-			convertEol: true,
-			rows: 25
+			rows: 25,
+			cols: 100
 		};
 
 		var ctx = {
