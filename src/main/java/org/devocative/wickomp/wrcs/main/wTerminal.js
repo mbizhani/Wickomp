@@ -2,7 +2,10 @@
 	$.fn.wTerminal = function (cmdOrOpts, options) {
 		var defaults = {
 			cursorBlink: true,
-			rows: 25,
+			//screenKeys: false,
+			//useStyle: true,
+			convertEol: true,
+			rows: 30,
 			cols: 100
 		};
 
@@ -14,13 +17,14 @@
 				wLog.info('wTerminal Init: ', options);
 
 				if (!Wicket && !Wicket.Event && !Wicket.Event.subscribe) {
+					wLog.error('No Wicket.Event.subscribe!');
 					alert('No Wicket.Event.subscribe!');
 					return;
 				}
 
 				ctx.term = new Terminal(options);
 				ctx.term.open(ctx.target[0]);
-				ctx.term.write("connecting ...\n");
+				ctx.term.write("Connecting ...\n");
 
 				try {
 					ctx.term.textarea.onpaste = function (e) {
@@ -40,6 +44,7 @@
 
 				Wicket.Event.subscribe("/websocket/open", function (jqEvent, message) {
 					wLog.info('wTerminal: websocket/open!, ' + message);
+					ctx.term.write("WebSocket connected!\n");
 				});
 
 				Wicket.Event.subscribe("/websocket/message", function (jqEvent, message) {
@@ -48,6 +53,7 @@
 
 				Wicket.Event.subscribe("/websocket/closed", function (jqEvent, message) {
 					wLog.warn('wTerminal: websocket/closed!', message);
+					ctx.term.write("\nWebSocket to server is disconnected!\n");
 				});
 
 				Wicket.Event.subscribe("/websocket/error", function (jqEvent, message) {
@@ -57,9 +63,12 @@
 				var isSpecialKey = false;
 				ctx.term.on('keydown', function (ev) {
 					isSpecialKey = true;
+					//wLog.debug('keydown', ev);
 				});
 
 				ctx.term.on('key', function (key, ev) {
+					//wLog.debug('key', ev);
+
 					var msg;
 					if (isSpecialKey) {
 						msg = "specialKey:" + ev.keyCode;
@@ -72,6 +81,13 @@
 						Wicket.WebSocket.send(msg);
 					}
 				});
+			},
+
+			resize: function () {
+				var width = Math.floor(ctx.target.innerWidth() - 8);
+				var height = Math.floor(ctx.target.innerHeight());
+				wLog.debug("wTerminal.resize: ", width, height);
+				ctx.term.resize(Math.floor(width / 8), Math.floor(height / 18));
 			}
 		};
 

@@ -75,7 +75,6 @@ public abstract class WTerminal extends WebMarkupContainer {
 			@Override
 			protected void onMessage(WebSocketRequestHandler handler, TextMessage message) {
 				String text = message.getText();
-				logger.debug("WebSocketAsyncBehavior.onMessage: {}", text);
 
 				String key = null;
 				Integer specialKey = null;
@@ -88,8 +87,6 @@ public abstract class WTerminal extends WebMarkupContainer {
 							specialKey = Integer.parseInt(split[1]);
 						}
 					}
-
-					logger.debug("Key=[{}], SpecialKey=[{}]", key, specialKey);
 
 					WTerminal.this.onMessage(key, specialKey);
 				} catch (Exception e) {
