@@ -3,6 +3,24 @@
 
 <head>
 	<meta charset="UTF-8">
+
+	<script type="application/javascript">
+		Wicket.Event.subscribe("/websocket/open", function (jqEvent, message) {
+			console.log('BasePage: websocket/open!, ' + message);
+		});
+
+		Wicket.Event.subscribe("/websocket/message", function (jqEvent, message) {
+			console.log('BasePage: websocket/message: ' + message);
+		});
+
+		Wicket.Event.subscribe("/websocket/closed", function (jqEvent, message) {
+			console.log('BasePage: websocket/closed!, ' + message);
+		});
+
+		Wicket.Event.subscribe("/websocket/error", function (jqEvent, message) {
+			console.log('BasePage: websocket/error!, ' + message);
+		});
+	</script>
 </head>
 
 <body style="margin: 0">

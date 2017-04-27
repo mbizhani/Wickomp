@@ -5,6 +5,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
+import org.devocative.wickomp.async.AsyncBehavior;
 import org.devocative.wickomp.html.WMessager;
 import org.devocative.wickomp.html.menu.OMenuItem;
 import org.devocative.wickomp.html.menu.WMenuBar;
@@ -65,5 +66,7 @@ public abstract class BasePage extends WebPage {
 				WMessager.copyToClipboard(new Date().toString(), target);
 			}
 		});
+
+		add(new AsyncBehavior());
 	}
 }

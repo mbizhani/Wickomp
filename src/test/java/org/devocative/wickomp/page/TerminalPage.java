@@ -1,6 +1,9 @@
 package org.devocative.wickomp.page;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
+import org.devocative.wickomp.html.WAjaxLink;
 import org.devocative.wickomp.html.WTerminal;
 import org.devocative.wickomp.ssh.IAsyncResult;
 import org.devocative.wickomp.ssh.SSHMediator;
@@ -17,7 +20,8 @@ public class TerminalPage extends BasePage implements IAsyncResult {
 
 			@Override
 			protected void onConnect() {
-				SSHMediator.init("root", "172.16.1.243", "qazwsx@123", TerminalPage.this);
+				System.out.println("TerminalPage.onConnect");
+				SSHMediator.init("ares", "192.168.40.131", "qweasd@123", TerminalPage.this);
 			}
 
 			@Override
@@ -34,8 +38,20 @@ public class TerminalPage extends BasePage implements IAsyncResult {
 				SSHMediator.close();
 			}
 		};
-
+		wTerminal.setVisible(false);
+		wTerminal.setOutputMarkupId(true);
+		wTerminal.setOutputMarkupPlaceholderTag(true);
 		add(wTerminal);
+
+		add(new WAjaxLink("createTerminal", new Model<>("Terminal")) {
+			private static final long serialVersionUID = -5885155363799887584L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				wTerminal.setVisible(true);
+				target.add(wTerminal);
+			}
+		});
 	}
 
 	@Override

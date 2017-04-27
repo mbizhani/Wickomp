@@ -1,20 +1,22 @@
 (function ($) {
-	$.fn.wTerminal = function (cmdOrOpts, options) {
+	$.fn.wTerminal = function (ctid) {
 		var defaults = {
 			cursorBlink: true,
 			//screenKeys: false,
 			//useStyle: true,
 			convertEol: true,
-			rows: 30,
+			rows: 40,
 			cols: 100
 		};
 
 		var ctx = {
 			term: null,
 			target: $(this),
+			ctid: '',
 
-			init: function (options) {
-				wLog.info('wTerminal Init: ', options);
+			init: function (ctid) {
+				wLog.info('wTerminal Init: ', ctid);
+				ctx.ctid = ctid;
 
 				if (!Wicket && !Wicket.Event && !Wicket.Event.subscribe) {
 					wLog.error('No Wicket.Event.subscribe!');
@@ -22,7 +24,7 @@
 					return;
 				}
 
-				ctx.term = new Terminal(options);
+				ctx.term = new Terminal(defaults);
 				ctx.term.open(ctx.target[0]);
 				ctx.term.write("Connecting ...\n");
 
@@ -34,7 +36,7 @@
 							var clipData = e.clipboardData.getData('text/plain');
 							if (clipData) {
 								wLog.debug('wTerminal: term.textarea.onpaste -> event.clipboardData', clipData);
-								Wicket.WebSocket.send("key:" + clipData);
+								ctx.send('key', clipData);
 							}
 						}
 					};
@@ -42,18 +44,16 @@
 					wLog.error("wTerminal: can't assign onpaste event", err);
 				}
 
-				Wicket.Event.subscribe("/websocket/open", function (jqEvent, message) {
-					wLog.info('wTerminal: websocket/open!, ' + message);
-					ctx.term.write("WebSocket connected!\n");
-				});
-
 				Wicket.Event.subscribe("/websocket/message", function (jqEvent, message) {
-					ctx.term.write(message);
+					var parse = JSON.parse(message);
+					if (parse && parse['ctid'] && parse.ctid == ctx.ctid) {
+						ctx.term.write(parse.text);
+					}
 				});
 
 				Wicket.Event.subscribe("/websocket/closed", function (jqEvent, message) {
 					wLog.warn('wTerminal: websocket/closed!', message);
-					ctx.term.write("\nWebSocket to server is disconnected!\n");
+					ctx.term.write("\nERR: WebSocket is Disconnected!\n");
 				});
 
 				Wicket.Event.subscribe("/websocket/error", function (jqEvent, message) {
@@ -61,6 +61,7 @@
 				});
 
 				var isSpecialKey = false;
+
 				ctx.term.on('keydown', function (ev) {
 					isSpecialKey = true;
 					//wLog.debug('keydown', ev);
@@ -69,18 +70,15 @@
 				ctx.term.on('key', function (key, ev) {
 					//wLog.debug('key', ev);
 
-					var msg;
 					if (isSpecialKey) {
-						msg = "specialKey:" + ev.keyCode;
+						ctx.send('specialKey', '' + ev.keyCode);
 					} else {
-						msg = "key:" + key;
+						ctx.send('key', key);
 					}
 					isSpecialKey = false;
-
-					if (msg) {
-						Wicket.WebSocket.send(msg);
-					}
 				});
+
+				ctx.send('init', null);
 			},
 
 			resize: function () {
@@ -88,21 +86,21 @@
 				var height = Math.floor(ctx.target.innerHeight());
 				wLog.debug("wTerminal.resize: ", width, height);
 				ctx.term.resize(Math.floor(width / 8), Math.floor(height / 18));
+			},
+
+			send: function (cmd, value) {
+				var msg = {
+					ctid: ctx.ctid,
+					cmd: cmd
+				};
+				if (value) {
+					msg['value'] = value;
+				}
+				Wicket.WebSocket.send("W.W_TERMINAL:" + JSON.stringify(msg));
 			}
 		};
 
-		if (!cmdOrOpts && !options) {
-			ctx.init(defaults);
-		} else if (typeof(cmdOrOpts) === 'object') {
-			var opt = $.extend({}, defaults, cmdOrOpts);
-			ctx.init(opt);
-		} else if (typeof(cmdOrOpts) === 'string') {
-			switch (cmdOrOpts) {
-				default:
-					throw "wTerminal: Invalid Command [" + cmdOrOpts + "]";
-			}
-		}
-
+		ctx.init(ctid);
 		return $(this);
 	}
 })(jQuery);

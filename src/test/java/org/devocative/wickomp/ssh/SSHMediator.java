@@ -33,7 +33,12 @@ public class SSHMediator {
 			channel = (ChannelShell) session.openChannel("shell");
 			channel.setPtyType("xterm");
 			processor = new ShellProcessor();
+
 			in = channel.getInputStream();
+			OutputStream out = channel.getOutputStream();
+
+			channel.connect();
+			commander = new PrintStream(out, true);
 
 			Thread th = new Thread() {
 				@Override
@@ -71,11 +76,6 @@ public class SSHMediator {
 				}
 			};
 			th.start();
-
-			OutputStream out = channel.getOutputStream();
-			commander = new PrintStream(out, true);
-
-			channel.connect();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
