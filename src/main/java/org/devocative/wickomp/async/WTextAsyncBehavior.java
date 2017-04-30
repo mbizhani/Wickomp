@@ -9,11 +9,15 @@ import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public abstract class WTextAsyncBehavior extends WebSocketBehavior {
 	private static final long serialVersionUID = -6196868642769507632L;
+
+	private static final Logger logger = LoggerFactory.getLogger(WTextAsyncBehavior.class);
 
 	// ------------------------------
 
@@ -46,7 +50,11 @@ public abstract class WTextAsyncBehavior extends WebSocketBehavior {
 		);
 
 		try {
-			connection.sendMessage(text);
+			if (connection != null && connection.isOpen()) {
+				connection.sendMessage(text);
+			} else {
+				logger.warn("WTextAsyncBehavior.push: broken connection text=[{}]", text);
+			}
 		} catch (IOException e) {
 			throw new WicketRuntimeException(e);
 		}
