@@ -10,6 +10,7 @@
 		};
 
 		var ctx = {
+			PREFIX: 'W.W_TERMINAL:',
 			term: null,
 			target: $(this),
 			ctid: '',
@@ -45,9 +46,15 @@
 				}
 
 				Wicket.Event.subscribe("/websocket/message", function (jqEvent, message) {
-					var parse = JSON.parse(message);
-					if (parse && parse['ctid'] && parse.ctid == ctx.ctid) {
-						ctx.term.write(parse.text);
+					if (message && message.startsWith(ctx.PREFIX)) {
+						try {
+							var parse = JSON.parse(message.substring(ctx.PREFIX.length));
+							if (parse && parse['ctid'] && parse.ctid == ctx.ctid) {
+								ctx.term.write(parse.text);
+							}
+						} catch (e) {
+							wLog.error('wTerminal: response handling problem: ', e);
+						}
 					}
 				});
 
@@ -96,7 +103,7 @@
 				if (value) {
 					msg['value'] = value;
 				}
-				Wicket.WebSocket.send("W.W_TERMINAL:" + JSON.stringify(msg));
+				Wicket.WebSocket.send(ctx.PREFIX + JSON.stringify(msg));
 			}
 		};
 

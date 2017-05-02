@@ -5,10 +5,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
-import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
-import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
-import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
-import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.message.*;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,10 +63,13 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 		}
 	}
 
-	/*@Override
+	@Override
 	protected void onMessage(WebSocketRequestHandler handler, TextMessage message) {
-		logger.debug("WebSocketAsyncBehavior.onMessage: {}", message);
-	}*/
+		String text = message.getText();
+		if("W.PING".equals(text)) {
+			handler.push("W.R_PING");
+		}
+	}
 
 	@Override
 	protected void onClose(ClosedMessage message) {

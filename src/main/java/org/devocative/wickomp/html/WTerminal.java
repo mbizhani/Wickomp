@@ -41,7 +41,7 @@ public abstract class WTerminal extends WebMarkupContainer {
 	// ------------------------------
 
 	public void push(String message) {
-		textAsyncBehavior.push(WebUtil.toJson(new ResponseMessage(message)));
+		textAsyncBehavior.push(PREFIX + WebUtil.toJson(new ResponseMessage(message)));
 	}
 
 	@Override
