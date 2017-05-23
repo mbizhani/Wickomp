@@ -5,17 +5,14 @@ public enum OCodeMode {
 	SQL("text/x-sql", "sql", true),
 	PL_SQL("text/x-plsql", "sql", true),
 	MS_SQL("text/x-mssql", "sql", true),
-	MY_SQL("text/x-mysql", "sql", true);
+	MY_SQL("text/x-mysql", "sql", true),
+	GROOVY("text/x-groovy", "groovy", false);
 
 	private String mode;
 	private String jsFile;
 	private boolean hasHint;
 
-	private OCodeMode(String mode, String jsFile) {
-		this(mode, jsFile, false);
-	}
-
-	private OCodeMode(String mode, String jsFile,  boolean hasHint) {
+	OCodeMode(String mode, String jsFile, boolean hasHint) {
 		this.mode = mode;
 		this.jsFile = jsFile;
 		this.hasHint = hasHint;

@@ -8,16 +8,23 @@ import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WCodeInput extends WFormInputPanel<String> {
 	private static final long serialVersionUID = 4501207922641028914L;
+	private static final Logger logger = LoggerFactory.getLogger(WCodeInput.class);
 
 	private static final HeaderItem MAIN_CSS = Resource.getCommonCSS("codemirror/codemirror.css");
 	private static final HeaderItem MAIN_JS = Resource.getCommonJS("codemirror/codemirror.js");
 	private static final HeaderItem JQ_JS = Resource.getCommonJS("codemirror/wcodemirror.js");
 
+	// ------------------------------
+
 	private OCode options;
 	private TextArea<String> editor;
+
+	// ------------------------------
 
 	public WCodeInput(String id, OCode options) {
 		this(id, null, options);
@@ -35,6 +42,8 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 		setOutputMarkupId(true);
 	}
+
+	// ------------------------------
 
 	@Override
 	protected void onBeforeRender() {
@@ -66,10 +75,12 @@ public class WCodeInput extends WFormInputPanel<String> {
 			response.render(Resource.getCommonJS(String.format("codemirror/hint/%s-hint.js", options.getMode().getJsFile())));
 		}
 
-		if (options.getShowMatchingBrackets()) {
+		if (options.getMatchBrackets() == null || options.getMatchBrackets()) {
 			response.render(Resource.getCommonJS("codemirror/addon/matchbrackets.js"));
 		}
 	}
+
+	// ------------------------------
 
 	@Override
 	protected void onAfterRender() {
@@ -78,6 +89,8 @@ public class WCodeInput extends WFormInputPanel<String> {
 		String script = String.format("$('#%s').codemirror(%s);",
 			editor.getMarkupId(),
 			WebUtil.toJson(options));
+
+		logger.debug("WCodeInput: {}", script);
 
 		if (!isEnabledInHierarchy()) {
 			script += String.format("$('#%s').find('div.CodeMirror-scroll').css('background-color', '#eeeeee');", getMarkupId());

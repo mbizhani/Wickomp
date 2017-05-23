@@ -1,6 +1,5 @@
 package org.devocative.wickomp.form.code;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.devocative.wickomp.opt.Options;
 
 import java.util.HashMap;
@@ -9,24 +8,22 @@ import java.util.Map;
 public class OCode extends Options {
 	private static final long serialVersionUID = 711452574514745355L;
 
-	private Boolean autofocus = true;
+	private Boolean autofocus;
 	private Object hintOptions;
-	private Boolean indentWithTabs = true;
-	private Boolean lineNumbers = true;
-	private Boolean matchBrackets = true;
+	private Boolean indentWithTabs;
+	private Boolean lineNumbers;
+	private Boolean matchBrackets;
 	private OCodeMode mode;
 	private Boolean readOnly; //default is false
-	private Boolean smartIndent = true;
+	private Boolean smartIndent;
 
-	private Boolean showMatchingBrackets = true;
-
-	// ------------------------------ CONSTRUCTORS
+	// ------------------------------
 
 	public OCode(OCodeMode mode) {
-		this.mode = mode;
+		setMode(mode);
 	}
 
-	// ------------------------------ ACCESSORS
+	// ------------------------------
 
 	public Boolean getAutofocus() {
 		return autofocus;
@@ -100,26 +97,14 @@ public class OCode extends Options {
 		return this;
 	}
 
-	// ------------------------------
+	// ---------------
 
 	public Object getExtraKeys() {
-		if(mode.isHasHint()) {
+		if (mode.isHasHint()) {
 			Map<String, String> map = new HashMap<>();
 			map.put("Ctrl-Space", "autocomplete");
 			return map;
 		}
 		return null;
-	}
-
-	// ------------------------------
-
-	@JsonIgnore
-	public Boolean getShowMatchingBrackets() {
-		return showMatchingBrackets;
-	}
-
-	public OCode setShowMatchingBrackets(Boolean showMatchingBrackets) {
-		this.showMatchingBrackets = showMatchingBrackets;
-		return this;
 	}
 }
