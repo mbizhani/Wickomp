@@ -22,7 +22,7 @@ public class WFileInput extends WLabeledFormInputPanel<List<FileUpload>> {
 	private WFileInput(String id, IModel<List<FileUpload>> model) {
 		super(id, model);
 
-		fileUploadField = new FileUploadField("file");
+		fileUploadField = new FileUploadField("theFile", new WModel<List<FileUpload>>());
 		add(fileUploadField);
 	}
 
