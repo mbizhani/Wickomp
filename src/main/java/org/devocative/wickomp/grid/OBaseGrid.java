@@ -41,6 +41,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	protected Boolean callbackOnColumnReorder;
 	protected Boolean columnReorder;
+	protected List<OPagingButtons> pagingBarLayout;
 	protected List<String> reorderColumns;
 	protected Boolean selectionIndicator;
 	protected String selectionJSHandler;
@@ -224,7 +225,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return callbackOnColumnReorder;
 	}
 
-	public OBaseGrid setCallbackOnColumnReorder(Boolean callbackOnColumnReorder) {
+	public OBaseGrid<T> setCallbackOnColumnReorder(Boolean callbackOnColumnReorder) {
 		this.callbackOnColumnReorder = callbackOnColumnReorder;
 		return this;
 	}
@@ -233,8 +234,17 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return columnReorder;
 	}
 
-	public OBaseGrid setColumnReorder(Boolean columnReorder) {
+	public OBaseGrid<T> setColumnReorder(Boolean columnReorder) {
 		this.columnReorder = columnReorder;
+		return this;
+	}
+
+	public List<OPagingButtons> getPagingBarLayout() {
+		return pagingBarLayout;
+	}
+
+	public OBaseGrid<T> setPagingBarLayout(List<OPagingButtons> pagingBarLayout) {
+		this.pagingBarLayout = pagingBarLayout;
 		return this;
 	}
 
@@ -242,7 +252,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return reorderColumns;
 	}
 
-	public OBaseGrid setReorderColumns(List<String> reorderColumns) {
+	public OBaseGrid<T> setReorderColumns(List<String> reorderColumns) {
 		this.reorderColumns = reorderColumns;
 		return this;
 	}

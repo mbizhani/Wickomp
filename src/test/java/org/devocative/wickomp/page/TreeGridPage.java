@@ -19,10 +19,7 @@ import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.vo.EmployeeVO;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 	private static final long serialVersionUID = 4726580534261868437L;
@@ -133,6 +130,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 				//.setParentIdField("parentId")
 			.setIdField("eid")
 			.setColumns(columnList)
+			.setPagingBarLayout(Arrays.asList(OPagingButtons.refresh))
 			.setHeight(OSize.fixed(400));
 
 		add(new WTreeGrid<>("treegrid", treeGrid, new ITreeGridDataSource<EmployeeVO>() {

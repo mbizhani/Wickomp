@@ -81,6 +81,16 @@
 			if (options['columnReorder']) {
 				$(this).datagrid('columnMoving');
 			}
+
+			if (options['pagingBarLayout']) {
+				var pageOpt = {layout: options['pagingBarLayout']};
+				//NOTE: a bug in the layout customization, without 'info' the pagination bar is invisible!
+				if (options['pagingBarLayout'].indexOf('info') < 0) {
+					pageOpt['displayMsg'] = '';
+					pageOpt.layout.push('info');
+				}
+				$(this).datagrid('getPager').pagination(pageOpt);
+			}
 		},
 
 		initSelection: function (grid) {
