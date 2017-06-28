@@ -1,5 +1,7 @@
 # Wickomp
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.devocative/wickomp/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.devocative/wickomp)
+
 The `Wickomp` project is an extension to Apache Wicket with collection of class as follows:
 - **Form components** like `WDateInput`, `WBooleanInput`, `WCodeInput`, `WSelectionInput`, ...
 - **Grid components** based on [EasyUI](http://www.jeasyui.com) which are `WDataGrid` and `WTreeGrid`
