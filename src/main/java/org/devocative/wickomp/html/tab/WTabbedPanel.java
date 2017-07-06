@@ -21,6 +21,7 @@ import java.util.List;
 
 public class WTabbedPanel extends WJqCallbackPanel {
 	private static final long serialVersionUID = -6158080713080205336L;
+	private static final String TAB_HTML_CLASS = "w-tab";
 	private static final Logger logger = LoggerFactory.getLogger(WTabbedPanel.class);
 
 	// ------------------------------
@@ -141,6 +142,7 @@ public class WTabbedPanel extends WJqCallbackPanel {
 
 	private WebMarkupContainer appendTab(Component tab, OTab oTab) {
 		WebMarkupContainer tabContainer = new WebMarkupContainer(tabs.newChildId());
+		tabContainer.add(new AttributeModifier("class", TAB_HTML_CLASS));
 		if (oTab != null) {
 			tabContainer.add(new AttributeModifier("title", oTab.getTitle()));
 			if (ObjectUtil.isTrue(oTab.getClosable())) {
