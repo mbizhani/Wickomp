@@ -39,9 +39,14 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	public static final String CLICK_FROM_CELL = "cl";
 	public static final String CLICK_FROM_BUTTON = "bt";
 
+	// ------------------------------
+
 	private static final long serialVersionUID = -2882882330275047801L;
+	private static final String TOOLBAR_HTML_CLASS = "w-grid-tbar";
 
 	protected static final Logger logger = LoggerFactory.getLogger(WBaseGrid.class);
+
+	// ------------------------------
 
 	private OBaseGrid<T> options;
 	private IExceptionToMessageHandler exceptionMessageHandler = WDefaults.getExceptionToMessageHandler();
@@ -302,24 +307,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		super.onAfterRender();
 
 		if (isVisible()) {
-			List<OButton<T>> toolbarButtons = options.getToolbarButtons();
-			if (!toolbarButtons.isEmpty()) {
-				StringBuilder builder = new StringBuilder();
-				if (hideToolbarFirstTime) {
-					builder
-						.append(String.format("<div id=\"%s-tb\" style=\"visibility:hidden\">", getMarkupId()));
-				} else {
-					builder
-						.append(String.format("<div id=\"%s-tb\">", getMarkupId()));
-				}
-				builder.append("<table><tr>");
-				for (OButton<T> button : toolbarButtons) {
-					builder.append("<td>").append(button.getHTMLContent()).append("</td>");
-				}
-				builder.append("</tr></table></div>");
-
-				getResponse().write(builder.toString());
-			}
+			createToolbar();
 		}
 	}
 
@@ -448,6 +436,29 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	}
 
 	// ---------------
+
+	private void createToolbar() {
+		List<OButton<T>> toolbarButtons = options.getToolbarButtons();
+		if (!toolbarButtons.isEmpty()) {
+			StringBuilder builder = new StringBuilder();
+			if (hideToolbarFirstTime) {
+				builder
+					.append(String.format("<div id=\"%s-tb\" class=\"%s\" style=\"visibility:hidden\">",
+						getMarkupId(), TOOLBAR_HTML_CLASS));
+			} else {
+				builder
+					.append(String.format("<div id=\"%s-tb\"> class=\"%s\" ", getMarkupId(), TOOLBAR_HTML_CLASS));
+			}
+			builder.append("<table><tr>");
+			for (OButton<T> button : toolbarButtons) {
+				builder.append("<td>").append(button.getHTMLContent()).append("</td>");
+			}
+			builder
+				.append("</tr></table></div>");
+
+			getResponse().write(builder.toString());
+		}
+	}
 
 	private void handleToolbarButtonClick(Integer colNo) {
 		OButton<T> button = options.getToolbarButtons().get(colNo);

@@ -36,7 +36,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 		builder.append("</select></td>");
 
 		if (expand != null) {
-			builder.append("<td><a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
+			builder.append(String.format("<td><a class=\"%s\" title=\"", TOOLBAR_BUT_HTML_CLASS))
 				.append(new ResourceModel("label.nodes.expand", "Expand All").getObject())
 				.append("\" onclick=\"")
 				.append(String.format("expandAllGroups('%s');", getGridHtmlId()))
@@ -47,7 +47,7 @@ public class OGridGroupingButton<T> extends OButton<T> {
 		}
 
 		if (collapse != null) {
-			builder.append("<td><a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
+			builder.append(String.format("<td><a class=\"%s\" title=\"", TOOLBAR_BUT_HTML_CLASS))
 				.append(new ResourceModel("label.nodes.expand", "Collapse All").getObject())
 				.append("\" onclick=\"")
 				.append(String.format("collapseAllGroups('%s');", getGridHtmlId()))

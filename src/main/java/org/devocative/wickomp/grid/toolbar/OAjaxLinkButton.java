@@ -19,8 +19,8 @@ public abstract class OAjaxLinkButton<T> extends OButton<T> {
 	@Override
 	public String getHTMLContent() {
 		return String.format(
-			"<a class=\"easyui-linkbutton\" plain=\"true\" href=\"#\" onclick=\"Wicket.Ajax.get({u:'%s'})\">%s</a>",
-			getCallbackURL(), html.toString());
+			"<a class=\"%s\" href=\"#\" onclick=\"Wicket.Ajax.get({u:'%s'})\">%s</a>",
+			TOOLBAR_BUT_HTML_CLASS, getCallbackURL(), html.toString());
 	}
 
 	// ------------------------------

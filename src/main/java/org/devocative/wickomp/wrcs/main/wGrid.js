@@ -91,6 +91,9 @@
 				}
 				$(this).datagrid('getPager').pagination(pageOpt);
 			}
+
+			var toolbarId = $(this).attr("id") + "-tb";
+			$('#' + toolbarId).find('.w-grid-tbar-but').linkbutton({plain: true});
 		},
 
 		initSelection: function (grid) {

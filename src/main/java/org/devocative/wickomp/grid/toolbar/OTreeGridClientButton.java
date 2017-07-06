@@ -23,7 +23,7 @@ public class OTreeGridClientButton<T> extends OButton<T> {
 
 		if (expand != null) {
 			builder
-				.append("<a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
+				.append(String.format("<a class=\"%s\" title=\"", TOOLBAR_BUT_HTML_CLASS))
 				.append(new ResourceModel("label.nodes.expand", "Expand All").getObject())
 				.append("\" onclick=\"")
 				.append(String.format("$('#%s').treegrid('expandAll');", getGridHtmlId()))
@@ -34,7 +34,7 @@ public class OTreeGridClientButton<T> extends OButton<T> {
 		}
 
 		builder
-			.append("<a class=\"easyui-linkbutton\" plain=\"true\" title=\"")
+			.append(String.format("<a class=\"%s\" title=\"", TOOLBAR_BUT_HTML_CLASS))
 			.append(new ResourceModel("label.nodes.collapse", "Collapse All").getObject())
 			.append("\" onclick=\"")
 			.append(String.format("$('#%s').treegrid('collapseAll');", getGridHtmlId()))

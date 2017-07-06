@@ -245,16 +245,13 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 		});
 		grid1.setVisible(false);
 		grid1.setOutputMarkupPlaceholderTag(true);
-		grid1.setFooterDataSource(new IGridFooterDataSource<PersonVO>() {
-			@Override
-			public List<?> footer(List<PersonVO> pagedData) {
-				List list = new ArrayList<>();
-				PersonVO agg = new PersonVO();
-				agg.setCol01("Sum");
-				agg.setIncome(1000L);
-				list.add(agg);
-				return list;
-			}
+		grid1.setFooterDataSource(pagedData -> {
+			List list1 = new ArrayList<>();
+			PersonVO agg = new PersonVO();
+			agg.setCol01("Sum");
+			agg.setIncome(1000L);
+			list1.add(agg);
+			return list1;
 		});
 
 		add(new AjaxLink("showGrid") {

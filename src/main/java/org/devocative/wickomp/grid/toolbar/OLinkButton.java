@@ -17,7 +17,8 @@ public abstract class OLinkButton<T> extends OButton<T> {
 
 	@Override
 	public String getHTMLContent() {
-		return String.format("<a class=\"easyui-linkbutton\" plain=\"true\" href=\"%s\">%s</a>", getCallbackURL(), html.toString());
+		return String.format("<a class=\"%s\" href=\"%s\">%s</a>",
+			TOOLBAR_BUT_HTML_CLASS, getCallbackURL(), html.toString());
 	}
 
 	// ------------------------------

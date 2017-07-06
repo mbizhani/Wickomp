@@ -11,6 +11,8 @@ import org.devocative.wickomp.opt.Options;
 public abstract class OButton<T> extends Options {
 	private static final long serialVersionUID = 4808428345821267063L;
 
+	protected static final String TOOLBAR_BUT_HTML_CLASS = "w-grid-tbar-but";
+
 	private int index;
 	private String url;
 	private String gridHtmlId;

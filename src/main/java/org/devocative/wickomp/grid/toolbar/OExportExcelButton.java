@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class OExportExcelButton<T> extends OLinkButton<T> {
 	private static final long serialVersionUID = -8571985043735727439L;
@@ -56,13 +57,12 @@ public class OExportExcelButton<T> extends OLinkButton<T> {
 
 			@Override
 			protected void handleStream(OutputStream stream) throws IOException {
-				List<String> columnsTitle = new ArrayList<>();
-
-				for (OColumn<T> column : getColumnList().getVisibleColumns()) {
-					if (column instanceof OPropertyColumn) {
-						columnsTitle.add(column.getTitle());
-					}
-				}
+				List<String> columnsTitle = getColumnList()
+					.getVisibleColumns()
+					.stream()
+					.filter(column -> column instanceof OPropertyColumn)
+					.map(OColumn::getTitle)
+					.collect(Collectors.toList());
 
 				ExcelExporter exporter = new ExcelExporter(fileName);
 				exporter.setColumnsHeader(columnsTitle);
