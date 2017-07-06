@@ -1,4 +1,8 @@
-function initClientSearchableList(selListPanelId) {
+var noOfSelectionLabel;
+
+function initClientSearchableList(selListPanelId, noOfSelLabel) {
+	noOfSelectionLabel = noOfSelLabel;
+
 	var selListPanel = $("#" + selListPanelId);
 	var slTable = selListPanel.find(".w-input:first");
 	var slOpener = selListPanel.find(".slOpener:first");
@@ -86,10 +90,10 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 		}
 		holder.find("input").on('change', function (event) {
 			var nos = holder.find('input:checked').size();
-			title.val(nos);
+			title.val(nos + ' ' + noOfSelectionLabel);
 		});
 
-		title.val(multipleSelection ? rows.length : 1);
+		title.val((multipleSelection ? rows.length : 1) + ' ' + noOfSelectionLabel);
 	}
 
 	if (title.data("oldContent") == undefined) {

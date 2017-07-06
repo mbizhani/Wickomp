@@ -139,7 +139,9 @@ public abstract class WClientSearchableListInput extends WLabeledFormInputPanel 
 				size = 1;
 			}
 		}
-		title.add(new AttributeModifier("value", size));
+
+		// NOTE: the following line is necessary for form reset action
+		title.add(new AttributeModifier("value", String.format("%s %s", size, getString("WClientSearchableListInput.noOfSelection"))));
 
 		super.onBeforeRender();
 	}
@@ -149,7 +151,7 @@ public abstract class WClientSearchableListInput extends WLabeledFormInputPanel 
 		super.onAfterRender();
 
 		StringBuilder builder = new StringBuilder();
-		builder.append(String.format("initClientSearchableList('%s');", getMarkupId()));
+		builder.append(String.format("initClientSearchableList('%s', '%s');", getMarkupId(), getString("WClientSearchableListInput.noOfSelection")));
 
 		List objectRows;
 		Object modelObject = getModelObject();
