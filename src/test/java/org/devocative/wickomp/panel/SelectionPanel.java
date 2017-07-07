@@ -51,18 +51,18 @@ public class SelectionPanel extends WPanel implements IGridDataSource<PersonVO> 
 		west.add(new WSelectionInput("selection", new Model(), Arrays.asList("A", "B"), true));
 
 		WEasyLayout layout = new WEasyLayout("layout");
-		layout.setWest(west);
+		layout.setWestOfLTRDir(west);
 		add(layout);
 
 		list = PersonVO.list();
 
 		OColumnList<PersonVO> columns = new OColumnList<>();
 		columns
-			.add(new OPropertyColumn<PersonVO>(new Model<>("nullCol"), "nullCol"))
+			.add(new OPropertyColumn<>(new Model<>("nullCol"), "nullCol"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Col02"), "col02").setWidth(OSize.fixed(50)))
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col01"), "col01"))
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04"))
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 05"), "col05"))
+			.add(new OPropertyColumn<>(new Model<>("Col01"), "col01"))
+			.add(new OPropertyColumn<>(new Model<>("Col 04"), "col04"))
+			.add(new OPropertyColumn<>(new Model<>("Col 05"), "col05"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "birthDate")
 				.setFormatter(ODateFormatter.prDateTime()))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "income")

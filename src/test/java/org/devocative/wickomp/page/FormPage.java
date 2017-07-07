@@ -45,7 +45,7 @@ public class FormPage extends BasePage {
 	public FormPage() {
 		west = new WebMarkupContainer("west");
 		layout = new WEasyLayout("layout");
-		layout.setWest(west);
+		layout.setWestOfLTRDir(west);
 		add(layout);
 
 		simpleForm();

@@ -12,7 +12,7 @@ public class WEasyLayout extends WebMarkupContainer {
 	private static final long serialVersionUID = 6610030199903497866L;
 
 	private WebMarkupContainer east, west;
-	private boolean eastFitToContent = true, westFitToContent = true;
+	//private boolean eastFitToContent = true, westFitToContent = true;
 
 	public WEasyLayout(String id) {
 		super(id);
@@ -22,21 +22,21 @@ public class WEasyLayout extends WebMarkupContainer {
 		add(new EasyUIBehavior());
 	}
 
-	public WEasyLayout setEast(WebMarkupContainer east) {
+	public WEasyLayout setEastOfLTRDir(WebMarkupContainer east) {
 		this.east = east;
 		east.setOutputMarkupId(true);
-		add(east);
+		//add(east);
 		return this;
 	}
 
-	public WEasyLayout setWest(WebMarkupContainer west) {
+	public WEasyLayout setWestOfLTRDir(WebMarkupContainer west) {
 		this.west = west;
 		west.setOutputMarkupId(true);
-		add(west);
+		//add(west);
 		return this;
 	}
 
-	public WEasyLayout setEastFitToContent(boolean eastFitToContent) {
+	/*public WEasyLayout setEastFitToContent(boolean eastFitToContent) {
 		this.eastFitToContent = eastFitToContent;
 		return this;
 	}
@@ -44,7 +44,7 @@ public class WEasyLayout extends WebMarkupContainer {
 	public WEasyLayout setWestFitToContent(boolean westFitToContent) {
 		this.westFitToContent = westFitToContent;
 		return this;
-	}
+	}*/
 
 	@Override
 	protected void onInitialize() {
@@ -73,17 +73,11 @@ public class WEasyLayout extends WebMarkupContainer {
 		}
 	}
 
-	/*@Override
-	protected void onComponentTag(ComponentTag tag) {
-		super.onComponentTag(tag);
-
-		tag.put("class", "easyui-layout");
-	}*/
-
 	@Override
 	protected void onAfterRender() {
 		super.onAfterRender();
 
+		/*
 		StringBuilder builder = new StringBuilder();
 		if (westFitToContent || eastFitToContent) {
 			if (westFitToContent && west != null) {
@@ -96,12 +90,14 @@ public class WEasyLayout extends WebMarkupContainer {
 
 		}
 		builder.append(String.format("$('#%s').layout();", getMarkupId()));
+		*/
 
-		WebUtil.writeJQueryCall(builder.toString(), false);
+		String script = String.format("$('#%s').layout();", getMarkupId());
+		WebUtil.writeJQueryCall(script, false);
 	}
 
-	private String getParentFitScript(WebMarkupContainer container) {
+	/*private String getParentFitScript(WebMarkupContainer container) {
 		String max = String.format("Math.max.apply(Math, $('#%s').find('table,div').map(function(){return $(this).width();}).get())", container.getMarkupId());
 		return String.format("$('#%s').width(%s);", container.getMarkupId(), max);
-	}
+	}*/
 }
