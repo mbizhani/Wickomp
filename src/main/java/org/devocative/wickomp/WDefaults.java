@@ -7,7 +7,7 @@ public class WDefaults {
 		private static final long serialVersionUID = 4280611531970060923L;
 
 		@Override
-		public String handleMessage(Component component, Exception e) {
+		public String handleMessage(Component component, Throwable e) {
 			if (e.getMessage() != null) {
 				if (component == null) {
 					return WebUtil.getStringOfResource(e.getMessage(), e.getMessage());

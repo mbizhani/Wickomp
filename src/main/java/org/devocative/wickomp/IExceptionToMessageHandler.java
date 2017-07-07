@@ -6,5 +6,5 @@ import java.io.Serializable;
 
 public interface IExceptionToMessageHandler extends Serializable {
 
-	String handleMessage(Component component, Exception e);
+	String handleMessage(Component component, Throwable e);
 }
