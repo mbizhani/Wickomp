@@ -2,7 +2,7 @@ package org.devocative.wickomp.async;
 
 import java.io.Serializable;
 
-class AsyncResult {
+public class AsyncResult {
 	private AsyncToken token;
 	private Serializable result;
 	private Exception error;

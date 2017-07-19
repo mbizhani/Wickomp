@@ -5,6 +5,10 @@ import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
+import org.devocative.wickomp.async.processor.ARequestProcessor;
+import org.devocative.wickomp.async.processor.AResponseProcessor;
+import org.devocative.wickomp.async.processor.SimpleRequestProcessor;
+import org.devocative.wickomp.async.processor.SimpleResponseProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +23,14 @@ public class AsyncMediator {
 	private static final Map<String, IAsyncRequestHandler> HANDLERS_MAP = new ConcurrentHashMap<>();
 	private static Application application;
 
+	private static ARequestProcessor requestProcessor;
+	private static AResponseProcessor responseProcessor;
+
 	public static void init(Application application) {
 		AsyncMediator.application = application;
+
+		requestProcessor = new SimpleRequestProcessor(HANDLERS_MAP);
+		responseProcessor = new SimpleResponseProcessor(application);
 	}
 
 	public static void handleSessionExpiration(String user, String sessionId) {
@@ -41,26 +51,20 @@ public class AsyncMediator {
 		logger.info("AsyncMediator.registerHandler: {}", handlerId);
 	}
 
-	public static boolean hasHandler() {
-		return !HANDLERS_MAP.isEmpty();
-	}
-
 	public synchronized static void sendRequest(String handlerId, AsyncToken asyncToken, Object requestPayLoad) {
 		asyncToken.setHandlerId(handlerId);
-		HANDLERS_MAP.get(handlerId).onRequest(asyncToken, requestPayLoad);
 
-		/*AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
-		if(target != null) {
-			target.appendJavaScript("Wicket.WebSocket.send('{msg:\"\"}');");
-		}*/
+		requestProcessor.processRequest(asyncToken, requestPayLoad);
 	}
 
 	public static void sendResponse(AsyncToken asyncToken, Serializable responsePayLoad) {
-		sendResponse(asyncToken, responsePayLoad, null);
+		//sendResponse(asyncToken, responsePayLoad, null);
+		responseProcessor.processResponse(asyncToken, responsePayLoad, null);
 	}
 
 	public static void sendError(AsyncToken asyncToken, Exception error) {
-		sendResponse(asyncToken, null, error);
+		//sendResponse(asyncToken, null, error);
+		responseProcessor.processResponse(asyncToken, null, error);
 	}
 
 	public static void broadcast(Object message) {
@@ -72,30 +76,5 @@ public class AsyncMediator {
 		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
 		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(registry);
 		broadcaster.broadcastAll(application, new WebSocketBroadcastMessage(message));
-	}
-
-	// ------------------------------
-
-	private static void sendResponse(AsyncToken asyncToken, Serializable responsePayLoad, Exception error) {
-		if (asyncToken instanceof WebSocketAsyncToken) {
-			WebSocketAsyncResult result = new WebSocketAsyncResult();
-			result
-				.setToken(asyncToken)
-				.setResult(responsePayLoad)
-				.setError(error);
-
-			WebSocketAsyncToken wsat = (WebSocketAsyncToken) asyncToken;
-
-			WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(wsat.getApplication());
-			IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
-			IWebSocketConnection connection = registry.getConnection(wsat.getApplication(), wsat.getSessionId(), wsat.getKey());
-			if (connection != null && connection.isOpen()) {
-				connection.sendMessage(result);
-			} else {
-				logger.warn("AsyncMediator.sendResponse: broken connection: tokenId={}, responsePayLoad={}",
-					asyncToken.getId(), responsePayLoad);
-			}
-		}
-
 	}
 }

@@ -1,19 +1,12 @@
 package org.devocative.wickomp.async;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 
-class WebSocketAsyncToken extends AsyncToken {
+public class WebSocketAsyncToken extends AsyncToken {
 	private static final long serialVersionUID = 2447830252709170231L;
 
-	private String appKey;
 	private IKey key;
 	private String sessionId;
-
-	public WebSocketAsyncToken setAppKey(String appKey) {
-		this.appKey = appKey;
-		return this;
-	}
 
 	public IKey getKey() {
 		return key;
@@ -31,9 +24,5 @@ class WebSocketAsyncToken extends AsyncToken {
 	public WebSocketAsyncToken setSessionId(String sessionId) {
 		this.sessionId = sessionId;
 		return this;
-	}
-
-	public Application getApplication() {
-		return Application.get(appKey);
 	}
 }

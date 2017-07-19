@@ -1,6 +1,5 @@
 package org.devocative.wickomp.async;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
@@ -29,7 +28,7 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 	@Override
 	public void afterRender(Component component) {
 		asyncToken = new WebSocketAsyncToken()
-			.setAppKey(Application.get().getApplicationKey())
+			//.setAppKey(Application.get().getApplicationKey())
 			.setSessionId(WebSession.get().getId())
 			.setKey(new PageIdKey(component.getPage().getPageId()));
 	}
@@ -66,7 +65,7 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 	@Override
 	protected void onMessage(WebSocketRequestHandler handler, TextMessage message) {
 		String text = message.getText();
-		if("W.PING".equals(text)) {
+		if ("W.PING".equals(text)) {
 			handler.push("W.R_PING");
 		}
 	}
