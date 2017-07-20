@@ -30,7 +30,6 @@ import org.devocative.wickomp.vo.PersonVO;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -122,9 +121,9 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 				}
 			})
 
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04"))
+			.add(new OPropertyColumn<>(new Model<>("Col 04"), "col04"))
 
-			.add(new OHiddenColumn<PersonVO>("col05"))
+			.add(new OHiddenColumn<>("col05"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "birthDate")
 				.setFormatter(ODateFormatter.prDateTime())
 				.setStyle("direction:ltr;"))
@@ -146,7 +145,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 	}
 
 	@Override
-	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
+	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
 		Map<String, Object> map = (Map<String, Object>) result;
 		//if (grid2.getPageNum() == 3) {
 		//	asyncDisabledGrid.pushError(handler, new RuntimeException("DataGridPage: Page 3 Error"));

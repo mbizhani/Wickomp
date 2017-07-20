@@ -37,9 +37,9 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 
 		columnList = new OColumnList<>();
 		columnList
-			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Id"), "eid"))
-			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Name"), "name"))
-			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Age"), "age"))
+			.add(new OPropertyColumn<>(new Model<>("Id"), "eid"))
+			.add(new OPropertyColumn<>(new Model<>("Name"), "name"))
+			.add(new OPropertyColumn<>(new Model<>("Age"), "age"))
 			.add(new OAjaxLinkColumn<EmployeeVO>(new Model<>(""), new HTMLBase("x")) {
 				private static final long serialVersionUID = -8145936659329291146L;
 
@@ -179,7 +179,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 	}
 
 	@Override
-	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
+	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
 		if ("T_GRID_PAGER".equals(handlerId)) {
 			Map<String, Object> map = (Map<String, Object>) result;
 			atreegrid.pushData(handler, (List) map.get("list"), (int) map.get("count"));

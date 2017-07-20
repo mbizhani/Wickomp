@@ -4,8 +4,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 
-import java.io.Serializable;
-
 public class AsyncBehavior extends Behavior implements IAsyncAction {
 	private static final long serialVersionUID = -3225863270756629087L;
 
@@ -32,7 +30,7 @@ public class AsyncBehavior extends Behavior implements IAsyncAction {
 	}
 
 	@Override
-	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
+	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
 	}
 
 	@Override

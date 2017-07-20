@@ -5,14 +5,10 @@ import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
-import org.devocative.wickomp.async.processor.ARequestProcessor;
-import org.devocative.wickomp.async.processor.AResponseProcessor;
-import org.devocative.wickomp.async.processor.SimpleRequestProcessor;
-import org.devocative.wickomp.async.processor.SimpleResponseProcessor;
+import org.devocative.wickomp.async.processor.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,11 +22,31 @@ public class AsyncMediator {
 	private static ARequestProcessor requestProcessor;
 	private static AResponseProcessor responseProcessor;
 
+	// ------------------------------
+
 	public static void init(Application application) {
+		init(application, false, false);
+	}
+
+	public static void init(Application application, boolean queueForRequest, boolean queueForResponse) {
 		AsyncMediator.application = application;
 
-		requestProcessor = new SimpleRequestProcessor(HANDLERS_MAP);
-		responseProcessor = new SimpleResponseProcessor(application);
+		if (queueForRequest) {
+			requestProcessor = new QueueRequestProcessor(HANDLERS_MAP);
+		} else {
+			requestProcessor = new SimpleRequestProcessor(HANDLERS_MAP);
+		}
+
+		if (queueForResponse) {
+			responseProcessor = new QueueResponseProcessor(application);
+		} else {
+			responseProcessor = new SimpleResponseProcessor(application);
+		}
+
+		logger.info("AsyncMediator started with: Request=[{}] Response=[{}]",
+			queueForRequest ? "Queue" : "Simple",
+			queueForResponse ? "Queue" : "Simple"
+		);
 	}
 
 	public static void handleSessionExpiration(String user, String sessionId) {
@@ -51,19 +67,26 @@ public class AsyncMediator {
 		logger.info("AsyncMediator.registerHandler: {}", handlerId);
 	}
 
-	public synchronized static void sendRequest(String handlerId, AsyncToken asyncToken, Object requestPayLoad) {
+	public static void shutdown() {
+		logger.info("AsyncMediator is shutting down!");
+
+		requestProcessor.shutdown();
+		responseProcessor.shutdown();
+	}
+
+	// ---------------
+
+	public static void sendRequest(String handlerId, AsyncToken asyncToken, Object requestPayLoad) {
 		asyncToken.setHandlerId(handlerId);
 
 		requestProcessor.processRequest(asyncToken, requestPayLoad);
 	}
 
-	public static void sendResponse(AsyncToken asyncToken, Serializable responsePayLoad) {
-		//sendResponse(asyncToken, responsePayLoad, null);
+	public static void sendResponse(AsyncToken asyncToken, Object responsePayLoad) {
 		responseProcessor.processResponse(asyncToken, responsePayLoad, null);
 	}
 
 	public static void sendError(AsyncToken asyncToken, Exception error) {
-		//sendResponse(asyncToken, null, error);
 		responseProcessor.processResponse(asyncToken, null, error);
 	}
 

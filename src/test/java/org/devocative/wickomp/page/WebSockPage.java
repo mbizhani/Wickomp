@@ -14,8 +14,6 @@ import org.devocative.wickomp.form.WAsyncAjaxButton;
 import org.devocative.wickomp.html.WAsyncAjaxLink;
 import org.devocative.wickomp.html.window.WModalWindow;
 
-import java.io.Serializable;
-
 public class WebSockPage extends BasePage {
 	private Label label222;
 	private Label label333;
@@ -45,7 +43,7 @@ public class WebSockPage extends BasePage {
 			}
 
 			@Override
-			public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
+			public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
 				label333.setDefaultModelObject(result);
 				handler.add(label333);
 			}
@@ -142,7 +140,7 @@ public class WebSockPage extends BasePage {
 				}
 
 				@Override
-				public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Serializable result) {
+				public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
 					timeLabel.setDefaultModelObject(result);
 					handler.add(timeLabel);
 				}

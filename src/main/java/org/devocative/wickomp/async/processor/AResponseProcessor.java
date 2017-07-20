@@ -10,20 +10,26 @@ import org.devocative.wickomp.async.WebSocketAsyncToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
-
 public abstract class AResponseProcessor {
-	private static final Logger logger = LoggerFactory.getLogger(AResponseProcessor.class);
+	protected static final Logger logger = LoggerFactory.getLogger(AResponseProcessor.class);
 
 	private Application application;
+
+	// ------------------------------
 
 	public AResponseProcessor(Application application) {
 		this.application = application;
 	}
 
-	public abstract void processResponse(AsyncToken asyncToken, Serializable responsePayLoad, Exception error);
+	// ------------------------------
 
-	protected void sendResponseByWS(AsyncToken asyncToken, Serializable responsePayLoad, Exception error) {
+	public abstract void processResponse(AsyncToken asyncToken, Object responsePayLoad, Exception error);
+
+	public abstract void shutdown();
+
+	// ------------------------------
+
+	protected void sendResponseByWS(AsyncToken asyncToken, Object responsePayLoad, Exception error) {
 		if (asyncToken instanceof WebSocketAsyncToken) {
 			WebSocketAsyncResult result = new WebSocketAsyncResult();
 			result

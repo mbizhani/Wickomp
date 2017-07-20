@@ -10,9 +10,14 @@ public class SimpleRequestProcessor extends ARequestProcessor {
 		super(handlersMap);
 	}
 
+	// ------------------------------
+
 	@Override
 	public void processRequest(AsyncToken asyncToken, Object requestPayLoad) {
-		String handlerId = asyncToken.getHandlerId();
-		handlersMap.get(handlerId).onRequest(asyncToken, requestPayLoad);
+		sendRequest(asyncToken, requestPayLoad);
+	}
+
+	@Override
+	public void shutdown() {
 	}
 }

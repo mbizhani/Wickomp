@@ -1,10 +1,8 @@
 package org.devocative.wickomp.async;
 
-import java.io.Serializable;
-
 public class AsyncResult {
 	private AsyncToken token;
-	private Serializable result;
+	private Object result;
 	private Exception error;
 
 	public AsyncToken getToken() {
@@ -16,11 +14,11 @@ public class AsyncResult {
 		return this;
 	}
 
-	public Serializable getResult() {
+	public Object getResult() {
 		return result;
 	}
 
-	public AsyncResult setResult(Serializable result) {
+	public AsyncResult setResult(Object result) {
 		this.result = result;
 		return this;
 	}

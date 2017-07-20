@@ -44,6 +44,7 @@
 	<properties>
 		<lang.level>1.8</lang.level>
 		<jetty.port>8081</jetty.port>
+		<jetty.port.stop>9091</jetty.port.stop>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<d.slf4j.ver>1.7.25</d.slf4j.ver>
@@ -191,6 +192,9 @@
 					<httpConnector>
 						<port>${jetty.port}</port>
 					</httpConnector>
+
+					<stopKey>Wickomp</stopKey>
+					<stopPort>${jetty.port.stop}</stopPort>
 				</configuration>
 			</plugin>
 
