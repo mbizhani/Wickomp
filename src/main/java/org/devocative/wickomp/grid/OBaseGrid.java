@@ -48,6 +48,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	protected Boolean selectionDblClick;
 
 	protected String htmlId;
+	protected String gridId;
 
 	// ---------------------- CONSTRUCTOR
 
@@ -285,6 +286,25 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
+	@JsonIgnore
+	public String getHtmlId() {
+		return htmlId;
+	}
+
+	@Override
+	public void setHtmlId(String htmlId) {
+		this.htmlId = htmlId;
+	}
+
+	public String getGridId() {
+		return gridId;
+	}
+
+	public OBaseGrid<T> setGridId(String gridId) {
+		this.gridId = gridId;
+		return this;
+	}
+
 	// --------------- PUBLIC METHODS
 
 	@JsonIgnore
@@ -295,16 +315,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	public OBaseGrid<T> addToolbarButton(OButton<T> button) {
 		toolbar.add(button);
 		return this;
-	}
-
-	@JsonIgnore
-	public String getHtmlId() {
-		return htmlId;
-	}
-
-	@Override
-	public void setHtmlId(String htmlId) {
-		this.htmlId = htmlId;
 	}
 
 	public boolean hasFooter() {

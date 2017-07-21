@@ -6,6 +6,9 @@
 </wicket:head>
 
 <wicket:extend>
+	<button onclick="wTools.dispatch('GridLoading', {targetGrid : 'activeAsyncGrid'})">Start Loading</button>
+	<button onclick="wTools.dispatch('GridLoaded', {targetGrid : 'activeAsyncGrid'})">End Loaded</button>
+
 	<div wicket:id="activeAsyncGrid"></div>
 
 	<hr/>

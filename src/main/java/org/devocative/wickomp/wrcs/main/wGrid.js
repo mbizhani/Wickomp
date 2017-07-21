@@ -72,6 +72,22 @@
 
 		onInit: function (options) {
 			wLog.debug('wBaseGridDefaults.onInit');
+
+			var gridId = options["gridId"];
+			if (gridId) {
+				var grid = $(this);
+				window.addEventListener("GridLoading", function (e) {
+					if (e["targetGrid"] && e["targetGrid"] == gridId) {
+						grid.datagrid("loading");
+					}
+				});
+				window.addEventListener("GridLoaded", function (e) {
+					if (e["targetGrid"] && e["targetGrid"] == gridId) {
+						grid.datagrid("loaded");
+					}
+				});
+			}
+
 			wBaseGridDefaults.initSelection($(this));
 
 			if (options['reorderColumns']) {

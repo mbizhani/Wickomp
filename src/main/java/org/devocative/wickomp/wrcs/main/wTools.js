@@ -44,5 +44,13 @@ var wTools = {
 				document.body.removeChild(textArea);
 			}
 		});
+	},
+
+	dispatch: function (eventType, attachment) {
+		var ev = new CustomEvent(eventType);
+		$.each(attachment, function (k, v) {
+			ev[k] = v;
+		});
+		window.dispatchEvent(ev);
 	}
 };

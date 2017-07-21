@@ -170,8 +170,9 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 				//.setSelectionIndicator(true)
 				//.setSelectionJSHandler("function(rows){console.log(rows);}")
 			.setShowFooter(true)
-			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
+			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
 			.setColumnReorder(false) //NOTE
+			.setGridId("activeAsyncGrid")
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
 
@@ -188,7 +189,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 				//.setSelectionIndicator(true)
 			.setSelectionJSHandler("function(asd){console.log(asd);}")
 			.setShowFooter(true)
-			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
+			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
 
