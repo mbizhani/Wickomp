@@ -6,46 +6,50 @@ import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.*;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
+import org.devocative.wickomp.async.response.WebSocketAsyncResult;
+import org.devocative.wickomp.async.response.WebSocketComponentRenderResult;
+import org.devocative.wickomp.async.response.WebSocketJavascriptResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class WebSocketAsyncBehavior extends WebSocketBehavior {
 	private static final long serialVersionUID = 1L;
-
 	private static Logger logger = LoggerFactory.getLogger(WebSocketAsyncBehavior.class);
 
 	private WebSocketAsyncToken asyncToken;
 	private IAsyncResponseHandler responseHandler;
 
+	// ------------------------------
+
 	public WebSocketAsyncBehavior(IAsyncResponseHandler responseHandler) {
 		this.responseHandler = responseHandler;
 	}
+
+	// ------------------------------
 
 	public WebSocketAsyncToken getAsyncToken() {
 		return asyncToken;
 	}
 
+	// ---------------
+
 	@Override
 	public void afterRender(Component component) {
 		asyncToken = new WebSocketAsyncToken()
-			//.setAppKey(Application.get().getApplicationKey())
 			.setSessionId(WebSession.get().getId())
 			.setKey(new PageIdKey(component.getPage().getPageId()));
 	}
 
+	// ---------------
+
 	@Override
 	protected void onConnect(ConnectedMessage message) {
 		logger.info("WebSocketAsyncBehavior.onConnect: msg={}", message);
-
-		/*asyncToken = new WebSocketAsyncToken()
-			.setAppKey(Application.get().getApplicationKey())
-			.setKey(message.getKey())
-			.setSessionId(message.getSessionId());*/
 	}
 
 	@Override
 	protected void onPush(WebSocketRequestHandler handler, IWebSocketPushMessage message) {
-		if (message instanceof AsyncResult) {
+		if (message instanceof WebSocketAsyncResult) {
 			AsyncResult result = (AsyncResult) message;
 			if (result.getToken().equals(asyncToken)) {
 				if (result.getError() != null) {
@@ -59,6 +63,14 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 					}
 				}
 			}
+		} else if (message instanceof WebSocketJavascriptResult) {
+			WebSocketJavascriptResult result = (WebSocketJavascriptResult) message;
+			handler.appendJavaScript(result.getScript());
+		} else if (message instanceof WebSocketComponentRenderResult) {
+			WebSocketComponentRenderResult result = (WebSocketComponentRenderResult) message;
+			handler.add(result.getComponents());
+		} else {
+			logger.warn("Unhandled push message type=[{}]: {}", message.getClass().getName(), message);
 		}
 	}
 

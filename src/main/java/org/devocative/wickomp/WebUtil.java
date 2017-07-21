@@ -13,8 +13,14 @@ import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.IWebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResponse;
+import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
+import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -263,6 +269,30 @@ public class WebUtil {
 	public static boolean isAjaxRequest(RequestCycle cycle) {
 		AjaxRequestTarget target = cycle.find(AjaxRequestTarget.class);
 		return target != null;
+	}
+
+	public static boolean sendByWebSocket(Component cmp, IWebSocketPushMessage message) {
+		int pageId = cmp.getPage().getPageId();
+
+		Application app = Application.get();
+		if (app != null && WebSession.get() != null) {
+			String sessionId = WebSession.get().getId();
+
+			WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(app);
+			IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
+			IWebSocketConnection connection = registry.getConnection(
+				app,
+				sessionId,
+				new PageIdKey(pageId)
+			);
+
+			if (connection != null && connection.isOpen()) {
+				connection.sendMessage(message);
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	// ---------------

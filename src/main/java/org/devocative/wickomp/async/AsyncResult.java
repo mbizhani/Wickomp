@@ -1,6 +1,6 @@
 package org.devocative.wickomp.async;
 
-public class AsyncResult {
+public abstract class AsyncResult {
 	private AsyncToken token;
 	private Object result;
 	private Exception error;

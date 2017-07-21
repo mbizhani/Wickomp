@@ -5,8 +5,8 @@ import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.devocative.wickomp.async.AsyncToken;
-import org.devocative.wickomp.async.WebSocketAsyncResult;
 import org.devocative.wickomp.async.WebSocketAsyncToken;
+import org.devocative.wickomp.async.response.WebSocketAsyncResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,25 +30,22 @@ public abstract class AResponseProcessor {
 	// ------------------------------
 
 	protected void sendResponseByWS(AsyncToken asyncToken, Object responsePayLoad, Exception error) {
-		if (asyncToken instanceof WebSocketAsyncToken) {
-			WebSocketAsyncResult result = new WebSocketAsyncResult();
-			result
-				.setToken(asyncToken)
-				.setResult(responsePayLoad)
-				.setError(error);
+		WebSocketAsyncResult result = new WebSocketAsyncResult();
+		result
+			.setToken(asyncToken)
+			.setResult(responsePayLoad)
+			.setError(error);
 
-			WebSocketAsyncToken wsat = (WebSocketAsyncToken) asyncToken;
+		WebSocketAsyncToken wsAsyncToken = (WebSocketAsyncToken) asyncToken;
 
-			WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
-			IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
-			IWebSocketConnection connection = registry.getConnection(application, wsat.getSessionId(), wsat.getKey());
-			if (connection != null && connection.isOpen()) {
-				connection.sendMessage(result);
-			} else {
-				logger.warn("AsyncMediator.sendResponse: broken connection: tokenId={}, responsePayLoad={}",
-					asyncToken.getId(), responsePayLoad);
-			}
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
+		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
+		IWebSocketConnection connection = registry.getConnection(application, wsAsyncToken.getSessionId(), wsAsyncToken.getKey());
+		if (connection != null && connection.isOpen()) {
+			connection.sendMessage(result);
+		} else {
+			logger.warn("AsyncMediator.sendResponse: broken connection: tokenId={}, responsePayLoad={}",
+				asyncToken.getId(), responsePayLoad);
 		}
-
 	}
 }

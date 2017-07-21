@@ -9,12 +9,17 @@ import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.WPanel;
+import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.async.BroadcastCaptureBehavior;
+import org.devocative.wickomp.async.response.WebSocketJavascriptResult;
 import org.devocative.wickomp.form.WAsyncAjaxButton;
+import org.devocative.wickomp.html.WAjaxLink;
 import org.devocative.wickomp.html.WAsyncAjaxLink;
 import org.devocative.wickomp.html.window.WModalWindow;
 
 public class WebSockPage extends BasePage {
+	private static final long serialVersionUID = 6252801009951145937L;
+
 	private Label label222;
 	private Label label333;
 	private NumberTextField<Integer> no;
@@ -37,6 +42,8 @@ public class WebSockPage extends BasePage {
 			}
 		});*/
 		form.add(new WAsyncAjaxButton("send") {
+			private static final long serialVersionUID = -536912605597392759L;
+
 			@Override
 			protected void onSubmit(AjaxRequestTarget target) {
 				sendAsyncRequest("COUNTER", no.getModelObject());
@@ -58,10 +65,21 @@ public class WebSockPage extends BasePage {
 		add(wsModal);
 
 		add(new AjaxLink("showTime") {
+			private static final long serialVersionUID = -6319449976103566284L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				wsModal.setContent(new TimerPanel(wsModal.getContentId()));
 				wsModal.show(target);
+			}
+		});
+
+		add(new WAjaxLink("testWebUtilSendWS") {
+			private static final long serialVersionUID = -4558794042037507951L;
+
+			@Override
+			public void onClick(AjaxRequestTarget ajaxRequestTarget) {
+				WebUtil.sendByWebSocket(this, new WebSocketJavascriptResult("alert('WebUtil.sendByWebSocket()');"));
 			}
 		});
 
@@ -95,6 +113,8 @@ public class WebSockPage extends BasePage {
 		});*/
 
 		add(new BroadcastCaptureBehavior<Integer>(Integer.class) {
+			private static final long serialVersionUID = -3583030292765930785L;
+
 			@Override
 			protected void onMessage(IPartialPageRequestHandler handler, Integer message) {
 				label222.setDefaultModelObject(message);
@@ -124,6 +144,7 @@ public class WebSockPage extends BasePage {
 	}*/
 
 	public class TimerPanel extends WPanel {
+		private static final long serialVersionUID = -3394483728053039113L;
 		private Label timeLabel;
 
 		public TimerPanel(String id) {
@@ -134,6 +155,8 @@ public class WebSockPage extends BasePage {
 			add(timeLabel);
 
 			add(new WAsyncAjaxLink("time") {
+				private static final long serialVersionUID = 5343830825504343191L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target) {
 					sendAsyncRequest("NTP", null);
