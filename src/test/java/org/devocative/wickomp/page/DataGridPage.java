@@ -131,6 +131,10 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 				.setFormatter(ONumberFormatter.integer())
 				.setHasFooter(true)
 				.setStyle("direction:ltr;"))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Expense"), "expense")
+				.setFormatter(ONumberFormatter.real())
+				.setHasFooter(true)
+				.setStyle("direction:ltr;"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
 				.setFormatter(OBooleanFormatter.bool()))
 		;

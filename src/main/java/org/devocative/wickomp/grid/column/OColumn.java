@@ -1,7 +1,6 @@
 package org.devocative.wickomp.grid.column;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.formatter.OFormatter;
 import org.devocative.wickomp.opt.OHorizontalAlign;
@@ -79,23 +78,6 @@ public abstract class OColumn<T> extends Options {
 	public OColumn<T> setSortable(Boolean sortable) {
 		this.sortable = sortable;
 		return this;
-	}
-
-	@JsonRawValue
-	public String getStyler() {
-		if (style != null || styleClass != null) {
-			StringBuilder builder = new StringBuilder();
-			builder.append(" function(value,row,index){var r={};");
-			if (style != null) {
-				builder.append(String.format("r['style']='%s';", style));
-			}
-			if (styleClass != null) {
-				builder.append(String.format("r['class']='%s';", styleClass));
-			}
-			builder.append("return r;}");
-			return builder.toString();
-		}
-		return null;
 	}
 
 	public String getTitle() {

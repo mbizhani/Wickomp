@@ -69,7 +69,7 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 		} else if (message instanceof WebSocketComponentRenderResult) {
 			WebSocketComponentRenderResult result = (WebSocketComponentRenderResult) message;
 			handler.add(result.getComponents());
-		} else {
+		} else if (!(message instanceof WebSocketBroadcastMessage)) {
 			logger.warn("Unhandled push message type=[{}]: {}", message.getClass().getName(), message);
 		}
 	}

@@ -1,6 +1,7 @@
 package org.devocative.wickomp.vo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,6 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class PersonVO implements Serializable {
+	private static final long serialVersionUID = -872345652724290638L;
+
+	// ------------------------------
+
 	private String col01;
 	private String col02;
 	private String col03;
@@ -15,11 +20,16 @@ public class PersonVO implements Serializable {
 	private String col05;
 	private Date birthDate;
 	private Long income;
+	private BigDecimal expense;
 	private boolean alive;
 	private String nullCol;
 
+	// ------------------------------
+
 	public PersonVO() {
 	}
+
+	// ------------------------------
 
 	public String getCol01() {
 		return col01;
@@ -84,6 +94,15 @@ public class PersonVO implements Serializable {
 		return this;
 	}
 
+	public BigDecimal getExpense() {
+		return expense;
+	}
+
+	public PersonVO setExpense(BigDecimal expense) {
+		this.expense = expense;
+		return this;
+	}
+
 	public boolean isAlive() {
 		return alive;
 	}
@@ -102,28 +121,11 @@ public class PersonVO implements Serializable {
 		return this;
 	}
 
+	// ------------------------------
+
 	@Override
 	public String toString() {
 		return col02;
-	}
-
-	public static List<PersonVO> list() {
-		long time = new Date().getTime();
-
-		List<PersonVO> list = new ArrayList<PersonVO>();
-		for (int i = 0; i < 189; i++) {
-			list.add(new PersonVO()
-					.setCol01((i / 7) + "")
-					.setCol02(i + " - " + UUID.randomUUID().toString())
-					.setCol03("سلام world خوبی؟")
-					.setCol04("C4 " + UUID.randomUUID().toString())
-					.setCol05("C5 " + UUID.randomUUID().toString())
-					.setBirthDate(new Timestamp((long) (time - Math.random() * 99999999999L)))
-					.setIncome((long) (Math.random() * 100000000) * (i % 3 == 0 ? -1 : 1))
-					.setAlive(((int) (Math.random() * 1000)) % 7 == 0)
-			);
-		}
-		return list;
 	}
 
 	@Override
@@ -140,5 +142,27 @@ public class PersonVO implements Serializable {
 	@Override
 	public int hashCode() {
 		return getCol02() != null ? getCol02().hashCode() : 0;
+	}
+
+	// ------------------------------
+
+	public static List<PersonVO> list() {
+		long time = new Date().getTime();
+
+		List<PersonVO> list = new ArrayList<PersonVO>();
+		for (int i = 0; i < 189; i++) {
+			list.add(new PersonVO()
+					.setCol01((i / 7) + "")
+					.setCol02(i + " - " + UUID.randomUUID().toString())
+					.setCol03("سلام world خوبی؟")
+					.setCol04("C4 " + UUID.randomUUID().toString())
+					.setCol05("C5 " + UUID.randomUUID().toString())
+					.setBirthDate(new Timestamp((long) (time - Math.random() * 99999999999L)))
+					.setIncome((long) (Math.random() * 100000000) * (i % 3 == 0 ? -1 : 1))
+					.setExpense(new BigDecimal(Math.random() * 1000000))
+					.setAlive(((int) (Math.random() * 1000)) % 7 == 0)
+			);
+		}
+		return list;
 	}
 }

@@ -88,6 +88,9 @@
 				});
 			}
 
+			wBaseGridDefaults.initColumns($(this), $(this).datagrid("getColumnFields"));
+			wBaseGridDefaults.initColumns($(this), $(this).datagrid("getColumnFields", true));
+
 			wBaseGridDefaults.initSelection($(this));
 
 			if (options['reorderColumns']) {
@@ -110,6 +113,38 @@
 
 			var toolbarId = $(this).attr("id") + "-tb";
 			$('#' + toolbarId).find('.w-grid-tbar-but').linkbutton({plain: true});
+		},
+
+		initColumns: function (grid, columns) {
+			for (var i = 0; i < columns.length; i++) {
+				wBaseGridDefaults.initColumn(grid, columns[i], grid.datagrid("getColumnOption", columns[i]));
+			}
+		},
+
+		initColumn: function (grid, colName, columnOpt) {
+			if (columnOpt["style"] || columnOpt["styleClass"]) {
+				columnOpt["styler"] = function (value, row, index) {
+					var r = {};
+					if (columnOpt["style"]) {
+						r["style"] = columnOpt["style"];
+					}
+
+					if (columnOpt["styleClass"]) {
+						r["class"] = columnOpt["styleClass"];
+					}
+
+					return r;
+				}
+			}
+
+			/*if (columnOpt["format"]) {
+			 var gridOpt = grid.datagrid("options");
+			 if (gridOpt["formatters"] && gridOpt["formatters"][columnOpt["format"]]) {
+			 columnOpt["formatter"] = function (value, row, index) {
+			 return gridOpt["formatters"][columnOpt["format"]](value, row, index);
+			 }
+			 }
+			 }*/
 		},
 
 		initSelection: function (grid) {

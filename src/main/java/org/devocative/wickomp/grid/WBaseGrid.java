@@ -441,15 +441,13 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		List<OButton<T>> toolbarButtons = options.getToolbarButtons();
 		if (!toolbarButtons.isEmpty()) {
 			StringBuilder builder = new StringBuilder();
+			builder
+				.append(String.format("<div id=\"%s-tb\" class=\"%s\"", getMarkupId(), TOOLBAR_HTML_CLASS));
 			if (hideToolbarFirstTime) {
 				builder
-					.append(String.format("<div id=\"%s-tb\" class=\"%s\" style=\"visibility:hidden\">",
-						getMarkupId(), TOOLBAR_HTML_CLASS));
-			} else {
-				builder
-					.append(String.format("<div id=\"%s-tb\"> class=\"%s\" ", getMarkupId(), TOOLBAR_HTML_CLASS));
+					.append(" style=\"visibility:hidden\"");
 			}
-			builder.append("<table><tr>");
+			builder.append("><table><tr>");
 			for (OButton<T> button : toolbarButtons) {
 				builder.append("<td>").append(button.getHTMLContent()).append("</td>");
 			}
