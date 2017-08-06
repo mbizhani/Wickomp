@@ -1,4 +1,4 @@
-package org.devocative.wickomp.ssh;
+package org.devocative.wickomp.service.ssh;
 
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;

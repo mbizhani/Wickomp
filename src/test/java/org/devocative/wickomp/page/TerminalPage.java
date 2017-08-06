@@ -5,8 +5,8 @@ import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.html.WAjaxLink;
 import org.devocative.wickomp.html.WTerminal;
-import org.devocative.wickomp.ssh.IAsyncResult;
-import org.devocative.wickomp.ssh.SSHMediator;
+import org.devocative.wickomp.service.ssh.IAsyncResult;
+import org.devocative.wickomp.service.ssh.SSHMediator;
 
 public class TerminalPage extends BasePage implements IAsyncResult {
 	private static final long serialVersionUID = -5989144748063188666L;

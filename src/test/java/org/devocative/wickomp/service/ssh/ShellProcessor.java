@@ -1,4 +1,4 @@
-package org.devocative.wickomp.ssh;
+package org.devocative.wickomp.service.ssh;
 
 public class ShellProcessor {
 	private boolean doStart = false, clientSent = false, isPrompt = true;

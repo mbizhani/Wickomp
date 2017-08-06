@@ -1,4 +1,4 @@
-package org.devocative.wickomp.ssh;
+package org.devocative.wickomp.service.ssh;
 
 import java.util.HashMap;
 import java.util.Map;
