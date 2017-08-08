@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallbackUrl {
 	private static final long serialVersionUID = 1095555452051726851L;
 
-	// ---------------------- JSON FIELDS
+	// ------------------------------ JSON FIELDS
 
 	private Boolean autoRowHeight;
 	private Boolean checkOnSelect;
@@ -37,7 +37,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private List<OButton<T>> toolbar = new ArrayList<>();
 	private String url;
 
-	// --------------- EXTRA FIELDS
+	// ------------------------------ EXTRA FIELDS
 
 	protected Boolean callbackOnColumnReorder;
 	protected Boolean columnReorder;
@@ -50,14 +50,14 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	protected String htmlId;
 	protected String gridId;
 
-	// ---------------------- CONSTRUCTOR
+	// ------------------------------
 
 	public OBaseGrid() {
 		pageList = Arrays.asList(10, 20, 30, 40, 50);
 		pageSize = pageList.get(0);
 	}
 
-	// ---------------------- ACCESSORS for JSON
+	// ------------------------------ ACCESSORS for JSON
 
 	public Boolean getAutoRowHeight() {
 		return autoRowHeight;
@@ -138,11 +138,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return pageSize;
 	}
 
-	public OBaseGrid<T> setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-		return this;
-	}
-
 	public String getReturnField() {
 		return returnField;
 	}
@@ -208,7 +203,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	}
 
 	public String getToolbar() {
-		return toolbar != null ? String.format("#%s-tb", htmlId) : null;
+		return !toolbar.isEmpty() ? String.format("#%s-tb", htmlId) : null;
 	}
 
 	public String getUrl() {
@@ -220,7 +215,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		this.url = url;
 	}
 
-	// --------------- EXTRA FIELDS
+	// ------------------------------ EXTRA FIELDS
 
 	public Boolean getCallbackOnColumnReorder() {
 		return callbackOnColumnReorder;

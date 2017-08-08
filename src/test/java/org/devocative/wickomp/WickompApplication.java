@@ -11,6 +11,7 @@ import org.devocative.adroit.obuilder.ObjectBuilder;
 import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.page.HomePage;
 import org.devocative.wickomp.page.MountedPage;
+import org.devocative.wickomp.service.DbService;
 import org.devocative.wickomp.vo.EmployeeVO;
 import org.devocative.wickomp.vo.PersonVO;
 
@@ -183,6 +184,8 @@ public class WickompApplication extends WebApplication {
 		});
 
 		mountPage("/mount", MountedPage.class);
+
+		DbService.init();
 	}
 
 	@Override
@@ -192,6 +195,7 @@ public class WickompApplication extends WebApplication {
 
 	@Override
 	protected void onDestroy() {
+		DbService.shutdown();
 		AsyncMediator.shutdown();
 	}
 }

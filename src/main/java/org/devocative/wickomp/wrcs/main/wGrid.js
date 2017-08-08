@@ -102,7 +102,7 @@
 			}
 
 			if (options['pagingBarLayout']) {
-				var pageOpt = {layout: options['pagingBarLayout']};
+				var pageOpt = {layout: options['pagingBarLayout'].slice(0)}; //clone array
 				//NOTE: a bug in the layout customization, without 'info' the pagination bar is invisible!
 				if (options['pagingBarLayout'].indexOf('info') < 0) {
 					pageOpt['displayMsg'] = '';
@@ -148,6 +148,18 @@
 		},
 
 		initSelection: function (grid) {
+			//NOTE: a bug in onLoadSuccess, pager is reset to default!
+			var pagingBarLayout = grid.datagrid('options')['pagingBarLayout'];
+			if (pagingBarLayout) {
+				var pageOpt = {layout: pagingBarLayout.slice(0)}; //clone array
+				if (pagingBarLayout.indexOf('info') < 0) {
+					//NOTE: a bug in the layout customization, without 'info' the pagination bar is invisible!
+					pageOpt['displayMsg'] = '';
+					pageOpt.layout.push('info');
+				}
+				grid.datagrid('getPager').pagination(pageOpt);
+			}
+
 			var selectionIndicator = grid.datagrid('options')['selectionIndicator'];
 			var selectionHandler = grid.datagrid('options')['selectionJSHandler'];
 

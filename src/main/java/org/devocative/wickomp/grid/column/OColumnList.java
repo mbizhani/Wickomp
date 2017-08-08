@@ -14,6 +14,8 @@ public class OColumnList<T> extends Options {
 	private List<OColumn<T>> visibleColumns = new ArrayList<>();
 	private List<OColumn<T>> allColumns = new ArrayList<>();
 
+	// ------------------------------
+
 	public OColumnList<T> add(OColumn<T> column) {
 		if (column.isVisible()) {
 			visibleColumns.add(column);
@@ -62,5 +64,10 @@ public class OColumnList<T> extends Options {
 				break;
 			}
 		}
+	}
+
+	public void clear() {
+		visibleColumns.clear();
+		allColumns.clear();
 	}
 }

@@ -5,7 +5,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IRequestParameters;
+import org.devocative.adroit.ObjectUtil;
 import org.devocative.wickomp.IExceptionToMessageHandler;
 import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.WJqCallbackComponent;
@@ -13,6 +15,8 @@ import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.data.RObject;
 import org.devocative.wickomp.data.RObjectList;
 import org.devocative.wickomp.grid.column.OColumn;
+import org.devocative.wickomp.grid.column.OColumnList;
+import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.grid.column.link.OLinkColumn;
 import org.devocative.wickomp.grid.toolbar.OAjaxLinkButton;
@@ -23,6 +27,7 @@ import org.devocative.wickomp.wrcs.HeaderBehavior;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.PropertyDescriptor;
 import java.util.*;
 
 public abstract class WBaseGrid<T> extends WJqCallbackComponent {
@@ -57,6 +62,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	private IGridFooterDataSource<T> footerDataSource;
 
 	private boolean hideToolbarFirstTime = true;
+	private boolean automaticColumns = false;
+	private boolean ignoreDataSourceCount = false;
 
 	protected Integer pageSize, pageNum;
 	protected List<WSortField> sortFieldList = new ArrayList<>();
@@ -114,6 +121,16 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		return this;
 	}
 
+	public WBaseGrid<T> setAutomaticColumns(boolean automaticColumns) {
+		this.automaticColumns = automaticColumns;
+		return this;
+	}
+
+	public WBaseGrid<T> setIgnoreDataSourceCount(boolean ignoreDataSourceCount) {
+		this.ignoreDataSourceCount = ignoreDataSourceCount;
+		return this;
+	}
+
 	// ------------------------------ METHODS
 
 	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
@@ -153,7 +170,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				if (footer != null) {
 					gridPage.setFooter(getGridFooter(footer));
 				} else {
-					gridPage.setFooter(new ArrayList<RObject>());
+					gridPage.setFooter(new ArrayList<>());
 				}
 			}
 
@@ -194,6 +211,10 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	protected void onInitialize() {
 		super.onInitialize();
 
+		if (options.getColumns() == null) {
+			options.setColumns(new OColumnList<>());
+		}
+
 		int i = 0;
 		for (OColumn<T> column : options.getColumns().getAllColumns()) {
 			if (column.getField() == null) {
@@ -208,7 +229,6 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		pageSize = options.getPageSize();
 
 		add(new FontAwesomeBehavior());
-		//add(new EasyUIBehavior());
 		add(new HeaderBehavior("main/wGrid.js").setNeedEasyUI(true));
 
 		if (gridDataSource == null && gridAsyncDataSource == null) {
@@ -320,14 +340,14 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				List<T> data = gridDataSource.list(pageNum, pageSize, sortFieldList);
 
 				long count;
-				if (data.size() >= pageSize) {
-					count = gridDataSource.count();
-					if (data.size() > pageSize) {
-						logger.warn("DataSource.list returns collection(size={}) greater than pageSize={}!",
-							data.size(), pageSize);
+				if (data.size() < pageSize || ignoreDataSourceCount) {
+					count = (pageNum - 1) * pageSize + data.size();
+					//TODO the plus-one must be detected by requesting one more item from data source!
+					if (ignoreDataSourceCount && data.size() == pageSize) {
+						count++;
 					}
 				} else {
-					count = (pageNum - 1) * pageSize + data.size();
+					count = gridDataSource.count();
 				}
 
 				result = getGridPage(data, count);
@@ -340,7 +360,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 				result = getGridPage(null, pageNum * pageSize);
 				if (options.hasFooter()) {
-					result.setFooter(new ArrayList<RObject>());
+					result.setFooter(new ArrayList<>());
 				}
 				result.setAsync(true);
 			}
@@ -404,6 +424,10 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	}
 
 	protected final void convertBeansToRObjects(List<T> list, RObjectList page) {
+		if (automaticColumns && !list.isEmpty()) {
+			publishDynamicColumns(list.get(0));
+		}
+
 		List<OColumn<T>> columns = options.getColumns().getAllColumns();
 
 		for (int rowNo = 0; rowNo < list.size(); rowNo++) {
@@ -505,15 +529,46 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	private String createClientScript(RGridPage gridPage) {
 		StringBuilder result = new StringBuilder();
 
+		if (automaticColumns) {
+			result.append(String.format("$('#%s').%s({columns:%s});",
+				getMarkupId(), getJQueryFunction(), WebUtil.toJson(options.getColumns())));
+		}
+
+		result.append(String.format("$('#%s').%s('loadData', %s);",
+			getMarkupId(), getJQueryFunction(), WebUtil.toJson(gridPage)));
+
+		// NOTE: setting URL must be set after loadData, otherwise it sends a request by loadData and fetches data twice
 		if (options.getUrl() == null) {
 			options.setUrl(getCallbackURL());
 			result.append(String.format("$('#%s').%s('options')['url']=\"%s\";",
 				getMarkupId(), getJQueryFunction(), getCallbackURL()));
 		}
 
-		result.append(String.format("$('#%s').%s('loadData', %s);",
-			getMarkupId(), getJQueryFunction(), WebUtil.toJson(gridPage)));
-
 		return result.toString();
 	}
+
+	private void publishDynamicColumns(T sample) {
+		OColumnList<T> columns = options.getColumns();
+		columns.clear();
+
+		if (sample instanceof Map) {
+			Map map = (Map) sample;
+			for (Object key : map.keySet()) {
+				String prop = key.toString();
+				columns.add(new OPropertyColumn<>(new Model<>(prop), prop));
+			}
+		} else {
+			PropertyDescriptor[] descriptors = ObjectUtil.getPropertyDescriptors(sample, false);
+			for (PropertyDescriptor pd : descriptors) {
+				String prop = pd.getName();
+
+				if ("class".equals(prop)) {
+					continue;
+				}
+
+				columns.add(new OPropertyColumn<>(new Model<>(prop), prop));
+			}
+		}
+	}
+
 }
