@@ -18,7 +18,7 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 	private static final HeaderItem MAIN_CSS = Resource.getCommonCSS("codemirror/codemirror.css");
 	private static final HeaderItem MAIN_JS = Resource.getCommonJS("codemirror/codemirror.js");
-	private static final HeaderItem JQ_JS = Resource.getCommonJS("codemirror/wCodeMirror.js");
+	private static final HeaderItem JQ_JS = Resource.getCommonJS("codemirror/wCodeInput.js");
 
 	// ------------------------------
 
@@ -51,10 +51,6 @@ public class WCodeInput extends WFormInputPanel<String> {
 	@Override
 	protected void onBeforeRender() {
 		super.onBeforeRender();
-
-		if (!isEnabledInHierarchy()) {
-			options.setReadOnly(true);
-		}
 
 		editor.setModelObject(getModelObject());
 	}
@@ -89,15 +85,15 @@ public class WCodeInput extends WFormInputPanel<String> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("$('#%s').wCodeMirror(%s);",
+		if (!isEnabledInHierarchy()) {
+			options.setEnabled(false);
+		}
+
+		String script = String.format("$('#%s').wCodeInput(%s);",
 			editor.getMarkupId(),
 			WebUtil.toJson(options));
 
 		logger.debug("WCodeInput: {}", script);
-
-		if (!isEnabledInHierarchy()) {
-			script += String.format("$('#%s').find('div.CodeMirror-scroll').css('background-color', '#eeeeee');", getMarkupId());
-		}
 
 		WebUtil.writeJQueryCall(script, false);
 	}

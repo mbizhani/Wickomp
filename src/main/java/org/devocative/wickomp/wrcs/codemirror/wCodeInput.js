@@ -1,13 +1,18 @@
 (function ($) {
-	$.fn.wCodeMirror = function (settings) {
+	$.fn.wCodeInput = function (settings) {
 		var defaults = {
 			autofocus: true,
 			indentWithTabs: true,
 			lineNumbers: true,
 			lineWrapping: true,
 			matchBrackets: true,
+			readOnly: false,
 			resizable: true,
-			smartIndent: true
+			smartIndent: true,
+
+			// ---------------
+
+			enabled: true
 		};
 
 		var cm = {
@@ -16,11 +21,19 @@
 
 			init: function (textAreaInput, settings) {
 				var opt = $.extend({}, defaults, settings);
+				if (!opt.enabled) {
+					opt.readOnly = true;
+				}
+
 				cm.textAreaInput = textAreaInput;
 				cm.editor = CodeMirror.fromTextArea(cm.textAreaInput[0], opt);
 				cm.editor.on("change", function () {
 					cm.editor.save();
 				});
+
+				if (!opt.enabled) {
+					cm.textAreaInput.parent().find('div.CodeMirror-scroll').css('background-color', '#eeeeee');
+				}
 
 				if (opt.width || opt.height) {
 					cm.editor.setSize(opt.width, opt.height);

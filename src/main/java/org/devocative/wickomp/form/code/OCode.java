@@ -22,6 +22,10 @@ public class OCode extends Options {
 	private Boolean smartIndent; //JS Default: TRUE
 	private OSize width;
 
+	// ---------------
+
+	private Boolean enabled; //JS Default: TRUE
+
 	// ------------------------------
 
 	public OCode(OCodeMode mode) {
@@ -147,5 +151,14 @@ public class OCode extends Options {
 			return map;
 		}
 		return null;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	OCode setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+		return this;
 	}
 }
