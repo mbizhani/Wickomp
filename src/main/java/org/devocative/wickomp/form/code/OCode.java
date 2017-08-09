@@ -1,5 +1,6 @@
 package org.devocative.wickomp.form.code;
 
+import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.opt.Options;
 
 import java.util.HashMap;
@@ -8,14 +9,18 @@ import java.util.Map;
 public class OCode extends Options {
 	private static final long serialVersionUID = 711452574514745355L;
 
-	private Boolean autofocus;
+	private Boolean autofocus; //JS Default: TRUE
+	private OSize height;
 	private Object hintOptions;
-	private Boolean indentWithTabs;
-	private Boolean lineNumbers;
-	private Boolean matchBrackets;
+	private Boolean indentWithTabs; //JS Default: TRUE
+	private Boolean lineNumbers; //JS Default: TRUE
+	private Boolean lineWrapping; //JS Default: TRUE
+	private Boolean matchBrackets; //JS Default: TRUE
 	private OCodeMode mode;
-	private Boolean readOnly; //default is false
-	private Boolean smartIndent;
+	private Boolean readOnly; //JS Default: FALSE
+	private Boolean resizable; //JS Default: TRUE
+	private Boolean smartIndent; //JS Default: TRUE
+	private OSize width;
 
 	// ------------------------------
 
@@ -31,6 +36,15 @@ public class OCode extends Options {
 
 	public OCode setAutofocus(Boolean autofocus) {
 		this.autofocus = autofocus;
+		return this;
+	}
+
+	public OSize getHeight() {
+		return height;
+	}
+
+	public OCode setHeight(OSize height) {
+		this.height = height;
 		return this;
 	}
 
@@ -61,6 +75,15 @@ public class OCode extends Options {
 		return this;
 	}
 
+	public Boolean getLineWrapping() {
+		return lineWrapping;
+	}
+
+	public OCode setLineWrapping(Boolean lineWrapping) {
+		this.lineWrapping = lineWrapping;
+		return this;
+	}
+
 	public Boolean getMatchBrackets() {
 		return matchBrackets;
 	}
@@ -88,12 +111,30 @@ public class OCode extends Options {
 		return this;
 	}
 
+	public Boolean getResizable() {
+		return resizable;
+	}
+
+	public OCode setResizable(Boolean resizable) {
+		this.resizable = resizable;
+		return this;
+	}
+
 	public Boolean getSmartIndent() {
 		return smartIndent;
 	}
 
 	public OCode setSmartIndent(Boolean smartIndent) {
 		this.smartIndent = smartIndent;
+		return this;
+	}
+
+	public OSize getWidth() {
+		return width;
+	}
+
+	public OCode setWidth(OSize width) {
+		this.width = width;
 		return this;
 	}
 

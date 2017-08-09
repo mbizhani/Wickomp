@@ -7,6 +7,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.wickomp.WFormInputPanel;
 import org.devocative.wickomp.WebUtil;
+import org.devocative.wickomp.wrcs.EasyUIBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,12 +36,14 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 		this.options = options;
 
-		editor = new TextArea<>("editor", new Model<String>());
+		editor = new TextArea<>("editor", new Model<>());
 		editor.setType(String.class);
 		editor.setOutputMarkupId(true);
 		add(editor);
 
 		setOutputMarkupId(true);
+
+		add(new EasyUIBehavior());
 	}
 
 	// ------------------------------
@@ -86,7 +89,7 @@ public class WCodeInput extends WFormInputPanel<String> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("$('#%s').codemirror(%s);",
+		String script = String.format("$('#%s').wCodeMirror(%s);",
 			editor.getMarkupId(),
 			WebUtil.toJson(options));
 
