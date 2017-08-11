@@ -158,12 +158,29 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		return this;
 	}
 
+	public WBaseGrid<T> resetPaging(IPartialPageRequestHandler handler) {
+		handler.appendJavaScript(String.format("$('#%s').%s('resetPaging');",
+			getMarkupId(), getJQueryFunction()));
+		return this;
+	}
+
+	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list) {
+		return pushData(handler, list, -1, null);
+	}
+
 	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list, long count) {
 		return pushData(handler, list, count, null);
 	}
 
 	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list, long count, List footer) {
 		if (isEnabledInHierarchy()) {
+			if (ignoreDataSourceCount) {
+				count = (pageNum - 1) * pageSize + list.size();
+				if (list.size() == pageSize) {
+					count++;
+				}
+			}
+
 			RGridPage gridPage = getGridPage(list, count);
 
 			if (options.hasFooter()) {
@@ -530,7 +547,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		StringBuilder result = new StringBuilder();
 
 		if (automaticColumns) {
-			result.append(String.format("$('#%s').%s({columns:%s});",
+			result.append(String.format("$('#%s').%s('updateColumns', {columns:%s});",
 				getMarkupId(), getJQueryFunction(), WebUtil.toJson(options.getColumns())));
 		}
 

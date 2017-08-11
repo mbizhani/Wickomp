@@ -35,6 +35,12 @@
 			wLog.debug('wBaseGridDefaults.onLoadSuccess');
 
 			wBaseGridDefaults.initSelection($(this));
+
+			if ($(this).data('action') == 'reset') {
+				$(this).datagrid('gotoPage', $(this).data('pageNum'));
+				$(this).datagrid('options')['url'] = $(this).data('url');
+				$(this).data('action', 'none');
+			}
 		},
 
 		onSelect: function (data) {
@@ -356,14 +362,25 @@
 	$.fn.wDataGrid = function (cmdOrOpts, options) {
 		var gridSpecific = {};
 
-		if (typeof(cmdOrOpts) === 'object') {
+		if (!$(this).data("inited")) {
 			var extOpt = $.extend({}, gridSpecific, wBaseGridDefaults, cmdOrOpts);
 			wLog.debug('wDataGrid init', extOpt);
 			var datagrid = $(this).datagrid(extOpt);
 			extOpt.onInit.call(this, extOpt);
+			!$(this).data("inited", true);
 			return datagrid
 		} else {
-			return $(this).datagrid(cmdOrOpts, options);
+			if (cmdOrOpts == 'updateColumns') {
+				$(this).data('url', $(this).datagrid('options')['url']);
+				$(this).data('pageNum', $(this).datagrid('getPager').pagination('options').pageNumber);
+				$(this).data('action', 'reset');
+				$(this).datagrid('options')['url'] = '';
+				$(this).datagrid(options);
+			} else if (cmdOrOpts == 'resetPaging') {
+				$(this).datagrid('getPager').pagination('select', 1);
+			} else {
+				return $(this).datagrid(cmdOrOpts, options);
+			}
 		}
 	};
 

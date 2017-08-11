@@ -28,6 +28,11 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devocative.adroit.AdroitList;
+import org.devocative.wickomp.async.WebSocketToken;
+import org.devocative.wickomp.async.response.WebSocketComponentRenderResult;
+import org.devocative.wickomp.async.response.WebSocketJavascriptResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,6 +53,10 @@ import java.util.*;
  * @JsonValue
  */
 public class WebUtil {
+	private static final Logger logger = LoggerFactory.getLogger(WebUtil.class);
+
+	// ------------------------------
+
 	public static String toJson(Object obj) {
 		StringWriter sw = new StringWriter();
 		ObjectMapper mapper = new ObjectMapper();
@@ -271,27 +280,41 @@ public class WebUtil {
 		return target != null;
 	}
 
-	public static boolean sendByWebSocket(Component cmp, IWebSocketPushMessage message) {
-		int pageId = cmp.getPage().getPageId();
+	// ---------------
 
-		Application app = Application.get();
-		if (app != null && WebSession.get() != null) {
-			String sessionId = WebSession.get().getId();
+	public static WebSocketToken createWSToken(Component cmp) {
+		return new WebSocketToken(
+			Application.get().getApplicationKey(),
+			WebSession.get().getId(),
+			new PageIdKey(cmp.getPage().getPageId())
+		);
+	}
 
-			WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(app);
-			IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
-			IWebSocketConnection connection = registry.getConnection(
-				app,
-				sessionId,
-				new PageIdKey(pageId)
-			);
+	public static boolean wsPush(WebSocketToken token, String javaScript) {
+		return wsPush(token, new WebSocketJavascriptResult(javaScript));
+	}
 
-			if (connection != null && connection.isOpen()) {
+	public static boolean wsPush(WebSocketToken token, Component... components) {
+		return wsPush(token, new WebSocketComponentRenderResult(components));
+	}
+
+	public static boolean wsPush(WebSocketToken token, IWebSocketPushMessage message) {
+		Application app = Application.get(token.getApplicationKey());
+
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(app);
+		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
+		IWebSocketConnection connection = registry.getConnection(app, token.getSessionId(), token.getPageKey());
+
+		if (connection != null) {
+			if (connection.isOpen()) {
 				connection.sendMessage(message);
 				return true;
+			} else {
+				logger.error("wsPush: WebSocketConnection Is Not Opened!");
 			}
+		} else {
+			logger.error("wsPush: WebSocketConnection Not Found!");
 		}
-
 		return false;
 	}
 
