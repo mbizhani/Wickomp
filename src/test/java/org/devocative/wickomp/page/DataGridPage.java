@@ -7,8 +7,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.adroit.obuilder.ObjectBuilder;
 import org.devocative.wickomp.BasePage;
-import org.devocative.wickomp.async.AsyncBehavior;
-import org.devocative.wickomp.async.IAsyncResponseHandler;
+import org.devocative.wickomp.TaskBehavior;
+import org.devocative.wickomp.async.IAsyncResponse;
 import org.devocative.wickomp.formatter.OBooleanFormatter;
 import org.devocative.wickomp.formatter.ODateFormatter;
 import org.devocative.wickomp.formatter.ONumberFormatter;
@@ -26,6 +26,7 @@ import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.html.icon.FontAwesome;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.resource.OutputStreamResource;
+import org.devocative.wickomp.service.DataService;
 import org.devocative.wickomp.vo.PersonVO;
 
 import java.io.IOException;
@@ -35,11 +36,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGridDataSource<PersonVO>, IGridAsyncDataSource<PersonVO> {
+public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataSource<PersonVO>, IGridAsyncDataSource<PersonVO> {
 	private static final long serialVersionUID = 7457034189424340046L;
 
 	private List<PersonVO> list;
-	private AsyncBehavior asyncBehavior;
+	private TaskBehavior taskBehavior;
 	private WDataGrid<PersonVO> asyncDisabledGrid;
 
 	public DataGridPage() {
@@ -139,7 +140,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 				.setFormatter(OBooleanFormatter.bool()))
 		;
 
-		add(asyncBehavior = new AsyncBehavior(this));
+		add(taskBehavior = new TaskBehavior(this));
 
 		activeGrid(columns);
 
@@ -149,7 +150,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 	}
 
 	@Override
-	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
+	public void onAsyncResult(IPartialPageRequestHandler handler, Object result) {
 		Map<String, Object> map = (Map<String, Object>) result;
 		//if (grid2.getPageNum() == 3) {
 		//	asyncDisabledGrid.pushError(handler, new RuntimeException("DataGridPage: Page 3 Error"));
@@ -159,7 +160,7 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 	}
 
 	@Override
-	public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
+	public void onAsyncError(IPartialPageRequestHandler handler, Exception error) {
 		asyncDisabledGrid.pushError(handler, error);
 	}
 
@@ -272,12 +273,12 @@ public class DataGridPage extends BasePage implements IAsyncResponseHandler, IGr
 
 	@Override
 	public void asyncList(long first, long size, List<WSortField> sortFields) {
-		asyncBehavior.sendAsyncRequest("GRID_PAGER",
-			ObjectBuilder
-				.<String, Object>createDefaultMap()
-				.put("first", first)
-				.put("size", size)
-				.get());
+		Map<String, Object> map = ObjectBuilder
+			.<String, Object>createDefaultMap()
+			.put("first", first)
+			.put("size", size)
+			.get();
+		DataService.processPerson(new DataService.RequestVO(taskBehavior, map));
 	}
 
 	// ------------------------------ IGridDataSource<PersonVO>

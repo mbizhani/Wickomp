@@ -1,15 +1,8 @@
 package org.devocative.wickomp;
 
-import org.devocative.wickomp.async.AsyncMediator;
-import org.devocative.wickomp.async.AsyncToken;
-
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
-
-public class WTimer extends TimerTask {
-	private static final Map<AsyncToken, WTimer> MAP = new ConcurrentHashMap<>();
+//TODO
+public class WTimer /*extends TimerTask*/ {
+	/*private static final Map<AsyncToken, WTimer> MAP = new ConcurrentHashMap<>();
 
 	public synchronized static void start(AsyncToken token, int no) {
 		if (MAP.containsKey(token)) {
@@ -41,5 +34,5 @@ public class WTimer extends TimerTask {
 
 	public void reset(int no) {
 		this.no = no;
-	}
+	}*/
 }

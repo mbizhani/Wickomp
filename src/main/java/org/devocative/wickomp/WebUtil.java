@@ -17,6 +17,7 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.IWebSocketRequestHandler;
+import org.apache.wicket.protocol.ws.api.WebSocketPushBroadcaster;
 import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
@@ -28,9 +29,8 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devocative.adroit.AdroitList;
+import org.devocative.wickomp.async.WebSocketBroadcastMessage;
 import org.devocative.wickomp.async.WebSocketToken;
-import org.devocative.wickomp.async.response.WebSocketComponentRenderResult;
-import org.devocative.wickomp.async.response.WebSocketJavascriptResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -290,14 +290,6 @@ public class WebUtil {
 		);
 	}
 
-	public static boolean wsPush(WebSocketToken token, String javaScript) {
-		return wsPush(token, new WebSocketJavascriptResult(javaScript));
-	}
-
-	public static boolean wsPush(WebSocketToken token, Component... components) {
-		return wsPush(token, new WebSocketComponentRenderResult(components));
-	}
-
 	public static boolean wsPush(WebSocketToken token, IWebSocketPushMessage message) {
 		Application app = Application.get(token.getApplicationKey());
 
@@ -316,6 +308,13 @@ public class WebUtil {
 			logger.error("wsPush: WebSocketConnection Not Found!");
 		}
 		return false;
+	}
+
+	public static void wsBroadcast(Application application, Object message) {
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
+		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
+		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(registry);
+		broadcaster.broadcastAll(application, new WebSocketBroadcastMessage(message));
 	}
 
 	// ---------------

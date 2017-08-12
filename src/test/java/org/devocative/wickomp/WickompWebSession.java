@@ -2,7 +2,6 @@ package org.devocative.wickomp;
 
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
-import org.devocative.wickomp.async.AsyncMediator;
 import org.devocative.wickomp.opt.OCalendar;
 import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
@@ -47,7 +46,5 @@ public class WickompWebSession extends WebSession implements OUserPreference {
 	@Override
 	public void onInvalidate() {
 		System.out.printf("Session Expired: %s\n", getId());
-
-		AsyncMediator.handleSessionExpiration(null, getId());
 	}
 }

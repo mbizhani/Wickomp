@@ -7,33 +7,32 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.devocative.adroit.obuilder.ObjectBuilder;
 import org.devocative.wickomp.BasePage;
+import org.devocative.wickomp.TaskBehavior;
 import org.devocative.wickomp.WModel;
-import org.devocative.wickomp.async.AsyncBehavior;
-import org.devocative.wickomp.async.IAsyncResponseHandler;
+import org.devocative.wickomp.async.IAsyncResponse;
 import org.devocative.wickomp.grid.*;
 import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.opt.OSize;
+import org.devocative.wickomp.service.DataService;
 import org.devocative.wickomp.vo.EmployeeVO;
 
 import java.io.Serializable;
 import java.util.*;
 
-public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
+public class TreeGridPage extends BasePage implements IAsyncResponse, ITreeGridAsyncDataSource<EmployeeVO> {
 	private static final long serialVersionUID = 4726580534261868437L;
 
 	private List<EmployeeVO> list;
 
-	private AsyncBehavior asyncBehavior;
-	private WTreeGrid<EmployeeVO> atreegrid;
+	private TaskBehavior taskBehavior;
+	private WTreeGrid<EmployeeVO> asyncTreeGrid;
 	private OColumnList<EmployeeVO> columnList;
 
 	public TreeGridPage() {
 		list = EmployeeVO.list();
-
-		add(asyncBehavior = new AsyncBehavior(this));
 
 		columnList = new OColumnList<>();
 		columnList
@@ -76,47 +75,22 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 			.setColumns(columnList)
 			.setHeight(OSize.fixed(400));
 
-		atreegrid = new WTreeGrid<>("atreegrid", treeGrid, new ITreeGridAsyncDataSource<EmployeeVO>() {
-			private static final long serialVersionUID = 4245241591226574311L;
-
-			@Override
-			public void asyncList(long pageIndex, long pageSize, List<WSortField> list) {
-				asyncBehavior.sendAsyncRequest("T_GRID_PAGER",
-					ObjectBuilder
-						.<String, Object>createDefaultMap()
-						.put("first", pageIndex)
-						.put("size", pageSize)
-						.get()
-				);
-			}
-
-			@Override
-			public void asyncListByParent(Serializable parentId, List<WSortField> list) {
-				asyncBehavior.sendAsyncRequest("T_GRID_CHILDREN", parentId);
-			}
-
-			@Override
-			public boolean hasChildren(EmployeeVO bean) {
-				return !bean.getEid().contains(".");
-			}
-
-			@Override
-			public IModel<EmployeeVO> model(EmployeeVO object) {
-				return new WModel<>(object);
-			}
-		});
-		atreegrid.setEnabled(false);
-		add(atreegrid);
+		asyncTreeGrid = new WTreeGrid<>("atreegrid", treeGrid, this);
+		asyncTreeGrid.setEnabled(false);
+		add(asyncTreeGrid);
 
 		add(new AjaxLink("enableTGrid") {
 			private static final long serialVersionUID = 5052194326107554173L;
 
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				atreegrid.setEnabled(true);
-				atreegrid.loadData(target);
+				asyncTreeGrid.setEnabled(true);
+				asyncTreeGrid.loadData(target);
 			}
 		});
+
+		taskBehavior = new TaskBehavior(this);
+		add(taskBehavior);
 	}
 
 	private void syncTreeGrid() {
@@ -178,18 +152,46 @@ public class TreeGridPage extends BasePage implements IAsyncResponseHandler {
 		}));
 	}
 
+	// ---------------
+
 	@Override
-	public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
-		if ("T_GRID_PAGER".equals(handlerId)) {
-			Map<String, Object> map = (Map<String, Object>) result;
-			atreegrid.pushData(handler, (List) map.get("list"), (int) map.get("count"));
-		} else if ("T_GRID_CHILDREN".equals(handlerId)) {
-			Map<String, Object> map = (Map<String, Object>) result;
-			atreegrid.pushChildren(handler, (String) map.get("parentId"), (List) map.get("list"));
+	public void onAsyncResult(IPartialPageRequestHandler handler, Object result) {
+		Map<String, Object> map = (Map<String, Object>) result;
+		if (map.containsKey("parentId")) {
+			asyncTreeGrid.pushChildren(handler, (String) map.get("parentId"), (List) map.get("list"));
+		} else if (map.containsKey("list")) {
+			asyncTreeGrid.pushData(handler, (List) map.get("list"), (int) map.get("count"));
 		}
 	}
 
 	@Override
-	public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
+	public void onAsyncError(IPartialPageRequestHandler handler, Exception error) {
+	}
+
+	// ---------------
+
+	@Override
+	public void asyncList(long pageIndex, long pageSize, List<WSortField> list) {
+		Map<String, Object> map = ObjectBuilder
+			.<String, Object>createDefaultMap()
+			.put("first", pageIndex)
+			.put("size", pageSize)
+			.get();
+		DataService.processEmployee(new DataService.RequestVO(taskBehavior, map));
+	}
+
+	@Override
+	public void asyncListByParent(Serializable parentId, List<WSortField> list) {
+		DataService.processSubEmployee(new DataService.RequestVO(taskBehavior, parentId.toString()));
+	}
+
+	@Override
+	public boolean hasChildren(EmployeeVO bean) {
+		return !bean.getEid().contains(".");
+	}
+
+	@Override
+	public IModel<EmployeeVO> model(EmployeeVO object) {
+		return new WModel<>(object);
 	}
 }

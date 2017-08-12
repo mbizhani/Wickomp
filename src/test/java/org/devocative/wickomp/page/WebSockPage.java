@@ -4,17 +4,13 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.NumberTextField;
-import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.async.BroadcastCaptureBehavior;
-import org.devocative.wickomp.async.response.WebSocketJavascriptResult;
-import org.devocative.wickomp.form.WAsyncAjaxButton;
+import org.devocative.wickomp.async.WebSocketToken;
 import org.devocative.wickomp.html.WAjaxLink;
-import org.devocative.wickomp.html.WAsyncAjaxLink;
 import org.devocative.wickomp.html.window.WModalWindow;
 
 public class WebSockPage extends BasePage {
@@ -24,8 +20,11 @@ public class WebSockPage extends BasePage {
 	private Label label333;
 	private NumberTextField<Integer> no;
 	private WModalWindow wsModal;
+	private WebSocketToken token;
 
 	public WebSockPage() {
+		token = WebUtil.createWSToken(this);
+
 		label222 = new Label("label222", "1");
 		label222.setOutputMarkupId(true);
 		add(label222);
@@ -33,33 +32,6 @@ public class WebSockPage extends BasePage {
 		label333 = new Label("label333", "-");
 		label333.setOutputMarkupId(true);
 		add(label333);
-
-		Form form = new Form("form");
-		form.add(no = new NumberTextField<>("no", new Model<>(1), Integer.class));
-		/*form.add(new WAjaxButton("send") {
-			@Override
-			protected void onSubmit(AjaxRequestTarget target) {
-			}
-		});*/
-		form.add(new WAsyncAjaxButton("send") {
-			private static final long serialVersionUID = -536912605597392759L;
-
-			@Override
-			protected void onSubmit(AjaxRequestTarget target) {
-				sendAsyncRequest("COUNTER", no.getModelObject());
-			}
-
-			@Override
-			public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
-				label333.setDefaultModelObject(result);
-				handler.add(label333);
-			}
-
-			@Override
-			public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
-			}
-		});
-		add(form);
 
 		wsModal = new WModalWindow("wsModal");
 		add(wsModal);
@@ -79,7 +51,6 @@ public class WebSockPage extends BasePage {
 
 			@Override
 			public void onClick(AjaxRequestTarget ajaxRequestTarget) {
-				WebUtil.sendByWebSocket(this, new WebSocketJavascriptResult("alert('WebUtil.sendByWebSocket()');"));
 			}
 		});
 
@@ -153,25 +124,6 @@ public class WebSockPage extends BasePage {
 			timeLabel = new Label("timeLabel", "-");
 			timeLabel.setOutputMarkupId(true);
 			add(timeLabel);
-
-			add(new WAsyncAjaxLink("time") {
-				private static final long serialVersionUID = 5343830825504343191L;
-
-				@Override
-				public void onClick(AjaxRequestTarget target) {
-					sendAsyncRequest("NTP", null);
-				}
-
-				@Override
-				public void onAsyncResult(String handlerId, IPartialPageRequestHandler handler, Object result) {
-					timeLabel.setDefaultModelObject(result);
-					handler.add(timeLabel);
-				}
-
-				@Override
-				public void onAsyncError(String handlerId, IPartialPageRequestHandler handler, Exception error) {
-				}
-			});
 		}
 	}
 }

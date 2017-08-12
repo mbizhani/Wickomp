@@ -21,7 +21,7 @@ public abstract class WTextAsyncBehavior extends WebSocketBehavior {
 
 	// ------------------------------
 
-	private static Application app;
+	private String appKey;
 	private String sessionId;
 	private int pageId;
 
@@ -29,7 +29,7 @@ public abstract class WTextAsyncBehavior extends WebSocketBehavior {
 
 	@Override
 	public void bind(Component component) {
-		app = component.getApplication();
+		appKey = component.getApplication().getApplicationKey();
 		pageId = component.getPage().getPageId();
 	}
 
@@ -41,6 +41,7 @@ public abstract class WTextAsyncBehavior extends WebSocketBehavior {
 	// ---------------
 
 	public void push(String text) {
+		Application app = Application.get(appKey);
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(app);
 		IWebSocketConnectionRegistry registry = webSocketSettings.getConnectionRegistry();
 		IWebSocketConnection connection = registry.getConnection(
