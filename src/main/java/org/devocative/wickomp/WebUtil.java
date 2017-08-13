@@ -9,6 +9,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.model.IModel;
@@ -381,6 +382,10 @@ public class WebUtil {
 			result.add(message.getMessage());
 		}
 		return result;
+	}
+
+	public static void copyToClipboard(String text, IPartialPageRequestHandler handler) {
+		handler.appendJavaScript(String.format("wTools.copyToClipboard(\"%s\");", text));
 	}
 
 	// ------------------------------

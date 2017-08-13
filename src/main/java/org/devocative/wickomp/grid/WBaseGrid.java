@@ -135,14 +135,20 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
 		if (isEnabledInHierarchy()) {
-			RGridPage gridPage = getGridPage();
+			if (options.getUrl() == null) {
+				RGridPage gridPage = getGridPage();
 
-			if (gridDataSource != null) {
-				String script = createClientScript(gridPage);
-
-				logger.debug("WBaseGrid.loadData(): {}", script);
-
-				target.appendJavaScript(script);
+				if (gridDataSource != null) {
+					String script = createClientScript(gridPage);
+					logger.debug("WBaseGrid.loadData(): {}", script);
+					target.appendJavaScript(script);
+				} else {
+					target.appendJavaScript(String.format("$('#%s').%s('loading');",
+						getMarkupId(), getJQueryFunction()));
+				}
+			} else {
+				target.appendJavaScript(String.format("$('#%s').%s('resetPaging');",
+					getMarkupId(), getJQueryFunction()));
 			}
 		} else {
 			throw new WicketRuntimeException("WBaseGrid is disabled: " + getId());
@@ -155,12 +161,6 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			setVisible(true);
 			target.add(this);
 		}
-		return this;
-	}
-
-	public WBaseGrid<T> resetPaging(IPartialPageRequestHandler handler) {
-		handler.appendJavaScript(String.format("$('#%s').%s('resetPaging');",
-			getMarkupId(), getJQueryFunction()));
 		return this;
 	}
 
@@ -351,7 +351,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	// ---------------
 
 	protected final RGridPage getGridPage() {
-		RGridPage result;
+		RGridPage result = null;
 		try {
 			if (gridDataSource != null) {
 				List<T> data = gridDataSource.list(pageNum, pageSize, sortFieldList);
@@ -374,12 +374,6 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				}
 			} else {
 				gridAsyncDataSource.asyncList(pageNum, pageSize, sortFieldList);
-
-				result = getGridPage(null, pageNum * pageSize);
-				if (options.hasFooter()) {
-					result.setFooter(new ArrayList<>());
-				}
-				result.setAsync(true);
 			}
 		} catch (Exception e) {
 			logger.warn("Grid.DataSource: id=" + getId(), e);

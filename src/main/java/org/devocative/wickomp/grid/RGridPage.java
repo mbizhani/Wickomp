@@ -17,7 +17,7 @@ class RGridPage extends Result {
 
 	private String error;
 
-	private Boolean async;
+	// ------------------------------
 
 	public RObjectList getRows() {
 		return rows;
@@ -52,15 +52,6 @@ class RGridPage extends Result {
 
 	public RGridPage setError(String error) {
 		this.error = error;
-		return this;
-	}
-
-	public Boolean getAsync() {
-		return async;
-	}
-
-	public RGridPage setAsync(Boolean async) {
-		this.async = async;
 		return this;
 	}
 }

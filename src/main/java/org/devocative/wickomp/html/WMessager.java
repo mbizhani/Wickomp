@@ -2,7 +2,7 @@ package org.devocative.wickomp.html;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.devocative.wickomp.WDefaults;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.opt.OAnimation;
@@ -52,40 +52,34 @@ public class WMessager {
 
 	// ---------------
 
-	public static void show(Exception ex, AjaxRequestTarget target) {
-		show(ex, null, target);
+	public static void show(Exception ex, IPartialPageRequestHandler handler) {
+		show(ex, null, handler);
 	}
 
-	public static void show(Exception ex, Component cmp, AjaxRequestTarget target) {
+	public static void show(Exception ex, Component cmp, IPartialPageRequestHandler handler) {
 		String msg = ex.getMessage();
 		if (WDefaults.getExceptionToMessageHandler() != null) {
 			msg = WDefaults.getExceptionToMessageHandler().handleMessage(cmp, ex);
 		}
-		show(WebUtil.getStringOfResource("label.error", "Error"), msg, target);
+		show(WebUtil.getStringOfResource("label.error", "Error"), msg, handler);
 	}
 
-	public static void show(String title, String message, AjaxRequestTarget target) {
-		show(title, message, new OMessager(), target);
+	public static void show(String title, String message, IPartialPageRequestHandler handler) {
+		show(title, message, new OMessager(), handler);
 	}
 
-	public static void show(String title, List<?> errors, AjaxRequestTarget target) {
-		show(title, errors, new OMessager(), target);
+	public static void show(String title, List<?> errors, IPartialPageRequestHandler handler) {
+		show(title, errors, new OMessager(), handler);
 	}
 
-	public static void show(String title, List<?> errors, OMessager options, AjaxRequestTarget target) {
-		show(title, getHtml(errors), options, target);
+	public static void show(String title, List<?> errors, OMessager options, IPartialPageRequestHandler handler) {
+		show(title, getHtml(errors), options, handler);
 	}
 
 	// Main Function
-	public static void show(String title, String message, OMessager options, AjaxRequestTarget target) {
+	public static void show(String title, String message, OMessager options, IPartialPageRequestHandler handler) {
 		String sc = getScript(title, message, options);
-		target.appendJavaScript(sc);
-	}
-
-	// ---------------
-
-	public static void copyToClipboard(String text, AjaxRequestTarget target) {
-		target.appendJavaScript(String.format("wTools.copyToClipboard(\"%s\");", text));
+		handler.appendJavaScript(sc);
 	}
 
 	// ------------------------------

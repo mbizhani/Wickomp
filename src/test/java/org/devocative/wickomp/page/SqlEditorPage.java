@@ -41,7 +41,6 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 			protected void onSubmit(AjaxRequestTarget target) {
 				grid.setEnabled(true);
 				grid.loadData(target);
-				grid.resetPaging(target);
 			}
 		});
 		add(form);
@@ -70,11 +69,18 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 
 	@Override
 	public void asyncList(long pageIndex, long pageSize, List<WSortField> sortFields) {
+		System.out.println("###> SqlEditorPage.asyncList");
+
 		String query = sql.getModelObject();
 
 		new Thread() {
 			@Override
 			public void run() {
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				List<RowVO> execute = DbService.execute(query, pageIndex, pageSize);
 				WebUtil.wsPush(token, new WebSocketDelayedResponse(SqlEditorPage.this, execute));
 			}
@@ -94,6 +100,5 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 
 	@Override
 	public void onAsyncError(IPartialPageRequestHandler handler, Exception e) {
-
 	}
 }

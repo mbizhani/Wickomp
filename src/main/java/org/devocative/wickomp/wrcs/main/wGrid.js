@@ -43,6 +43,10 @@
 			}
 		},
 
+		onLoadError: function () {
+			$(this).datagrid('loading');
+		},
+
 		onSelect: function (data) {
 			wBaseGridDefaults.selectionChanged($(this));
 		},
@@ -377,7 +381,7 @@
 				$(this).datagrid('options')['url'] = '';
 				$(this).datagrid(options);
 			} else if (cmdOrOpts == 'resetPaging') {
-				$(this).datagrid('getPager').pagination('select', 1);
+				$(this).datagrid('gotoPage', 1);
 			} else {
 				return $(this).datagrid(cmdOrOpts, options);
 			}

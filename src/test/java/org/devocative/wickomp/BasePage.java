@@ -63,7 +63,7 @@ public abstract class BasePage extends WebPage {
 
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				WMessager.copyToClipboard(new Date().toString(), target);
+				WebUtil.copyToClipboard(new Date().toString(), target);
 			}
 		});
 
