@@ -46,10 +46,12 @@ public class FormPage extends BasePage {
 		west = new WebMarkupContainer("west");
 		layout = new WEasyLayout("layout");
 		layout.setWestOfLTRDir(west);
+		layout.add(west);
 		add(layout);
 
 		simpleForm();
 		dynamicForm();
+		theCaptcha();
 
 		add(new EasyUIBehavior());
 	}
@@ -302,5 +304,24 @@ public class FormPage extends BasePage {
 		System.out.println("sql = " + sql);
 
 		System.out.println("groovy = " + groovy);
+	}
+
+	private void theCaptcha() {
+		Form<Void> form = new Form<>("captchaForm");
+		form.add(new WCaptchaInput("captcha"));
+		form.add(new WAjaxButton("submit") {
+			private static final long serialVersionUID = -8661601583848726777L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target) {
+				WMessager.show("!", "ok!", target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, List<Serializable> errors) {
+				WMessager.show("!", errors, target);
+			}
+		});
+		layout.add(form);
 	}
 }
