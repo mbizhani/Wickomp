@@ -48,6 +48,7 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 		OGrid<RowVO> oGrid = new OGrid<>();
 		oGrid
 			.setPagingBarLayout(Arrays.asList(OPagingButtons.first, OPagingButtons.prev, OPagingButtons.next))
+			.setNoResultMessage("No result")
 			.setPageList(Arrays.asList(5))
 			.setWidth(OSize.percent(100))
 			.setHeight(OSize.fixed(200));
@@ -76,11 +77,11 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 		new Thread() {
 			@Override
 			public void run() {
-				try {
+				/*try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
+				}*/
 				List<RowVO> execute = DbService.execute(query, pageIndex, pageSize);
 				WebUtil.wsPush(token, new WebSocketDelayedResponse(SqlEditorPage.this, execute));
 			}
@@ -100,5 +101,6 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 
 	@Override
 	public void onAsyncError(IPartialPageRequestHandler handler, Exception e) {
+		grid.pushError(handler, e);
 	}
 }

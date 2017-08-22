@@ -135,21 +135,18 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
 		if (isEnabledInHierarchy()) {
-			if (options.getUrl() == null) {
+			if (gridDataSource != null) {
 				RGridPage gridPage = getGridPage();
-
-				if (gridDataSource != null) {
-					String script = createClientScript(gridPage);
-					logger.debug("WBaseGrid.loadData(): {}", script);
-					target.appendJavaScript(script);
-				} else {
-					target.appendJavaScript(String.format("$('#%s').%s('loading');",
-						getMarkupId(), getJQueryFunction()));
-				}
-			} else {
-				target.appendJavaScript(String.format("$('#%s').%s('resetPaging');",
-					getMarkupId(), getJQueryFunction()));
+				String script = createClientScript(gridPage);
+				logger.debug("WBaseGrid.loadData(): {}", script);
+				target.appendJavaScript(script);
+			} else if (options.getUrl() == null) {
+				options.setUrl(getCallbackURL());
+				target.appendJavaScript(String.format("$('#%s').%s('updateUrl', \"%s\");",
+					getMarkupId(), getJQueryFunction(), getCallbackURL()));
 			}
+			target.appendJavaScript(String.format("$('#%s').%s('resetData');",
+				getMarkupId(), getJQueryFunction()));
 		} else {
 			throw new WicketRuntimeException("WBaseGrid is disabled: " + getId());
 		}
@@ -551,7 +548,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		// NOTE: setting URL must be set after loadData, otherwise it sends a request by loadData and fetches data twice
 		if (options.getUrl() == null) {
 			options.setUrl(getCallbackURL());
-			result.append(String.format("$('#%s').%s('options')['url']=\"%s\";",
+			result.append(String.format("$('#%s').%s('updateUrl', \"%s\");",
 				getMarkupId(), getJQueryFunction(), getCallbackURL()));
 		}
 

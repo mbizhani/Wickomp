@@ -1,6 +1,5 @@
 package org.devocative.wickomp.form;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -25,9 +24,10 @@ public abstract class WAjaxButton extends Button {
 
 	private static final Logger logger = LoggerFactory.getLogger(WAjaxButton.class);
 
-	private HTMLBase icon;
+	private String afterClickScript;
 	private IModel<String> confirmationMessage;
 	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
+	private HTMLBase icon;
 
 	// ---------------------- CONSTRUCTORS
 
@@ -46,6 +46,11 @@ public abstract class WAjaxButton extends Button {
 	}
 
 	// ---------------------- ACCESSORS
+
+	public WAjaxButton setAfterClickScript(String afterClickScript) {
+		this.afterClickScript = afterClickScript;
+		return this;
+	}
 
 	public WAjaxButton setConfirmationMessage(IModel<String> confirmationMessage) {
 		this.confirmationMessage = confirmationMessage;
@@ -140,15 +145,15 @@ public abstract class WAjaxButton extends Button {
 				// do not allow normal form submit to happen
 				attributes.setPreventDefault(true);
 
-				if (confirmationMessage != null) {
-					AjaxCallListener myAjaxCallListener = new AjaxCallListener() {
-						private static final long serialVersionUID = 8302847859100880597L;
+				if (confirmationMessage != null || afterClickScript != null) {
+					AjaxCallListener myAjaxCallListener = new AjaxCallListener();
+					if (confirmationMessage != null) {
+						myAjaxCallListener.onPrecondition(String.format("if(!confirm('%s')) return false;", confirmationMessage.getObject()));
+					}
 
-						@Override
-						public CharSequence getPrecondition(Component component) {
-							return String.format("if(!confirm('%s')) return false;", confirmationMessage.getObject());
-						}
-					};
+					if (afterClickScript != null) {
+						myAjaxCallListener.onAfter(afterClickScript);
+					}
 					attributes.getAjaxCallListeners().add(myAjaxCallListener);
 				}
 

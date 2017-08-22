@@ -39,8 +39,10 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	// ------------------------------ EXTRA FIELDS
 
+	protected Boolean asyncLoadingEnabled;
 	protected Boolean callbackOnColumnReorder;
 	protected Boolean columnReorder;
+	protected String noResultMessage;
 	protected List<OPagingButtons> pagingBarLayout;
 	protected List<String> reorderColumns;
 	protected Boolean selectionIndicator;
@@ -217,6 +219,15 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	// ------------------------------ EXTRA FIELDS
 
+	public Boolean getAsyncLoadingEnabled() {
+		return asyncLoadingEnabled;
+	}
+
+	public OBaseGrid<T> setAsyncLoadingEnabled(Boolean asyncLoadingEnabled) {
+		this.asyncLoadingEnabled = asyncLoadingEnabled;
+		return this;
+	}
+
 	public Boolean getCallbackOnColumnReorder() {
 		return callbackOnColumnReorder;
 	}
@@ -232,6 +243,15 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	public OBaseGrid<T> setColumnReorder(Boolean columnReorder) {
 		this.columnReorder = columnReorder;
+		return this;
+	}
+
+	public String getNoResultMessage() {
+		return noResultMessage;
+	}
+
+	public OBaseGrid<T> setNoResultMessage(String noResultMessage) {
+		this.noResultMessage = noResultMessage;
 		return this;
 	}
 

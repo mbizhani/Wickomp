@@ -11,6 +11,7 @@
 
 		// --------------- custom fields
 
+		asyncLoadingEnabled: true,
 		columnReorder: true,
 		callbackOnColumnReorder: false,
 		selectionIndicator: false,
@@ -22,7 +23,20 @@
 			wLog.debug('wBaseGridDefaults.loadFilter', data);
 
 			if (data.error) {
-				$.messager.alert('<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>', data.error);
+				wTools.show({
+					title: '<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>',
+					msg: data.error
+				});
+			} else if (data.rows && data.rows.length == 0) {
+				var noResultMessage = $(this).datagrid('options')['noResultMessage'];
+				if (noResultMessage) {
+					wTools.show({
+						title: '<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>',
+						msg: noResultMessage,
+						timeout: 1500,
+						showType: 'slide'
+					});
+				}
 			}
 
 			$(this).datagrid('loaded');
@@ -44,7 +58,10 @@
 		},
 
 		onLoadError: function () {
-			$(this).datagrid('loading');
+			wLog.debug('wBaseGridDefaults.onLoadError');
+			if ($(this).datagrid('options')['asyncLoadingEnabled']) {
+				$(this).datagrid('loading');
+			}
 		},
 
 		onSelect: function (data) {
@@ -83,9 +100,9 @@
 		onInit: function (options) {
 			wLog.debug('wBaseGridDefaults.onInit');
 
+			var grid = $(this);
 			var gridId = options["gridId"];
 			if (gridId) {
-				var grid = $(this);
 				window.addEventListener("GridLoading", function (e) {
 					if (e["targetGrid"] && e["targetGrid"] == gridId) {
 						grid.datagrid("loading");
@@ -371,7 +388,7 @@
 			wLog.debug('wDataGrid init', extOpt);
 			var datagrid = $(this).datagrid(extOpt);
 			extOpt.onInit.call(this, extOpt);
-			!$(this).data("inited", true);
+			$(this).data("inited", true);
 			return datagrid
 		} else {
 			if (cmdOrOpts == 'updateColumns') {
@@ -379,9 +396,12 @@
 				$(this).data('pageNum', $(this).datagrid('getPager').pagination('options').pageNumber);
 				$(this).data('action', 'reset');
 				$(this).datagrid('options')['url'] = '';
-				$(this).datagrid(options);
-			} else if (cmdOrOpts == 'resetPaging') {
-				$(this).datagrid('gotoPage', 1);
+				return $(this).datagrid(options);
+			} else if (cmdOrOpts == 'resetData') {
+				return $(this).datagrid('load');
+			} else if (cmdOrOpts == 'updateUrl') {
+				$(this).datagrid('options')['url'] = options;
+				return $(this);
 			} else {
 				return $(this).datagrid(cmdOrOpts, options);
 			}
@@ -408,14 +428,22 @@
 
 		};
 
-		if (typeof(cmdOrOpts) === 'object') {
+		if (!$(this).data("inited")) {
 			var extOpt = $.extend({}, treeGridSpecific, wBaseGridDefaults, cmdOrOpts);
 			wLog.debug('wTreeGrid init', extOpt);
 			var treegrid = $(this).treegrid(extOpt);
 			extOpt.onInit.call(this, extOpt);
+			$(this).data("inited", true);
 			return treegrid;
 		} else {
-			return $(this).treegrid(cmdOrOpts, options);
+			if (cmdOrOpts == 'resetData') {
+				return $(this).treegrid('load');
+			} else if (cmdOrOpts == 'updateUrl') {
+				$(this).treegrid('options')['url'] = options;
+				return $(this);
+			} else {
+				return $(this).treegrid(cmdOrOpts, options);
+			}
 		}
 	}
 })(jQuery);
