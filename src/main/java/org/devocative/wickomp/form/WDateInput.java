@@ -209,26 +209,25 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		DateFieldVO now = null;
-		String calType = null;
+		if (isVisible() && isEnabled()) {
+			String calType = null;
 
-		switch (calendar) {
-			case Gregorian:
-				now = CalendarUtil.getDateField(new Date());
-				calType = "gregorian";
-				break;
-			case Persian:
-				now = CalendarUtil.toPersianDateField(new Date());
-				calType = "jalali";
-				break;
+			switch (calendar) {
+				case Gregorian:
+					calType = "gregorian";
+					break;
+				case Persian:
+					calType = "jalali";
+					break;
+			}
+
+			String script = String.format(
+				"$('#%s').wDateInput('%s','%s','%s','%s', '%s');",
+				calOpener.getMarkupId(), calType, year.getMarkupId(), month.getMarkupId(), day.getMarkupId(),
+				mainTable.getMarkupId());
+
+			WebUtil.writeJQueryCall(script, false);
 		}
-
-		String script = String.format(
-			"$('#%s').wDateInput('%s','%s','%s','%s', '%s');",
-			calOpener.getMarkupId(), calType, year.getMarkupId(), month.getMarkupId(), day.getMarkupId(),
-			mainTable.getMarkupId());
-
-		WebUtil.writeJQueryCall(script, false);
 	}
 
 	// ------------------------------

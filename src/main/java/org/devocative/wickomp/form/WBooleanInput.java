@@ -71,9 +71,11 @@ public class WBooleanInput extends WLabeledFormInputPanel<Boolean> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("$('#%s').candlestick({'on':'true','off':'false','nc':''});",
-			hidden.getMarkupId());
+		if (isVisible()) {
+			String script = String.format("$('#%s').candlestick({'on':'true','off':'false','nc':''});",
+				hidden.getMarkupId());
 
-		WebUtil.writeJQueryCall(script, false);
+			WebUtil.writeJQueryCall(script, false);
+		}
 	}
 }

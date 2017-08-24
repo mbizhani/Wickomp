@@ -105,9 +105,11 @@ public class WMenuBar extends WPanel {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("$(\"#%s\").smartmenus();", rootMenu.getMarkupId());
+		if (isVisible()) {
+			String script = String.format("$(\"#%s\").smartmenus();", rootMenu.getMarkupId());
 
-		WebUtil.writeJQueryCall(script, false);
+			WebUtil.writeJQueryCall(script, false);
+		}
 	}
 
 	protected Component newMenuItemLink(String compId, OMenuItem item) {

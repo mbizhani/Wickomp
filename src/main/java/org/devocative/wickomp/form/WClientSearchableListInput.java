@@ -150,33 +150,35 @@ public abstract class WClientSearchableListInput extends WLabeledFormInputPanel 
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		StringBuilder builder = new StringBuilder();
-		builder.append(String.format("initClientSearchableList('%s', '%s');", getMarkupId(), getString("WClientSearchableListInput.noOfSelection")));
+		if (isVisible() && isEnabled()) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(String.format("initClientSearchableList('%s', '%s');", getMarkupId(), getString("WClientSearchableListInput.noOfSelection")));
 
-		List objectRows;
-		Object modelObject = getModelObject();
-		if (modelObject != null) {
-			if (multipleSelection) {
-				objectRows = (List) modelObject;
+			List objectRows;
+			Object modelObject = getModelObject();
+			if (modelObject != null) {
+				if (multipleSelection) {
+					objectRows = (List) modelObject;
+				} else {
+					objectRows = Collections.singletonList(modelObject);
+				}
 			} else {
-				objectRows = Collections.singletonList(modelObject);
+				objectRows = Collections.emptyList();
 			}
-		} else {
-			objectRows = Collections.emptyList();
+
+			String rows = WebUtil.toJson(createClientOptions(objectRows));
+			builder.append(String.format(
+					"handleClientSearchableList(null, '%s', '%s', '%s', %s, %s);",
+					getInputName(),
+					result.getMarkupId(),
+					title.getMarkupId(),
+					rows,
+					multipleSelection
+				)
+			);
+
+			WebUtil.writeJQueryCall(builder.toString(), false);
 		}
-
-		String rows = WebUtil.toJson(createClientOptions(objectRows));
-		builder.append(String.format(
-				"handleClientSearchableList(null, '%s', '%s', '%s', %s, %s);",
-				getInputName(),
-				result.getMarkupId(),
-				title.getMarkupId(),
-				rows,
-				multipleSelection
-			)
-		);
-
-		WebUtil.writeJQueryCall(builder.toString(), false);
 	}
 
 	protected String getJSCallback() {

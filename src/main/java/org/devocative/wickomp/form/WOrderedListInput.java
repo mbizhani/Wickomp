@@ -146,7 +146,7 @@ public class WOrderedListInput<T> extends WFormInputPanel<List<T>> {
 	protected void onInitialize() {
 		super.onInitialize();
 
-		if (isEnabledInHierarchy()) {
+		if (isEnabled()) {
 			up.add(new AttributeAppender("style", "cursor: pointer;"));
 			down.add(new AttributeAppender("style", "cursor: pointer;"));
 		} else {
@@ -178,9 +178,7 @@ public class WOrderedListInput<T> extends WFormInputPanel<List<T>> {
 			}
 			Collections.sort(toBeRemoved);
 			Collections.reverse(toBeRemoved);
-			for (int idx : toBeRemoved) {
-				srcOptions.remove(idx);
-			}
+			toBeRemoved.forEach(srcOptions::remove);
 			hiddenIds.setModel(new Model<>(hiddenValue.toString()));
 		}
 
@@ -191,7 +189,7 @@ public class WOrderedListInput<T> extends WFormInputPanel<List<T>> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		if (isEnabledInHierarchy()) {
+		if (isVisible() && isEnabled()) {
 			String script = String.format("handleOrderedList('%s', '%s', '%s', '%s', '%s', '%s');",
 				hiddenIds.getMarkupId(), idDelimiter,
 				src.getMarkupId(), dest.getMarkupId(), up.getMarkupId(), down.getMarkupId());

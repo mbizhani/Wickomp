@@ -127,9 +127,11 @@ public class WNumberInput extends WLabeledFormInputPanel<Number> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		String script = String.format("$('#%s').autoNumeric('init', %s);",
-			numberField.getMarkupId(), WebUtil.toJson(options));
+		if (isVisible() && isEnabled()) {
+			String script = String.format("$('#%s').autoNumeric('init', %s);",
+				numberField.getMarkupId(), WebUtil.toJson(options));
 
-		WebUtil.writeJQueryCall(script, false);
+			WebUtil.writeJQueryCall(script, false);
+		}
 	}
 }

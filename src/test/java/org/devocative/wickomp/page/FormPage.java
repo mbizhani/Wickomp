@@ -212,8 +212,8 @@ public class FormPage extends BasePage {
 		form.add(new WTextRangeInput("stringRange"));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
-		form.add(new WCodeInput("sql", new PropertyModel<String>(this, "sql"), oCode));
-		form.add(new WCodeInput("groovy", new PropertyModel<String>(this, "groovy"), new OCode(OCodeMode.GROOVY)));
+		form.add(new WCodeInput("sql", new PropertyModel<>(this, "sql"), oCode));
+		form.add(new WCodeInput("groovy", new PropertyModel<>(this, "groovy"), new OCode(OCodeMode.GROOVY)));
 		form.add(new WClientSearchableListInput("kvList", true) {
 			private static final long serialVersionUID = 4542301240930720140L;
 

@@ -85,16 +85,18 @@ public class WCodeInput extends WFormInputPanel<String> {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		if (!isEnabledInHierarchy()) {
-			options.setEnabled(false);
+		if (isVisible()) {
+			if (!isEnabledInHierarchy()) {
+				options.setEnabled(false);
+			}
+
+			String script = String.format("$('#%s').wCodeInput(%s);",
+				editor.getMarkupId(),
+				WebUtil.toJson(options));
+
+			logger.debug("WCodeInput: {}", script);
+
+			WebUtil.writeJQueryCall(script, true);
 		}
-
-		String script = String.format("$('#%s').wCodeInput(%s);",
-			editor.getMarkupId(),
-			WebUtil.toJson(options));
-
-		logger.debug("WCodeInput: {}", script);
-
-		WebUtil.writeJQueryCall(script, false);
 	}
 }

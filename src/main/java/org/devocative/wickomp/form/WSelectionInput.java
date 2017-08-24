@@ -137,7 +137,9 @@ public class WSelectionInput extends WLabeledFormInputPanel {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		WebUtil.writeJQueryCall(getHandleScript(), false);
+		if (isVisible()) {
+			WebUtil.writeJQueryCall(getHandleScript(), false);
+		}
 	}
 
 	// ------------------------------

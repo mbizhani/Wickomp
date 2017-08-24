@@ -92,8 +92,10 @@ public class WEasyLayout extends WebMarkupContainer {
 		builder.append(String.format("$('#%s').layout();", getMarkupId()));
 		*/
 
-		String script = String.format("$('#%s').layout();", getMarkupId());
-		WebUtil.writeJQueryCall(script, false);
+		if (isVisible()) {
+			String script = String.format("$('#%s').layout();", getMarkupId());
+			WebUtil.writeJQueryCall(script, false);
+		}
 	}
 
 	/*private String getParentFitScript(WebMarkupContainer container) {
