@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WHttpAuthBean {
-	private Map<String, String> authRqValues = new HashMap<String, String>();
+	private Map<String, String> authRqValues = new HashMap<>();
 	private WAuthMethod authMethod;
 
 	// ------------------------------ CONSTRUCTORS
+
+	public WHttpAuthBean() {
+	}
 
 	public WHttpAuthBean(String headerString) {
 		if (headerString != null && headerString.trim().length() > 0) {
@@ -57,6 +60,10 @@ public class WHttpAuthBean {
 
 	public String getUsername() {
 		return authRqValues.get("username");
+	}
+
+	void setUsername(String username) {
+		authRqValues.put("username", username);
 	}
 
 	public String getPassword() {

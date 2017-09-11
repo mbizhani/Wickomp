@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Based on: https://en.wikipedia.org/wiki/Digest_access_authentication
@@ -26,17 +27,19 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 
 	// ------------------------------
 
-	private boolean processAuth = true;
+	private AtomicBoolean processAuth = new AtomicBoolean(true);
 	private WAuthMethod desiredAuthMethod = WAuthMethod.BASIC;
 
 	// ------------------------------
 
 	@Override
-	public void doFilter(ServletRequest srvRq, ServletResponse srvRsp, FilterChain filterChain) throws IOException, ServletException {
+	public final void doFilter(ServletRequest srvRq, ServletResponse srvRsp, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) srvRq;
 		HttpServletResponse response = (HttpServletResponse) srvRsp;
 
-		if (processAuth) {
+		onRequest(request, response);
+
+		if (processAuth.get()) {
 			try {
 				process(request, response, filterChain);
 			} catch (Exception e) {
@@ -45,17 +48,19 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 			}
 		} else {
 			logger.warn("HttpAuthFilter: Authentication Ignored!");
+			onBeforeChainNoAuth(request, response);
 			filterChain.doFilter(request, response);
+			onAfterChainNoAuth(request, response);
 		}
 	}
 
 	// ------------------------------
 
-	public WAuthMethod getDesiredAuthMethod() {
+	public final WAuthMethod getDesiredAuthMethod() {
 		return desiredAuthMethod;
 	}
 
-	public void setDesiredAuthMethod(WAuthMethod desiredAuthMethod) {
+	public final void setDesiredAuthMethod(WAuthMethod desiredAuthMethod) {
 		this.desiredAuthMethod = desiredAuthMethod;
 	}
 
@@ -67,7 +72,7 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 
 	/**
 	 * DigestUtils.md5Hex(userName + ":" + realm + ":" + password);
-	 *
+	 * <p>
 	 * param authBean
 	 * return
 	 */
@@ -79,7 +84,7 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 
 	/**
 	 * quality of protection
-	 *
+	 * <p>
 	 * param authBean
 	 * return
 	 */
@@ -87,18 +92,31 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 		return "auth";
 	}
 
-	protected boolean isProcessAuth() {
-		return processAuth;
+	protected final boolean isProcessAuth() {
+		return processAuth.get();
 	}
 
-	protected void setProcessAuth(boolean processAuth) {
-		this.processAuth = processAuth;
+	protected final void setProcessAuth(boolean processAuth) {
+		this.processAuth.set(processAuth);
 	}
 
-	protected void onBeforeChainAuthenticated(WHttpAuthBean authBean) {
+	protected String authenticateByOther(HttpServletRequest request, HttpServletResponse response) {
+		return null;
 	}
 
-	protected void onAfterChainAuthenticated(WHttpAuthBean authBean) {
+	protected void onRequest(HttpServletRequest request, HttpServletResponse response) {
+	}
+
+	protected void onBeforeChainAuthenticated(WHttpAuthBean authBean, HttpServletRequest request, HttpServletResponse response) {
+	}
+
+	protected void onAfterChainAuthenticated(WHttpAuthBean authBean, HttpServletRequest request, HttpServletResponse response) {
+	}
+
+	protected void onBeforeChainNoAuth(HttpServletRequest request, HttpServletResponse response) {
+	}
+
+	protected void onAfterChainNoAuth(HttpServletRequest request, HttpServletResponse response) {
 	}
 
 	// ------------------------------ PRIVATE METHODS
@@ -112,40 +130,51 @@ public abstract class WBaseHttpAuthFilter implements Filter {
 		logger.info("HttpAuthFilter: User=[{}] RemoteAddress=[{}] AuthResult=[{}] AuthMethod=[{}]",
 			authBean.getUsername(), request.getRemoteAddr(), authResult, authBean.getAuthMethod());
 
+		if (authResult == EAuthResult.NoAuthHeader) {
+			String username = authenticateByOther(request, response);
+			if(username != null) {
+				logger.info("HttpAuthFilter: authenticateByOther, user=[{}]", username);
+				authResult = EAuthResult.Ok;
+				authBean = new WHttpAuthBean();
+				authBean.setUsername(username);
+			}
+		}
+
 		if (authResult == EAuthResult.Ok) {
 			WHttpServletRequest rqWrap = new WHttpServletRequest(request);
 			rqWrap
 				.setAuthType(authBean.getAuthMethod().name())
 				.setUserPrincipal(new WPrinciple(authBean.getUsername()));
 
-			onBeforeChainAuthenticated(authBean);
+			onBeforeChainAuthenticated(authBean, request, response);
 
 			filterChain.doFilter(rqWrap, response);
 
-			onAfterChainAuthenticated(authBean);
+			onAfterChainAuthenticated(authBean, request, response);
 
-		} else {
-			String errorResultDesc = null;
-			switch (authResult) {
-				case NoAuthHeader:
-					response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
-					break;
-				case NoAuthMethod:
-					errorResultDesc = "Only HTTP Basic/Digest authentication supported!";
-					break;
-				case InvalidNonce:
-					errorResultDesc = "Invalid login state. Retry!";
-					response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
-					break;
-				case InvalidUser:
-				case InvalidPassword:
-					errorResultDesc = "Invalid username/password";
-					response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
-					break;
-			}
-			response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, errorResultDesc);
+			return;
 		}
+
+		String errorResultDesc = null;
+		switch (authResult) {
+			case NoAuthHeader:
+				response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
+				break;
+			case NoAuthMethod:
+				errorResultDesc = "Only HTTP Basic/Digest authentication supported!";
+				break;
+			case InvalidNonce:
+				errorResultDesc = "Invalid login state. Retry!";
+				response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
+				break;
+			case InvalidUser:
+			case InvalidPassword:
+				errorResultDesc = "Invalid username/password";
+				response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
+				break;
+		}
+		response.addHeader(RS_AUTH_HEADER, getRsAuthHeader(authBean));
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, errorResultDesc);
 	}
 
 	private EAuthResult authenticate(HttpServletRequest request, WHttpAuthBean authBean) {

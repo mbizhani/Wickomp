@@ -35,6 +35,7 @@ import org.devocative.wickomp.async.WebSocketToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -126,8 +127,8 @@ public class WebUtil {
 	// Main toMap with IRequestParameters
 	public static Map<String, List<String>> toMap(IRequestParameters parameters, boolean ignoreCase, List<String> ignoreParams, boolean ignoreEmptyValue, List<String> ignoreValues) {
 		Map<String, List<String>> result = ignoreCase ?
-			new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER) :
-			new HashMap<String, List<String>>();
+			new TreeMap<>(String.CASE_INSENSITIVE_ORDER) :
+			new HashMap<>();
 
 		if (ignoreCase) {
 			ignoreParams = new AdroitList<>(ignoreParams)
@@ -146,7 +147,7 @@ public class WebUtil {
 
 			List<String> values = ignoreCase ?
 				new AdroitList<>(String.CASE_INSENSITIVE_ORDER) :
-				new ArrayList<String>();
+				new ArrayList<>();
 
 			for (StringValue paramValue : parameterValues) {
 				if (ignoreValues.contains(paramValue.toString())) {
@@ -175,8 +176,8 @@ public class WebUtil {
 
 	public static Map<String, List<String>> toMap(String paramsAsUrl, boolean ignoreCase, boolean ignoreEmpty) {
 		Map<String, List<String>> result = ignoreCase ?
-			new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER) :
-			new HashMap<String, List<String>>();
+			new TreeMap<>(String.CASE_INSENSITIVE_ORDER) :
+			new HashMap<>();
 
 		String[] paramValueArr = paramsAsUrl.split("[&]");
 
@@ -189,7 +190,7 @@ public class WebUtil {
 				if (!result.containsKey(param)) {
 					ArrayList<String> list = ignoreCase ?
 						new AdroitList<>(String.CASE_INSENSITIVE_ORDER) :
-						new ArrayList<String>();
+						new ArrayList<>();
 					result.put(param, list);
 				}
 
@@ -211,6 +212,60 @@ public class WebUtil {
 		return result;
 	}
 
+	public static Map<String, List<String>> toMap(HttpServletRequest request, boolean ignoreCase, boolean ignoreEmptyValue) {
+		return toMap(request, ignoreCase, Collections.<String>emptyList(), ignoreEmptyValue, Collections.<String>emptyList());
+	}
+
+	// Main toMap with HttpServletRequest
+	public static Map<String, List<String>> toMap(HttpServletRequest request, boolean ignoreCase, List<String> ignoreParams, boolean ignoreEmptyValue, List<String> ignoreValues) {
+		Map<String, List<String>> result = ignoreCase ?
+			new TreeMap<>(String.CASE_INSENSITIVE_ORDER) :
+			new HashMap<>();
+
+		if (ignoreCase) {
+			ignoreParams = new AdroitList<>(ignoreParams)
+				.setComparator(String.CASE_INSENSITIVE_ORDER);
+
+			ignoreValues = new AdroitList<>(ignoreValues)
+				.setComparator(String.CASE_INSENSITIVE_ORDER);
+		}
+
+		while (request.getParameterNames().hasMoreElements()) {
+			String param = request.getParameterNames().nextElement();
+			String[] parameterValues = request.getParameterValues(param);
+
+			if (ignoreParams.contains(param)) {
+				continue;
+			}
+
+			List<String> values = ignoreCase ?
+				new AdroitList<>(String.CASE_INSENSITIVE_ORDER) :
+				new ArrayList<>();
+
+			for (String paramValue : parameterValues) {
+				if (ignoreValues.contains(paramValue)) {
+					continue;
+				}
+
+				if (ignoreEmptyValue) {
+					if (!paramValue.isEmpty()) {
+						values.add(paramValue);
+					}
+				} else {
+					values.add(paramValue);
+				}
+			}
+
+			if (values.size() > 0) {
+				if (result.containsKey(param)) {
+					result.get(param).addAll(values);
+				} else {
+					result.put(param, values);
+				}
+			}
+		}
+		return result;
+	}
 	// ---------------
 
 	public static Set<String> toSet(boolean ignoreCase) {
@@ -220,7 +275,7 @@ public class WebUtil {
 	public static Set<String> toSet(IRequestParameters parameters, boolean ignoreCase) {
 		Set<String> result = ignoreCase ?
 			new TreeSet<>(String.CASE_INSENSITIVE_ORDER) :
-			new HashSet<String>();
+			new HashSet<>();
 
 		for (String param : parameters.getParameterNames()) {
 			result.add(param);
@@ -237,7 +292,7 @@ public class WebUtil {
 	public static List<String> listOf(IRequestParameters parameters, String param, boolean ignoreCase) {
 		List<String> result = ignoreCase ?
 			new AdroitList<>(String.CASE_INSENSITIVE_ORDER) :
-			new ArrayList<String>();
+			new ArrayList<>();
 
 		List<StringValue> parameterValues = parameters.getParameterValues(param);
 		if (parameterValues != null && parameterValues.size() > 0) {
