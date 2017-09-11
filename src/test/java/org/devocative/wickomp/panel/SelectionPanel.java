@@ -51,6 +51,7 @@ public class SelectionPanel extends WPanel implements IGridDataSource<PersonVO> 
 		west.add(new WSelectionInput("selection", new Model(), Arrays.asList("A", "B"), true));
 
 		WEasyLayout layout = new WEasyLayout("layout");
+		layout.add(west);
 		layout.setWestOfLTRDir(west);
 		add(layout);
 
