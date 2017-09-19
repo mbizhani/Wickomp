@@ -103,7 +103,7 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 			if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0])) {
 				return convertChoiceIdsToChoices(ids);
 			} else {
-				ArrayList<T> result = new ArrayList<T>();
+				ArrayList<T> result = new ArrayList<>();
 				addRetainedDisabled(result);
 				return result.size() > 0 ? result : null;
 			}
@@ -299,7 +299,7 @@ class WSelectionList<T> extends AbstractChoice<Object, T> {
 	private Map<String, T> createChoicesIdsMap() {
 		final List<? extends T> choices = getChoices();
 
-		final Map<String, T> choiceIds2choiceValues = new HashMap<String, T>(choices.size(), 1);
+		final Map<String, T> choiceIds2choiceValues = new HashMap<>(choices.size(), 1);
 
 		for (int index = 0; index < choices.size(); index++) {
 			// Get next choice

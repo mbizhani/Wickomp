@@ -233,7 +233,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 	// ------------------------------
 
 	private TextField<Integer> createTextField(String compId) {
-		TextField<Integer> textField = new TextField<>(compId, new Model<Integer>(), Integer.class);
+		TextField<Integer> textField = new TextField<>(compId, new Model<>(), Integer.class);
 		textField.setOutputMarkupId(true);
 		return textField;
 	}

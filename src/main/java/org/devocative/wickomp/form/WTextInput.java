@@ -33,7 +33,7 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 	public WTextInput(String id, IModel<String> model, boolean password) {
 		super(id, model);
 
-		textField = new WTextField("textField", new Model<String>(), password);
+		textField = new WTextField("textField", new Model<>(), password);
 		add(textField);
 
 		add(new CommonBehavior());

@@ -49,7 +49,7 @@ public class WOrderedListInput<T> extends WFormInputPanel<List<T>> {
 
 		this.options = options;
 
-		hiddenIds = new HiddenField<>("hiddenIds", new Model<String>());
+		hiddenIds = new HiddenField<>("hiddenIds", new Model<>());
 		hiddenIds.setOutputMarkupId(true);
 		add(hiddenIds);
 

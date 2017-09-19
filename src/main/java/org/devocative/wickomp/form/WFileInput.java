@@ -16,13 +16,13 @@ public class WFileInput extends WLabeledFormInputPanel<List<FileUpload>> {
 	// ------------------------------
 
 	public WFileInput(String id) {
-		this(id, new WModel<List<FileUpload>>());
+		this(id, new WModel<>());
 	}
 
 	private WFileInput(String id, IModel<List<FileUpload>> model) {
 		super(id, model);
 
-		fileUploadField = new FileUploadField("theFile", new WModel<List<FileUpload>>());
+		fileUploadField = new FileUploadField("theFile", new WModel<>());
 		add(fileUploadField);
 	}
 

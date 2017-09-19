@@ -24,7 +24,7 @@ public class WSqlStringInput extends WLabeledFormInputPanel<String> {
 	public WSqlStringInput(String id, IModel<String> model) {
 		super(id, model);
 
-		add(text = new TextField<>("text", new Model<String>(), String.class));
+		add(text = new TextField<>("text", new Model<>(), String.class));
 		add(leftBox = new CheckBox("leftBox", new Model<>(true)));
 		add(rightBox = new CheckBox("rightBox", new Model<>(true)));
 

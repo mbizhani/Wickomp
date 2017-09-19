@@ -36,7 +36,7 @@ public class WNumberInput extends WLabeledFormInputPanel<Number> {
 		super(id, model);
 		setType(type);
 
-		numberField = new TextField<>("numberField", new Model<String>(), String.class);
+		numberField = new TextField<>("numberField", new Model<>(), String.class);
 		numberField.setOutputMarkupId(true);
 		add(numberField);
 
