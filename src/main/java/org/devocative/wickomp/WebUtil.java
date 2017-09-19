@@ -230,8 +230,9 @@ public class WebUtil {
 				.setComparator(String.CASE_INSENSITIVE_ORDER);
 		}
 
-		while (request.getParameterNames().hasMoreElements()) {
-			String param = request.getParameterNames().nextElement();
+		Enumeration<String> enumeration = request.getParameterNames();
+		while (enumeration.hasMoreElements()) {
+			String param = enumeration.nextElement();
 			String[] parameterValues = request.getParameterValues(param);
 
 			if (ignoreParams.contains(param)) {
@@ -266,6 +267,7 @@ public class WebUtil {
 		}
 		return result;
 	}
+
 	// ---------------
 
 	public static Set<String> toSet(boolean ignoreCase) {

@@ -1,29 +1,37 @@
 package org.devocative.wickomp.http.filter;
 
 import org.devocative.adroit.StringEncryptorUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class WHttpAuthBean {
-	private Map<String, String> authRqValues = new HashMap<>();
-	private WAuthMethod authMethod;
+	private static final Logger logger = LoggerFactory.getLogger(WHttpAuthBean.class);
+
+	private final Map<String, String> authRqValues = new HashMap<>();
+	private final WAuthMethod authMethod;
 
 	// ------------------------------ CONSTRUCTORS
 
 	public WHttpAuthBean() {
+		authMethod = WAuthMethod.CUSTOM;
 	}
 
 	public WHttpAuthBean(String headerString) {
+		WAuthMethod sentAuthMethod = WAuthMethod.UNKNOWN;
+
 		if (headerString != null && headerString.trim().length() > 0) {
 			int authMethodEndIdx = headerString.indexOf(" ");
 			String method = headerString.substring(0, authMethodEndIdx).trim().toUpperCase();
 
 			try {
-				authMethod = WAuthMethod.valueOf(method);
+				sentAuthMethod = WAuthMethod.valueOf(method);
 			} catch (IllegalArgumentException e) {
-				authMethod = WAuthMethod.UNKNOWN;
+				logger.error("WHttpAuthBean: Invalid HTTP method=[{}] header=[{}]", method, headerString);
 			}
+			authMethod = sentAuthMethod;
 
 			String headerStringWithoutScheme = headerString.substring(authMethodEndIdx + 1).trim();
 
@@ -49,6 +57,8 @@ public class WHttpAuthBean {
 					}
 					break;
 			}
+		} else {
+			authMethod = sentAuthMethod;
 		}
 	}
 
