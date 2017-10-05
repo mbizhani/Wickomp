@@ -13,10 +13,14 @@ public class ODateFormatter implements OFormatter {
 	private OCalendar calendar;
 	private String pattern;
 
+	// ------------------------------
+
 	public ODateFormatter(OCalendar calendar, String pattern) {
 		this.calendar = calendar;
 		this.pattern = pattern;
 	}
+
+	// ------------------------------
 
 	@Override
 	public String format(Object value) {
@@ -26,11 +30,17 @@ public class ODateFormatter implements OFormatter {
 		return CalendarUtil.formatDate((Date) value, pattern);
 	}
 
+	// ------------------------------
+
 	private static final ODateFormatter PERSIAN_DATE = new ODateFormatter(OCalendar.Persian, "yyyy/MM/dd");
 	private static final ODateFormatter PERSIAN_DATE_TIME = new ODateFormatter(OCalendar.Persian, "yyyy/MM/dd HH:mm:ss");
 
 	private static final ODateFormatter GREGORIAN_DATE = new ODateFormatter(OCalendar.Gregorian, "yyyy/MM/dd");
 	private static final ODateFormatter GREGORIAN_DATE_TIME = new ODateFormatter(OCalendar.Gregorian, "yyyy/MM/dd HH:mm:ss");
+
+	private static final OFormatter MILLIS = value -> String.valueOf(((Date) value).getTime());
+
+	// ------------------------------
 
 	public static ODateFormatter prDate() {
 		return PERSIAN_DATE;
@@ -47,6 +57,12 @@ public class ODateFormatter implements OFormatter {
 	public static ODateFormatter grDateTime() {
 		return GREGORIAN_DATE_TIME;
 	}
+
+	public static OFormatter millis() {
+		return MILLIS;
+	}
+
+	// ---------------
 
 	public static ODateFormatter getDateByUserPreference() {
 		OUserPreference userPreference = OUserPreference.DEFAULT;
