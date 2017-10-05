@@ -6,7 +6,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.IRequestParameters;
 import org.devocative.adroit.ObjectUtil;
 import org.devocative.wickomp.WJqCallbackPanel;
 import org.devocative.wickomp.WebUtil;
@@ -113,7 +112,7 @@ public class WTabbedPanel extends WJqCallbackPanel {
 	}
 
 	@Override
-	protected void onRequest(IRequestParameters parameters) {
+	protected void onRequest() {
 		Integer index = getRequest().getRequestParameters().getParameterValue("index").toOptionalInteger();
 		logger.debug("WTabbedPanel.TabClosed: index=[{}]", index);
 		if (index != null) {

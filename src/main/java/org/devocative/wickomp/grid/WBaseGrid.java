@@ -31,12 +31,7 @@ import java.beans.PropertyDescriptor;
 import java.util.*;
 
 public abstract class WBaseGrid<T> extends WJqCallbackComponent {
-	/*
-	NOTE: this field can't be changed!!!
-	the easyui grid sends this "id" as parameter,
-	and especially in the treegrid it is used for requesting children nodes of a clicked node!
-	 */
-	public static final String URL_PARAM_ID = "id";
+	public static final String URL_PARAM_ID = "$id";
 	public static final String URL_PARAM_CLICK_TYPE = "$tp";
 	public static final String URL_PARAM_COLUMN_NUMBER = "$cn";
 	public static final String URL_PARAM_COLUMN_REORDER = "$cr";
@@ -274,34 +269,47 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	}
 
 	@Override
-	protected void onRequest(IRequestParameters parameters) {
-
-		pageSize = parameters.getParameterValue("rows").toInt(options.getPageSize());
-		pageNum = parameters.getParameterValue("page").toInt(1);
-
+	protected void onRequest() {
 		if (!isEnabledInHierarchy()) {
 			return;
 		}
 
-		String id = parameters.getParameterValue(URL_PARAM_ID).toOptionalString();
-		String sortList = parameters.getParameterValue("sort").toOptionalString(); //TODO $
-		String orderList = parameters.getParameterValue("order").toOptionalString(); // TODO $
+		IRequestParameters getParams = getRequest().getQueryParameters();
+		IRequestParameters postParams = getRequest().getPostParameters();
 
-		String clickType = parameters.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
-		Integer colNo = parameters.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
-		String columnReorder = parameters.getParameterValue(URL_PARAM_COLUMN_REORDER).toOptionalString();
+		/*
+		NOTE: EasyUI POST params = rows, page, id, sort, order
+		 */
 
-		logger.debug("WBaseGrid: onRequest.parameters: clickType={}, pageSize={}, pageNum={}, sort={}, order={}, id={}, colNo={}",
-			clickType, pageSize, pageNum, sortList, orderList, id, colNo);
+		pageSize = postParams.getParameterValue("rows").toInt(options.getPageSize());
+		pageNum = postParams.getParameterValue("page").toInt(1);
+
+		/*
+		NOTE: idByPost vs idByGet
+		idByPost: sent by EasyUI TreeGrid for expanded node
+		idByGet:  sent by a custom link in the cell
+		 */
+		String idByGet = getParams.getParameterValue(URL_PARAM_ID).toOptionalString();
+		String idByPost = postParams.getParameterValue("id").toOptionalString();
+
+		String sortList = postParams.getParameterValue("sort").toOptionalString();
+		String orderList = postParams.getParameterValue("order").toOptionalString();
+
+		String clickType = getParams.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
+		Integer colNo = getParams.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
+		String columnReorder = getParams.getParameterValue(URL_PARAM_COLUMN_REORDER).toOptionalString();
+
+		logger.debug("WBaseGrid.onRequest:\n\tpageSize=[{}], pageNum=[{}], sort=[{}], order=[{}], idByPost=[{}]\n\tclickType=[{}] idByGet=[{}] colNo=[{}]",
+			pageSize, pageNum, sortList, orderList, idByPost, clickType, idByGet, colNo);
 
 		if (CLICK_FROM_CELL.equals(clickType)) {// click from cell (per row)
-			if (id == null) {
+			if (idByGet == null) {
 				throw new RuntimeException("Null id parameter!");
 			}
 			if (colNo == null) {
 				throw new RuntimeException("Null colNo parameter!");
 			}
-			handleCellLinkClick(id, colNo);
+			handleCellLinkClick(idByGet, colNo);
 		} else if (CLICK_FROM_BUTTON.equals(clickType)) {// click from button in toolbar
 			if (colNo == null) {
 				throw new RuntimeException("Null button index parameter!");
@@ -312,8 +320,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			String[] columns = columnReorder.split("[,]");
 			onColumnReorder(Arrays.asList(columns));
 			sendEmptyResponse();
-		} else if (id != null && id.length() > 0) {
-			handleRowsById(id);
+		} else if (idByPost != null && idByPost.length() > 0) {
+			handleRowsById(idByPost);
 		} else {
 			if (sortList != null && orderList != null) {
 				updateSortFieldList(sortList.split(","), orderList.split(","));

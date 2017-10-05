@@ -3,7 +3,6 @@ package org.devocative.wickomp;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.TextRequestHandler;
 import org.devocative.wickomp.opt.ICallbackUrl;
@@ -29,8 +28,7 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 
 			@Override
 			public void onRequest() {
-				RequestCycle requestCycle = RequestCycle.get();
-				WJqCallbackComponent.this.onRequest(requestCycle.getRequest().getRequestParameters());
+				WJqCallbackComponent.this.onRequest();
 			}
 		};
 
@@ -39,7 +37,7 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 
 	// ------------------------------
 
-	protected abstract void onRequest(IRequestParameters parameters);
+	protected abstract void onRequest();
 
 	// ------------------------------
 
