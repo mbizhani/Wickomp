@@ -8,7 +8,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
@@ -77,16 +76,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		response.render(DATE_POPUP_JS);
 		response.render(DATE_CALC_JS);
 
-		DateFieldVO now = null;
-
-		switch (calendar) {
-			case Gregorian:
-				now = CalendarUtil.getDateField(new Date());
-				break;
-			case Persian:
-				now = CalendarUtil.toPersianDateField(new Date());
-				break;
-		}
+		DateFieldVO now = calendar.convertToFields(new Date());
 
 		response.render(JavaScriptHeaderItem.forScript(
 			String.format("var currentDate = %s;", WebUtil.toJson(now)),
@@ -115,15 +105,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 				minuteValue != null ? minuteValue : 0,
 				secondValue != null ? secondValue : 0);
 
-			switch (calendar) {
-
-				case Gregorian:
-					date = CalendarUtil.getDate(dateField);
-					break;
-				case Persian:
-					date = CalendarUtil.toGregorian(dateField);
-					break;
-			}
+			date = calendar.convertToDate(dateField);
 		}
 
 		setConvertedInput(date);
@@ -174,16 +156,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		Date modelObject = getModelObject();
 
 		if (modelObject != null) {
-			DateFieldVO dateFieldVO = null;
-
-			switch (calendar) {
-				case Gregorian:
-					dateFieldVO = CalendarUtil.getDateField(modelObject);
-					break;
-				case Persian:
-					dateFieldVO = CalendarUtil.toPersianDateField(modelObject);
-					break;
-			}
+			DateFieldVO dateFieldVO = calendar.convertToFields(modelObject);
 
 			if (dateFieldVO != null) {
 				year.setModelObject(dateFieldVO.getYear());

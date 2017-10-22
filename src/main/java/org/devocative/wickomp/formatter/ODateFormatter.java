@@ -1,7 +1,6 @@
 package org.devocative.wickomp.formatter;
 
 import org.apache.wicket.protocol.http.WebSession;
-import org.devocative.adroit.CalendarUtil;
 import org.devocative.wickomp.opt.OCalendar;
 import org.devocative.wickomp.opt.OUserPreference;
 
@@ -24,10 +23,7 @@ public class ODateFormatter implements OFormatter {
 
 	@Override
 	public String format(Object value) {
-		if (OCalendar.Persian.equals(calendar)) {
-			return CalendarUtil.toPersian((Date) value, pattern);
-		}
-		return CalendarUtil.formatDate((Date) value, pattern);
+		return calendar.convertToString((Date) value, pattern);
 	}
 
 	// ------------------------------
