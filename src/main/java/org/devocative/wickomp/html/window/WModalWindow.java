@@ -88,12 +88,17 @@ public class WModalWindow extends WPanel {
 		return show(component, null, target);
 	}
 
+	public final WModalWindow show(IModel<String> title, AjaxRequestTarget target) {
+		return show(null, title, target);
+	}
+
 	// Main show()
 	public final WModalWindow show(Component component, IModel<String> title, AjaxRequestTarget target) {
 		if (component != null) {
 			setContent(component);
 		}
 
+		String oldTitle = options.getTitle();
 		if (title != null) {
 			options.setTitle(title.getObject());
 		}
@@ -105,6 +110,8 @@ public class WModalWindow extends WPanel {
 		String script = String.format("$('#%s').wWindow(%s);",
 			getContainerMarkupId(),
 			WebUtil.toJson(options));
+
+		options.setTitle(oldTitle);
 
 		logger.debug("WModalWindow.show: {}", script);
 
