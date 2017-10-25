@@ -2,9 +2,12 @@ package org.devocative.wickomp.async;
 
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebSocketDelayedResponse implements IWebSocketPushMessage {
 	private static final long serialVersionUID = 1131076920625578700L;
+	private static final Logger logger = LoggerFactory.getLogger(WebSocketDelayedResponse.class);
 
 	private IAsyncResponse response;
 	private Object result;
@@ -30,7 +33,12 @@ public class WebSocketDelayedResponse implements IWebSocketPushMessage {
 		if (exception != null) {
 			response.onAsyncError(handler, exception);
 		} else {
-			response.onAsyncResult(handler, result);
+			try {
+				response.onAsyncResult(handler, result);
+			} catch (Exception e) {
+				logger.error("WebSocketDelayedResponse.call", e);
+				response.onAsyncError(handler, e);
+			}
 		}
 	}
 
