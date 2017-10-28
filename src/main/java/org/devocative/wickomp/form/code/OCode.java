@@ -25,6 +25,7 @@ public class OCode extends Options {
 	// ---------------
 
 	private Boolean enabled; //JS Default: TRUE
+	private Boolean submitSelection; //JS Default: FALSE
 
 	// ------------------------------
 
@@ -159,6 +160,15 @@ public class OCode extends Options {
 
 	OCode setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+		return this;
+	}
+
+	public Boolean getSubmitSelection() {
+		return submitSelection;
+	}
+
+	public OCode setSubmitSelection(Boolean submitSelection) {
+		this.submitSelection = submitSelection;
 		return this;
 	}
 }

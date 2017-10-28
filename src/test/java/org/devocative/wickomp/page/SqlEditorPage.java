@@ -31,7 +31,7 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 	private WebSocketToken token;
 
 	public SqlEditorPage() {
-		sql = new WCodeInput("sql", new Model<>("select * from t_person"), new OCode(OCodeMode.SQL));
+		sql = new WCodeInput("sql", new Model<>("select * from t_person"), new OCode(OCodeMode.SQL).setSubmitSelection(true));
 		Form<Void> form = new Form<>("form");
 		form.add(sql);
 		form.add(new WAjaxButton("exec") {

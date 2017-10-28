@@ -12,7 +12,8 @@
 
 			// ---------------
 
-			enabled: true
+			enabled: true,
+			submitSelection: false
 		};
 
 		var cm = {
@@ -30,6 +31,18 @@
 				cm.editor.on("change", function () {
 					cm.editor.save();
 				});
+
+				if (opt.submitSelection) {
+					wLog.info("wCodeInput.submitSelection");
+
+					cm.editor.on("cursorActivity", function (instance) {
+						if (instance.somethingSelected()) {
+							cm.textAreaInput.val(instance.getSelection());
+						} else {
+							cm.editor.save();
+						}
+					});
+				}
 
 				if (!opt.enabled) {
 					cm.textAreaInput.parent().find('div.CodeMirror-scroll').css('background-color', '#eeeeee');
