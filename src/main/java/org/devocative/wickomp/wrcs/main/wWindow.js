@@ -1,9 +1,11 @@
 (function ($) {
 	var wWindowDefaults = {
+		closable: true,
 		collapsible: false,
+		inline: false,
 		maximizable: false,
 		minimizable: false,
-		modal: true,
+		modal: false,
 
 		openAnimation: 'fade',
 		openDuration: 800,
