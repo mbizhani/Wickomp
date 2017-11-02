@@ -1,7 +1,7 @@
 (function ($) {
 	var wBaseGridDefaults = {
 		autoRowHeight: false,
-		loadMsg: '...',
+		loadMsg: "...",
 		multiSort: false,
 		pagination: true,
 		rownumbers: true,
@@ -12,6 +12,7 @@
 		// --------------- custom fields
 
 		asyncLoadingEnabled: true,
+		autoTooltip: true,
 		columnReorder: true,
 		callbackOnColumnReorder: false,
 		selectionIndicator: false,
@@ -20,7 +21,7 @@
 		// ------------------------------
 
 		loadFilter: function (data) {
-			wLog.debug('wBaseGridDefaults.loadFilter', data);
+			wLog.debug("wBaseGridDefaults.loadFilter", data);
 
 			if (data.error) {
 				wTools.show({
@@ -28,32 +29,32 @@
 					msg: data.error
 				});
 			} else if (data.rows && data.rows.length == 0) {
-				var noResultMessage = $(this).datagrid('options')['noResultMessage'];
+				var noResultMessage = $(this).datagrid("options")["noResultMessage"];
 				if (noResultMessage) {
 					wTools.show({
 						title: '<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>',
 						msg: noResultMessage,
 						timeout: 1500,
-						showType: 'slide'
+						showType: "slide"
 					});
 				}
 			}
 
-			$(this).datagrid('loaded');
-			$('#' + $(this).attr('id') + '-tb').css('visibility', 'visible');
+			$(this).datagrid("loaded");
+			$("#" + $(this).attr("id") + "-tb").css("visibility", "visible");
 
 			return data;
 		},
 
 		onLoadSuccess: function (data) {
-			wLog.debug('wBaseGridDefaults.onLoadSuccess');
+			wLog.debug("wBaseGridDefaults.onLoadSuccess");
 
 			wBaseGridDefaults.initSelection($(this));
 
-			if ($(this).data('action') == 'reset') {
-				$(this).datagrid('gotoPage', $(this).data('pageNum'));
-				$(this).datagrid('options')['url'] = $(this).data('url');
-				$(this).data('action', 'none');
+			if ($(this).data("action") == "reset") {
+				$(this).datagrid("gotoPage", $(this).data("pageNum"));
+				$(this).datagrid("options")["url"] = $(this).data("url");
+				$(this).data("action", "none");
 			}
 
 			wBaseGridDefaults.updateColumnsTooltip($(this), $(this).datagrid("getColumnFields"));
@@ -61,9 +62,9 @@
 		},
 
 		onLoadError: function () {
-			wLog.debug('wBaseGridDefaults.onLoadError');
-			if ($(this).datagrid('options')['asyncLoadingEnabled']) {
-				$(this).datagrid('loading');
+			wLog.debug("wBaseGridDefaults.onLoadError");
+			if ($(this).datagrid("options")["asyncLoadingEnabled"]) {
+				$(this).datagrid("loading");
 			}
 		},
 
@@ -83,25 +84,29 @@
 			wBaseGridDefaults.selectionChanged($(this));
 		},
 
+		onResizeColumn: function (field, width) {
+			wBaseGridDefaults.updateColumnTooltip($(this), field);
+		},
+
 		// --------------- columns-ext
 
 		onDropColumn: function (toField, fromField, point) {
-			wLog.debug('wBaseGridDefaults.onDropColumn', toField, fromField, point, $(this).datagrid('getColumnFields'));
-			var options = $(this).datagrid('options');
-			if (options['url'] && options['callbackOnColumnReorder']) {
-				var cols = $(this).datagrid('getColumnFields');
+			wLog.debug("wBaseGridDefaults.onDropColumn", toField, fromField, point, $(this).datagrid("getColumnFields"));
+			var options = $(this).datagrid("options");
+			if (options["url"] && options["callbackOnColumnReorder"]) {
+				var cols = $(this).datagrid("getColumnFields");
 				var colName = cols[0];
 				for (var i = 1; i < cols.length; i++) {
 					colName += "," + cols[i];
 				}
-				Wicket.Ajax.get({u: options['url'] + '&$cr=' + colName});
+				Wicket.Ajax.get({u: options["url"] + "&$cr=" + colName});
 			}
 		},
 
 		// --------------- custom methods
 
 		onInit: function (options) {
-			wLog.debug('wBaseGridDefaults.onInit');
+			wLog.debug("wBaseGridDefaults.onInit");
 
 			var grid = $(this);
 			var gridId = options["gridId"];
@@ -123,21 +128,21 @@
 
 			wBaseGridDefaults.initSelection($(this));
 
-			if (options['reorderColumns']) {
-				$(this).datagrid('reorderColumns', options['reorderColumns']);
+			if (options["reorderColumns"]) {
+				$(this).datagrid("reorderColumns", options["reorderColumns"]);
 			}
 
-			if (options['columnReorder']) {
-				$(this).datagrid('columnMoving');
+			if (options["columnReorder"]) {
+				$(this).datagrid("columnMoving");
 			}
 
-			if (options['pagingBarLayout']) {
-				var pageOpt = {layout: options['pagingBarLayout'].slice(0)}; //clone array
-				$(this).datagrid('getPager').pagination(pageOpt);
+			if (options["pagingBarLayout"]) {
+				var pageOpt = {layout: options["pagingBarLayout"].slice(0)}; //clone array
+				$(this).datagrid("getPager").pagination(pageOpt);
 			}
 
 			var toolbarId = $(this).attr("id") + "-tb";
-			$('#' + toolbarId).find('.w-grid-tbar-but').linkbutton({plain: true});
+			$("#" + toolbarId).find(".w-grid-tbar-but").linkbutton({plain: true});
 		},
 
 		initColumns: function (grid, columns) {
@@ -161,36 +166,27 @@
 					return r;
 				}
 			}
-
-			/*if (columnOpt["format"]) {
-			 var gridOpt = grid.datagrid("options");
-			 if (gridOpt["formatters"] && gridOpt["formatters"][columnOpt["format"]]) {
-			 columnOpt["formatter"] = function (value, row, index) {
-			 return gridOpt["formatters"][columnOpt["format"]](value, row, index);
-			 }
-			 }
-			 }*/
 		},
 
 		initSelection: function (grid) {
 			//NOTE: a bug in onLoadSuccess, pager is reset to default!
-			var pagingBarLayout = grid.datagrid('options')['pagingBarLayout'];
+			var pagingBarLayout = grid.datagrid("options")["pagingBarLayout"];
 			if (pagingBarLayout) {
 				var pageOpt = {layout: pagingBarLayout.slice(0)}; //clone array
-				grid.datagrid('getPager').pagination(pageOpt);
+				grid.datagrid("getPager").pagination(pageOpt);
 			}
 
-			var selectionIndicator = grid.datagrid('options')['selectionIndicator'];
-			var selectionHandler = grid.datagrid('options')['selectionJSHandler'];
+			var selectionIndicator = grid.datagrid("options")["selectionIndicator"];
+			var selectionHandler = grid.datagrid("options")["selectionJSHandler"];
 
 			if (!selectionIndicator && !selectionHandler) {
-				wLog.debug('wGrid: no selection indicator & handler');
+				wLog.debug("wGrid: no selection indicator & handler");
 				return;
 			}
 
-			var enableDblClickSelection = grid.datagrid('options')['selectionDblClick'];
+			var enableDblClickSelection = grid.datagrid("options")["selectionDblClick"];
 
-			var noOfSelected = grid.datagrid('getSelections').length.toString();
+			var noOfSelected = grid.datagrid("getSelections").length.toString();
 			var butts = [
 				{
 					text: noOfSelected,
@@ -198,60 +194,60 @@
 					iconCls: "fa fa-check-square-o",
 					handler: function () {
 						var tb = '<table border="1" cellspacing="0"><tr>';
-						var fields = grid.datagrid('getColumnFields');
+						var fields = grid.datagrid("getColumnFields");
 						for (var i = 0; i < fields.length; i++) {
-							tb += '<th>' + fields[i] + '</th>';
+							tb += "<th>" + fields[i] + "</th>";
 						}
-						var selData = grid.datagrid('getSelections');
+						var selData = grid.datagrid("getSelections");
 						for (var d = 0; d < selData.length; d++) {
-							tb += '<tr>';
+							tb += "<tr>";
 							for (var f = 0; f < fields.length; f++) {
-								tb += '<td>' + selData[d][fields[f]] + '</td>';
+								tb += "<td>" + selData[d][fields[f]] + "</td>";
 							}
-							tb += '</tr>';
+							tb += "</tr>";
 						}
-						tb += '</tr>';
-						tb += '</table>';
+						tb += "</tr>";
+						tb += "</table>";
 						$.messager.show({
 							title: '<i class="fa fa-check-square-o"></i>',
 							msg: tb,
 							timeout: 0,
-							showType: 'show',
+							showType: "show",
 							width: 600,
 							height: 400,
-							style: {right: '', bottom: ''}
+							style: {right: "", bottom: ""}
 						});
 					}
 				},
 				{
 					width: 25,
-					iconCls: 'fa fa-eraser',
+					iconCls: "fa fa-eraser",
 					handler: function () {
-						grid.datagrid('clearSelections');
+						grid.datagrid("clearSelections");
 					}
 				}
 			];
 
 			if (selectionHandler) {
-				if (!grid.datagrid('options').singleSelect) {
+				if (!grid.datagrid("options").singleSelect) {
 					butts.push({
 						width: 25,
-						iconCls: 'fa fa-bars',
+						iconCls: "fa fa-bars",
 						handler: function () {
-							grid.datagrid('selectAll');
+							grid.datagrid("selectAll");
 						}
 					});
 				}
 
 				if (enableDblClickSelection) {
-					if (grid.datagrid('options')['treeField']) {
-						grid.datagrid('options').onDblClickRow = function (row) {
+					if (grid.datagrid("options")["treeField"]) {
+						grid.datagrid("options").onDblClickRow = function (row) {
 							var arr = [];
 							arr.push(row);
 							wBaseGridDefaults.handleSelection(grid, selectionHandler, arr, true);
 						};
 					} else {
-						grid.datagrid('options').onDblClickRow = function (index, row) {
+						grid.datagrid("options").onDblClickRow = function (index, row) {
 							var arr = [];
 							arr.push(row);
 							wBaseGridDefaults.handleSelection(grid, selectionHandler, arr, true);
@@ -261,59 +257,59 @@
 
 				butts.push({
 					width: 25,
-					iconCls: 'fa fa-paper-plane-o',
+					iconCls: "fa fa-paper-plane-o",
 					handler: function () {
-						wBaseGridDefaults.handleSelection(grid, selectionHandler, grid.datagrid('getSelections'), true);
+						wBaseGridDefaults.handleSelection(grid, selectionHandler, grid.datagrid("getSelections"), true);
 					}
 				});
 
 				if (WickompDebugEnabled) {
 					butts.push({
 						width: 25,
-						iconCls: 'fa fa-bug',
+						iconCls: "fa fa-bug",
 						handler: function () {
-							wBaseGridDefaults.handleSelection(grid, wBaseGridDefaults.handleDebug, grid.datagrid('getSelections'), false);
+							wBaseGridDefaults.handleSelection(grid, wBaseGridDefaults.handleDebug, grid.datagrid("getSelections"), false);
 						}
 					})
 				}
 			}
 
 			wBaseGridDefaults.updateButtonsOfPager(grid, butts);
-			wLog.debug('wBaseGridDefaults.initSelection: butts', butts);
+			wLog.debug("wBaseGridDefaults.initSelection: butts", butts);
 		},
 
 		selectionChanged: function (grid) {
-			var butts = grid.datagrid('getPager').pagination('options')['buttons'];
+			var butts = grid.datagrid("getPager").pagination("options")["buttons"];
 			if (butts) {
-				butts[0].text = grid.datagrid('getSelections').length.toString();
+				butts[0].text = grid.datagrid("getSelections").length.toString();
 
 				wBaseGridDefaults.updateButtonsOfPager(grid, butts);
 			}
 		},
 
 		updateButtonsOfPager: function (grid, butts) {
-			wLog.debug('wBaseGridDefaults.updateButtonsOfPager: no of selection but text=', butts[0].text);
+			wLog.debug("wBaseGridDefaults.updateButtonsOfPager: no of selection but text=", butts[0].text);
 
-			grid.datagrid('getPager').pagination({
+			grid.datagrid("getPager").pagination({
 				buttons: butts
 			});
 
-			grid.datagrid('getPager').pagination().find('span.fa').closest('a.l-btn')
+			grid.datagrid("getPager").pagination().find("span.fa").closest("a.l-btn")
 				.each(function () {
-					var cls = $(this).find('span.fa').attr('class');
+					var cls = $(this).find("span.fa").attr("class");
 					var title = "";
-					if (cls.indexOf('fa-check-square-o') > -1) {
+					if (cls.indexOf("fa-check-square-o") > -1) {
 						title = wMsg.wGrid.pager.showAllSelections;
-					} else if (cls.indexOf('fa-eraser') > -1) {
+					} else if (cls.indexOf("fa-eraser") > -1) {
 						title = wMsg.wGrid.pager.deselectAll;
-					} else if (cls.indexOf('fa-bars') > -1) {
+					} else if (cls.indexOf("fa-bars") > -1) {
 						title = wMsg.wGrid.pager.selectAll;
-					} else if (cls.indexOf('fa-paper-plane-o') > -1) {
+					} else if (cls.indexOf("fa-paper-plane-o") > -1) {
 						title = wMsg.wGrid.pager.sendSelections;
-					} else if (cls.indexOf('fa-bug') > -1) {
+					} else if (cls.indexOf("fa-bug") > -1) {
 						title = wMsg.wGrid.pager.debugSelections;
 					}
-					$(this).attr('title', title);
+					$(this).attr("title", title);
 				});
 		},
 
@@ -323,12 +319,12 @@
 				return;
 			}
 
-			var idField = grid.datagrid('options')["returnField"];
+			var idField = grid.datagrid("options")["returnField"];
 			if (!idField) {
-				idField = grid.datagrid('options')["idField"];
+				idField = grid.datagrid("options")["idField"];
 			}
 			if (idField) {
-				var titleField = grid.datagrid('options')["titleField"];
+				var titleField = grid.datagrid("options")["titleField"];
 				if (!titleField) {
 					titleField = idField;
 				}
@@ -346,10 +342,10 @@
 					}
 					selectionHandler(kvList);
 				} catch (e) {
-					$.messager.alert('Error', e);
+					$.messager.alert("Error", e);
 				}
 			} else {
-				$.messager.alert('Error', 'No idField for grid!');
+				$.messager.alert("Error", "No idField for grid!");
 			}
 		},
 
@@ -360,10 +356,10 @@
 					result.append("<li>" + JSON.stringify(kvList[i]) + "</li>");
 				}
 				$.messager.show({
-					title: 'Rows',
+					title: "Rows",
 					msg: "<div style='direction: ltr;text-align: left;'>" + result.html() + "</div>",
-					showType: 'show',
-					style: {right: '', bottom: ''},
+					showType: "show",
+					style: {right: "", bottom: ""},
 					width: 400,
 					height: 300,
 					timeout: 0,
@@ -379,21 +375,26 @@
 		},
 
 		updateColumnTooltip: function (grid, columnName) {
-			if (grid.datagrid("getColumnOption", columnName)["showAsTooltip"]) {
-				grid.datagrid('getPanel').find("td[field=" + columnName + "] > div.datagrid-cell").tooltip({
-					content: function () {
-						return $(this).html();
-					},
-					onShow: function () {
-						$(this).tooltip('tip').css({
-							backgroundColor: '#FFFFE0',
-							borderColor: '#555555',
-							boxShadow: '1px 1px 3px #292929',
-							padding: '5px'
-						});
-					}
-				});
-			}
+			grid.datagrid("getPanel").find("td[field=" + columnName + "] > div.datagrid-cell").each(function () {
+				if (grid.datagrid("getColumnOption", columnName)["showAsTooltip"] ||
+					(grid.datagrid("options")["autoTooltip"] && $(this)[0].clientWidth < $(this)[0].scrollWidth)) {
+					$(this).tooltip({
+						content: function () {
+							return $(this).html();
+						},
+						onShow: function () {
+							$(this).tooltip("tip").css({
+								backgroundColor: "#FFFFE0",
+								borderColor: "#555555",
+								boxShadow: "1px 1px 3px #292929",
+								padding: "5px"
+							});
+						}
+					});
+				} else {
+					$(this).tooltip("destroy");
+				}
+			});
 		}
 	};
 
@@ -402,22 +403,22 @@
 
 		if (!$(this).data("inited")) {
 			var extOpt = $.extend({}, gridSpecific, wBaseGridDefaults, cmdOrOpts);
-			wLog.debug('wDataGrid init', extOpt);
+			wLog.debug("wDataGrid init", extOpt);
 			var datagrid = $(this).datagrid(extOpt);
 			extOpt.onInit.call(this, extOpt);
 			$(this).data("inited", true);
 			return datagrid
 		} else {
-			if (cmdOrOpts == 'updateColumns') {
-				$(this).data('url', $(this).datagrid('options')['url']);
-				$(this).data('pageNum', $(this).datagrid('getPager').pagination('options').pageNumber);
-				$(this).data('action', 'reset');
-				$(this).datagrid('options')['url'] = '';
+			if (cmdOrOpts == "updateColumns") {
+				$(this).data("url", $(this).datagrid("options")["url"]);
+				$(this).data("pageNum", $(this).datagrid("getPager").pagination("options").pageNumber);
+				$(this).data("action", "reset");
+				$(this).datagrid("options")["url"] = "";
 				return $(this).datagrid(options);
-			} else if (cmdOrOpts == 'resetData') {
-				return $(this).datagrid('load');
-			} else if (cmdOrOpts == 'updateUrl') {
-				$(this).datagrid('options')['url'] = options;
+			} else if (cmdOrOpts == "resetData") {
+				return $(this).datagrid("load");
+			} else if (cmdOrOpts == "updateUrl") {
+				$(this).datagrid("options")["url"] = options;
 				return $(this);
 			} else {
 				return $(this).datagrid(cmdOrOpts, options);
@@ -431,46 +432,47 @@
 
 			onBeforeLoad: function (row, param) {
 				if (!row) {
-					param.id = '';
+					param.id = "";
 				}
 			},
 
 			onBeforeExpand: function (row) {
-				wLog.debug('treeGridSpecific.onBeforeExpand', row);
+				wLog.debug("treeGridSpecific.onBeforeExpand", row);
 			},
 
 			onExpand: function (row) {
-				wLog.debug('treeGridSpecific.onExpand', row);
+				wLog.debug("treeGridSpecific.onExpand", row);
 			}
 
 		};
 
 		if (!$(this).data("inited")) {
 			var extOpt = $.extend({}, treeGridSpecific, wBaseGridDefaults, cmdOrOpts);
-			wLog.debug('wTreeGrid init', extOpt);
+			wLog.debug("wTreeGrid init", extOpt);
 			var treegrid = $(this).treegrid(extOpt);
 			extOpt.onInit.call(this, extOpt);
 			$(this).data("inited", true);
 			return treegrid;
 		} else {
-			if (cmdOrOpts == 'resetData') {
-				return $(this).treegrid('load');
-			} else if (cmdOrOpts == 'updateUrl') {
-				$(this).treegrid('options')['url'] = options;
+			if (cmdOrOpts == "resetData") {
+				return $(this).treegrid("load");
+			} else if (cmdOrOpts == "updateUrl") {
+				$(this).treegrid("options")["url"] = options;
 				return $(this);
 			} else {
 				return $(this).treegrid(cmdOrOpts, options);
 			}
 		}
 	}
-})(jQuery);
+})
+(jQuery);
 
 // TODO: the following must be merged to the upper part!
 
 var gridDefaultView;
 
 function changeGridGroupField(select, gridId) {
-	var opt = $('#' + gridId).datagrid('options');
+	var opt = $("#" + gridId).datagrid("options");
 
 	if (!gridDefaultView) {
 		gridDefaultView = opt.view;
@@ -480,7 +482,7 @@ function changeGridGroupField(select, gridId) {
 		//TODO: checking !opt.groupStyler is based on unknown bug where opt.groupStyler is null using in Metis project!
 		if (opt.groupStyle || !opt.groupStyler) {
 			opt.groupStyler = function (value, rows) {
-				return (opt.groupStyle) ? opt.groupStyle : '';
+				return (opt.groupStyle) ? opt.groupStyle : "";
 			};
 		}
 		opt.view = groupview;
@@ -489,30 +491,30 @@ function changeGridGroupField(select, gridId) {
 			//return value + " (" + rows.length + ")";
 			return "<table><tr><td>" + value + " </td><td> #[</td><td>" + rows.length + "</td><td>]</td></tr></table>"
 		};
-		$('#' + gridId).datagrid('sort', {sortName: select.value, sortOrder: 'asc'});
+		$("#" + gridId).datagrid("sort", {sortName: select.value, sortOrder: "asc"});
 	} else {
 		opt.view = gridDefaultView;
-		opt.groupField = '';
-		$('#' + gridId).datagrid('reload');
+		opt.groupField = "";
+		$("#" + gridId).datagrid("reload");
 	}
 }
 
 function expandAllGroups(gridId) {
-	var grid = $('#' + gridId);
-	if (grid.datagrid('options').view.groups) {
-		var groupsCount = grid.datagrid('options').view.groups.length;
+	var grid = $("#" + gridId);
+	if (grid.datagrid("options").view.groups) {
+		var groupsCount = grid.datagrid("options").view.groups.length;
 		for (var i = 0; i < groupsCount; i++) {
-			grid.datagrid('expandGroup', i);
+			grid.datagrid("expandGroup", i);
 		}
 	}
 }
 
 function collapseAllGroups(gridId) {
-	var grid = $('#' + gridId);
-	if (grid.datagrid('options').view.groups) {
-		var groupsCount = grid.datagrid('options').view.groups.length;
+	var grid = $("#" + gridId);
+	if (grid.datagrid("options").view.groups) {
+		var groupsCount = grid.datagrid("options").view.groups.length;
 		for (var i = 0; i < groupsCount; i++) {
-			grid.datagrid('collapseGroup', i);
+			grid.datagrid("collapseGroup", i);
 		}
 	}
 }

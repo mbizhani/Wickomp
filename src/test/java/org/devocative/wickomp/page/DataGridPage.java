@@ -43,6 +43,8 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 	private TaskBehavior taskBehavior;
 	private WDataGrid<PersonVO> asyncDisabledGrid;
 
+	// ------------------------------
+
 	public DataGridPage() {
 		list = PersonVO.list();
 
@@ -129,7 +131,6 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "v_birthDate", "birthDate")
 					.setFormatter(ODateFormatter.prDateTime())
 					.setStyle("direction:ltr;")
-					.setShowAsTooltip(true)
 			)
 			.add(new OHiddenColumn<PersonVO>("birthDate")
 					.setFormatter(ODateFormatter.millis())
@@ -139,6 +140,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 					.setFormatter(ONumberFormatter.integer())
 					.setHasFooter(true)
 					.setStyle("direction:ltr;")
+					.setWidth(OSize.fixed(50))
 			)
 			.add(new OHiddenColumn<>("income"))
 
@@ -159,6 +161,8 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 		enabledGrid(columns);
 	}
 
+	// ------------------------------
+
 	@Override
 	public void onAsyncResult(IPartialPageRequestHandler handler, Object result) {
 		Map<String, Object> map = (Map<String, Object>) result;
@@ -173,6 +177,8 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 	public void onAsyncError(IPartialPageRequestHandler handler, Exception error) {
 		asyncDisabledGrid.pushError(handler, error);
 	}
+
+	// ------------------------------
 
 	private void activeGrid(OColumnList<PersonVO> columns) {
 		OGrid<PersonVO> grid2Opt = new OGrid<>();
@@ -204,6 +210,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 				//.setSelectionIndicator(true)
 			.setSelectionJSHandler("function(asd){console.log(asd);}")
 			.setShowFooter(true)
+			.setAutoTooltip(false)
 			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
 		;
 		grid2Opt.setHeight(OSize.fixed(400));

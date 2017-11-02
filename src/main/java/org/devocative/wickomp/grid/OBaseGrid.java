@@ -40,6 +40,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	// ------------------------------ EXTRA FIELDS
 
 	protected Boolean asyncLoadingEnabled;
+	protected Boolean autoTooltip;
 	protected Boolean callbackOnColumnReorder;
 	protected Boolean columnReorder;
 	protected String noResultMessage;
@@ -225,6 +226,15 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	public OBaseGrid<T> setAsyncLoadingEnabled(Boolean asyncLoadingEnabled) {
 		this.asyncLoadingEnabled = asyncLoadingEnabled;
+		return this;
+	}
+
+	public Boolean getAutoTooltip() {
+		return autoTooltip;
+	}
+
+	public OBaseGrid<T> setAutoTooltip(Boolean autoTooltip) {
+		this.autoTooltip = autoTooltip;
 		return this;
 	}
 

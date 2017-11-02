@@ -158,7 +158,7 @@ public class PersonVO implements Serializable {
 					.setCol04("C4 " + UUID.randomUUID().toString())
 					.setCol05("C5 " + UUID.randomUUID().toString())
 					.setBirthDate(new Timestamp((long) (time - Math.random() * 99999999999L)))
-					.setIncome((long) (Math.random() * 100000000) * (i % 3 == 0 ? -1 : 1))
+					.setIncome(i % 2 == 0 ? (long) (Math.random() * 100000000) * (i % 3 == 0 ? -1 : 1) : (long) (Math.random() * 1000))
 					.setExpense(new BigDecimal(Math.random() * 1000000))
 					.setAlive(((int) (Math.random() * 1000)) % 7 == 0)
 			);
