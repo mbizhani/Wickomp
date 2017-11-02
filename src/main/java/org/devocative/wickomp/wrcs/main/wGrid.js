@@ -375,7 +375,7 @@
 		},
 
 		updateColumnTooltip: function (grid, columnName) {
-			grid.datagrid("getPanel").find("td[field=" + columnName + "] > div.datagrid-cell").each(function () {
+			grid.datagrid("getPanel").find("td[field='" + columnName + "'] > div.datagrid-cell").each(function () {
 				if (grid.datagrid("getColumnOption", columnName)["showAsTooltip"] ||
 					(grid.datagrid("options")["autoTooltip"] && $(this)[0].clientWidth < $(this)[0].scrollWidth)) {
 					$(this).tooltip({
