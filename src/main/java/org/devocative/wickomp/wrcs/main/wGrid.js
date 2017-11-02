@@ -55,6 +55,9 @@
 				$(this).datagrid('options')['url'] = $(this).data('url');
 				$(this).data('action', 'none');
 			}
+
+			wBaseGridDefaults.updateColumnsTooltip($(this), $(this).datagrid("getColumnFields"));
+			wBaseGridDefaults.updateColumnsTooltip($(this), $(this).datagrid("getColumnFields", true));
 		},
 
 		onLoadError: function () {
@@ -365,6 +368,30 @@
 					height: 300,
 					timeout: 0,
 					resizable: true
+				});
+			}
+		},
+
+		updateColumnsTooltip: function (grid, columns) {
+			for (var i = 0; i < columns.length; i++) {
+				wBaseGridDefaults.updateColumnTooltip(grid, columns[i]);
+			}
+		},
+
+		updateColumnTooltip: function (grid, columnName) {
+			if (grid.datagrid("getColumnOption", columnName)["showAsTooltip"]) {
+				grid.datagrid('getPanel').find("td[field=" + columnName + "] > div.datagrid-cell").tooltip({
+					content: function () {
+						return $(this).html();
+					},
+					onShow: function () {
+						$(this).tooltip('tip').css({
+							backgroundColor: '#FFFFE0',
+							borderColor: '#555555',
+							boxShadow: '1px 1px 3px #292929',
+							padding: '5px'
+						});
+					}
 				});
 			}
 		}

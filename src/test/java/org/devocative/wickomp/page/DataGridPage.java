@@ -122,21 +122,22 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 				}
 			})
 
-			.add(new OPropertyColumn<>(new Model<>("Col 04"), "col04"))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Col 04"), "col04").setShowAsTooltip(true))
 
 			.add(new OHiddenColumn<>("col05"))
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "v_birthDate", "birthDate")
-				.setFormatter(ODateFormatter.prDateTime())
+					.setFormatter(ODateFormatter.prDateTime())
 					.setStyle("direction:ltr;")
+					.setShowAsTooltip(true)
 			)
 			.add(new OHiddenColumn<PersonVO>("birthDate")
 					.setFormatter(ODateFormatter.millis())
 			)
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "v_income", "income")
-				.setFormatter(ONumberFormatter.integer())
-				.setHasFooter(true)
+					.setFormatter(ONumberFormatter.integer())
+					.setHasFooter(true)
 					.setStyle("direction:ltr;")
 			)
 			.add(new OHiddenColumn<>("income"))

@@ -23,6 +23,7 @@ public abstract class OColumn<T> extends Options {
 
 	private String style;
 	private String styleClass;
+	private Boolean showAsTooltip;
 
 	// ------------------------------ MISC FIELDS
 
@@ -110,6 +111,15 @@ public abstract class OColumn<T> extends Options {
 
 	public OColumn<T> setStyleClass(String styleClass) {
 		this.styleClass = styleClass;
+		return this;
+	}
+
+	public Boolean getShowAsTooltip() {
+		return showAsTooltip;
+	}
+
+	public OColumn<T> setShowAsTooltip(Boolean showAsTooltip) {
+		this.showAsTooltip = showAsTooltip;
 		return this;
 	}
 
