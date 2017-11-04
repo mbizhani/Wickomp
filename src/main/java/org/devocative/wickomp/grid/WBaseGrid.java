@@ -22,6 +22,7 @@ import org.devocative.wickomp.grid.column.link.OLinkColumn;
 import org.devocative.wickomp.grid.toolbar.OAjaxLinkButton;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.grid.toolbar.OLinkButton;
+import org.devocative.wickomp.opt.OStyle;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.HeaderBehavior;
 import org.slf4j.Logger;
@@ -465,14 +466,9 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 						URL_PARAM_COLUMN_NUMBER, colNo, URL_PARAM_CLICK_TYPE, CLICK_FROM_CELL);
 					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
 
-					String cellStyle = column.onCellStyle(bean, id);
-					if (cellStyle != null) {
-						rObject.addProperty(column.getField() + "$stl", cellStyle);
-					}
-
-					String cellStyleClass = column.onCellStyleClass(bean, id);
-					if (cellStyleClass != null) {
-						rObject.addProperty(column.getField() + "$cls", cellStyleClass);
+					if (column.getCellStyler() != null) {
+						OStyle oStyle = column.getCellStyler().doStyle(bean, id);
+						rObject.addProperty(column.getField() + "$stl", oStyle);
 					}
 				}
 			}

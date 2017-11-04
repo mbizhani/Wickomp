@@ -3,6 +3,7 @@ package org.devocative.wickomp.grid.column;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.wicket.model.IModel;
 import org.devocative.wickomp.formatter.OFormatter;
+import org.devocative.wickomp.opt.IStyler;
 import org.devocative.wickomp.opt.OHorizontalAlign;
 import org.devocative.wickomp.opt.OSize;
 import org.devocative.wickomp.opt.Options;
@@ -30,6 +31,7 @@ public abstract class OColumn<T> extends Options {
 	private boolean dummyField = false;
 	private boolean visible = true;
 	private boolean hasFooter = false;
+	private IStyler<T> cellStyler;
 	protected OFormatter formatter;
 
 	// ------------------------------ CONSTRUCTORS
@@ -165,15 +167,17 @@ public abstract class OColumn<T> extends Options {
 		return this;
 	}
 
+	@JsonIgnore
+	public IStyler<T> getCellStyler() {
+		return cellStyler;
+	}
+
+	public OColumn<T> setCellStyler(IStyler<T> cellStyler) {
+		this.cellStyler = cellStyler;
+		return this;
+	}
+
 	public boolean onCellRender(T bean, String id) {
 		return true;
-	}
-
-	public String onCellStyle(T bean, String id) {
-		return null;
-	}
-
-	public String onCellStyleClass(T bean, String id) {
-		return null;
 	}
 }

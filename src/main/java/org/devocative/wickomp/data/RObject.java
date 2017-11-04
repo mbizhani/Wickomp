@@ -8,9 +8,9 @@ import java.util.Map;
 public class RObject extends Result {
 	private static final long serialVersionUID = -5062992658934621619L;
 
-	private Map<String, String> properties = new HashMap<String, String>();
+	private Map<String, Object> properties = new HashMap<>();
 
-	public RObject addProperty(String property, String value) {
+	public RObject addProperty(String property, Object value) {
 		properties.put(property, value);
 		return this;
 	}
@@ -20,12 +20,12 @@ public class RObject extends Result {
 		return this;
 	}
 
-	public String getProperty(String property) {
+	public Object getProperty(String property) {
 		return properties.get(property);
 	}
 
 	@JsonValue
-	public Map<String, String> getValue() {
+	public Map<String, Object> getValue() {
 		return properties;
 	}
 }

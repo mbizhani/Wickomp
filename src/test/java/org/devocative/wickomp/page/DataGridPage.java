@@ -24,13 +24,16 @@ import org.devocative.wickomp.grid.toolbar.OExportExcelButton;
 import org.devocative.wickomp.grid.toolbar.OGridGroupingButton;
 import org.devocative.wickomp.html.HTMLBase;
 import org.devocative.wickomp.html.icon.FontAwesome;
+import org.devocative.wickomp.opt.IStyler;
 import org.devocative.wickomp.opt.OSize;
+import org.devocative.wickomp.opt.OStyle;
 import org.devocative.wickomp.resource.OutputStreamResource;
 import org.devocative.wickomp.service.DataService;
 import org.devocative.wickomp.vo.PersonVO;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -136,49 +139,37 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 					.setFormatter(ODateFormatter.millis())
 			)
 
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "v_income", "income") {
-				private static final long serialVersionUID = -1344856246164435369L;
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "v_income", "income")
+					.setFormatter(ONumberFormatter.integer())
+					.setHasFooter(true)
+					.setWidth(OSize.fixed(50))
+					.setStyle("direction:ltr;background-color:#dddddd; color:blue")
+					.setCellStyler((IStyler<PersonVO> & Serializable) (bean, id) -> OStyle.style(bean.getIncome() < 0 ? "color:red" : null))
+			)
 
-				{
-					setFormatter(ONumberFormatter.integer())
-						.setHasFooter(true)
-						.setStyle("direction:ltr;")
-						.setWidth(OSize.fixed(50));
-				}
-
-				@Override
-				public String onCellStyle(PersonVO bean, String id) {
-					return bean.getIncome() > 0 ? "color:green" : "color:red";
-				}
-			})
 			.add(new OHiddenColumn<>("income"))
 
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Expense"), "expense") {
-				private static final long serialVersionUID = -3456905959427087388L;
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Expense"), "expense")
+					.setFormatter(ONumberFormatter.real())
+					.setHasFooter(true)
+					.setStyle("direction:ltr;")
+					.setCellStyler((IStyler<PersonVO> & Serializable) (bean, id) -> OStyle.css(bean.getExpense().longValue() > 100000 ? "high" : null))
+			)
 
-				{
-					setFormatter(ONumberFormatter.real())
-						.setHasFooter(true)
-						.setStyle("direction:ltr;");
-
-				}
-
-				@Override
-				public String onCellStyleClass(PersonVO bean, String id) {
-					return bean.getExpense().longValue() > 100000 ? "high" : null;
-				}
-			})
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
 				.setFormatter(OBooleanFormatter.bool()))
 		;
 
-		add(taskBehavior = new TaskBehavior(this));
+		add(taskBehavior = new TaskBehavior(this)
+
+		);
 
 		activeGrid(columns);
 
 		visibleGrid(columns);
 
 		enabledGrid(columns);
+
 	}
 
 	// ------------------------------

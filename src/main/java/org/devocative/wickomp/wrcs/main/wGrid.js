@@ -155,24 +155,23 @@
 			if (columnOpt["style"] || columnOpt["styleClass"]) {
 				columnOpt["styler"] = function (value, row, index) {
 					var r = {};
+
 					if (columnOpt["style"]) {
 						r["style"] = columnOpt["style"];
 					}
-
 					if (columnOpt["styleClass"]) {
 						r["class"] = columnOpt["styleClass"];
 					}
 
 					var cellStyle = colName + "$stl";
 					if (row[cellStyle]) {
-						r["style"] += ";" + row[cellStyle];
+						if (row[cellStyle]["style"]) {
+							r["style"] += ";" + row[cellStyle]["style"];
+						}
+						if (row[cellStyle]["class"]) {
+							r["class"] += " " + row[cellStyle]["class"];
+						}
 					}
-
-					var cellStyleClass = colName + "$cls";
-					if (row[cellStyleClass]) {
-						r["class"] += " " + row[cellStyleClass];
-					}
-
 					return r;
 				}
 			}
