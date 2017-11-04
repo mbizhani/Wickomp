@@ -163,6 +163,16 @@
 						r["class"] = columnOpt["styleClass"];
 					}
 
+					var cellStyle = colName + "$stl";
+					if (row[cellStyle]) {
+						r["style"] += ";" + row[cellStyle];
+					}
+
+					var cellStyleClass = colName + "$cls";
+					if (row[cellStyleClass]) {
+						r["class"] += " " + row[cellStyleClass];
+					}
+
 					return r;
 				}
 			}
@@ -378,6 +388,7 @@
 			grid.datagrid("getPanel").find("td[field='" + columnName + "'] > div.datagrid-cell").each(function () {
 				if (grid.datagrid("getColumnOption", columnName)["showAsTooltip"] ||
 					(grid.datagrid("options")["autoTooltip"] && $(this)[0].clientWidth < $(this)[0].scrollWidth)) {
+					var parentDir = $(this).parent().css("direction");
 					$(this).tooltip({
 						content: function () {
 							return $(this).html();
@@ -387,7 +398,8 @@
 								backgroundColor: "#FFFFE0",
 								borderColor: "#555555",
 								boxShadow: "1px 1px 3px #292929",
-								padding: "5px"
+								padding: "5px",
+								direction: parentDir
 							});
 						}
 					});

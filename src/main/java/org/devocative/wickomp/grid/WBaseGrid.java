@@ -464,6 +464,16 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 					String url = String.format("%s&%s=%s&%s=%s&%s=%s", getCallbackURL(), URL_PARAM_ID, id,
 						URL_PARAM_COLUMN_NUMBER, colNo, URL_PARAM_CLICK_TYPE, CLICK_FROM_CELL);
 					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
+
+					String cellStyle = column.onCellStyle(bean, id);
+					if (cellStyle != null) {
+						rObject.addProperty(column.getField() + "$stl", cellStyle);
+					}
+
+					String cellStyleClass = column.onCellStyleClass(bean, id);
+					if (cellStyleClass != null) {
+						rObject.addProperty(column.getField() + "$cls", cellStyleClass);
+					}
 				}
 			}
 			onAfterBeanToRObject(bean, rObject);

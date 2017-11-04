@@ -136,18 +136,38 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 					.setFormatter(ODateFormatter.millis())
 			)
 
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "v_income", "income")
-					.setFormatter(ONumberFormatter.integer())
-					.setHasFooter(true)
-					.setStyle("direction:ltr;")
-					.setWidth(OSize.fixed(50))
-			)
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "v_income", "income") {
+				private static final long serialVersionUID = -1344856246164435369L;
+
+				{
+					setFormatter(ONumberFormatter.integer())
+						.setHasFooter(true)
+						.setStyle("direction:ltr;")
+						.setWidth(OSize.fixed(50));
+				}
+
+				@Override
+				public String onCellStyle(PersonVO bean, String id) {
+					return bean.getIncome() > 0 ? "color:green" : "color:red";
+				}
+			})
 			.add(new OHiddenColumn<>("income"))
 
-			.add(new OPropertyColumn<PersonVO>(new Model<>("Expense"), "expense")
-				.setFormatter(ONumberFormatter.real())
-				.setHasFooter(true)
-				.setStyle("direction:ltr;"))
+			.add(new OPropertyColumn<PersonVO>(new Model<>("Expense"), "expense") {
+				private static final long serialVersionUID = -3456905959427087388L;
+
+				{
+					setFormatter(ONumberFormatter.real())
+						.setHasFooter(true)
+						.setStyle("direction:ltr;");
+
+				}
+
+				@Override
+				public String onCellStyleClass(PersonVO bean, String id) {
+					return bean.getExpense().longValue() > 100000 ? "high" : null;
+				}
+			})
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
 				.setFormatter(OBooleanFormatter.bool()))
 		;

@@ -168,4 +168,12 @@ public abstract class OColumn<T> extends Options {
 	public boolean onCellRender(T bean, String id) {
 		return true;
 	}
+
+	public String onCellStyle(T bean, String id) {
+		return null;
+	}
+
+	public String onCellStyleClass(T bean, String id) {
+		return null;
+	}
 }
