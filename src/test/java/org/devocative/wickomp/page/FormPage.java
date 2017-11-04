@@ -58,6 +58,7 @@ public class FormPage extends BasePage {
 
 	private void dynamicForm() {
 		List<Field> fields = new ArrayList<>();
+		fields.add(new Field("RO", "readOnly", Field.Type.RO));
 		fields.add(new Field("Name", "name", Field.Type.SQL));
 		fields.add(new Field("Age", "age", Field.Type.Integer));
 		fields.add(new Field("Weight", "weight", Field.Type.Real));
@@ -67,6 +68,7 @@ public class FormPage extends BasePage {
 		final Map<String, Serializable> map = new HashMap<>();
 		map.put("name", "Joe%");
 		map.put("age", 123456);
+		map.put("readOnly", 987654321);
 
 		WFloatTable floatTable = new WFloatTable("floatTable");
 		floatTable.add(new ListView<Field>("fields", fields) {
@@ -80,6 +82,11 @@ public class FormPage extends BasePage {
 				RepeatingView view = new RepeatingView("field");
 				FormComponent fc = null;
 				switch (field.getType()) {
+
+					case RO:
+						fc = new WLabelInput(field.getName())
+							.setRequired(true);
+						break;
 
 					case String:
 						fc = new WTextInput(field.getName())
@@ -181,6 +188,7 @@ public class FormPage extends BasePage {
 
 		final WSelectionInput child, parentSI;
 //		map.put("name", "Joe");
+		map.put("lblIn", new KeyValue("KV-LBL-IN", "KV-LBL-IN"));
 		map.put("eduSingle", new KeyValue("A"));
 		map.put("eduMultiple", (Serializable) Arrays.asList(new KeyValue("A"), new KeyValue("D")));
 		map.put("child", "B.1");
@@ -197,6 +205,7 @@ public class FormPage extends BasePage {
 
 //		form.add(new WTextInput("name").setRequired(true).add(new WAsciiIdentifierValidator()));
 //		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$")));
+		form.add(new WLabelInput("lblIn"));
 		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$", "name.format")));
 		form.add(new WTextInput("password", true));
 //		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$").setCustomMessage("oops!")));

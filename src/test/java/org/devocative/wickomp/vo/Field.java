@@ -3,7 +3,9 @@ package org.devocative.wickomp.vo;
 import java.io.Serializable;
 
 public class Field implements Serializable {
-	public enum Type {String, Integer, Real, Boolean, Date, SQL}
+	private static final long serialVersionUID = -934057286621436596L;
+
+	public enum Type {String, Integer, Real, Boolean, Date, SQL, RO}
 
 	private String title;
 	private String name;
