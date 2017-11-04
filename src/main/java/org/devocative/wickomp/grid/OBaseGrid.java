@@ -7,6 +7,7 @@ import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.toolbar.OButton;
 import org.devocative.wickomp.opt.ICallbackUrl;
 import org.devocative.wickomp.opt.IHtmlId;
+import org.devocative.wickomp.opt.IStyler;
 import org.devocative.wickomp.opt.OComponent;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	protected String noResultMessage;
 	protected List<OPagingButtons> pagingBarLayout;
 	protected List<String> reorderColumns;
+	protected IStyler<T> rowStyler;
 	protected Boolean selectionIndicator;
 	protected String selectionJSHandler;
 	protected Boolean selectionDblClick;
@@ -280,6 +282,16 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	public OBaseGrid<T> setReorderColumns(List<String> reorderColumns) {
 		this.reorderColumns = reorderColumns;
+		return this;
+	}
+
+	@JsonIgnore
+	public IStyler<T> getRowStyler() {
+		return rowStyler;
+	}
+
+	public OBaseGrid<T> setRowStyler(IStyler<T> rowStyler) {
+		this.rowStyler = rowStyler;
 		return this;
 	}
 

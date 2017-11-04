@@ -5,7 +5,9 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.devocative.adroit.CalendarUtil;
 import org.devocative.adroit.obuilder.ObjectBuilder;
+import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.TaskBehavior;
 import org.devocative.wickomp.async.IAsyncResponse;
@@ -34,10 +36,7 @@ import org.devocative.wickomp.vo.PersonVO;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataSource<PersonVO>, IGridAsyncDataSource<PersonVO> {
 	private static final long serialVersionUID = 7457034189424340046L;
@@ -205,6 +204,13 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
 			.setColumnReorder(false) //NOTE
 			.setGridId("activeAsyncGrid")
+			.setRowStyler((IStyler<PersonVO> & Serializable) (bean, id) -> {
+				Date base = CalendarUtil.toGregorian(new DateFieldVO(1360, 1, 1));
+				if (bean.getBirthDate().getTime() < base.getTime()) {
+					return OStyle.style("font-weight: bold;background-color:#FFD4D4");
+				}
+				return null;
+			})
 		;
 		grid2Opt.setHeight(OSize.fixed(400));
 
@@ -264,6 +270,14 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
 			.setReorderColumns(Arrays.asList("col02", "col01")) //NOTE
 			.setCallbackOnColumnReorder(true) //NOTE
+			.setRowStyler((IStyler<PersonVO> & Serializable) (bean, id) -> {
+				Date base = CalendarUtil.toGregorian(new DateFieldVO(1360, 1, 1));
+				if (bean.getBirthDate().getTime() < base.getTime()) {
+					return OStyle.css("old");
+				}
+				return null;
+			})
+
 		;
 		grid1Opt.setHeight(OSize.fixed(400));
 

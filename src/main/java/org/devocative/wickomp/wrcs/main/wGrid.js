@@ -88,6 +88,10 @@
 			wBaseGridDefaults.updateColumnTooltip($(this), field);
 		},
 
+		rowStyler: function (index, row) {
+			return row["$style"];
+		},
+
 		// --------------- columns-ext
 
 		onDropColumn: function (toField, fromField, point) {
@@ -163,7 +167,7 @@
 						r["class"] = columnOpt["styleClass"];
 					}
 
-					var cellStyle = colName + "$stl";
+					var cellStyle = colName + "$style";
 					if (row[cellStyle]) {
 						if (row[cellStyle]["style"]) {
 							r["style"] += ";" + row[cellStyle]["style"];

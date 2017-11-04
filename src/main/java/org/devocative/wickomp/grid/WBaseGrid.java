@@ -459,6 +459,11 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			}
 			pageData.put(id, dataSource.model(bean));
 
+			if (options.getRowStyler() != null) {
+				OStyle rowStyle = options.getRowStyler().doStyle(bean, id);
+				rObject.addProperty("$style", rowStyle);
+			}
+
 			for (int colNo = 0; colNo < columns.size(); colNo++) {
 				OColumn<T> column = columns.get(colNo);
 				if (column.onCellRender(bean, id)) {
@@ -467,8 +472,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 					rObject.addProperty(column.getField(), column.cellValue(bean, id, colNo, url));
 
 					if (column.getCellStyler() != null) {
-						OStyle oStyle = column.getCellStyler().doStyle(bean, id);
-						rObject.addProperty(column.getField() + "$stl", oStyle);
+						OStyle cellStyle = column.getCellStyler().doStyle(bean, id);
+						rObject.addProperty(column.getField() + "$style", cellStyle);
 					}
 				}
 			}

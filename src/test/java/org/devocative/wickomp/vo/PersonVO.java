@@ -1,5 +1,8 @@
 package org.devocative.wickomp.vo;
 
+import org.devocative.adroit.CalendarUtil;
+import org.devocative.adroit.vo.DateFieldVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -147,7 +150,7 @@ public class PersonVO implements Serializable {
 	// ------------------------------
 
 	public static List<PersonVO> list() {
-		long time = new Date().getTime();
+		long time = CalendarUtil.toGregorian(new DateFieldVO(1362, 1, 1)).getTime();
 
 		List<PersonVO> list = new ArrayList<PersonVO>();
 		for (int i = 0; i < 189; i++) {
