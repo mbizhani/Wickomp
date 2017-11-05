@@ -178,7 +178,9 @@ public class WOrderedListInput<T> extends WFormInputPanel<List<T>> {
 			}
 			Collections.sort(toBeRemoved);
 			Collections.reverse(toBeRemoved);
-			toBeRemoved.forEach(srcOptions::remove);
+			for (Integer idx : toBeRemoved) {
+				srcOptions.remove(idx.intValue());
+			}
 			hiddenIds.setModel(new Model<>(hiddenValue.toString()));
 		}
 
