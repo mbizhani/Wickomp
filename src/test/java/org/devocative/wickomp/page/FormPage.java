@@ -21,6 +21,7 @@ import org.devocative.wickomp.form.code.OCodeMode;
 import org.devocative.wickomp.form.code.WCodeInput;
 import org.devocative.wickomp.form.range.WDateRangeInput;
 import org.devocative.wickomp.form.range.WTextRangeInput;
+import org.devocative.wickomp.form.validator.WPasswordStrengthValidator;
 import org.devocative.wickomp.form.validator.WPatternValidator;
 import org.devocative.wickomp.html.WEasyLayout;
 import org.devocative.wickomp.html.WFloatTable;
@@ -207,7 +208,7 @@ public class FormPage extends BasePage {
 //		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$")));
 		form.add(new WLabelInput("lblIn"));
 		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$", "name.format")));
-		form.add(new WTextInput("password", true));
+		form.add(new WTextInput("password", true).add(new WPasswordStrengthValidator()));
 //		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$").setCustomMessage("oops!")));
 
 		//form.add(new WNumberRangeInput("age", Integer.class).setThousandSeparator(","));
