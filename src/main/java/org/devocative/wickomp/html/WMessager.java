@@ -18,12 +18,11 @@ public class WMessager {
 
 	// Main Function
 	public static String getScript(String title, String message, OMessager options) {
-		message = message.replaceAll("[\\\\]", "\\\\\\\\");
+		/*message = message.replaceAll("[\\\\]", "\\\\\\\\");
 		message = message.replaceAll("'", "\\\\'");
 		message = message.replaceAll("[\\r]", "");
 		message = message.replaceAll("[\\n]", "<br/>");
-		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");
-
+		message = message.replaceAll("[\\t]", "&nbsp;&nbsp;");*/
 		options.setTitle(title).setMsg(message);
 		return String.format("wTools.show(%s);", WebUtil.toJson(options));
 	}

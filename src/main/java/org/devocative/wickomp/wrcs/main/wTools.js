@@ -11,8 +11,12 @@ var wTools = {
 	},
 
 	show: function (options) {
-		var ext = $.extend({}, wTools.messagerShowDefaults, options);
-		$.messager.show(ext);
+		try {
+			var ext = $.extend({}, wTools.messagerShowDefaults, options);
+			$.messager.show(ext);
+		} catch (e) {
+			$.messager.alert("Error: show()", e);
+		}
 	},
 
 	copyToClipboard: function (text) {
