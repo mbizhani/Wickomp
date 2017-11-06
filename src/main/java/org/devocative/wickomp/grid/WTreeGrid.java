@@ -137,9 +137,12 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 			}
 
 			for (RObject rObject : rObjectList.getValue()) {
-				String parentId = rObject.getProperty(PARENT_ID_PROPERTY).toString();
-				if (parentId != null && rObjectList.hasRObject(parentId)) {
-					rObjectList.getRObject(parentId).removeProperty(STATE_PROPERTY);
+				Object parentId = rObject.getProperty(PARENT_ID_PROPERTY);
+				if (parentId != null) {
+					String parentIdStr = parentId.toString();
+					if (rObjectList.hasRObject(parentIdStr)) {
+						rObjectList.getRObject(parentIdStr).removeProperty(STATE_PROPERTY);
+					}
 				}
 			}
 		}

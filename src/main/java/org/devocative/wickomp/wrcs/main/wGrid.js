@@ -89,7 +89,11 @@
 		},
 
 		rowStyler: function (index, row) {
-			return row["$style"];
+			var data = row ? row : index;
+			if (data) {
+				return data["$style"];
+			}
+			return null;
 		},
 
 		// --------------- columns-ext
@@ -156,28 +160,26 @@
 		},
 
 		initColumn: function (grid, colName, columnOpt) {
-			if (columnOpt["style"] || columnOpt["styleClass"]) {
-				columnOpt["styler"] = function (value, row, index) {
-					var r = {};
+			columnOpt["styler"] = function (value, row, index) {
+				var r = {};
 
-					if (columnOpt["style"]) {
-						r["style"] = columnOpt["style"];
-					}
-					if (columnOpt["styleClass"]) {
-						r["class"] = columnOpt["styleClass"];
-					}
-
-					var cellStyle = colName + "$style";
-					if (row[cellStyle]) {
-						if (row[cellStyle]["style"]) {
-							r["style"] += ";" + row[cellStyle]["style"];
-						}
-						if (row[cellStyle]["class"]) {
-							r["class"] += " " + row[cellStyle]["class"];
-						}
-					}
-					return r;
+				if (columnOpt["style"]) {
+					r["style"] = columnOpt["style"];
 				}
+				if (columnOpt["styleClass"]) {
+					r["class"] = columnOpt["styleClass"];
+				}
+
+				var cellStyle = colName + "$style";
+				if (row[cellStyle]) {
+					if (row[cellStyle]["style"]) {
+						r["style"] += ";" + row[cellStyle]["style"];
+					}
+					if (row[cellStyle]["class"]) {
+						r["class"] += " " + row[cellStyle]["class"];
+					}
+				}
+				return r;
 			}
 		},
 

@@ -15,7 +15,9 @@ import org.devocative.wickomp.grid.column.OColumnList;
 import org.devocative.wickomp.grid.column.OPropertyColumn;
 import org.devocative.wickomp.grid.column.link.OAjaxLinkColumn;
 import org.devocative.wickomp.html.HTMLBase;
+import org.devocative.wickomp.opt.IStyler;
 import org.devocative.wickomp.opt.OSize;
+import org.devocative.wickomp.opt.OStyle;
 import org.devocative.wickomp.service.DataService;
 import org.devocative.wickomp.vo.EmployeeVO;
 
@@ -38,7 +40,9 @@ public class TreeGridPage extends BasePage implements IAsyncResponse, ITreeGridA
 		columnList
 			.add(new OPropertyColumn<>(new Model<>("Id"), "eid"))
 			.add(new OPropertyColumn<>(new Model<>("Name"), "name"))
-			.add(new OPropertyColumn<>(new Model<>("Age"), "age"))
+			.add(new OPropertyColumn<EmployeeVO>(new Model<>("Age"), "age")
+				.setCellStyler((IStyler<EmployeeVO> & Serializable) (bean, id) ->
+					OStyle.style(bean.getAge() % 3 == 0 ? "background-color:khaki" : null)))
 			.add(new OAjaxLinkColumn<EmployeeVO>(new Model<>(""), new HTMLBase("x")) {
 				private static final long serialVersionUID = -8145936659329291146L;
 
@@ -105,6 +109,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponse, ITreeGridA
 			.setIdField("eid")
 			.setColumns(columnList)
 			.setPagingBarLayout(Arrays.asList(OPagingButtons.refresh))
+			.setRowStyler((IStyler<EmployeeVO> & Serializable) (bean, id) -> OStyle.style(bean.getAge() > 30 ? "color:red" : "color:green"))
 			.setHeight(OSize.fixed(400));
 
 		add(new WTreeGrid<>("treegrid", treeGrid, new ITreeGridDataSource<EmployeeVO>() {
