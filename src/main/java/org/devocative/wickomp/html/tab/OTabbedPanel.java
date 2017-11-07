@@ -1,5 +1,6 @@
 package org.devocative.wickomp.html.tab;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.devocative.wickomp.opt.ICallbackUrl;
 import org.devocative.wickomp.opt.OComponent;
 
@@ -11,6 +12,7 @@ public class OTabbedPanel extends OComponent implements ICallbackUrl {
 	private Boolean border;
 	private Boolean justified;
 	private Boolean narrow;
+	private String onSelect;
 	private Boolean plain;
 	private Boolean pill;
 	private Boolean showHeader;
@@ -44,6 +46,16 @@ public class OTabbedPanel extends OComponent implements ICallbackUrl {
 
 	public OTabbedPanel setNarrow(Boolean narrow) {
 		this.narrow = narrow;
+		return this;
+	}
+
+	@JsonRawValue
+	public String getOnSelect() {
+		return onSelect;
+	}
+
+	public OTabbedPanel setOnSelect(String onSelect) {
+		this.onSelect = onSelect;
 		return this;
 	}
 

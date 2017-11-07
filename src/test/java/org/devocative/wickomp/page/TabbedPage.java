@@ -6,6 +6,7 @@ import org.apache.wicket.model.Model;
 import org.devocative.wickomp.BasePage;
 import org.devocative.wickomp.html.WAjaxLink;
 import org.devocative.wickomp.html.tab.OTab;
+import org.devocative.wickomp.html.tab.OTabbedPanel;
 import org.devocative.wickomp.html.tab.WTabbedPanel;
 import org.devocative.wickomp.panel.SelectionPanel;
 
@@ -38,7 +39,9 @@ public class TabbedPage extends BasePage {
 			}
 		});
 
-		tabs = new WTabbedPanel("tabs");
+		OTabbedPanel oTabbedPanel = new OTabbedPanel();
+		oTabbedPanel.setOnSelect("function(title,index){console.log('OnSelect', index);}");
+		tabs = new WTabbedPanel("tabs", oTabbedPanel);
 		tabs.addTab(new Label(tabs.getTabContentId(), "Salam"), new Model<>("A"));
 		tabs.addTab(new Label(tabs.getTabContentId(), "How r u?"), new Model<>("B"));
 
