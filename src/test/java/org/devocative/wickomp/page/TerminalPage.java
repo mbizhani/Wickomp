@@ -19,9 +19,14 @@ public class TerminalPage extends BasePage implements IAsyncResult {
 			private static final long serialVersionUID = 3958105834715956085L;
 
 			@Override
-			protected void onConnect() {
+			protected void onConnect(int cols, int rows, int width, int height) {
 				System.out.println("TerminalPage.onConnect");
-				SSHMediator.init("ares", "192.168.40.131", "qweasd@123", TerminalPage.this);
+				SSHMediator.init("root", "192.168.40.131", "qazwsx@123", TerminalPage.this, cols, rows, width, height);
+			}
+
+			@Override
+			protected void onResize(int cols, int rows, int width, int height) {
+				SSHMediator.resize(cols, rows, width, height);
 			}
 
 			@Override

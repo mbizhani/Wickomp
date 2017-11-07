@@ -1,6 +1,6 @@
 package org.devocative.wickomp.html;
 
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -10,6 +10,7 @@ import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.async.WTextAsyncBehavior;
+import org.devocative.wickomp.opt.Options;
 import org.devocative.wickomp.wrcs.HeaderBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 import org.slf4j.Logger;
@@ -24,12 +25,13 @@ public abstract class WTerminal extends WebMarkupContainer {
 	private static final String PREFIX = "W.W_TERMINAL:";
 
 	private static HeaderItem JS = Resource.getCommonJS("xterm/xterm.js");
+	private static HeaderItem RESIZE_JS = Resource.getCommonJS("xterm/ResizeSensor.js");
 	private static HeaderItem CSS = Resource.getCommonCSS("xterm/xterm.css");
 
 	// ------------------------------
 
-	private String clientTermId;
 	private WTextAsyncBehavior textAsyncBehavior;
+	private OTerminal oTerminal = new OTerminal();
 
 	// ------------------------------
 
@@ -39,6 +41,18 @@ public abstract class WTerminal extends WebMarkupContainer {
 	}
 
 	// ------------------------------
+
+	public WTerminal setCharWidth(int charWidth) {
+		oTerminal.charWidth = charWidth;
+		return this;
+	}
+
+	public WTerminal setCharHeight(int charHeight) {
+		oTerminal.charHeight = charHeight;
+		return this;
+	}
+
+	// ---------------
 
 	public void push(String message) {
 		textAsyncBehavior.push(PREFIX + WebUtil.toJson(new ResponseMessage(message)));
@@ -50,11 +64,14 @@ public abstract class WTerminal extends WebMarkupContainer {
 
 		response.render(CSS);
 		response.render(JS);
+		response.render(RESIZE_JS);
 	}
 
 	// ------------------------------
 
-	protected abstract void onConnect();
+	protected abstract void onConnect(int cols, int rows, int width, int height);
+
+	protected abstract void onResize(int cols, int rows, int width, int height);
 
 	protected abstract void onMessage(String key, Integer specialKey);
 
@@ -66,8 +83,8 @@ public abstract class WTerminal extends WebMarkupContainer {
 	protected void onInitialize() {
 		super.onInitialize();
 
-		clientTermId = UUID.randomUUID().toString().replaceAll("[-]", "");
-		logger.info("Creating WTerminal: clientTermId=[{}]", clientTermId);
+		oTerminal.clientTermId = UUID.randomUUID().toString().replaceAll("[-]", "");
+		logger.info("Creating WTerminal: clientTermId=[{}]", oTerminal.clientTermId);
 
 		textAsyncBehavior = new WTextAsyncBehavior() {
 			private static final long serialVersionUID = 2348707601617837513L;
@@ -81,9 +98,25 @@ public abstract class WTerminal extends WebMarkupContainer {
 						RequestMessage rq = WebUtil.fromJson(text.substring(PREFIX.length()), RequestMessage.class);
 						logger.debug("WTerminal Client Message: {}", rq);
 
-						if (clientTermId.equals(rq.getCtid())) {
+						if (oTerminal.clientTermId.equals(rq.getCtid())) {
 							if ("init".equals(rq.getCmd())) {
-								WTerminal.this.onConnect();
+								Size size = WebUtil.fromJson(rq.getValue(), Size.class);
+								logger.info("WTerminal.onConnect: c=[{}] r=[{}] w=[{}] h=[{}]",
+									size.cols, size.rows, size.cols * oTerminal.charWidth, size.rows * oTerminal.charHeight);
+								WTerminal.this.onConnect(
+									size.cols,
+									size.rows,
+									size.cols * oTerminal.charWidth,
+									size.rows * oTerminal.charHeight);
+							} else if ("resize".equals(rq.getCmd())) {
+								Size size = WebUtil.fromJson(rq.getValue(), Size.class);
+								logger.debug("WTerminal.onResize: c=[{}] r=[{}] w=[{}] h=[{}]",
+									size.cols, size.rows, size.cols * oTerminal.charWidth, size.rows * oTerminal.charHeight);
+								WTerminal.this.onResize(
+									size.cols,
+									size.rows,
+									size.cols * oTerminal.charWidth,
+									size.rows * oTerminal.charHeight);
 							} else if ("key".equals(rq.getCmd())) {
 								WTerminal.this.onMessage(rq.getValue(), null);
 							} else if ("specialKey".equals(rq.getCmd())) {
@@ -114,7 +147,7 @@ public abstract class WTerminal extends WebMarkupContainer {
 		add(textAsyncBehavior);
 
 		add(new HeaderBehavior("main/wTerminal.js"));
-		add(new AttributeModifier("style", "direction:ltr;overflow-x:hidden;"));
+		add(new AttributeAppender("style", ";direction:ltr;overflow-x:hidden;"));
 	}
 
 	@Override
@@ -122,7 +155,7 @@ public abstract class WTerminal extends WebMarkupContainer {
 		super.onAfterRender();
 
 		if (isVisible()) {
-			WebUtil.writeJQueryCall(String.format("$('#%s').wTerminal('%s');", getMarkupId(), clientTermId), false);
+			WebUtil.writeJQueryCall(String.format("$('#%s').wTerminal(%s);", getMarkupId(), WebUtil.toJson(oTerminal)), true);
 		}
 	}
 
@@ -163,6 +196,27 @@ public abstract class WTerminal extends WebMarkupContainer {
 		}
 	}
 
+	private static class Size {
+		private int cols;
+		private int rows;
+
+		public int getCols() {
+			return cols;
+		}
+
+		public void setCols(int cols) {
+			this.cols = cols;
+		}
+
+		public int getRows() {
+			return rows;
+		}
+
+		public void setRows(int rows) {
+			this.rows = rows;
+		}
+	}
+
 	private class ResponseMessage {
 		private String text;
 
@@ -171,11 +225,31 @@ public abstract class WTerminal extends WebMarkupContainer {
 		}
 
 		public String getCtid() {
-			return clientTermId;
+			return oTerminal.clientTermId;
 		}
 
 		public String getText() {
 			return text;
+		}
+	}
+
+	private class OTerminal extends Options {
+		private static final long serialVersionUID = 4476540410344233327L;
+
+		private String clientTermId;
+		private int charWidth = 10;
+		private int charHeight = 18;
+
+		public String getClientTermId() {
+			return clientTermId;
+		}
+
+		public int getCharWidth() {
+			return charWidth;
+		}
+
+		public int getCharHeight() {
+			return charHeight;
 		}
 	}
 }

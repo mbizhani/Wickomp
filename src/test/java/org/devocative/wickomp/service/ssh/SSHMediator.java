@@ -21,7 +21,7 @@ public class SSHMediator {
 
 	// ------------------------------
 
-	public static void init(String username, String host, String password, final IAsyncResult asyncResult) {
+	public static void init(String username, String host, String password, final IAsyncResult asyncResult, int cols, int rows, int width, int height) {
 		SSHMediator.asyncResult = asyncResult;
 
 		try {
@@ -32,6 +32,7 @@ public class SSHMediator {
 
 			channel = (ChannelShell) session.openChannel("shell");
 			channel.setPtyType("xterm");
+			channel.setPtySize(cols, rows, width, height);
 			processor = new ShellProcessor();
 
 			in = channel.getInputStream();
@@ -79,6 +80,10 @@ public class SSHMediator {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static void resize(int cols, int rows, int width, int height) {
+		channel.setPtySize(cols, rows, width, height);
 	}
 
 	public static void send(String txt) {
