@@ -506,7 +506,8 @@ function changeGridGroupField(select, gridId) {
 		opt.groupField = select.value;
 		opt.groupFormatter = function (value, rows) {
 			//return value + " (" + rows.length + ")";
-			return "<table><tr><td>" + value + " </td><td> #[</td><td>" + rows.length + "</td><td>]</td></tr></table>"
+			//return "<table><tr><td>" + value + " </td><td> #[</td><td>" + rows.length + "</td><td>]</td></tr></table>"
+			return "<span> [ " + value + " ]  <span><span> " + rows.length + " </span><span>#</span>"
 		};
 		$("#" + gridId).datagrid("sort", {sortName: select.value, sortOrder: "asc"});
 	} else {
