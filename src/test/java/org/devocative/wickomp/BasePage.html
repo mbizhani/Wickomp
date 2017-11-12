@@ -5,25 +5,28 @@
 	<meta charset="UTF-8">
 
 	<script type="text/javascript">
-		Wicket.Event.subscribe("/websocket/open", function (jqEvent, message) {
-			console.log('BasePage: websocket/open!, ' + message);
-			setInterval(pingWebSocket, 10000);
+		var pingHandler;
+
+		Wicket.Event.subscribe("/websocket/open", function (jqEvent) {
+			console.log('BasePage: websocket/open', jqEvent);
+			pingHandler = setInterval(pingWebSocket, 10000);
 		});
 
 		Wicket.Event.subscribe("/websocket/message", function (jqEvent, message) {
-			console.log('BasePage: websocket/message: ' + message);
+			console.log('BasePage: websocket/message', jqEvent, message);
 		});
 
-		Wicket.Event.subscribe("/websocket/closed", function (jqEvent, message) {
-			console.log('BasePage: websocket/closed!, ' + message, jqEvent);
+		Wicket.Event.subscribe("/websocket/closed", function (jqEvent) {
+			console.log('BasePage: websocket/closed', jqEvent);
+			clearInterval(pingHandler);
 		});
 
-		Wicket.Event.subscribe("/websocket/error", function (jqEvent, message) {
-			console.log('BasePage: websocket/error!, ' + message, jqEvent);
+		Wicket.Event.subscribe("/websocket/error", function (jqEvent) {
+			console.log('BasePage: websocket/error', jqEvent);
 		});
 
 		function pingWebSocket() {
-			Wicket.WebSocket.send('PING');
+			Wicket.WebSocket.send("W.PING");
 		}
 	</script>
 </head>
