@@ -333,7 +333,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
 
 			RGridPage result = getGridPage();
-			if (gridDataSource != null) {
+			if (gridDataSource != null || (result != null && result.getError() != null)) {
 				sendJSONResponse(WebUtil.toJson(result));
 			} else {
 				sendJSONResponse("");

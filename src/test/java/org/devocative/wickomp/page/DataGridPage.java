@@ -267,7 +267,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 					target.appendJavaScript("alert('Button');");
 				}
 			})
-			.addToolbarButton(new OGridGroupingButton<PersonVO>(new FontAwesome("expand"), new FontAwesome("compress")))
+			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
 			.setReorderColumns(Arrays.asList("col02", "col01")) //NOTE
 			.setCallbackOnColumnReorder(true) //NOTE
 			.setRowStyler((IStyler<PersonVO> & Serializable) (bean, id) -> {
