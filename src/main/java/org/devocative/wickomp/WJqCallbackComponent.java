@@ -54,13 +54,13 @@ public abstract class WJqCallbackComponent extends WJqComponent {
 	protected void sendJSONResponse(String json) {
 		logger.debug("JSON Response: {}", json);
 		RequestCycle requestCycle = RequestCycle.get();
-		requestCycle.replaceAllRequestHandlers(new TextRequestHandler("text/json", "UTF-8", json));
+		requestCycle.scheduleRequestHandlerAfterCurrent(new TextRequestHandler("text/json", "UTF-8", json));
 	}
 
 	protected void sendEmptyResponse() {
 		logger.debug("Empty Response");
 		RequestCycle requestCycle = RequestCycle.get();
-		requestCycle.replaceAllRequestHandlers(new TextRequestHandler("<ajax-response/>"));
+		requestCycle.scheduleRequestHandlerAfterCurrent(new TextRequestHandler("<ajax-response/>"));
 	}
 
 	protected AjaxRequestTarget createAjaxResponse() {

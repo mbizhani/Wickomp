@@ -271,73 +271,15 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	@Override
 	protected void onRequest() {
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
+		try {
+			processRequest();
+		} catch (Exception e) {
+			logger.warn("Grid.onRequest: id={}", getId(), e);
 
-		IRequestParameters getParams = getRequest().getQueryParameters();
-		IRequestParameters postParams = getRequest().getPostParameters();
+			RGridPage result = new RGridPage();
+			result.setError(exceptionMessageHandler.handleMessage(this, e));
 
-		/*
-		NOTE: EasyUI POST params = rows, page, id, sort, order
-		 */
-
-		pageSize = postParams.getParameterValue("rows").toInt(options.getPageSize());
-		pageNum = postParams.getParameterValue("page").toInt(1);
-
-		/*
-		NOTE: idByPost vs idByGet
-		idByPost: sent by EasyUI TreeGrid for expanded node
-		idByGet:  sent by a custom link in the cell
-		 */
-		String idByGet = getParams.getParameterValue(URL_PARAM_ID).toOptionalString();
-		String idByPost = postParams.getParameterValue("id").toOptionalString();
-
-		String sortList = postParams.getParameterValue("sort").toOptionalString();
-		String orderList = postParams.getParameterValue("order").toOptionalString();
-
-		String clickType = getParams.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
-		Integer colNo = getParams.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
-		String columnReorder = getParams.getParameterValue(URL_PARAM_COLUMN_REORDER).toOptionalString();
-
-		logger.debug("WBaseGrid.onRequest:\n\tpageSize=[{}], pageNum=[{}], sort=[{}], order=[{}], idByPost=[{}]\n\tclickType=[{}] idByGet=[{}] colNo=[{}]",
-			pageSize, pageNum, sortList, orderList, idByPost, clickType, idByGet, colNo);
-
-		if (CLICK_FROM_CELL.equals(clickType)) {// click from cell (per row)
-			if (idByGet == null) {
-				throw new RuntimeException("Null id parameter!");
-			}
-			if (colNo == null) {
-				throw new RuntimeException("Null colNo parameter!");
-			}
-			handleCellLinkClick(idByGet, colNo);
-		} else if (CLICK_FROM_BUTTON.equals(clickType)) {// click from button in toolbar
-			if (colNo == null) {
-				throw new RuntimeException("Null button index parameter!");
-			}
-			handleToolbarButtonClick(colNo);
-		} else if (columnReorder != null) {
-			logger.debug("Column Reorder: {}", columnReorder);
-			String[] columns = columnReorder.split("[,]");
-			onColumnReorder(Arrays.asList(columns));
-			sendEmptyResponse();
-		} else if (idByPost != null && idByPost.length() > 0) {
-			handleRowsById(idByPost);
-		} else {
-			if (sortList != null && orderList != null) {
-				updateSortFieldList(sortList.split(","), orderList.split(","));
-			} else {
-				sortFieldList.clear();
-			}
-
-			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
-
-			RGridPage result = getGridPage();
-			if (gridDataSource != null || (result != null && result.getError() != null)) {
-				sendJSONResponse(WebUtil.toJson(result));
-			} else {
-				sendJSONResponse("");
-			}
+			sendJSONResponse(WebUtil.toJson(result));
 		}
 	}
 
@@ -354,34 +296,27 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	protected final RGridPage getGridPage() {
 		RGridPage result = null;
-		try {
-			if (gridDataSource != null) {
-				List<T> data = gridDataSource.list(pageNum, pageSize, sortFieldList);
+		if (gridDataSource != null) {
+			List<T> data = gridDataSource.list(pageNum, pageSize, sortFieldList);
 
-				long count;
-				if (data.size() < pageSize || ignoreDataSourceCount) {
-					count = (pageNum - 1) * pageSize + data.size();
-					//TODO the plus-one must be detected by requesting one more item from data source!
-					if (ignoreDataSourceCount && data.size() == pageSize) {
-						count++;
-					}
-				} else {
-					count = gridDataSource.count();
-				}
-
-				result = getGridPage(data, count);
-
-				if (options.hasFooter() && footerDataSource != null) {
-					result.setFooter(getGridFooter(footerDataSource.footer(data)));
+			long count;
+			if (data.size() < pageSize || ignoreDataSourceCount) {
+				count = (pageNum - 1) * pageSize + data.size();
+				//TODO the plus-one must be detected by requesting one more item from data source!
+				if (ignoreDataSourceCount && data.size() == pageSize) {
+					count++;
 				}
 			} else {
-				gridAsyncDataSource.asyncList(pageNum, pageSize, sortFieldList);
+				count = gridDataSource.count();
 			}
-		} catch (Exception e) {
-			logger.warn("Grid.DataSource: id=" + getId(), e);
-			result = new RGridPage();
-			result.setTotal((long) pageNum * pageSize);
-			result.setError(exceptionMessageHandler.handleMessage(this, e));
+
+			result = getGridPage(data, count);
+
+			if (options.hasFooter() && footerDataSource != null) {
+				result.setFooter(getGridFooter(footerDataSource.footer(data)));
+			}
+		} else {
+			gridAsyncDataSource.asyncList(pageNum, pageSize, sortFieldList);
 		}
 		return result;
 	}
@@ -483,6 +418,77 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	}
 
 	// ---------------
+
+	private void processRequest() {
+		if (!isEnabledInHierarchy()) {
+			return;
+		}
+
+		IRequestParameters getParams = getRequest().getQueryParameters();
+		IRequestParameters postParams = getRequest().getPostParameters();
+
+		/*
+		NOTE: EasyUI POST params = rows, page, id, sort, order
+		 */
+
+		pageSize = postParams.getParameterValue("rows").toInt(options.getPageSize());
+		pageNum = postParams.getParameterValue("page").toInt(1);
+
+		/*
+		NOTE: idByPost vs idByGet
+		idByPost: sent by EasyUI TreeGrid for expanded node
+		idByGet:  sent by a custom link in the cell
+		 */
+		String idByGet = getParams.getParameterValue(URL_PARAM_ID).toOptionalString();
+		String idByPost = postParams.getParameterValue("id").toOptionalString();
+
+		String sortList = postParams.getParameterValue("sort").toOptionalString();
+		String orderList = postParams.getParameterValue("order").toOptionalString();
+
+		String clickType = getParams.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
+		Integer colNo = getParams.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
+		String columnReorder = getParams.getParameterValue(URL_PARAM_COLUMN_REORDER).toOptionalString();
+
+		logger.debug("WBaseGrid.onRequest:\n\tpageSize=[{}], pageNum=[{}], sort=[{}], order=[{}], idByPost=[{}]\n\tclickType=[{}] idByGet=[{}] colNo=[{}]",
+			pageSize, pageNum, sortList, orderList, idByPost, clickType, idByGet, colNo);
+
+		if (CLICK_FROM_CELL.equals(clickType)) {// click from cell (per row)
+			if (idByGet == null) {
+				throw new RuntimeException("Null id parameter!");
+			}
+			if (colNo == null) {
+				throw new RuntimeException("Null colNo parameter!");
+			}
+			handleCellLinkClick(idByGet, colNo);
+		} else if (CLICK_FROM_BUTTON.equals(clickType)) {// click from button in toolbar
+			if (colNo == null) {
+				throw new RuntimeException("Null button index parameter!");
+			}
+			handleToolbarButtonClick(colNo);
+		} else if (columnReorder != null) {
+			logger.debug("Column Reorder: {}", columnReorder);
+			String[] columns = columnReorder.split("[,]");
+			onColumnReorder(Arrays.asList(columns));
+			sendEmptyResponse();
+		} else if (idByPost != null && idByPost.length() > 0) {
+			handleRowsById(idByPost);
+		} else {
+			if (sortList != null && orderList != null) {
+				updateSortFieldList(sortList.split(","), orderList.split(","));
+			} else {
+				sortFieldList.clear();
+			}
+
+			logger.debug("WBaseGrid: SortFields = {}", sortFieldList);
+
+			RGridPage result = getGridPage();
+			if (gridDataSource != null) {
+				sendJSONResponse(WebUtil.toJson(result));
+			} else {
+				sendJSONResponse("");
+			}
+		}
+	}
 
 	private void createToolbar() {
 		List<OButton<T>> toolbarButtons = options.getToolbarButtons();
