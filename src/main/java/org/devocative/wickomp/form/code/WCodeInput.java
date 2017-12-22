@@ -48,11 +48,8 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 	// ------------------------------
 
-	@Override
-	protected void onBeforeRender() {
-		super.onBeforeRender();
-
-		editor.setModelObject(getModelObject());
+	public String getClearJSCall() {
+		return String.format("$('#%s').wCodeInput('clear');", editor.getMarkupId());
 	}
 
 	@Override
@@ -80,6 +77,13 @@ public class WCodeInput extends WFormInputPanel<String> {
 	}
 
 	// ------------------------------
+
+	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+
+		editor.setModelObject(getModelObject());
+	}
 
 	@Override
 	protected void onAfterRender() {

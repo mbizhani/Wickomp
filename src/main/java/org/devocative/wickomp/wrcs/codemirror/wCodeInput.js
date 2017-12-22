@@ -45,7 +45,7 @@
 				}
 
 				if (!opt.enabled) {
-					cm.textAreaInput.parent().find('div.CodeMirror-scroll').css('background-color', '#eeeeee');
+					cm.textAreaInput.parent().find("div.CodeMirror-scroll").css("background-color", "#eeeeee");
 				}
 
 				if (opt.width || opt.height) {
@@ -53,10 +53,17 @@
 				}
 
 				if (opt.resizable) {
-					cm.textAreaInput.siblings(".CodeMirror").resizable({handles: 's'});
+					cm.textAreaInput.siblings(".CodeMirror").resizable({handles: "s"});
 				}
 			}
 		};
-		cm.init($(this), settings);
+
+		if (settings == "clear") {
+			$(this).data("cm").setValue("");
+		} else {
+			cm.init($(this), settings);
+			$(this).data("cm", cm.editor);
+		}
+		return this;
 	};
 })(jQuery);

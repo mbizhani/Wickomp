@@ -1,7 +1,9 @@
 package org.devocative.wickomp.page;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -43,6 +45,7 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 				grid.loadData(target);
 			}
 		});
+		form.add(new WebMarkupContainer("clear").add(new AttributeModifier("onclick", sql.getClearJSCall())));
 		add(form);
 
 		OGrid<RowVO> oGrid = new OGrid<>();
