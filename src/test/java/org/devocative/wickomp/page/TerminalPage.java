@@ -21,7 +21,7 @@ public class TerminalPage extends BasePage implements IAsyncResult {
 			@Override
 			protected void onConnect(int cols, int rows, int width, int height) {
 				System.out.println("TerminalPage.onConnect");
-				SSHMediator.init("root", "192.168.40.131", "qazwsx@123", TerminalPage.this, cols, rows, width, height);
+				SSHMediator.init("root", "192.168.40.131", "qazWSX@123", TerminalPage.this, cols, rows, width, height);
 			}
 
 			@Override

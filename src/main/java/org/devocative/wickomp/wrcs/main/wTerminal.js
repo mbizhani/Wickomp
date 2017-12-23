@@ -1,4 +1,8 @@
 (function ($) {
+	$(window).on("beforeunload", function (e) {
+		return "Are you sure?";
+	});
+
 	$.fn.wTerminal = function (options) {
 		var defaults = {
 			cursorBlink: true,
