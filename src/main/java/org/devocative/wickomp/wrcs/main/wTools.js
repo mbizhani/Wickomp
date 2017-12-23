@@ -1,3 +1,12 @@
+$(window).keydown(function (e) {
+	if (e.keyCode == 27) {
+		$("div.messager-body")
+			.parent()
+			.find("a.panel-tool-close")
+			.click();
+	}
+});
+
 var wTools = {
 	messagerShowDefaults: {
 		draggable: true,
@@ -6,7 +15,7 @@ var wTools = {
 		resizable: true,
 		showType: 'show',
 		style: {right: '', bottom: ''},
-		timeout: 0,
+		timeout: 7000,
 		width: ''
 	},
 
