@@ -32,7 +32,7 @@ public class WickompApplication extends WebApplication {
 			.setCompressWhitespace(true)
 			.setDefaultMarkupEncoding("UTF-8");
 
-		getResourceSettings().getStringResourceLoaders().add(0, new BundleStringResourceLoader("org.devocative.wickomp.Test"));
+		getResourceSettings().getStringResourceLoaders().add(0, new BundleStringResourceLoader("org.devocative.wickomp.demo.Test"));
 
 		getRequestCycleListeners().add(new WickompRequestCycleListener());
 

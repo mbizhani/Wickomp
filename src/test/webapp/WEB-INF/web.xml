@@ -10,7 +10,7 @@
 
 	<filter>
 		<filter-name>TestHttpAuthFilter</filter-name>
-		<filter-class>org.devocative.wickomp.TestHttpBasicAuthFilter</filter-class>
+		<filter-class>org.devocative.wickomp.demo.TestHttpBasicAuthFilter</filter-class>
 	</filter>
 
 	<filter-mapping>
@@ -23,7 +23,7 @@
 		<filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>org.devocative.wickomp.WickompApplication</param-value>
+			<param-value>org.devocative.wickomp.demo.WickompApplication</param-value>
 		</init-param>
 	</filter>
 
