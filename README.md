@@ -24,8 +24,8 @@ In the test directory, there is a test application which tries to show applicati
 The test application can be run with `Jetty Maven Plugin`.
 
 **TIP** Classes name convention: initial character maps it to a category:
-	W -> Components
-	O -> Options for a component
-	R -> Result of a request as callback on a component
+- W -> Components
+- O -> Options for a component
+- R -> Result of a request as callback on a component
 
 

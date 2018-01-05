@@ -2,8 +2,8 @@ package org.devocative.wickomp.test;
 
 import org.apache.wicket.util.tester.WicketTester;
 import org.devocative.wickomp.WebUtil;
-import org.devocative.wickomp.WickompApplication;
-import org.devocative.wickomp.page.MountedPage;
+import org.devocative.wickomp.demo.WickompApplication;
+import org.devocative.wickomp.demo.page.MountedPage;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
