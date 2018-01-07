@@ -24,7 +24,7 @@ import org.devocative.wickomp.opt.OStyle;
 import java.io.Serializable;
 import java.util.*;
 
-public class TreeGridPage extends BasePage implements IAsyncResponse, ITreeGridAsyncDataSource<EmployeeVO> {
+public class TreeGridPage extends BasePage implements IAsyncResponse<Map<String, Object>>, ITreeGridAsyncDataSource<EmployeeVO> {
 	private static final long serialVersionUID = 4726580534261868437L;
 
 	private List<EmployeeVO> list;
@@ -32,6 +32,8 @@ public class TreeGridPage extends BasePage implements IAsyncResponse, ITreeGridA
 	private TaskBehavior taskBehavior;
 	private WTreeGrid<EmployeeVO> asyncTreeGrid;
 	private OColumnList<EmployeeVO> columnList;
+
+	// ------------------------------
 
 	public TreeGridPage() {
 		list = EmployeeVO.list();
@@ -67,6 +69,50 @@ public class TreeGridPage extends BasePage implements IAsyncResponse, ITreeGridA
 
 		asyncTreeGrid();
 	}
+
+	// ------------------------------
+
+	@Override
+	public void onAsyncResult(IPartialPageRequestHandler handler, Map<String, Object> result) {
+		if (result.containsKey("parentId")) {
+			asyncTreeGrid.pushChildren(handler, (String) result.get("parentId"), (List) result.get("list"));
+		} else if (result.containsKey("list")) {
+			asyncTreeGrid.pushData(handler, (List) result.get("list"), (int) result.get("count"));
+		}
+	}
+
+	@Override
+	public void onAsyncError(IPartialPageRequestHandler handler, Exception error) {
+	}
+
+	// ---------------
+
+	@Override
+	public void asyncList(long pageIndex, long pageSize, List<WSortField> list) {
+		Map<String, Object> map = ObjectBuilder
+			.<String, Object>createDefaultMap()
+			.put("first", pageIndex)
+			.put("size", pageSize)
+			.get();
+		DataService.processEmployee(new DataService.RequestVO(taskBehavior, map));
+	}
+
+	@Override
+	public void asyncListByParent(Serializable parentId, List<WSortField> list) {
+		DataService.processSubEmployee(new DataService.RequestVO(taskBehavior, parentId.toString()));
+	}
+
+	@Override
+	public boolean hasChildren(EmployeeVO bean) {
+		return !bean.getEid().contains(".");
+	}
+
+	@Override
+	public IModel<EmployeeVO> model(EmployeeVO object) {
+		return new WModel<>(object);
+	}
+
+	// ------------------------------
 
 	private void asyncTreeGrid() {
 		OTreeGrid<EmployeeVO> treeGrid = new OTreeGrid<>();
@@ -155,48 +201,5 @@ public class TreeGridPage extends BasePage implements IAsyncResponse, ITreeGridA
 				return new WModel<>(object);
 			}
 		}));
-	}
-
-	// ---------------
-
-	@Override
-	public void onAsyncResult(IPartialPageRequestHandler handler, Object result) {
-		Map<String, Object> map = (Map<String, Object>) result;
-		if (map.containsKey("parentId")) {
-			asyncTreeGrid.pushChildren(handler, (String) map.get("parentId"), (List) map.get("list"));
-		} else if (map.containsKey("list")) {
-			asyncTreeGrid.pushData(handler, (List) map.get("list"), (int) map.get("count"));
-		}
-	}
-
-	@Override
-	public void onAsyncError(IPartialPageRequestHandler handler, Exception error) {
-	}
-
-	// ---------------
-
-	@Override
-	public void asyncList(long pageIndex, long pageSize, List<WSortField> list) {
-		Map<String, Object> map = ObjectBuilder
-			.<String, Object>createDefaultMap()
-			.put("first", pageIndex)
-			.put("size", pageSize)
-			.get();
-		DataService.processEmployee(new DataService.RequestVO(taskBehavior, map));
-	}
-
-	@Override
-	public void asyncListByParent(Serializable parentId, List<WSortField> list) {
-		DataService.processSubEmployee(new DataService.RequestVO(taskBehavior, parentId.toString()));
-	}
-
-	@Override
-	public boolean hasChildren(EmployeeVO bean) {
-		return !bean.getEid().contains(".");
-	}
-
-	@Override
-	public IModel<EmployeeVO> model(EmployeeVO object) {
-		return new WModel<>(object);
 	}
 }

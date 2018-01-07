@@ -25,12 +25,14 @@ import org.devocative.wickomp.opt.OSize;
 import java.util.Arrays;
 import java.util.List;
 
-public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowVO>, IAsyncResponse {
+public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowVO>, IAsyncResponse<List<RowVO>> {
 	private static final long serialVersionUID = -978809088812121353L;
 
 	private WCodeInput sql;
 	private WDataGrid<RowVO> grid;
 	private WebSocketToken token;
+
+	// ------------------------------
 
 	public SqlEditorPage() {
 		sql = new WCodeInput("sql", new Model<>("select * from t_person"), new OCode(OCodeMode.SQL).setSubmitSelection(true));
@@ -64,12 +66,7 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 		add(grid);
 	}
 
-	@Override
-	protected void onBeforeRender() {
-		super.onBeforeRender();
-
-		token = WebUtil.createWSToken(this);
-	}
+	// ------------------------------
 
 	@Override
 	public void asyncList(long pageIndex, long pageSize, List<WSortField> sortFields) {
@@ -97,13 +94,21 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 	}
 
 	@Override
-	public void onAsyncResult(IPartialPageRequestHandler handler, Object result) {
-		List<RowVO> execute = (List<RowVO>) result;
-		grid.pushData(handler, execute);
+	public void onAsyncResult(IPartialPageRequestHandler handler, List<RowVO> result) {
+		grid.pushData(handler, result);
 	}
 
 	@Override
 	public void onAsyncError(IPartialPageRequestHandler handler, Exception e) {
 		grid.pushError(handler, e);
+	}
+
+	// ------------------------------
+
+	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+
+		token = WebUtil.createWSToken(this);
 	}
 }

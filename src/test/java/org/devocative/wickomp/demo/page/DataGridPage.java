@@ -38,7 +38,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.*;
 
-public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataSource<PersonVO>, IGridAsyncDataSource<PersonVO> {
+public class DataGridPage extends BasePage implements IAsyncResponse<Map<String, Object>>, IGridDataSource<PersonVO>, IGridAsyncDataSource<PersonVO> {
 	private static final long serialVersionUID = 7457034189424340046L;
 
 	private List<PersonVO> list;
@@ -174,12 +174,11 @@ public class DataGridPage extends BasePage implements IAsyncResponse, IGridDataS
 	// ------------------------------
 
 	@Override
-	public void onAsyncResult(IPartialPageRequestHandler handler, Object result) {
-		Map<String, Object> map = (Map<String, Object>) result;
+	public void onAsyncResult(IPartialPageRequestHandler handler, Map<String, Object> result) {
 		//if (grid2.getPageNum() == 3) {
 		//	asyncDisabledGrid.pushError(handler, new RuntimeException("DataGridPage: Page 3 Error"));
 		//} else {
-		asyncDisabledGrid.pushData(handler, (List) map.get("list"), (int) map.get("count"), (List) map.get("footer"));
+		asyncDisabledGrid.pushData(handler, (List) result.get("list"), (int) result.get("count"), (List) result.get("footer"));
 		//}
 	}
 

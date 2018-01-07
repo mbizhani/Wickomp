@@ -27,6 +27,7 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.devocative.adroit.AdroitList;
@@ -443,6 +444,13 @@ public class WebUtil {
 
 	public static void copyToClipboard(String text, IPartialPageRequestHandler handler) {
 		handler.appendJavaScript(String.format("wTools.copyToClipboard(\"%s\");", text));
+	}
+
+	public static String escape(String text, boolean escapeSpaces, boolean convertToHtmlUnicodeEscapes) {
+		String str = Strings.escapeMarkup(text, escapeSpaces, convertToHtmlUnicodeEscapes).toString();
+		str = str.replaceAll("[\n]", "<br/>");
+		str = str.replaceAll("[\r]", "");
+		return str;
 	}
 
 	// ------------------------------
