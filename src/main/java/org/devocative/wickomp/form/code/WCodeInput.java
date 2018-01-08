@@ -48,8 +48,8 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 	// ------------------------------
 
-	public String getClearJSCall() {
-		return String.format("$('#%s').wCodeInput('clear');", editor.getMarkupId());
+	public String getCommandJSCall(String cmd) {
+		return String.format("$('#%s').wCodeInput('%s');", editor.getMarkupId(), cmd);
 	}
 
 	@Override

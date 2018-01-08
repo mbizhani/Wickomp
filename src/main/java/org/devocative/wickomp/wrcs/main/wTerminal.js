@@ -104,6 +104,8 @@
 					ctx.send("resize", JSON.stringify(ctx.size));
 				});
 
+				ctx.term.focus();
+
 				ctx.send("init", JSON.stringify(ctx.size));
 			},
 
@@ -138,7 +140,13 @@
 			}
 		};
 
-		ctx.init(options);
+		if (!$(this).data("term")) {
+			ctx.init(options);
+			$(this).data("term", ctx.term);
+		} else {
+			throw "Already Initialized!";
+		}
+
 		return $(this);
 	}
 })(jQuery);

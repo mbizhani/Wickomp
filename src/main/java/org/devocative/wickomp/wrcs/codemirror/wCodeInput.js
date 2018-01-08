@@ -55,15 +55,34 @@
 				if (opt.resizable) {
 					cm.textAreaInput.siblings(".CodeMirror").resizable({handles: "s"});
 				}
+			},
+
+			focus: function () {
+				wLog.debug("wCodeInput.focus()");
+				cm.textAreaInput.focus();
+				cm.editor.focus();
 			}
 		};
 
-		if (settings == "clear") {
-			$(this).data("cm").setValue("");
+		if (settings) {
+			if (typeof settings === "object") {
+				cm.init($(this), settings);
+				$(this).data("cm", cm.editor);
+			} else if ($(this).data("cm")) { //INITED
+				if (settings == "clear") {
+					$(this).data("cm").setValue("");
+					$(this).data("cm").focus();
+				} else if (settings == "focus") {
+					$(this).data("cm").focus();
+				} else {
+					throw "Invalid Command: " + settings;
+				}
+			} else {
+				throw "Invalid wCodeInput() Parameter!";
+			}
 		} else {
-			cm.init($(this), settings);
-			$(this).data("cm", cm.editor);
+			throw "Invalid wCodeInput Initialization!";
 		}
-		return this;
+		return $(this);
 	};
 })(jQuery);

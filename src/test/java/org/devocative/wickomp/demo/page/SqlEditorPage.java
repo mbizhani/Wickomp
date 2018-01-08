@@ -47,7 +47,7 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 				grid.loadData(target);
 			}
 		});
-		form.add(new WebMarkupContainer("clear").add(new AttributeModifier("onclick", sql.getClearJSCall())));
+		form.add(new WebMarkupContainer("clear").add(new AttributeModifier("onclick", sql.getCommandJSCall("clear"))));
 		add(form);
 
 		OGrid<RowVO> oGrid = new OGrid<>();
