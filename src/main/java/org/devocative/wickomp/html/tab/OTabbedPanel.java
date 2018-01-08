@@ -12,12 +12,19 @@ public class OTabbedPanel extends OComponent implements ICallbackUrl {
 	private Boolean border;
 	private Boolean justified;
 	private Boolean narrow;
+	private String onAdd;
 	private String onSelect;
 	private Boolean plain;
 	private Boolean pill;
 	private Boolean showHeader;
 	private OPosition tabPosition;
+
+	private Boolean globalHotkeyEnabled; // default=false
+	private Integer changeTabKeyCode;    // default is 191 which is '/'
+	private Integer closeTabKeyCode;     // default is 190 which is '.'
+
 	// ---------------
+
 	private String url;
 
 	// ------------------------------
@@ -46,6 +53,16 @@ public class OTabbedPanel extends OComponent implements ICallbackUrl {
 
 	public OTabbedPanel setNarrow(Boolean narrow) {
 		this.narrow = narrow;
+		return this;
+	}
+
+	@JsonRawValue
+	public String getOnAdd() {
+		return onAdd;
+	}
+
+	public OTabbedPanel setOnAdd(String onAdd) {
+		this.onAdd = onAdd;
 		return this;
 	}
 
@@ -92,6 +109,35 @@ public class OTabbedPanel extends OComponent implements ICallbackUrl {
 
 	public OTabbedPanel setTabPosition(OPosition tabPosition) {
 		this.tabPosition = tabPosition;
+		return this;
+	}
+
+	// ---------------
+
+	public Boolean getGlobalHotkeyEnabled() {
+		return globalHotkeyEnabled;
+	}
+
+	public OTabbedPanel setGlobalHotkeyEnabled(Boolean globalHotkeyEnabled) {
+		this.globalHotkeyEnabled = globalHotkeyEnabled;
+		return this;
+	}
+
+	public Integer getChangeTabKeyCode() {
+		return changeTabKeyCode;
+	}
+
+	public OTabbedPanel setChangeTabKeyCode(Integer changeTabKeyCode) {
+		this.changeTabKeyCode = changeTabKeyCode;
+		return this;
+	}
+
+	public Integer getCloseTabKeyCode() {
+		return closeTabKeyCode;
+	}
+
+	public OTabbedPanel setCloseTabKeyCode(Integer closeTabKeyCode) {
+		this.closeTabKeyCode = closeTabKeyCode;
 		return this;
 	}
 

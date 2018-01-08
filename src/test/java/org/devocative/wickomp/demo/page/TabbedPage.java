@@ -40,7 +40,10 @@ public class TabbedPage extends BasePage {
 		});
 
 		OTabbedPanel oTabbedPanel = new OTabbedPanel();
-		oTabbedPanel.setOnSelect("function(title,index){console.log('OnSelect', index);}");
+		oTabbedPanel
+			.setOnSelect("function(title,index){console.log('OnSelect', index);}")
+			.setGlobalHotkeyEnabled(true)
+		;
 		tabs = new WTabbedPanel("tabs", oTabbedPanel);
 		tabs.addTab(new Label(tabs.getTabContentId(), "Salam"), new Model<>("A"));
 		tabs.addTab(new Label(tabs.getTabContentId(), "How r u?"), new Model<>("B"));
