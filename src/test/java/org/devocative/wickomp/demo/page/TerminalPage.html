@@ -6,7 +6,32 @@
 </wicket:head>
 
 <wicket:extend>
-	<button wicket:id="createTerminal"></button>
+	<form wicket:id="form">
+		<table>
+			<tr>
+				<td>Address</td>
+				<td>
+					<div wicket:id="address"></div>
+				</td>
+				<td>Port</td>
+				<td>
+					<div wicket:id="port"></div>
+				</td>
+				<td>Username</td>
+				<td>
+					<div wicket:id="username"></div>
+				</td>
+				<td>Password</td>
+				<td>
+					<div wicket:id="password"></div>
+				</td>
+				<td>
+					<button wicket:id="createTerminal"></button>
+				</td>
+			</tr>
+		</table>
+	</form>
+
 	<div style="height: calc(100% - 260px);">
 		<div wicket:id="xterm" style="width:100%;height:100%;"></div>
 	</div>

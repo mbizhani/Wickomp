@@ -21,11 +21,11 @@ public class SSHMediator {
 
 	// ------------------------------
 
-	public static void init(String username, String host, String password, final IAsyncResult asyncResult, int cols, int rows, int width, int height) {
+	public static void init(String address, Integer port, String username, String password, final IAsyncResult asyncResult, int cols, int rows, int width, int height) {
 		SSHMediator.asyncResult = asyncResult;
 
 		try {
-			session = jsch.getSession(username, host, 22);
+			session = jsch.getSession(username, address, port);
 			session.setPassword(password);
 			session.setConfig("StrictHostKeyChecking", "no");
 			session.connect(30000);
