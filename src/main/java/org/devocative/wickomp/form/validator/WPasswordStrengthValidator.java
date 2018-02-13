@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public class WPasswordStrengthValidator implements IValidator<String> {
 	private static final long serialVersionUID = 5187782035983173417L;
 
+	private boolean enabled = true;
 	private boolean digit = true;
 	private boolean lowerCase = true;
 	private boolean upperCase = true;
@@ -22,34 +23,71 @@ public class WPasswordStrengthValidator implements IValidator<String> {
 
 	// ------------------------------
 
-	public WPasswordStrengthValidator hasDigit(boolean digit) {
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public WPasswordStrengthValidator setEnabled(boolean enabled) {
+		this.enabled = enabled;
+		return this;
+	}
+
+	public boolean isDigit() {
+		return digit;
+	}
+
+	public WPasswordStrengthValidator setDigit(boolean digit) {
 		this.digit = digit;
 		return this;
 	}
 
-	public WPasswordStrengthValidator hasLowerCase(boolean lowerCase) {
+	public boolean isLowerCase() {
+		return lowerCase;
+	}
+
+	public WPasswordStrengthValidator setLowerCase(boolean lowerCase) {
 		this.lowerCase = lowerCase;
 		return this;
 	}
 
-	public WPasswordStrengthValidator hasUpperCase(boolean upperCase) {
+	public boolean isUpperCase() {
+		return upperCase;
+	}
+
+	public WPasswordStrengthValidator setUpperCase(boolean upperCase) {
 		this.upperCase = upperCase;
 		return this;
 	}
 
-	public WPasswordStrengthValidator hasSpecialChar(boolean specialChar) {
+	public boolean isSpecialChar() {
+		return specialChar;
+	}
+
+	public WPasswordStrengthValidator setSpecialChar(boolean specialChar) {
 		this.specialChar = specialChar;
 		return this;
 	}
 
-	public WPasswordStrengthValidator hasNoWhiteSpace(boolean noWhiteSpace) {
+	public boolean isNoWhiteSpace() {
+		return noWhiteSpace;
+	}
+
+	public WPasswordStrengthValidator setNoWhiteSpace(boolean noWhiteSpace) {
 		this.noWhiteSpace = noWhiteSpace;
 		return this;
+	}
+
+	public int getMinLength() {
+		return minLength;
 	}
 
 	public WPasswordStrengthValidator setMinLength(int minLength) {
 		this.minLength = minLength;
 		return this;
+	}
+
+	public Integer getMaxLength() {
+		return maxLength;
 	}
 
 	public WPasswordStrengthValidator setMaxLength(Integer maxLength) {
@@ -61,28 +99,39 @@ public class WPasswordStrengthValidator implements IValidator<String> {
 
 	@Override
 	public void validate(IValidatable<String> validatable) {
+		if (!isEnabled()) {
+			return;
+		}
+
 		StringBuilder builder = new StringBuilder();
 		builder.append("^");
-		if (digit) {
+
+		if (isDigit()) {
 			builder.append("(?=.*[0-9])");
 		}
-		if (lowerCase) {
+
+		if (isLowerCase()) {
 			builder.append("(?=.*[a-z])");
 		}
-		if (upperCase) {
+
+		if (isUpperCase()) {
 			builder.append("(?=.*[A-Z])");
 		}
-		if (specialChar) {
-			builder.append("(?=.*[@#$%^&+=])");
+
+		if (isSpecialChar()) {
+			builder.append("(?=.*([^\\s][\\W_]))");
 		}
-		if (noWhiteSpace) {
+
+		if (isNoWhiteSpace()) {
 			builder.append("(?=\\S+$)");
 		}
-		if (maxLength == null) {
-			builder.append(String.format(".{%d,}", minLength));
+
+		if (getMaxLength() == null) {
+			builder.append(String.format(".{%d,}", getMinLength()));
 		} else {
-			builder.append(String.format(".{%d,%d}", minLength, maxLength));
+			builder.append(String.format(".{%d,%d}", getMinLength(), getMaxLength()));
 		}
+
 		builder.append("$");
 
 		Pattern PATTERN = Pattern.compile(builder.toString());
