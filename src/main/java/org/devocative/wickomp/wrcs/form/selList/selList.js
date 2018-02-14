@@ -41,11 +41,11 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 		});
 		lastOpenedSelList = slDropDown;
 
-		preventEvent(event);
+		preventBubbling(event);
 	});
 
 	slDropDown.on("click keydown", function (event) {
-		preventEvent(event);
+		preventBubbling(event);
 	});
 
 	slOpener.click(function (event) {
@@ -57,11 +57,11 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 		});
 		lastOpenedSelList = slDropDown;
 
-		preventEvent(event);
+		preventBubbling(event);
 	});
 
 	slOpener.keydown(function (event) {
-		preventEvent(event);
+		preventBubbling(event);
 	});
 
 	slFilter.keydown(function (event) {
@@ -79,24 +79,29 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 	});
 
 	if (isEnabled) {
-		slChoices.find("input[type='radio']").on('change', function (event) {
-			slTitle.val(slChoices.find('label[for="' + event.target.id + '"]:first').html());
-		});
+		slChoices
+			.find("input[type='radio']")
+			.on('change click', function (event) {
+				slTitle.val(slChoices.find('label[for="' + event.target.id + '"]:first').html());
+				closeHandler_SelList(event);
+			});
 
-		slChoices.find("input[type='checkbox']").on('change', function (event) {
-			var nos = slDropDown.find('input:checked').size();
-			if (nos > 0) {
-				slTitle.val(nos + " " + noOfSelectionLabel);
-			} else {
-				slTitle.val(selectLabel);
-			}
-		});
+		slChoices
+			.find("input[type='checkbox']")
+			.on('change', function (event) {
+				var nos = slDropDown.find('input:checked').size();
+				if (nos > 0) {
+					slTitle.val(nos + " " + noOfSelectionLabel);
+				} else {
+					slTitle.val(selectLabel);
+				}
+			});
 
 		slSelectAll.click(function (event) {
 			var checkboxes = slDropDown.find("tr:visible").find("input[type='checkbox']").prop("checked", true);
 			slTitle.val(checkboxes.size() + " " + noOfSelectionLabel);
 
-			preventEvent(event);
+			preventBubbling(event);
 			event.preventDefault();
 		});
 
@@ -105,7 +110,7 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 			slDropDown.find("input[type='radio']").prop("checked", false);
 			slTitle.val(selectLabel);
 
-			preventEvent(event);
+			preventBubbling(event);
 			event.preventDefault();
 		});
 
@@ -118,13 +123,13 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 				slChoices.find("input:not(:checked)").parentsUntil("tr").parent().css("display", "");
 			}
 
-			preventEvent(event);
+			preventBubbling(event);
 			event.preventDefault();
 		});
 	}
 }
 
-function preventEvent(event) {
+function preventBubbling(event) {
 	if (event.stopPropagation) {
 		event.stopPropagation();
 	} else {

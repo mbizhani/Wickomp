@@ -21,11 +21,11 @@ function initClientSearchableList(selListPanelId, noOfSelLabel) {
 		});
 		lastOpenedSelList = slDropDown;
 
-		preventEvent(event)
+		preventBubbling(event)
 	});
 
 	slDropDown.on("click keydown", function (event) {
-		preventEvent(event);
+		preventBubbling(event);
 	});
 
 	slOpener.click(function (event) {
@@ -37,11 +37,11 @@ function initClientSearchableList(selListPanelId, noOfSelLabel) {
 		});
 		lastOpenedSelList = slDropDown;
 
-		preventEvent(event);
+		preventBubbling(event);
 	});
 
 	slOpener.keydown(function (event) {
-		preventEvent(event);
+		preventBubbling(event);
 	});
 
 	//overwrite the CSS 120px value
