@@ -22,6 +22,10 @@ var wTools = {
 	show: function (options) {
 		try {
 			var ext = $.extend({}, wTools.messagerShowDefaults, options);
+			ext.msg = ext.msg
+				.replace(/\t/g, '&nbsp;&nbsp;')
+				.replace(/\r/g, '')
+				.replace(/\n/g, '<br/>');
 			$.messager.show(ext);
 		} catch (e) {
 			$.messager.alert("Error: show()", e);
