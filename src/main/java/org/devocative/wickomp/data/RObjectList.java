@@ -1,6 +1,7 @@
 package org.devocative.wickomp.data;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.devocative.wickomp.grid.WDuplicateKeyException;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -11,13 +12,16 @@ public class RObjectList extends Result {
 
 	private Map<String, RObject> result = new LinkedHashMap<>();
 
-	public RObjectList addRObject(String id, RObject rObject) {
-		return addRObject(id, rObject, false);
-	}
+	// ------------------------------
 
-	public RObjectList addRObject(String id, RObject rObject, boolean force) {
-		if (force || !result.containsKey(id)) {
+	public RObjectList addRObject(String id, RObject rObject) {
+		if (!result.containsKey(id)) {
 			result.put(id, rObject);
+		} else if (!rObject.equals(result.get(id))) {
+			throw new WDuplicateKeyException(
+				String.format(
+					"Duplicate key in result:\n\tRECORD-1 = \n%s\n\tRECORD-2 = \n%s",
+					result.get(id), rObject));
 		}
 		return this;
 	}
@@ -29,6 +33,8 @@ public class RObjectList extends Result {
 	public boolean hasRObject(String id) {
 		return result.containsKey(id);
 	}
+
+	// ---------------
 
 	@JsonValue
 	public Collection<RObject> getValue() {

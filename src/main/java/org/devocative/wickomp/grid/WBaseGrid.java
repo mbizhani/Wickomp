@@ -60,6 +60,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	private boolean hideToolbarFirstTime = true;
 	private boolean automaticColumns = false;
 	private boolean ignoreDataSourceCount = false;
+	private boolean assertDuplicateKey = true;
 
 	protected Integer pageSize, pageNum;
 	protected List<WSortField> sortFieldList = new ArrayList<>();
@@ -127,6 +128,11 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		return this;
 	}
 
+	public WBaseGrid<T> setAssertDuplicateKey(boolean assertDuplicateKey) {
+		this.assertDuplicateKey = assertDuplicateKey;
+		return this;
+	}
+
 	// ------------------------------ METHODS
 
 	public WBaseGrid<T> loadData(AjaxRequestTarget target) {
@@ -170,7 +176,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				}
 			}
 
-			RGridPage gridPage = getGridPage(list, count);
+			RGridPage gridPage = createRGridPage(list, count);
 
 			if (options.hasFooter()) {
 				if (footer != null) {
@@ -310,7 +316,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				count = gridDataSource.count();
 			}
 
-			result = getGridPage(data, count);
+			result = createRGridPage(data, count);
 
 			if (options.hasFooter() && footerDataSource != null) {
 				result.setFooter(getGridFooter(footerDataSource.footer(data)));
@@ -321,7 +327,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		return result;
 	}
 
-	protected final RGridPage getGridPage(List<T> data, long count) {
+	protected final RGridPage createRGridPage(List<T> data, long count) {
 		RGridPage result = new RGridPage();
 		if (data != null) {
 			result.setRows(createRObjectList(data));
@@ -413,7 +419,15 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 				}
 			}
 			onAfterBeanToRObject(bean, rObject);
-			page.addRObject(id, rObject);
+
+			try {
+				page.addRObject(id, rObject);
+			} catch (WDuplicateKeyException e) {
+				logger.error("WGrid (id={}) duplicate key", getId(), e);
+				if (assertDuplicateKey) {
+					throw e;
+				}
+			}
 		}
 	}
 

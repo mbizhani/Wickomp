@@ -35,7 +35,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	private Boolean singleSelect;
 	private Boolean striped;
 	private String titleField;
-	private List<OButton<T>> toolbar = new ArrayList<>();
 	private String url;
 
 	// ------------------------------ EXTRA FIELDS
@@ -47,13 +46,14 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	protected String noResultMessage;
 	protected List<OPagingButtons> pagingBarLayout;
 	protected List<String> reorderColumns;
-	protected IStyler<T> rowStyler;
 	protected Boolean selectionIndicator;
 	protected String selectionJSHandler;
 	protected Boolean selectionDblClick;
-
-	protected String htmlId;
 	protected String gridId;
+
+	protected IStyler<T> rowStyler; //no-json
+	private List<OButton<T>> toolbar = new ArrayList<>(); // no-json
+	protected String htmlId; //no-json
 
 	// ------------------------------
 
@@ -285,16 +285,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
-	@JsonIgnore
-	public IStyler<T> getRowStyler() {
-		return rowStyler;
-	}
-
-	public OBaseGrid<T> setRowStyler(IStyler<T> rowStyler) {
-		this.rowStyler = rowStyler;
-		return this;
-	}
-
 	public Boolean getSelectionIndicator() {
 		return selectionIndicator;
 	}
@@ -323,16 +313,6 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 		return this;
 	}
 
-	@JsonIgnore
-	public String getHtmlId() {
-		return htmlId;
-	}
-
-	@Override
-	public void setHtmlId(String htmlId) {
-		this.htmlId = htmlId;
-	}
-
 	public String getGridId() {
 		return gridId;
 	}
@@ -343,6 +323,26 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	}
 
 	// --------------- PUBLIC METHODS
+
+	@JsonIgnore
+	public String getHtmlId() {
+		return htmlId;
+	}
+
+	@Override
+	public void setHtmlId(String htmlId) {
+		this.htmlId = htmlId;
+	}
+
+	@JsonIgnore
+	public IStyler<T> getRowStyler() {
+		return rowStyler;
+	}
+
+	public OBaseGrid<T> setRowStyler(IStyler<T> rowStyler) {
+		this.rowStyler = rowStyler;
+		return this;
+	}
 
 	@JsonIgnore
 	public List<OButton<T>> getToolbarButtons() {

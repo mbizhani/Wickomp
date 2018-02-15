@@ -17,9 +17,14 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 	private static final String PARENT_ID_PROPERTY = "_parentId";
 	private static final String STATE_PROPERTY = "state";
 
+	// ------------------------------
+
 	private OTreeGrid<T> options;
 	private ITreeGridDataSource<T> treeGridDataSource;
 	private ITreeGridAsyncDataSource<T> treeGridAsyncDataSource;
+	private boolean assertParentNotFound = true;
+
+	// ------------------------------
 
 	// Main Constructor 1
 	public WTreeGrid(String id, OTreeGrid<T> options, ITreeGridDataSource<T> treeGridDataSource) {
@@ -38,6 +43,12 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 	}
 
 	//---------------- PUBLIC METHODS
+
+
+	public WTreeGrid<T> setAssertParentNotFound(boolean assertParentNotFound) {
+		this.assertParentNotFound = assertParentNotFound;
+		return this;
+	}
 
 	public WTreeGrid<T> pushChildren(IPartialPageRequestHandler handler, String parentId, List<T> children) {
 		RObjectList subRow = new RObjectList();
@@ -58,8 +69,8 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 	protected void onInitialize() {
 		super.onInitialize();
 
-		if (options.getIdField() == null || options.getTreeField() == null) {
-			throw new RuntimeException("Both idField and treeField are required for WTreeGrid: componentId=" + getId());
+		if (options.getIdField() == null || options.getTreeField() == null || options.getParentIdField() == null) {
+			throw new RuntimeException("'idField', 'parentIdField', and 'treeField' are required for WTreeGrid: componentId=" + getId());
 		}
 	}
 
@@ -96,11 +107,9 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 			}
 		}
 
-		if (options.getParentIdField() != null) {
-			Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
-			if (parentId != null) {
-				rObject.addProperty(PARENT_ID_PROPERTY, parentId.toString());
-			}
+		Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
+		if (parentId != null) {
+			rObject.addProperty(PARENT_ID_PROPERTY, parentId.toString());
 		}
 	}
 
@@ -111,37 +120,40 @@ public class WTreeGrid<T> extends WBaseGrid<T> {
 		RObjectList rObjectList = new RObjectList();
 		convertBeansToRObjects(data, rObjectList);
 
-		if (options.getParentIdField() != null) {
-			if (treeGridDataSource != null) {
-				Set<Serializable> parentIds;
-				do {
-					parentIds = new HashSet<>();
-					for (T bean : data) {
-						Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
-						if (parentId != null) {
-							if (!rObjectList.hasRObject(parentId.toString())) {
-								parentIds.add(parentId);
-							}
+		if (treeGridDataSource != null) {
+			Set<Serializable> parentIds;
+			do {
+				parentIds = new HashSet<>();
+				for (T bean : data) {
+					Serializable parentId = (Serializable) PropertyResolver.getValue(options.getParentIdField(), bean);
+					if (parentId != null) {
+						if (!rObjectList.hasRObject(parentId.toString())) {
+							parentIds.add(parentId);
 						}
 					}
+				}
 
-					if (parentIds.size() > 0) {
-						data = treeGridDataSource.listByIds(parentIds, sortFieldList);
-						if (data.size() < parentIds.size()) {
-							logger.warn("WTreeGrid -> finding parents -> missing some parent(s) = {} (parent ids = {}) ",
-								parentIds.size() - data.size(), parentIds);
-						}
-						convertBeansToRObjects(data, rObjectList);
+				if (parentIds.size() > 0) {
+					data = treeGridDataSource.listByIds(parentIds, sortFieldList);
+					if (data.size() < parentIds.size()) {
+						logger.warn("WTreeGrid -> finding parents -> missing some parent(s) = {} (parent ids = {}) ",
+							parentIds.size() - data.size(), parentIds);
 					}
-				} while (parentIds.size() > 0);
-			}
+					convertBeansToRObjects(data, rObjectList);
+				}
+			} while (parentIds.size() > 0);
+		}
 
-			for (RObject rObject : rObjectList.getValue()) {
-				Object parentId = rObject.getProperty(PARENT_ID_PROPERTY);
-				if (parentId != null) {
-					String parentIdStr = parentId.toString();
-					if (rObjectList.hasRObject(parentIdStr)) {
-						rObjectList.getRObject(parentIdStr).removeProperty(STATE_PROPERTY);
+		for (RObject rObject : rObjectList.getValue()) {
+			Object parentId = rObject.getProperty(PARENT_ID_PROPERTY);
+			if (parentId != null) {
+				String parentIdStr = parentId.toString();
+				if (rObjectList.hasRObject(parentIdStr)) {
+					rObjectList.getRObject(parentIdStr).removeProperty(STATE_PROPERTY);
+				} else {
+					logger.error("WTreeGrid (id={}) parent not found: ", getId(), rObject);
+					if (assertParentNotFound) {
+						throw new WParentNotFoundException("Parent not found: row = \n" + rObject);
 					}
 				}
 			}
