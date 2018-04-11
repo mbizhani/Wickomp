@@ -49,7 +49,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	// ------------------------------
 
-	private OBaseGrid<T> options;
+	private final OBaseGrid<T> options;
 	private IExceptionToMessageHandler exceptionMessageHandler = WDefaults.getExceptionToMessageHandler();
 
 	private IDataSource<T> dataSource;
@@ -63,12 +63,12 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	private boolean assertDuplicateKey = true;
 
 	protected Integer pageSize, pageNum;
-	protected List<WSortField> sortFieldList = new ArrayList<>();
-	protected Map<String, IModel<T>> pageData = new HashMap<>();
+	protected final List<WSortField> sortFieldList = new ArrayList<>();
+	protected final Map<String, IModel<T>> pageData = new HashMap<>();
 
 	// ------------------------------ CONSTRUCTORS
 
-	public WBaseGrid(String id, OBaseGrid<T> options, IGridDataSource<T> gridDataSource) {
+	protected WBaseGrid(String id, OBaseGrid<T> options, IGridDataSource<T> gridDataSource) {
 		super(id, options);
 
 		this.dataSource = gridDataSource;
@@ -76,7 +76,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		this.options = options;
 	}
 
-	public WBaseGrid(String id, OBaseGrid<T> options, IGridAsyncDataSource<T> gridAsyncDataSource) {
+	protected WBaseGrid(String id, OBaseGrid<T> options, IGridAsyncDataSource<T> gridAsyncDataSource) {
 		super(id, options);
 
 		this.dataSource = gridAsyncDataSource;
@@ -564,8 +564,12 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 	private void updateSortFieldList(String[] sortList, String[] orderList) {
 		sortFieldList.clear();
 
+		final OColumnList<T> columns = options.getColumns();
+
 		for (int i = 0; i < sortList.length; i++) {
-			sortFieldList.add(new WSortField(sortList[i], orderList[i]));
+			final String field = sortList[i];
+			final String sortField = columns.findByField(field).getSortField();
+			sortFieldList.add(new WSortField(sortField, orderList[i]));
 		}
 	}
 

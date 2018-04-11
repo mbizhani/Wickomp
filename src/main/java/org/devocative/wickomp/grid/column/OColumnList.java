@@ -70,4 +70,14 @@ public class OColumnList<T> extends Options {
 		visibleColumns.clear();
 		allColumns.clear();
 	}
+
+	public OColumn<T> findByField(String field) {
+		for (OColumn<T> column : allColumns) {
+			if (column.getField().equals(field)) {
+				return column;
+			}
+		}
+
+		return null;
+	}
 }

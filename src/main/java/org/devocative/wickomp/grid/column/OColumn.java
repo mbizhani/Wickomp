@@ -83,6 +83,10 @@ public abstract class OColumn<T> extends Options {
 		return this;
 	}
 
+	public String getSortField() {
+		return field;
+	}
+
 	public String getTitle() {
 		return title != null ? title.getObject() : "";
 	}

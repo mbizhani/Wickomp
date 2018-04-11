@@ -24,6 +24,13 @@ public class OPropertyColumn<T> extends OColumn<T> {
 	// ------------------------------
 
 	@Override
+	public String getSortField() {
+		return property != null ? property : super.getSortField();
+	}
+
+	// ---------------
+
+	@Override
 	public String cellValue(T bean, String id, int colNo, String url) {
 		Object value = PropertyResolver.getValue(property, bean);
 		if (value != null) {
