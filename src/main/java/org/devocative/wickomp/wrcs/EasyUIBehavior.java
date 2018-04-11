@@ -11,7 +11,8 @@ import org.devocative.wickomp.opt.OUserPreference;
 public class EasyUIBehavior extends Behavior {
 	private static final long serialVersionUID = -1373990347234224329L;
 
-	private static HeaderItem THEME_CSS = Resource.getCommonCSS("easyui/themes/metroBlue.css");
+	//	private static HeaderItem THEME_CSS = Resource.getCommonCSS("easyui/themes/metroBlue.css");
+	private static HeaderItem THEME_CSS = Resource.getCommonCSS("easyui/themes/bootstrap.css");
 	private static HeaderItem MAIN_JS = Resource.getCommonJS("easyui/jquery.easyui.min.js");
 
 	private static HeaderItem EXT_GROUP_VIEW_JS = Resource.getCommonJS("easyui/ext/datagrid-groupview.js");
@@ -20,8 +21,14 @@ public class EasyUIBehavior extends Behavior {
 	private static HeaderItem EXT_COLUMNS = Resource.getCommonJS("easyui/ext/columns-ext.js");
 	private static HeaderItem EXT_COLUMNS_RTL = Resource.getCommonJS("easyui/ext/columns-ext-rtl.js");
 
+	// ------------------------------
+
 	public static void setThemeCSS(HeaderItem THEME_CSS) {
 		EasyUIBehavior.THEME_CSS = THEME_CSS;
+	}
+
+	public static void setThemeName(String name) {
+		EasyUIBehavior.THEME_CSS = Resource.getCommonCSS(String.format("easyui/themes/%s.css", name));
 	}
 
 	public static void setMainJs(HeaderItem mainJs) {
@@ -31,6 +38,8 @@ public class EasyUIBehavior extends Behavior {
 	public static void setExtGroupViewJs(HeaderItem extGroupViewJs) {
 		EXT_GROUP_VIEW_JS = extGroupViewJs;
 	}
+
+	// ------------------------------
 
 	@Override
 	public void renderHead(Component component, IHeaderResponse response) {
