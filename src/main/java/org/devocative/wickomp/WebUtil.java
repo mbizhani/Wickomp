@@ -1,5 +1,6 @@
 package org.devocative.wickomp;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,12 +59,27 @@ import java.util.*;
 public class WebUtil {
 	private static final Logger logger = LoggerFactory.getLogger(WebUtil.class);
 
-	// ------------------------------
-
 	public static String toJson(Object obj) {
+		return toJson(obj, null, null);
+	}
+
+	public static String toJson(Object obj, Map<JsonParser.Feature, Boolean> features, Map<SerializationFeature, Boolean> serializationFeatures) {
 		StringWriter sw = new StringWriter();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
+
+		if (features != null) {
+			for (Map.Entry<JsonParser.Feature, Boolean> entry : features.entrySet()) {
+				mapper.configure(entry.getKey(), entry.getValue());
+			}
+		}
+
+		if (serializationFeatures != null) {
+			for (Map.Entry<JsonParser.Feature, Boolean> entry : features.entrySet()) {
+				mapper.configure(entry.getKey(), entry.getValue());
+			}
+		}
+
 		try {
 			mapper.writeValue(sw, obj);
 		} catch (IOException e) {
@@ -73,8 +89,12 @@ public class WebUtil {
 	}
 
 	public static <T> T fromJson(String json, Class<T> cls) {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		return fromJson(json, cls, null, null);
+	}
+
+	public static <T> T fromJson(String json, Class<T> cls, Map<JsonParser.Feature, Boolean> features, Map<DeserializationFeature, Boolean> deserializationFeatures) {
+		ObjectMapper mapper = createMapper(features, deserializationFeatures);
+
 		try {
 			return mapper.readValue(json, cls);
 		} catch (IOException e) {
@@ -83,14 +103,20 @@ public class WebUtil {
 	}
 
 	public static <T> T fromJson(String json, TypeReference<T> typeReference) {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		return fromJson(json, typeReference, null, null);
+	}
+
+	public static <T> T fromJson(String json, TypeReference<T> typeReference, Map<JsonParser.Feature, Boolean> features, Map<DeserializationFeature, Boolean> deserializationFeatures) {
+		ObjectMapper mapper = createMapper(features, deserializationFeatures);
+
 		try {
 			return mapper.readValue(json, typeReference);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
+
+	// ---------------
 
 	public static void writeJQueryCall(String script, boolean decorateWithInit) {
 		AjaxRequestTarget target = RequestCycle.get().find(AjaxRequestTarget.class);
@@ -454,6 +480,24 @@ public class WebUtil {
 	}
 
 	// ------------------------------
+
+	private static ObjectMapper createMapper(Map<JsonParser.Feature, Boolean> features, Map<DeserializationFeature, Boolean> deserializationFeatures) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		if (features != null) {
+			for (Map.Entry<JsonParser.Feature, Boolean> entry : features.entrySet()) {
+				mapper.configure(entry.getKey(), entry.getValue());
+			}
+		}
+
+		if (deserializationFeatures != null) {
+			for (Map.Entry<DeserializationFeature, Boolean> entry : deserializationFeatures.entrySet()) {
+				mapper.configure(entry.getKey(), entry.getValue());
+			}
+		}
+		return mapper;
+	}
 
 	private static IRequestParameters getRequestParameters() {
 		return RequestCycle.get().getRequest().getRequestParameters();
