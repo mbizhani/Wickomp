@@ -118,6 +118,7 @@ public class FormPage extends BasePage {
 
 					case Date:
 						fc = new WDateInput(field.getName())
+							.setDefaultHour(12)
 							.setRequired(true);
 				}
 

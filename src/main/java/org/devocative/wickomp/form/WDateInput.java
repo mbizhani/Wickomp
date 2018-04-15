@@ -34,6 +34,10 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 	private OCalendar calendar;
 	private boolean timePartVisible = false;
 
+	private int defaultHour = 0;
+	private int defaultMinute = 0;
+	private int defaultSecond = 0;
+
 	// ------------------------------
 
 	public WDateInput(String id) {
@@ -63,6 +67,21 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 
 	public WDateInput setTimePartVisible(boolean timePartVisible) {
 		this.timePartVisible = timePartVisible;
+		return this;
+	}
+
+	public WDateInput setDefaultHour(int defaultHour) {
+		this.defaultHour = defaultHour;
+		return this;
+	}
+
+	public WDateInput setDefaultMinute(int defaultMinute) {
+		this.defaultMinute = defaultMinute;
+		return this;
+	}
+
+	public WDateInput setDefaultSecond(int defaultSecond) {
+		this.defaultSecond = defaultSecond;
 		return this;
 	}
 
@@ -101,9 +120,9 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 				monthValue,
 				dayValue,
 
-				hourValue != null ? hourValue : 0,
-				minuteValue != null ? minuteValue : 0,
-				secondValue != null ? secondValue : 0);
+				hourValue != null ? hourValue : defaultHour,
+				minuteValue != null ? minuteValue : defaultMinute,
+				secondValue != null ? secondValue : defaultSecond);
 
 			date = calendar.convertToDate(dateField);
 		}

@@ -14,6 +14,10 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 	private OCalendar calendar;
 	private Boolean timePartVisible;
 
+	private int defaultHour = 0;
+	private int defaultMinute = 0;
+	private int defaultSecond = 0;
+
 	// ------------------------------
 
 	public WDateRangeInput(String id) {
@@ -36,11 +40,29 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 		return this;
 	}
 
+	public WDateRangeInput setDefaultHour(int defaultHour) {
+		this.defaultHour = defaultHour;
+		return this;
+	}
+
+	public WDateRangeInput setDefaultMinute(int defaultMinute) {
+		this.defaultMinute = defaultMinute;
+		return this;
+	}
+
+	public WDateRangeInput setDefaultSecond(int defaultSecond) {
+		this.defaultSecond = defaultSecond;
+		return this;
+	}
+
 	// ------------------------------ INTERNAL METHODS
 
 	@Override
 	protected FormComponent<Date> createFormComponent(String id, IModel<Date> model) {
-		WDateInput input = new WDateInput(id, model);
+		WDateInput input = new WDateInput(id, model)
+			.setDefaultHour(defaultHour)
+			.setDefaultMinute(defaultMinute)
+			.setDefaultSecond(defaultSecond);
 
 		if (calendar != null) {
 			input.setCalendar(calendar);
