@@ -1,12 +1,20 @@
 package org.devocative.wickomp.form.code;
 
-public enum OCodeMode {
-	XML("xml", "xml", true),
-	SQL("text/x-sql", "sql", true),
-	PL_SQL("text/x-plsql", "sql", true),
+public enum OCodeMode implements ICodeMode {
+	GROOVY("text/x-groovy", "groovy", false),
+
+	JAVA_SCRIPT("text/javascript", "javascript", false),
+	JSON("application/json", "javascript", false),
+	TYPE_SCRIPT("text/typescript", "javascript", false),
+
 	MS_SQL("text/x-mssql", "sql", true),
 	MY_SQL("text/x-mysql", "sql", true),
-	GROOVY("text/x-groovy", "groovy", false);
+	PG_SQL("text/x-pgsql", "sql", true),
+	PL_SQL("text/x-plsql", "sql", true),
+	SQL("text/x-sql", "sql", true),
+
+	SHELL("text/x-sh", "shell", false),
+	XML("xml", "xml", true);
 
 	private String mode;
 	private String jsFile;

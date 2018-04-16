@@ -16,10 +16,11 @@ public class OCode extends Options {
 	private Boolean lineNumbers; //JS Default: TRUE
 	private Boolean lineWrapping; //JS Default: TRUE
 	private Boolean matchBrackets; //JS Default: TRUE
-	private OCodeMode mode;
+	private ICodeMode mode;
 	private Boolean readOnly; //JS Default: FALSE
 	private Boolean resizable; //JS Default: TRUE
 	private Boolean smartIndent; //JS Default: TRUE
+	private String theme = "mbo";
 	private OSize width;
 
 	// ---------------
@@ -98,11 +99,11 @@ public class OCode extends Options {
 		return this;
 	}
 
-	public OCodeMode getMode() {
+	public ICodeMode getMode() {
 		return mode;
 	}
 
-	public OCode setMode(OCodeMode mode) {
+	public OCode setMode(ICodeMode mode) {
 		this.mode = mode;
 		return this;
 	}
@@ -131,6 +132,15 @@ public class OCode extends Options {
 
 	public OCode setSmartIndent(Boolean smartIndent) {
 		this.smartIndent = smartIndent;
+		return this;
+	}
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public OCode setTheme(String theme) {
+		this.theme = theme;
 		return this;
 	}
 

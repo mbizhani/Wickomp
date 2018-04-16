@@ -59,6 +59,9 @@ public class WCodeInput extends WFormInputPanel<String> {
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
+		if (options.getTheme() != null) {
+			response.render(Resource.getCommonCSS(String.format("codemirror/theme/%s.css", options.getTheme())));
+		}
 		response.render(MAIN_CSS);
 		response.render(MAIN_JS);
 		response.render(JQ_JS);
