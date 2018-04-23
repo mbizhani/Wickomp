@@ -8,6 +8,9 @@ import org.devocative.wickomp.form.WTextInput;
 public class WTextRangeInput extends WBaseRangeInput<String> {
 	private static final long serialVersionUID = 6127097391007670937L;
 
+	private Integer maxlength;
+	private Integer size;
+
 	// ------------------------------
 
 	public WTextRangeInput(String id) {
@@ -20,8 +23,22 @@ public class WTextRangeInput extends WBaseRangeInput<String> {
 
 	// ------------------------------
 
+	public WTextRangeInput setMaxlength(Integer maxlength) {
+		this.maxlength = maxlength;
+		return this;
+	}
+
+	public WTextRangeInput setSize(Integer size) {
+		this.size = size;
+		return this;
+	}
+
+	// ------------------------------
+
 	@Override
 	protected FormComponent<String> createFormComponent(String id, IModel<String> model) {
-		return new WTextInput(id, model);
+		return new WTextInput(id, model)
+			.setMaxlength(maxlength)
+			.setSize(size);
 	}
 }

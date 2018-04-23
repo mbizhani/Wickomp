@@ -1,8 +1,10 @@
 package org.devocative.wickomp.form.range;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.validation.IValidator;
 import org.devocative.adroit.vo.IRange;
 import org.devocative.adroit.vo.RangeVO;
 import org.devocative.wickomp.WLabeledFormInputPanel;
@@ -12,7 +14,7 @@ import java.io.Serializable;
 public abstract class WBaseRangeInput<T extends Serializable> extends WLabeledFormInputPanel<IRange<T>> {
 	private static final long serialVersionUID = 8954208501398056478L;
 
-	protected FormComponent<T> lower, upper;
+	private FormComponent<T> lower, upper;
 
 	// ------------------------------
 
@@ -35,6 +37,13 @@ public abstract class WBaseRangeInput<T extends Serializable> extends WLabeledFo
 
 		add(lower);
 		add(upper);
+
+		for (Behavior b : getBehaviors()) {
+			if (!(b instanceof IValidator)) {
+				lower.add(b);
+				upper.add(b);
+			}
+		}
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package org.devocative.wickomp.form;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
@@ -14,6 +15,9 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 	private static final long serialVersionUID = 7161394972946695203L;
 
 	private FormComponent<String> textField;
+
+	private Integer maxlength;
+	private Integer size;
 
 	// ------------------------------
 
@@ -36,22 +40,24 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 		textField = new WTextField("textField", new Model<>(), password);
 		add(textField);
 
+		setEscapeModelStrings(false);
+
 		add(new CommonBehavior());
 	}
 
 	// ------------------------------
 
-	@Override
-	public WTextInput add(Behavior... behavior) {
-		for (Behavior b : behavior) {
-			if (b instanceof IValidator) {
-				super.add(b);
-			} else {
-				textField.add(behavior);
-			}
-		}
+	public WTextInput setMaxlength(Integer maxlength) {
+		this.maxlength = maxlength;
 		return this;
 	}
+
+	public WTextInput setSize(Integer size) {
+		this.size = size;
+		return this;
+	}
+
+	// ---------------
 
 	@Override
 	public void convertInput() {
@@ -59,6 +65,28 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 	}
 
 	// ------------------------------
+
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		textField.setEscapeModelStrings(getEscapeModelStrings());
+
+		if (maxlength != null) {
+			textField.add(new AttributeModifier("maxlength", maxlength));
+		}
+
+		if (size != null) {
+			textField.add(new AttributeModifier("size", size));
+		}
+
+		for (Behavior b : getBehaviors()) {
+			if (!(b instanceof IValidator)) {
+				textField.add(b);
+			}
+		}
+	}
 
 	@Override
 	protected void onBeforeRender() {
@@ -74,7 +102,7 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 
 		private boolean password;
 
-		public WTextField(String id, IModel<String> model, boolean password) {
+		WTextField(String id, IModel<String> model, boolean password) {
 			super(id, model);
 			this.password = password;
 			setType(String.class);

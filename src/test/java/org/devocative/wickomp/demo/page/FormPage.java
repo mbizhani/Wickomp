@@ -1,5 +1,6 @@
 package org.devocative.wickomp.demo.page;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -26,7 +27,6 @@ import org.devocative.wickomp.form.code.WCodeInput;
 import org.devocative.wickomp.form.range.WDateRangeInput;
 import org.devocative.wickomp.form.range.WTextRangeInput;
 import org.devocative.wickomp.form.validator.WPasswordStrengthValidator;
-import org.devocative.wickomp.form.validator.WPatternValidator;
 import org.devocative.wickomp.html.WEasyLayout;
 import org.devocative.wickomp.html.WFloatTable;
 import org.devocative.wickomp.html.WMessager;
@@ -189,7 +189,7 @@ public class FormPage extends BasePage {
 		List<PersonVO> personVOs = PersonVO.list();
 
 		final WSelectionInput child, parentSI;
-//		map.put("name", "Joe");
+		map.put("name", "Joe!@#$%^&*()_+-=[]{}\\|/?.,><");
 		map.put("lblIn", new KeyValue("KV-LBL-IN", "KV-LBL-IN"));
 		map.put("eduSingle", new KeyValue("A"));
 		map.put("eduMultiple", (Serializable) Arrays.asList(new KeyValue("A"), new KeyValue("D")));
@@ -205,10 +205,14 @@ public class FormPage extends BasePage {
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 
-//		form.add(new WTextInput("name").setRequired(true).add(new WAsciiIdentifierValidator()));
-//		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$")));
 		form.add(new WLabelInput("lblIn"));
-		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$", "name.format")));
+		form.add(new WTextInput("name")
+			.setSize(30)
+			.setRequired(true)
+			.add(new AttributeModifier("size", "50"))
+		);
+//		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$")));
+//		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$", "name.format")));
 		form.add(new WTextInput("password", true).add(new WPasswordStrengthValidator()));
 //		form.add(new WTextInput("name").setRequired(true).add(new WPatternValidator("^[A-Za-z]+?[A-Za-z0-9]*?$").setCustomMessage("oops!")));
 
@@ -220,7 +224,7 @@ public class FormPage extends BasePage {
 		form.add(new WDateInput("birthdate").setTimePartVisible(true));
 		form.add(new WBooleanInput("alive"));
 		form.add(new WDateRangeInput("dateRange"));
-		form.add(new WTextRangeInput("stringRange"));
+		form.add(new WTextRangeInput("stringRange").setSize(40).setMaxlength(5));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));
 		form.add(new WCodeInput("sql", new PropertyModel<>(this, "sql"), oCode));
