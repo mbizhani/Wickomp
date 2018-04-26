@@ -1,4 +1,49 @@
 (function ($) {
+	function buildHeaderMenu(target) {
+		var state = $(target).data('datagrid');
+		if (!state.columnMenu) {
+			state.columnMenu = $('<div></div>').appendTo('body');
+			state.columnMenu.menu({
+				onClick: function (item) {
+					if (item.iconCls == 'tree-checkbox1') {
+						$(target).datagrid('hideColumn', item.name);
+						$(this).menu('setIcon', {
+							target: item.target,
+							iconCls: 'tree-checkbox0'
+						});
+					} else {
+						$(target).datagrid('showColumn', item.name);
+						$(this).menu('setIcon', {
+							target: item.target,
+							iconCls: 'tree-checkbox1'
+						});
+					}
+				}
+			});
+			var fields = $(target).datagrid('getColumnFields', true).concat($(target).datagrid('getColumnFields', false));
+			for (var i = 0; i < fields.length; i++) {
+				var field = fields[i];
+				var col = $(target).datagrid('getColumnOption', field);
+				if (col.title) {
+					state.columnMenu.menu('appendItem', {
+						text: col.title,
+						name: field,
+						iconCls: 'tree-checkbox1'
+					});
+				}
+			}
+
+			state.columnMenu.css("height", "");
+		}
+		return state.columnMenu;
+	}
+
+	$.extend($.fn.datagrid.methods, {
+		columnHeaderMenu: function (jq) {
+			return buildHeaderMenu(jq[0]);
+		}
+	});
+
 	var wBaseGridDefaults = {
 		autoRowHeight: false,
 		loadMsg: "...",
@@ -94,6 +139,14 @@
 				return data["$style"];
 			}
 			return null;
+		},
+
+		onHeaderContextMenu: function (e, field) {
+			e.preventDefault();
+			$(this).datagrid('columnHeaderMenu').menu('show', {
+				left: e.pageX,
+				top: e.pageY
+			});
 		},
 
 		// --------------- columns-ext
@@ -480,7 +533,7 @@
 				return $(this).treegrid(cmdOrOpts, options);
 			}
 		}
-	}
+	};
 })
 (jQuery);
 
