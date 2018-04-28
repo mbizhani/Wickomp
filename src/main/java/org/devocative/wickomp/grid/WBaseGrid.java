@@ -553,6 +553,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			try {
 				ajaxLinkColumn.onClick(target, rowModel);
 			} catch (Exception e) {
+				logger.error("handleCellLinkClick", e);
 				ajaxLinkColumn.onException(target, e, rowModel);
 			}
 
