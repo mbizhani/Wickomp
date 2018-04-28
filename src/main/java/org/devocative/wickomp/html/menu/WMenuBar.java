@@ -14,6 +14,7 @@ import org.devocative.wickomp.WPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
+import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.List;
@@ -34,6 +35,9 @@ public class WMenuBar extends WPanel {
 	private MenuItemFragment rootMenu;
 	private boolean contextRelativeLink = false;
 	private boolean enableToggleButton = true;
+
+	private boolean showIcon = true;
+	private String defaultIcon = "fa fa-minus";
 
 	// ------------------------------
 
@@ -61,6 +65,16 @@ public class WMenuBar extends WPanel {
 
 	public WMenuBar setEnableToggleButton(boolean enableToggleButton) {
 		this.enableToggleButton = enableToggleButton;
+		return this;
+	}
+
+	public WMenuBar setShowIcon(boolean showIcon) {
+		this.showIcon = showIcon;
+		return this;
+	}
+
+	public WMenuBar setDefaultIcon(String defaultIcon) {
+		this.defaultIcon = defaultIcon;
 		return this;
 	}
 
@@ -99,6 +113,8 @@ public class WMenuBar extends WPanel {
 		}
 
 		add(new WebMarkupContainer("toggleButton").setVisible(enableToggleButton));
+
+		add(new FontAwesomeBehavior());
 	}
 
 	@Override
@@ -113,8 +129,26 @@ public class WMenuBar extends WPanel {
 	}
 
 	protected Component newMenuItemLink(String compId, OMenuItem item) {
-		return new ExternalLink(compId, item.getHref(), item.getLabel().getObject())
-			.setContextRelative(contextRelativeLink);
+		String icon = null;
+
+		if (showIcon) {
+			icon = item.getIcon();
+			if (icon == null && item.getLevel() > 0) {
+				icon = defaultIcon;
+			}
+		}
+
+		String label = icon != null ?
+			String.format("%s %s", createMenuItemElement(icon), item.getLabel().getObject()) :
+			item.getLabel().getObject();
+
+		return new ExternalLink(compId, item.getHref(), label)
+			.setContextRelative(contextRelativeLink)
+			.setEscapeModelStrings(false);
+	}
+
+	protected String createMenuItemElement(String icon) {
+		return String.format("<i class='sm-w-icon %s' aria-hidden='true'></i>", icon);
 	}
 
 	// ------------------------------

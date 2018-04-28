@@ -29,13 +29,24 @@
 			Wicket.WebSocket.send("W.PING");
 		}
 	</script>
+
+	<style type="text/css">
+		div.w-menu {
+			background-color: #404040;
+			padding: 5px 0 0 0;
+		}
+
+		div.w-menu * {
+			color: beige;
+		}
+	</style>
 </head>
 
 <body style="margin:0; height:100%">
 <div wicket:id="modal"></div>
 <div>
-	<div>Wickomp</div>
-	<div wicket:id="menu"></div>
+	<h2>Wickomp</h2>
+	<div class="w-menu" wicket:id="menu"></div>
 </div>
 <ul>
 	<li><span wicket:id="link"></span></li>

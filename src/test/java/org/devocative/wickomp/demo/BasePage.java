@@ -23,9 +23,10 @@ public abstract class BasePage extends WebPage {
 		add(new WMenuBar("menu",
 				Arrays.asList(
 					new OMenuItem("/", new Model<>("Home")),
-					new OMenuItem(new Model<>("Edit"), Arrays.asList(
-						new OMenuItem(new Model<>("Copy")),
-						new OMenuItem(new Model<>("Paste"))
+					new OMenuItem("#", new Model<>("Edit"), Arrays.asList(
+						new OMenuItem("#", new Model<>("Copy"), "fa fa-clone"),
+						new OMenuItem("#", new Model<>("Paste"), "fa fa-clipboard"),
+						new OMenuItem("#", new Model<>("Add User"), "fa fa-user-plus")
 					))
 				)
 			)

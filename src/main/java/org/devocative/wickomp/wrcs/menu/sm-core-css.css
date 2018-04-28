@@ -12,3 +12,8 @@
 .sm a.disabled{cursor:not-allowed;}
 .sm:after{content:"\00a0";display:block;height:0;font:0/0 serif;clear:both;visibility:hidden;overflow:hidden;}
 .sm,.sm *,.sm *:before,.sm *:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;}
+
+/* ADDED for FontIcon*/
+.sm-w-icon {color: inherit !important;}
+.sm .sm-w-icon {padding: 0 8px 0 0;}
+.sm-rtl .sm-w-icon {padding: 0 0 0 8px;}
