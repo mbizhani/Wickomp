@@ -20,7 +20,7 @@ public class OCode extends Options {
 	private Boolean readOnly; //JS Default: FALSE
 	private Boolean resizable; //JS Default: TRUE
 	private Boolean smartIndent; //JS Default: TRUE
-	private String theme = "mbo";
+	private String theme = "idea";
 	private OSize width;
 
 	// ---------------

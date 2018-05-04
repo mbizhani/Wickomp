@@ -423,7 +423,8 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			try {
 				page.addRObject(id, rObject);
 			} catch (WDuplicateKeyException e) {
-				logger.error("WGrid (id={}) duplicate key", getId(), e);
+				logger.error("WGrid (id={}) duplicate key, msg={}", getId(), e.getMessage());
+
 				if (assertDuplicateKey) {
 					throw e;
 				}
