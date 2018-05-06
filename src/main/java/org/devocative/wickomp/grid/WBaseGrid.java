@@ -169,10 +169,17 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	public WBaseGrid<T> pushData(IPartialPageRequestHandler handler, List<T> list, long count, List footer) {
 		if (isEnabledInHierarchy()) {
+
 			if (ignoreDataSourceCount) {
+				/*
+				 * 'ignoreDataSourceCount' of 'pushData' is different from getGridPage():
+				 * 	1. no need to count++
+				 * 	2. list size must be validated against 'pageSize' and extra records must be omitted
+				 */
 				count = (pageNum - 1) * pageSize + list.size();
-				if (list.size() == pageSize) {
-					count++;
+
+				if (list.size() > pageSize) {
+					list = list.subList(0, pageSize);
 				}
 			}
 

@@ -42,6 +42,6 @@ INSERT INTO t_person (id, c_name, d_birth_date, f_education) VALUES (16, 'L', TI
 INSERT INTO t_person (id, c_name, d_birth_date, f_education) VALUES (17, 'M', TIMESTAMP '2009-08-01 20:08:08', 1);
 INSERT INTO t_person (id, c_name, d_birth_date, f_education) VALUES (18, 'N', TIMESTAMP '2009-08-01 20:08:08', 1);
 INSERT INTO t_person (id, c_name, d_birth_date, f_education) VALUES (19, 'O', TIMESTAMP '2000-04-08 20:08:08', 2);
--- INSERT INTO t_person (id, c_name, d_birth_date, f_education) VALUES (20, 'P', TIMESTAMP '1995-09-18 20:08:08', 3)
+INSERT INTO t_person (id, c_name, d_birth_date, f_education) VALUES (20, 'P', TIMESTAMP '1995-09-18 20:08:08', 3)
 
 SET DATABASE SQL SYNTAX ORA TRUE;

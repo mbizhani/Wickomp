@@ -56,7 +56,7 @@ public class SqlEditorPage extends BasePage implements IGridAsyncDataSource<RowV
 			.setNoResultMessage("No result")
 			.setPageList(Arrays.asList(5))
 			.setWidth(OSize.percent(100))
-			.setHeight(OSize.fixed(200));
+			.setHeight(OSize.fixed(300));
 
 		grid = new WDataGrid<>("grid", oGrid, this);
 		grid
