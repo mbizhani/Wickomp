@@ -140,6 +140,11 @@ public class FormPage extends BasePage {
 			@Override
 			protected void onSubmit(AjaxRequestTarget target) {
 				System.out.println(map);
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 			@Override

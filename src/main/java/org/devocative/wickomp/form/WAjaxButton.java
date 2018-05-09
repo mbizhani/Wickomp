@@ -29,6 +29,8 @@ public abstract class WAjaxButton extends Button {
 	private IExceptionToMessageHandler exceptionToMessageHandler = WDefaults.getExceptionToMessageHandler();
 	private HTMLBase icon;
 
+	private boolean preventSuccessiveSubmit = true;
+
 	// ---------------------- CONSTRUCTORS
 
 	public WAjaxButton(String id) {
@@ -43,6 +45,8 @@ public abstract class WAjaxButton extends Button {
 	public WAjaxButton(String id, IModel<String> caption, HTMLBase icon) {
 		super(id, caption);
 		this.icon = icon;
+
+		setOutputMarkupId(true);
 	}
 
 	// ---------------------- ACCESSORS
@@ -69,6 +73,11 @@ public abstract class WAjaxButton extends Button {
 
 	public WAjaxButton setExceptionToMessageHandler(IExceptionToMessageHandler exceptionToMessageHandler) {
 		this.exceptionToMessageHandler = exceptionToMessageHandler;
+		return this;
+	}
+
+	public WAjaxButton setPreventSuccessiveSubmit(boolean preventSuccessiveSubmit) {
+		this.preventSuccessiveSubmit = preventSuccessiveSubmit;
 		return this;
 	}
 
@@ -119,6 +128,10 @@ public abstract class WAjaxButton extends Button {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target) {
+				if (preventSuccessiveSubmit) {
+					target.appendJavaScript(String.format(";$('#%s').prop('disabled', false);", getMarkupId()));
+				}
+
 				try {
 					WAjaxButton.this.onSubmit(target);
 				} catch (Exception e) {
@@ -135,6 +148,10 @@ public abstract class WAjaxButton extends Button {
 
 			@Override
 			protected void onError(AjaxRequestTarget target) {
+				if (preventSuccessiveSubmit) {
+					target.appendJavaScript(String.format(";$('#%s').prop('disabled', false);", getMarkupId()));
+				}
+
 				WAjaxButton.this.onError(target, WebUtil.collectAs(WAjaxButton.this, true));
 			}
 
@@ -145,7 +162,7 @@ public abstract class WAjaxButton extends Button {
 				// do not allow normal form submit to happen
 				attributes.setPreventDefault(true);
 
-				if (confirmationMessage != null || afterClickScript != null) {
+				if (confirmationMessage != null || afterClickScript != null || preventSuccessiveSubmit) {
 					AjaxCallListener myAjaxCallListener = new AjaxCallListener();
 					if (confirmationMessage != null) {
 						myAjaxCallListener.onPrecondition(String.format("if(!confirm('%s')) return false;", confirmationMessage.getObject()));
@@ -154,6 +171,11 @@ public abstract class WAjaxButton extends Button {
 					if (afterClickScript != null) {
 						myAjaxCallListener.onAfter(afterClickScript);
 					}
+
+					if (preventSuccessiveSubmit) {
+						myAjaxCallListener.onAfter(";this.disabled=true;");
+					}
+
 					attributes.getAjaxCallListeners().add(myAjaxCallListener);
 				}
 
