@@ -191,11 +191,9 @@ public abstract class WAjaxButton extends Button {
 	}
 
 	protected void onException(AjaxRequestTarget target, Exception e) {
-		if (e.getMessage() != null) {
-			List<Serializable> error = new ArrayList<>();
-			error.add(exceptionToMessageHandler.handleMessage(this, e));
-			onError(target, error);
-		}
+		List<Serializable> error = new ArrayList<>();
+		error.add(exceptionToMessageHandler.handleMessage(this, e));
+		onError(target, error);
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
