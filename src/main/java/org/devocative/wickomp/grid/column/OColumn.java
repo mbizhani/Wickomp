@@ -133,9 +133,11 @@ public abstract class OColumn<T> extends Options {
 
 	public abstract String cellValue(T bean, String id, int colNo, String url);
 
-	public abstract String footerCellValue(Object bean, int colNo, String url);
-
 	// ------------------------------ PUBLIC METHODS
+
+	public String footerCellValue(Object bean, int colNo, String url) {
+		throw new RuntimeException("OColumn.footerCellValue Not Implemented: column type = " + getClass().getName());
+	}
 
 	public OColumn<T> setFormatter(OFormatter formatter) {
 		this.formatter = formatter;
