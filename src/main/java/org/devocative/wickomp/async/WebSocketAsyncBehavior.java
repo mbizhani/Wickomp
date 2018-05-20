@@ -31,8 +31,9 @@ class WebSocketAsyncBehavior extends WebSocketBehavior {
 	@Override
 	protected void onMessage(WebSocketRequestHandler handler, TextMessage message) {
 		String text = message.getText();
-		if ("W.PING".equals(text)) {
-			handler.push("W.R_PING");
+		if (text.startsWith("W::")) {
+			String rs = "W::R_" + text.substring(3);
+			handler.push(rs);
 		}
 	}
 

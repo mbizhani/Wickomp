@@ -9,6 +9,7 @@
 
 		Wicket.Event.subscribe("/websocket/open", function (jqEvent) {
 			console.log('BasePage: websocket/open', jqEvent);
+			Wicket.WebSocket.send("W::HI");
 			pingHandler = setInterval(pingWebSocket, 10000);
 		});
 
@@ -26,7 +27,7 @@
 		});
 
 		function pingWebSocket() {
-			Wicket.WebSocket.send("W.PING");
+			Wicket.WebSocket.send("W::PING");
 		}
 	</script>
 
