@@ -8,15 +8,16 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.adroit.vo.DateFieldVO;
+import org.devocative.adroit.date.DateFieldVO;
+import org.devocative.adroit.date.EUniCalendar;
 import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
-import org.devocative.wickomp.opt.OCalendar;
 import org.devocative.wickomp.wrcs.CommonBehavior;
 import org.devocative.wickomp.wrcs.FontAwesomeBehavior;
 import org.devocative.wickomp.wrcs.Resource;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 public class WDateInput extends WLabeledFormInputPanel<Date> {
 	private static final long serialVersionUID = -2348912362832020132L;
@@ -31,7 +32,8 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 	private WebMarkupContainer calOpener;
 	private TextField<Integer> year, month, day, hour, minute, second;
 
-	private OCalendar calendar;
+	private EUniCalendar calendar;
+	private TimeZone timeZone;
 	private boolean timePartVisible = false;
 
 	private int defaultHour = 0;
@@ -48,20 +50,25 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		this(id, model, null);
 	}
 
-	public WDateInput(String id, OCalendar calendar) {
+	public WDateInput(String id, EUniCalendar calendar) {
 		this(id, null, calendar);
 	}
 
 	// Main Constructor
-	public WDateInput(String id, IModel<Date> model, OCalendar calendar) {
+	public WDateInput(String id, IModel<Date> model, EUniCalendar calendar) {
 		super(id, model);
 		this.calendar = calendar;
 	}
 
 	// ------------------------------
 
-	public WDateInput setCalendar(OCalendar calendar) {
+	public WDateInput setCalendar(EUniCalendar calendar) {
 		this.calendar = calendar;
+		return this;
+	}
+
+	public WDateInput setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
 		return this;
 	}
 
@@ -95,7 +102,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		response.render(DATE_POPUP_JS);
 		response.render(DATE_CALC_JS);
 
-		DateFieldVO now = calendar.convertToFields(new Date());
+		DateFieldVO now = calendar.convertToFields(new Date(), getTimeZone());
 
 		response.render(JavaScriptHeaderItem.forScript(
 			String.format("var currentDate = %s;", WebUtil.toJson(now)),
@@ -115,16 +122,27 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		Integer secondValue = second.getConvertedInput();
 
 		if (yearValue != null && monthValue != null && dayValue != null) {
+
+			if (timePartVisible) {
+				hourValue = hourValue != null ? hourValue : defaultHour;
+				minuteValue = minuteValue != null ? minuteValue : defaultMinute;
+				secondValue = secondValue != null ? secondValue : defaultSecond;
+			} else {
+				hourValue = defaultHour;
+				minuteValue = defaultMinute;
+				secondValue = defaultSecond;
+			}
+
 			DateFieldVO dateField = new DateFieldVO(
 				yearValue,
 				monthValue,
 				dayValue,
 
-				hourValue != null ? hourValue : defaultHour,
-				minuteValue != null ? minuteValue : defaultMinute,
-				secondValue != null ? secondValue : defaultSecond);
+				hourValue,
+				minuteValue,
+				secondValue);
 
-			date = calendar.convertToDate(dateField);
+			date = calendar.convertToDate(dateField, getTimeZone());
 		}
 
 		setConvertedInput(date);
@@ -175,7 +193,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		Date modelObject = getModelObject();
 
 		if (modelObject != null) {
-			DateFieldVO dateFieldVO = calendar.convertToFields(modelObject);
+			DateFieldVO dateFieldVO = calendar.convertToFields(modelObject, getTimeZone());
 
 			if (dateFieldVO != null) {
 				year.setModelObject(dateFieldVO.getYear());
@@ -228,5 +246,9 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		TextField<Integer> textField = new TextField<>(compId, new Model<>(), Integer.class);
 		textField.setOutputMarkupId(true);
 		return textField;
+	}
+
+	private TimeZone getTimeZone() {
+		return timeZone != null ? timeZone : getUserTimeZone();
 	}
 }

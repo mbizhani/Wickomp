@@ -1,10 +1,11 @@
 package org.devocative.wickomp.opt;
 
 import org.devocative.adroit.CalendarUtil;
-import org.devocative.adroit.vo.DateFieldVO;
+import org.devocative.adroit.date.DateFieldVO;
 
 import java.util.Date;
 
+@Deprecated
 public enum OCalendar {
 	Gregorian, Persian;
 

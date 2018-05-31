@@ -5,9 +5,9 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.adroit.CalendarUtil;
+import org.devocative.adroit.date.EUniCalendar;
+import org.devocative.adroit.date.UniDate;
 import org.devocative.adroit.obuilder.ObjectBuilder;
-import org.devocative.adroit.vo.DateFieldVO;
 import org.devocative.wickomp.async.IAsyncResponse;
 import org.devocative.wickomp.demo.BasePage;
 import org.devocative.wickomp.demo.TaskBehavior;
@@ -131,28 +131,28 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 			.add(new OHiddenColumn<>("col05"))
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "v_birthDate", "birthDate")
-					.setFormatter(ODateFormatter.prDateTime())
-					.setStyle("direction:ltr;")
+				.setFormatter(ODateFormatter.prDateTime())
+				.setStyle("direction:ltr;")
 			)
 			.add(new OHiddenColumn<PersonVO>("birthDate")
-					.setFormatter(ODateFormatter.millis())
+				.setFormatter(ODateFormatter.millis())
 			)
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "v_income", "income")
-					.setFormatter(ONumberFormatter.integer())
-					.setHasFooter(true)
-					.setWidth(OSize.fixed(50))
-					.setStyle("direction:ltr;background-color:#dddddd; color:blue")
-					.setCellStyler((IStyler<PersonVO> & Serializable) (bean, id) -> OStyle.style(bean.getIncome() < 0 ? "color:red" : null))
+				.setFormatter(ONumberFormatter.integer())
+				.setHasFooter(true)
+				.setWidth(OSize.fixed(50))
+				.setStyle("direction:ltr;background-color:#dddddd; color:blue")
+				.setCellStyler((IStyler<PersonVO> & Serializable) (bean, id) -> OStyle.style(bean.getIncome() < 0 ? "color:red" : null))
 			)
 
 			.add(new OHiddenColumn<>("income"))
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Expense"), "expense")
-					.setFormatter(ONumberFormatter.real())
-					.setHasFooter(true)
-					.setStyle("direction:ltr;")
-					.setCellStyler((IStyler<PersonVO> & Serializable) (bean, id) -> OStyle.css(bean.getExpense().longValue() > 100000 ? "high" : null))
+				.setFormatter(ONumberFormatter.real())
+				.setHasFooter(true)
+				.setStyle("direction:ltr;")
+				.setCellStyler((IStyler<PersonVO> & Serializable) (bean, id) -> OStyle.css(bean.getExpense().longValue() > 100000 ? "high" : null))
 			)
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
@@ -197,14 +197,14 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 			.setColumns(columns)
 			.setMultiSort(true)
 			.setSingleSelect(false)
-				//.setSelectionIndicator(true)
-				//.setSelectionJSHandler("function(rows){console.log(rows);}")
+			//.setSelectionIndicator(true)
+			//.setSelectionJSHandler("function(rows){console.log(rows);}")
 			.setShowFooter(true)
 			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
 			.setColumnReorder(false) //NOTE
 			.setGridId("activeAsyncGrid")
 			.setRowStyler((IStyler<PersonVO> & Serializable) (bean, id) -> {
-				Date base = CalendarUtil.toGregorian(new DateFieldVO(1360, 1, 1));
+				Date base = UniDate.of(EUniCalendar.Persian, 1360, 1, 1).toDate();
 				if (bean.getBirthDate().getTime() < base.getTime()) {
 					return OStyle.style("font-weight: bold;background-color:#FFD4D4");
 				}
@@ -223,7 +223,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 			.setIdField("col02")
 			.setColumns(columns)
 			.setMultiSort(true)
-				//.setSelectionIndicator(true)
+			//.setSelectionIndicator(true)
 			.setSelectionJSHandler("function(asd){console.log(asd);}")
 			.setShowFooter(true)
 			.setAutoTooltip(false)
@@ -255,7 +255,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 			.setColumns(columns)
 			.setMultiSort(true)
 			.setIdField("col02")
-				// .setGroupField("col01")
+			// .setGroupField("col01")
 			.setShowFooter(true)
 			.addToolbarButton(new OExportExcelButton<>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), this))
 			.addToolbarButton(new OAjaxLinkButton<PersonVO>(new HTMLBase("Ajax")) {
@@ -270,7 +270,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 			.setReorderColumns(Arrays.asList("col02", "col01")) //NOTE
 			.setCallbackOnColumnReorder(true) //NOTE
 			.setRowStyler((IStyler<PersonVO> & Serializable) (bean, id) -> {
-				Date base = CalendarUtil.toGregorian(new DateFieldVO(1360, 1, 1));
+				Date base = UniDate.of(EUniCalendar.Persian, 1360, 1, 1).toDate();
 				if (bean.getBirthDate().getTime() < base.getTime()) {
 					return OStyle.css("old");
 				}

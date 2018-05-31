@@ -1,9 +1,11 @@
 package org.devocative.wickomp.opt;
 
+import org.devocative.adroit.date.EUniCalendar;
+
 import java.util.TimeZone;
 
 public interface OUserPreference {
-	OCalendar getCalendar();
+	EUniCalendar getCalendar();
 
 	TimeZone getTimeZone();
 
@@ -15,8 +17,8 @@ public interface OUserPreference {
 
 	OUserPreference DEFAULT = new OUserPreference() {
 		@Override
-		public OCalendar getCalendar() {
-			return OCalendar.Gregorian;
+		public EUniCalendar getCalendar() {
+			return EUniCalendar.Gregorian;
 		}
 
 		@Override

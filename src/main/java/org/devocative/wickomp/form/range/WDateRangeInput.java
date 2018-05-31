@@ -2,16 +2,18 @@ package org.devocative.wickomp.form.range;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.devocative.adroit.date.EUniCalendar;
 import org.devocative.adroit.vo.IRange;
 import org.devocative.wickomp.form.WDateInput;
-import org.devocative.wickomp.opt.OCalendar;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 public class WDateRangeInput extends WBaseRangeInput<Date> {
 	private static final long serialVersionUID = 6659364241951361411L;
 
-	private OCalendar calendar;
+	private EUniCalendar calendar;
+	private TimeZone timeZone;
 	private Boolean timePartVisible;
 
 	private int defaultHour = 0;
@@ -30,8 +32,13 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 
 	// ------------------------------ ACCESSORS
 
-	public WDateRangeInput setCalendar(OCalendar calendar) {
+	public WDateRangeInput setCalendar(EUniCalendar calendar) {
 		this.calendar = calendar;
+		return this;
+	}
+
+	public WDateRangeInput setTimeZone(TimeZone timeZone) {
+		this.timeZone = timeZone;
 		return this;
 	}
 
@@ -60,6 +67,7 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 	@Override
 	protected FormComponent<Date> createFormComponent(String id, IModel<Date> model) {
 		WDateInput input = new WDateInput(id, model)
+			.setTimeZone(timeZone)
 			.setDefaultHour(defaultHour)
 			.setDefaultMinute(defaultMinute)
 			.setDefaultSecond(defaultSecond);

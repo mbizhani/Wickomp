@@ -5,6 +5,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.wickomp.opt.OUserPreference;
 
+import java.util.TimeZone;
+
 public abstract class WFormInputPanel<T> extends FormComponentPanel<T> {
 	private static final long serialVersionUID = 6476009650782023078L;
 
@@ -18,5 +20,9 @@ public abstract class WFormInputPanel<T> extends FormComponentPanel<T> {
 			return (OUserPreference) session;
 		}
 		return OUserPreference.DEFAULT;
+	}
+
+	protected final TimeZone getUserTimeZone() {
+		return getUserPreference().getTimeZone();
 	}
 }

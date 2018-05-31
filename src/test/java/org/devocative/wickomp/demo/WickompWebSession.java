@@ -2,7 +2,7 @@ package org.devocative.wickomp.demo;
 
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
-import org.devocative.wickomp.opt.OCalendar;
+import org.devocative.adroit.date.EUniCalendar;
 import org.devocative.wickomp.opt.OLayoutDirection;
 import org.devocative.wickomp.opt.OUserPreference;
 
@@ -19,13 +19,13 @@ public class WickompWebSession extends WebSession implements OUserPreference {
 	}
 
 	@Override
-	public OCalendar getCalendar() {
-		return OCalendar.Persian;
+	public EUniCalendar getCalendar() {
+		return EUniCalendar.Persian;
 	}
 
 	@Override
 	public TimeZone getTimeZone() {
-		return TimeZone.getDefault();
+		return TimeZone.getTimeZone("GMT");
 	}
 
 	@Override

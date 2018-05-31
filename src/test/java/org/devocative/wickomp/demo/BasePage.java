@@ -3,8 +3,10 @@ package org.devocative.wickomp.demo;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.async.AsyncBehavior;
 import org.devocative.wickomp.demo.panel.SelectionPanel;
@@ -15,6 +17,7 @@ import org.devocative.wickomp.html.window.WModalWindow;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.TimeZone;
 
 public abstract class BasePage extends WebPage {
 	private static final long serialVersionUID = 4633952971700734823L;
@@ -68,6 +71,11 @@ public abstract class BasePage extends WebPage {
 				WebUtil.copyToClipboard(new Date().toString(), target);
 			}
 		});
+
+		WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+		add(new Label("clientTimeZone", clientInfo.getProperties().getTimeZone().getID()));
+
+		add(new Label("serverTimeZone", TimeZone.getDefault().getID()));
 
 		add(new AsyncBehavior());
 	}

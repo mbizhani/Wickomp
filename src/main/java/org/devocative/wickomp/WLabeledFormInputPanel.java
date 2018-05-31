@@ -41,5 +41,4 @@ public abstract class WLabeledFormInputPanel<T> extends WFormInputPanel<T> {
 			label.setVisible(false);
 		}
 	}
-
 }
