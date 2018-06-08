@@ -35,7 +35,7 @@ public class WickompApplication extends WebApplication {
 		getResourceSettings().getStringResourceLoaders().add(0, new BundleStringResourceLoader("org.devocative.wickomp.demo.Test"));
 
 		getRequestCycleListeners().add(new WickompRequestCycleListener());
-		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+		//getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
 
 		Thread th = new Thread() {
 			private int no = 0;
