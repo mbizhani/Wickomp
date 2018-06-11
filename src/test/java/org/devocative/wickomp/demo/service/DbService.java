@@ -40,10 +40,7 @@ public class DbService {
 
 	public static List<RowVO> execute(String sql, long pageIndex, long pageSize) {
 		NamedParameterStatement nps = new NamedParameterStatement(connection, sql);
-		nps.addPlugin(new PaginationPlugin(
-			(pageIndex - 1) * pageSize + 1,
-			pageSize + 1,
-			PaginationPlugin.findDatabaseType(connection)));
+		nps.addPlugin(PaginationPlugin.of(connection, (pageIndex - 1) * pageSize + 1, pageSize + 1));
 		QueryVO process;
 		try {
 			ResultSet rs = nps.executeQuery();

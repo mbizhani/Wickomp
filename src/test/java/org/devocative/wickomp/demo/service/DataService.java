@@ -49,7 +49,7 @@ public class DataService {
 						footer.add(agg);
 
 						Map<String, Object> resultMap = ObjectBuilder
-							.<String, Object>createDefaultMap()
+							.<String, Object>map()
 							.put("list", result)
 							.put("count", personVOList.size())
 							.put("footer", footer)
@@ -87,7 +87,7 @@ public class DataService {
 					e.printStackTrace();
 				}
 				Map<String, Object> resp = ObjectBuilder
-					.<String, Object>createDefaultMap()
+					.<String, Object>map()
 					.put("list", result)
 					.put("count", employeeVOList.size())
 					.get();
@@ -127,7 +127,7 @@ public class DataService {
 					e.printStackTrace();
 				}
 				Map<String, Object> resp = ObjectBuilder
-					.<String, Object>createDefaultMap()
+					.<String, Object>map()
 					.put("parentId", parentId)
 					.put("list", result)
 					.get();

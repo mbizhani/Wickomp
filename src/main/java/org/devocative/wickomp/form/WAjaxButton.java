@@ -128,16 +128,16 @@ public abstract class WAjaxButton extends Button {
 
 			@Override
 			protected void onSubmit(AjaxRequestTarget target) {
-				if (preventSuccessiveSubmit) {
-					target.appendJavaScript(String.format(";$('#%s').prop('disabled', false);", getMarkupId()));
-				}
-
 				try {
 					WAjaxButton.this.onSubmit(target);
 				} catch (Exception e) {
 					logger.warn("WAjaxButton.onSubmit: id=" + getId(), e);
 
 					WAjaxButton.this.onException(target, e);
+				}
+
+				if (WAjaxButton.this.isEnabledInHierarchy() && preventSuccessiveSubmit) {
+					target.appendJavaScript(String.format(";$('#%s').prop('disabled', false);", getMarkupId()));
 				}
 			}
 
@@ -148,11 +148,11 @@ public abstract class WAjaxButton extends Button {
 
 			@Override
 			protected void onError(AjaxRequestTarget target) {
-				if (preventSuccessiveSubmit) {
+				WAjaxButton.this.onError(target, WebUtil.collectAs(WAjaxButton.this, true));
+
+				if (WAjaxButton.this.isEnabledInHierarchy() && preventSuccessiveSubmit) {
 					target.appendJavaScript(String.format(";$('#%s').prop('disabled', false);", getMarkupId()));
 				}
-
-				WAjaxButton.this.onError(target, WebUtil.collectAs(WAjaxButton.this, true));
 			}
 
 			@Override

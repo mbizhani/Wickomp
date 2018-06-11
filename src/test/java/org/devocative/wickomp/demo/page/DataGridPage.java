@@ -315,7 +315,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 	@Override
 	public void asyncList(long first, long size, List<WSortField> sortFields) {
 		Map<String, Object> map = ObjectBuilder
-			.<String, Object>createDefaultMap()
+			.<String, Object>map()
 			.put("first", first)
 			.put("size", size)
 			.get();

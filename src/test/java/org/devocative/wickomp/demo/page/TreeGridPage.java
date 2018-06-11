@@ -90,7 +90,7 @@ public class TreeGridPage extends BasePage implements IAsyncResponse<Map<String,
 	@Override
 	public void asyncList(long pageIndex, long pageSize, List<WSortField> list) {
 		Map<String, Object> map = ObjectBuilder
-			.<String, Object>createDefaultMap()
+			.<String, Object>map()
 			.put("first", pageIndex)
 			.put("size", pageSize)
 			.get();
