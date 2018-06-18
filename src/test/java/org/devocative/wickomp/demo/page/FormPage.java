@@ -119,7 +119,7 @@ public class FormPage extends BasePage {
 					case Date:
 						fc = new WDateInput(field.getName())
 							.setTimePartVisible(true)
-							.setDefaultHour(12)
+							.setDefaultTime(12, 0, 0, 0)
 							.setRequired(true);
 				}
 
@@ -227,9 +227,9 @@ public class FormPage extends BasePage {
 		form.add(new WSelectionInput("eduSingle", list, false));
 		form.add(new WSelectionInput("eduMultiple", list, true));
 		form.add(new DropDownChoice<>("eduDD", list));
-		form.add(new WDateInput("birthdate").setTimePartVisible(true));
+		form.add(new WDateInput("birthdate"));
 		form.add(new WBooleanInput("alive"));
-		form.add(new WDateRangeInput("dateRange"));
+		form.add(new WDateRangeInput("dateRange").setTimePartVisible(true));
 		form.add(new WTextRangeInput("stringRange").setSize(40).setMaxlength(5));
 		form.add(parentSI = new WSelectionInput("parent", Arrays.asList("A", "B", "C"), false));
 		form.add(child = new WSelectionInput("child", Arrays.asList("B.1"), false));

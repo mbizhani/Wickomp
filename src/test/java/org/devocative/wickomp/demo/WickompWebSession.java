@@ -25,7 +25,7 @@ public class WickompWebSession extends WebSession implements OUserPreference {
 
 	@Override
 	public TimeZone getTimeZone() {
-		return TimeZone.getTimeZone("GMT");
+		return TimeZone.getTimeZone("GMT+4");
 	}
 
 	@Override
@@ -46,5 +46,11 @@ public class WickompWebSession extends WebSession implements OUserPreference {
 	@Override
 	public void onInvalidate() {
 		System.out.printf("Session Expired: %s\n", getId());
+	}
+
+	// ------------------------------
+
+	public static WickompWebSession get() {
+		return (WickompWebSession) WebSession.get();
 	}
 }

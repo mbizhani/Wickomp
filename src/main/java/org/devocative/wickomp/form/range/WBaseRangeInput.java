@@ -14,6 +14,9 @@ import java.io.Serializable;
 public abstract class WBaseRangeInput<T extends Serializable> extends WLabeledFormInputPanel<IRange<T>> {
 	private static final long serialVersionUID = 8954208501398056478L;
 
+	protected static final String LOWER_ID = "lower";
+	protected static final String UPPER_ID = "upper";
+
 	private FormComponent<T> lower, upper;
 
 	// ------------------------------
@@ -32,8 +35,8 @@ public abstract class WBaseRangeInput<T extends Serializable> extends WLabeledFo
 	protected void onInitialize() {
 		super.onInitialize();
 
-		lower = createFormComponent("lower", new Model<T>());
-		upper = createFormComponent("upper", new Model<T>());
+		lower = createFormComponent(LOWER_ID, new Model<>());
+		upper = createFormComponent(UPPER_ID, new Model<>());
 
 		add(lower);
 		add(upper);

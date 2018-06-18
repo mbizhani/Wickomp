@@ -8,8 +8,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.devocative.adroit.date.DateFieldVO;
+import org.devocative.adroit.date.DateTimeFieldVO;
 import org.devocative.adroit.date.EUniCalendar;
+import org.devocative.adroit.date.TimeFieldVO;
 import org.devocative.wickomp.WLabeledFormInputPanel;
 import org.devocative.wickomp.WebUtil;
 import org.devocative.wickomp.wrcs.CommonBehavior;
@@ -36,9 +37,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 	private TimeZone timeZone;
 	private boolean timePartVisible = false;
 
-	private int defaultHour = 0;
-	private int defaultMinute = 0;
-	private int defaultSecond = 0;
+	private TimeFieldVO defaultTime = new TimeFieldVO(0, 0, 0, 0);
 
 	// ------------------------------
 
@@ -77,18 +76,15 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		return this;
 	}
 
-	public WDateInput setDefaultHour(int defaultHour) {
-		this.defaultHour = defaultHour;
+	public WDateInput setDefaultTime(int hour, int minute, int second, int millisecond) {
+		this.defaultTime.setTime(hour, minute, second, millisecond);
+
 		return this;
 	}
 
-	public WDateInput setDefaultMinute(int defaultMinute) {
-		this.defaultMinute = defaultMinute;
-		return this;
-	}
+	public WDateInput setDefaultTime(TimeFieldVO other) {
+		this.defaultTime.setTime(other);
 
-	public WDateInput setDefaultSecond(int defaultSecond) {
-		this.defaultSecond = defaultSecond;
 		return this;
 	}
 
@@ -102,7 +98,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		response.render(DATE_POPUP_JS);
 		response.render(DATE_CALC_JS);
 
-		DateFieldVO now = calendar.convertToFields(new Date(), getTimeZone());
+		DateTimeFieldVO now = calendar.convertToFields(new Date(), getTimeZone());
 
 		response.render(JavaScriptHeaderItem.forScript(
 			String.format("var currentDate = %s;", WebUtil.toJson(now)),
@@ -124,23 +120,24 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		if (yearValue != null && monthValue != null && dayValue != null) {
 
 			if (timePartVisible) {
-				hourValue = hourValue != null ? hourValue : defaultHour;
-				minuteValue = minuteValue != null ? minuteValue : defaultMinute;
-				secondValue = secondValue != null ? secondValue : defaultSecond;
+				hourValue = hourValue != null ? hourValue : defaultTime.getHour();
+				minuteValue = minuteValue != null ? minuteValue : defaultTime.getMinute();
+				secondValue = secondValue != null ? secondValue : defaultTime.getSecond();
 			} else {
-				hourValue = defaultHour;
-				minuteValue = defaultMinute;
-				secondValue = defaultSecond;
+				hourValue = defaultTime.getHour();
+				minuteValue = defaultTime.getMinute();
+				secondValue = defaultTime.getSecond();
 			}
 
-			DateFieldVO dateField = new DateFieldVO(
+			DateTimeFieldVO dateField = new DateTimeFieldVO(
 				yearValue,
 				monthValue,
 				dayValue,
 
 				hourValue,
 				minuteValue,
-				secondValue);
+				secondValue,
+				defaultTime.getMillisecond());
 
 			date = calendar.convertToDate(dateField, getTimeZone());
 		}
@@ -193,7 +190,7 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 		Date modelObject = getModelObject();
 
 		if (modelObject != null) {
-			DateFieldVO dateFieldVO = calendar.convertToFields(modelObject, getTimeZone());
+			DateTimeFieldVO dateFieldVO = calendar.convertToFields(modelObject, getTimeZone());
 
 			if (dateFieldVO != null) {
 				year.setModelObject(dateFieldVO.getYear());
@@ -249,6 +246,10 @@ public class WDateInput extends WLabeledFormInputPanel<Date> {
 	}
 
 	private TimeZone getTimeZone() {
-		return timeZone != null ? timeZone : getUserTimeZone();
+		if (timePartVisible) {
+			return timeZone != null ? timeZone : getUserTimeZone();
+		} else {
+			return TimeZone.getDefault();
+		}
 	}
 }

@@ -3,6 +3,7 @@ package org.devocative.wickomp.form.range;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.devocative.adroit.date.EUniCalendar;
+import org.devocative.adroit.date.TimeFieldVO;
 import org.devocative.adroit.vo.IRange;
 import org.devocative.wickomp.form.WDateInput;
 
@@ -16,9 +17,8 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 	private TimeZone timeZone;
 	private Boolean timePartVisible;
 
-	private int defaultHour = 0;
-	private int defaultMinute = 0;
-	private int defaultSecond = 0;
+	private final TimeFieldVO defaultFromTime = new TimeFieldVO(0, 0, 0, 0);
+	private final TimeFieldVO defaultToTime = new TimeFieldVO(0, 0, 0, 0);
 
 	// ------------------------------
 
@@ -47,18 +47,27 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 		return this;
 	}
 
-	public WDateRangeInput setDefaultHour(int defaultHour) {
-		this.defaultHour = defaultHour;
+	public WDateRangeInput setFromDefaultTime(int hour, int minute, int second, int millisecond) {
+		this.defaultFromTime.setTime(hour, minute, second, millisecond);
+
 		return this;
 	}
 
-	public WDateRangeInput setDefaultMinute(int defaultMinute) {
-		this.defaultMinute = defaultMinute;
+	public WDateRangeInput setFromDefaultTime(TimeFieldVO other) {
+		this.defaultFromTime.setTime(other);
+
 		return this;
 	}
 
-	public WDateRangeInput setDefaultSecond(int defaultSecond) {
-		this.defaultSecond = defaultSecond;
+	public WDateRangeInput setToDefaultTime(int hour, int minute, int second, int millisecond) {
+		this.defaultToTime.setTime(hour, minute, second, millisecond);
+
+		return this;
+	}
+
+	public WDateRangeInput setToDefaultTime(TimeFieldVO other) {
+		this.defaultToTime.setTime(other);
+
 		return this;
 	}
 
@@ -67,10 +76,13 @@ public class WDateRangeInput extends WBaseRangeInput<Date> {
 	@Override
 	protected FormComponent<Date> createFormComponent(String id, IModel<Date> model) {
 		WDateInput input = new WDateInput(id, model)
-			.setTimeZone(timeZone)
-			.setDefaultHour(defaultHour)
-			.setDefaultMinute(defaultMinute)
-			.setDefaultSecond(defaultSecond);
+			.setTimeZone(timeZone);
+
+		if (LOWER_ID.equals(id)) {
+			input.setDefaultTime(defaultFromTime.getHour(), defaultFromTime.getMinute(), defaultFromTime.getSecond(), defaultFromTime.getMillisecond());
+		} else {
+			input.setDefaultTime(defaultToTime.getHour(), defaultToTime.getMinute(), defaultToTime.getSecond(), defaultToTime.getMillisecond());
+		}
 
 		if (calendar != null) {
 			input.setCalendar(calendar);
