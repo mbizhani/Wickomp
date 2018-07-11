@@ -6,34 +6,33 @@ var wLog = {
 		Error: 'error',
 		None: 'none'
 	},
-	_level: '',
-	_debug: ['debug'],
-	_info: ['info', 'debug'],
-	_warn: ['warn', 'info', 'debug'],
-	_error: ['error', 'warn', 'info', 'debug'],
+	_curLevel: 10,
+	_orderOfLevels: ['debug', 'info', 'warn', 'error', 'none'],
 
 	setLevel: function (lvl) {
-		wLog._level = lvl;
+		wLog._curLevel = wLog._orderOfLevels.indexOf(lvl);
+		console.log("******* WLog Level:", lvl, wLog._curLevel, "*******");
 	},
 
 	debug: function () {
-		wLog._log(wLog.Levels.Debug, '[DEBUG]', wLog._debug, arguments);
+		wLog._log(wLog.Levels.Debug, '[DEBUG]', arguments);
 	},
 
 	info: function () {
-		wLog._log(wLog.Levels.Info, '[INFO] ', wLog._info, arguments);
+		wLog._log(wLog.Levels.Info, '[INFO] ', arguments);
 	},
 
 	warn: function () {
-		wLog._log(wLog.Levels.Warn, '[WARN] ', wLog._warn, arguments);
+		wLog._log(wLog.Levels.Warn, '[WARN] ', arguments);
 	},
 
 	error: function () {
-		wLog._log(wLog.Levels.Error, '[ERROR]', wLog._error, arguments);
+		wLog._log(wLog.Levels.Error, '[ERROR]', arguments);
 	},
 
-	_log: function (level, levelTitle, levelArr, args) {
-		if (console && levelArr.indexOf(wLog._level) > -1) {
+	_log: function (level, levelTitle, args) {
+		var idx = wLog._orderOfLevels.indexOf(level);
+		if (console && idx >= wLog._curLevel) {
 			var argArr = Array.prototype.slice.call(args);
 			argArr.unshift(levelTitle);
 

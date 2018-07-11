@@ -5,7 +5,7 @@
 			state.columnMenu = $('<div></div>').appendTo('body');
 			state.columnMenu.menu({
 				onClick: function (item) {
-					if (item.iconCls == 'tree-checkbox1') {
+					if (item.iconCls === 'tree-checkbox1') {
 						$(target).datagrid('hideColumn', item.name);
 						$(this).menu('setIcon', {
 							target: item.target,
@@ -73,7 +73,7 @@
 					title: '<i class="fa fa-exclamation-triangle" style="color:#aa1111"></i>',
 					msg: data.error
 				});
-			} else if (data.rows && data.rows.length == 0) {
+			} else if (data.rows && data.rows.length === 0) {
 				var noResultMessage = $(this).datagrid("options")["noResultMessage"];
 				if (noResultMessage) {
 					wTools.show({
@@ -91,16 +91,16 @@
 			return data;
 		},
 
+		onBeforeLoad: function (params) {
+			wLog.debug("wBaseGridDefaults.onBeforeLoad", params);
+			$(this).datagrid("options")["STATE"] = "start";
+		},
+
 		onLoadSuccess: function (data) {
 			wLog.debug("wBaseGridDefaults.onLoadSuccess");
+			$(this).datagrid("options")["STATE"] = "end";
 
 			wBaseGridDefaults.initSelection($(this));
-
-			if ($(this).data("action") == "reset") {
-				$(this).datagrid("gotoPage", $(this).data("pageNum"));
-				$(this).datagrid("options")["url"] = $(this).data("url");
-				$(this).data("action", "none");
-			}
 
 			wBaseGridDefaults.updateColumnsTooltip($(this), $(this).datagrid("getColumnFields"));
 			wBaseGridDefaults.updateColumnsTooltip($(this), $(this).datagrid("getColumnFields", true));
@@ -108,7 +108,7 @@
 
 		onLoadError: function () {
 			wLog.debug("wBaseGridDefaults.onLoadError");
-			if ($(this).datagrid("options")["asyncLoadingEnabled"]) {
+			if ($(this).datagrid("options")["asyncLoadingEnabled"] && $(this).datagrid("options")["STATE"] === "start") {
 				$(this).datagrid("loading");
 			}
 		},
@@ -173,12 +173,12 @@
 			var gridId = options["gridId"];
 			if (gridId) {
 				window.addEventListener("GridLoading", function (e) {
-					if (e["targetGrid"] && e["targetGrid"] == gridId) {
+					if (e["targetGrid"] && e["targetGrid"] === gridId) {
 						grid.datagrid("loading");
 					}
 				});
 				window.addEventListener("GridLoaded", function (e) {
-					if (e["targetGrid"] && e["targetGrid"] == gridId) {
+					if (e["targetGrid"] && e["targetGrid"] === gridId) {
 						grid.datagrid("loaded");
 					}
 				});
@@ -479,15 +479,15 @@
 			$(this).data("inited", true);
 			return datagrid
 		} else {
-			if (cmdOrOpts == "updateColumns") {
-				$(this).data("url", $(this).datagrid("options")["url"]);
-				$(this).data("pageNum", $(this).datagrid("getPager").pagination("options").pageNumber);
-				$(this).data("action", "reset");
-				$(this).datagrid("options")["url"] = "";
-				return $(this).datagrid(options);
-			} else if (cmdOrOpts == "resetData") {
+			if (cmdOrOpts === "updateColumns") {
+				var url = $(this).datagrid("options")["url"];
+				options["url"] = "";
+				var result = $(this).datagrid(options);
+				$(this).datagrid("options")["url"] = url;
+				return result;
+			} else if (cmdOrOpts === "resetData") {
 				return $(this).datagrid("load");
-			} else if (cmdOrOpts == "updateUrl") {
+			} else if (cmdOrOpts === "updateUrl") {
 				$(this).datagrid("options")["url"] = options;
 				return $(this);
 			} else {
@@ -504,6 +504,7 @@
 				if (!row) {
 					param.id = "";
 				}
+				grid.datagrid("options")["STATE"] = "start";
 			},
 
 			onBeforeExpand: function (row) {
@@ -524,9 +525,9 @@
 			$(this).data("inited", true);
 			return treegrid;
 		} else {
-			if (cmdOrOpts == "resetData") {
+			if (cmdOrOpts === "resetData") {
 				return $(this).treegrid("load");
-			} else if (cmdOrOpts == "updateUrl") {
+			} else if (cmdOrOpts === "updateUrl") {
 				$(this).treegrid("options")["url"] = options;
 				return $(this);
 			} else {
