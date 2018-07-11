@@ -1,8 +1,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<wicket:head>
+	<style>
+		.mfuex {
+			padding: 5px;
+			margin: 5px;
+			background: #eee;
+		}
+
+		.mfuex .wicket-mfu-container {
+			padding: 5px;
+			margin-top: 3px;
+			background-color: white;
+			border: 1px solid black;
+			font-size: xx-small;
+		}
+
+		.mfuex .wicket-mfu-caption {
+			font-weight: bold;
+		}
+
+		.mfuex .wicket-mfu-container input {
+			margin-left: 5px;
+			font-size: xx-small;
+		}
+	</style>
+</wicket:head>
 
 <wicket:panel>
 	<div class="w-input-lbl" wicket:id="label"></div>
-	<input wicket:id="theFile" type="file" class="w-input" style="width:180px;"/>
+	<input wicket:id="singleFile" type="file" class="w-input" style="width:180px;"/>
+	<div wicket:id="multipleFiles" style="width:180px;" class="w-input mfuex"/>
 </wicket:panel>
 
 </html>

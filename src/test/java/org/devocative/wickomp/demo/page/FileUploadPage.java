@@ -42,7 +42,9 @@ public class FileUploadPage extends BasePage {
 		add(feedback);
 
 		file = new WFileInput("file");
-		file.setLabel(new Model<>("The File"));
+		file
+			.setMultiple(true)
+			.setLabel(new Model<>("The File"));
 
 		Form<Void> form = new Form<>("form");
 		form.add(file);
@@ -89,14 +91,21 @@ public class FileUploadPage extends BasePage {
 	private void checkSubmit2(String disc, AjaxRequestTarget target, FeedbackPanel feedback, WFileInput... files) {
 		if (files != null) {
 			for (WFileInput file : files) {
-				FileUpload upload = file.getFileUpload();
-				if (upload == null) {
+				List<FileUpload> uploads = file.getFileUpload();
+				if (uploads == null) {
 					info("No file uploaded");
 				} else {
-					info("File-Name: " + upload.getClientFileName() + " File-Size: " + upload.getSize());
+					StringBuilder builder = new StringBuilder();
+					uploads.forEach(upload ->
+						builder
+							.append("File, name: ")
+							.append(upload.getClientFileName())
+							.append(", size: ").append(upload.getSize())
+					);
+					info(builder.toString());
 				}
 
-				System.out.printf("disc = %s, file = %s \n", disc, upload != null);
+				System.out.printf("disc = %s, file = %s \n", disc, uploads != null);
 			}
 		}
 
@@ -133,6 +142,7 @@ public class FileUploadPage extends BasePage {
 			fileInPanel1.setRequired(true);
 
 			fileInPanel2 = new WFileInput("fileInPanel2");
+			fileInPanel2.setMultiple(true);
 
 			selectionInput = new WSelectionInput("selection", Arrays.asList("A", "B", "C"), true);
 			selectionInput.setRequired(true);
