@@ -131,7 +131,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 			.add(new OHiddenColumn<>("col05"))
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "v_birthDate", "birthDate")
-				.setFormatter(ODateFormatter.prDateTime())
+				.setFormatter(ODateFormatter.dateTime())
 				.setStyle("direction:ltr;")
 			)
 			.add(new OHiddenColumn<PersonVO>("birthDate")
@@ -149,7 +149,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 			.add(new OHiddenColumn<>("income"))
 
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Expense"), "expense")
-				.setFormatter(ONumberFormatter.real())
+				.setFormatter(ONumberFormatter.allDecimal())
 				.setHasFooter(true)
 				.setStyle("direction:ltr;")
 				.setCellStyler((IStyler<PersonVO> & Serializable) (bean, id) -> OStyle.css(bean.getExpense().longValue() > 100000 ? "high" : null))

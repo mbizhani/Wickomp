@@ -1,5 +1,6 @@
 package org.devocative.wickomp.formatter;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 public class ONumberFormatter implements OFormatter {
@@ -7,17 +8,28 @@ public class ONumberFormatter implements OFormatter {
 
 	private String pattern;
 
-	public ONumberFormatter(String pattern) {
+	private ONumberFormatter(String pattern) {
 		this.pattern = pattern;
 	}
 
 	@Override
 	public String format(Object value) {
+		if (pattern.endsWith(".*")) {
+			final String newPat = pattern.replaceAll("[.][*]", ".####################");
+			final String[] result = new DecimalFormat(newPat).format(value).split("[.]");
+			BigDecimal decimal = new BigDecimal(result[1]);
+			if (!decimal.equals(BigDecimal.ZERO)) {
+				return String.format("%s.%s", result[0], decimal);
+			}
+			return result[0];
+		}
+
 		return new DecimalFormat(pattern).format(value);
 	}
 
 	private static final ONumberFormatter INTEGER = new ONumberFormatter("#,###");
 	private static final ONumberFormatter REAL = new ONumberFormatter("#,###.##");
+	private static final ONumberFormatter ALL_DECIMAL = new ONumberFormatter("#,###.*");
 
 	public static ONumberFormatter integer() {
 		return INTEGER;
@@ -25,5 +37,13 @@ public class ONumberFormatter implements OFormatter {
 
 	public static ONumberFormatter real() {
 		return REAL;
+	}
+
+	public static ONumberFormatter allDecimal() {
+		return ALL_DECIMAL;
+	}
+
+	public static ONumberFormatter of(String pattern) {
+		return new ONumberFormatter(pattern);
 	}
 }

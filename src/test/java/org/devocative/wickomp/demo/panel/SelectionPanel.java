@@ -65,7 +65,7 @@ public class SelectionPanel extends WPanel implements IGridDataSource<PersonVO> 
 			.add(new OPropertyColumn<>(new Model<>("Col 04"), "col04"))
 			.add(new OPropertyColumn<>(new Model<>("Col 05"), "col05"))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Birth Date"), "birthDate")
-				.setFormatter(ODateFormatter.prDateTime()))
+				.setFormatter(ODateFormatter.dateTime()))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Income"), "income")
 				.setFormatter(ONumberFormatter.integer()))
 			.add(new OPropertyColumn<PersonVO>(new Model<>("Alive"), "alive")
