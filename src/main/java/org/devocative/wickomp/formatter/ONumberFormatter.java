@@ -15,7 +15,7 @@ public class ONumberFormatter implements OFormatter {
 	@Override
 	public String format(Object value) {
 		if (pattern.endsWith(".*")) {
-			final String newPat = pattern.replaceAll("[.][*]", ".####################");
+			final String newPat = pattern.replaceAll("[.][*]", ".0###################");
 			final String[] result = new DecimalFormat(newPat).format(value).split("[.]");
 			BigDecimal decimal = new BigDecimal(result[1]);
 			if (!decimal.equals(BigDecimal.ZERO)) {
