@@ -47,7 +47,9 @@ public class WFileInput extends WLabeledFormInputPanel<Collection<FileUpload>> {
 	public List<FileUpload> getFileUpload() {
 		if (!multiple) {
 			uploads.clear();
-			uploads.add(singleFile.getFileUpload());
+			if (singleFile.getFileUpload() != null) {
+				uploads.add(singleFile.getFileUpload());
+			}
 		}
 		return uploads;
 	}

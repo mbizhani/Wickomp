@@ -139,10 +139,12 @@ public class FileUploadPage extends BasePage {
 			add(feedbackInPanel);
 
 			fileInPanel1 = new WFileInput("fileInPanel1");
-			fileInPanel1.setRequired(true);
+			//fileInPanel1.setRequired(true);
 
 			fileInPanel2 = new WFileInput("fileInPanel2");
-			fileInPanel2.setMultiple(true);
+			fileInPanel2
+				.setMultiple(true)
+				.setRequired(true);
 
 			selectionInput = new WSelectionInput("selection", Arrays.asList("A", "B", "C"), true);
 			selectionInput.setRequired(true);
