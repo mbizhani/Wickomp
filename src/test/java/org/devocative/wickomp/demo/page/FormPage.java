@@ -205,9 +205,9 @@ public class FormPage extends BasePage {
 		map.put("orderedPerson", new ArrayList<>(personVOs.subList(4, 8)));
 
 		// Multiple
-		map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
+		//map.put("kvList", (Serializable) Arrays.asList(new KeyValueVO<>("A", "A"), new KeyValueVO<>("B", "B")));
 		// Single
-//		map.put("kvList", new KeyValueVO<>("A", "A"));
+		//map.put("kvList", new KeyValueVO<>("A", "A"));
 
 		Form<Map<String, Serializable>> form = new Form<>("form", new CompoundPropertyModel<>(map));
 

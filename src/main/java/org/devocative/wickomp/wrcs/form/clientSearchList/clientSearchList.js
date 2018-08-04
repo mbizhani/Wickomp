@@ -69,7 +69,7 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 			if (multipleSelection) {
 				input = $('<input id="' + inputName + r + '" type="checkbox" name="' + inputName + '" value="' + rows[r]["key"] + '" checked/>');
 			} else {
-				if (r == 0) {
+				if (r === 0) {
 					input = $('<input id="' + inputName + r + '" type="radio" name="' + inputName + '" value="' + rows[r]["key"] + '" checked/>');
 				} else {
 					input = $('<input id="' + inputName + r + '" type="radio" name="' + inputName + '" value="' + rows[r]["key"] + '"/>');
@@ -93,10 +93,10 @@ function handleClientSearchableList(modalWindowId, inputName, holderTableId, tit
 			title.val(nos + ' ' + noOfSelectionLabel);
 		});
 
-		title.val((multipleSelection ? rows.length : 1) + ' ' + noOfSelectionLabel);
+		title.val((multipleSelection ? rows.length : Math.min(rows.length, 1)) + ' ' + noOfSelectionLabel);
 	}
 
-	if (title.data("oldContent") == undefined) {
+	if (title.data("oldContent") === undefined) {
 		//console.log("ClientSearch: First!");
 		title.data("oldContent", holder[0].outerHTML);
 	}
