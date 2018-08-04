@@ -78,6 +78,7 @@ public class WizardPage extends BasePage {
 				.setCancelButtonVisible(true)
 				.setCancelConfirmationMessage(new Model<>("Cancel?"))
 				.setFinishConfirmationMessage(new Model<>("Finish?"))
+			.setFinishEnabled(true)
 		);
 
 		add(new EasyUIBehavior());

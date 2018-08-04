@@ -126,6 +126,11 @@ public class WWizardPanel extends WPanel {
 		return this;
 	}
 
+	public WWizardPanel setFinishEnabled(boolean enabled) {
+		buttonBar.setFinishEnabled(enabled);
+		return this;
+	}
+
 	// ------------------------------
 
 	protected void clearSkippedSteps() {
@@ -296,6 +301,11 @@ public class WWizardPanel extends WPanel {
 
 		public WizardButtonBar setCancelConfirmationMessage(IModel<String> msg) {
 			cancel.setConfirmationMessage(msg);
+			return this;
+		}
+
+		public WizardButtonBar setFinishEnabled(boolean enabled) {
+			finish.setEnabled(enabled);
 			return this;
 		}
 
