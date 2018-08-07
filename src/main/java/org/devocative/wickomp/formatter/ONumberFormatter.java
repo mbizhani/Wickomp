@@ -19,7 +19,7 @@ public class ONumberFormatter implements OFormatter {
 			final String[] result = new DecimalFormat(newPat).format(value).split("[.]");
 			BigDecimal decimal = new BigDecimal(result[1]);
 			if (!decimal.equals(BigDecimal.ZERO)) {
-				return String.format("%s.%s", result[0], decimal);
+				return String.format("%s.%s", result[0], result[1]);
 			}
 			return result[0];
 		}
