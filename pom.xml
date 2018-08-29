@@ -4,7 +4,6 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.devocative</groupId>
 	<artifactId>wickomp</artifactId>
 	<version>2.11-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -12,6 +11,13 @@
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Web components for Apache Wicket</description>
 	<url>https://github.com/mbizhani/Wickomp</url>
+
+	<parent>
+		<groupId>org.devocative</groupId>
+		<artifactId>dena</artifactId>
+		<version>sivar</version>
+		<relativePath/>
+	</parent>
 
 	<licenses>
 		<license>
@@ -42,24 +48,8 @@
 	</scm>
 
 	<properties>
-		<lang.level>1.8</lang.level>
 		<jetty.port>8081</jetty.port>
 		<jetty.port.stop>9091</jetty.port.stop>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<d.slf4j.ver>1.7.25</d.slf4j.ver>
-		<d.servlet.ver>3.1.0</d.servlet.ver>
-		<d.wicket.ver>7.9.0</d.wicket.ver>
-
-		<p.jetty.ver>9.4.6.v20170531</p.jetty.ver>
-		<p.compiler.ver>3.5.1</p.compiler.ver>
-		<p.release.ver>2.5.3</p.release.ver>
-		<p.source.ver>3.0.0</p.source.ver>
-		<p.javadoc.ver>2.10.3</p.javadoc.ver>
-		<p.gpg.ver>1.6</p.gpg.ver>
-		<p.jar.ver>2.6</p.jar.ver>
-
-		<project.owner>Mehdi Bizhani</project.owner>
 	</properties>
 
 	<dependencies>
@@ -67,50 +57,42 @@
 		<dependency>
 			<groupId>org.devocative</groupId>
 			<artifactId>adroit</artifactId>
-			<version>2.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
-			<version>${d.wicket.ver}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>${d.wicket.ver}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-native-websocket-javax</artifactId>
-			<version>${d.wicket.ver}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>${d.slf4j.ver}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>${d.slf4j.ver}</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>${d.servlet.ver}</version>
-			<scope>provided</scope>
 		</dependency>
 
 
@@ -119,21 +101,18 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
-			<version>0.1.54</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-			<version>2.4.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -156,6 +135,7 @@
 				</excludes>
 			</resource>
 		</resources>
+
 		<testResources>
 			<testResource>
 				<filtering>false</filtering>
@@ -174,154 +154,13 @@
 		</testResources>
 
 		<plugins>
-			<!-- Compiler -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${p.compiler.ver}</version>
-				<configuration>
-					<source>${lang.level}</source>
-					<target>${lang.level}</target>
-					<encoding>UTF-8</encoding>
-					<showWarnings>true</showWarnings>
-					<showDeprecation>true</showDeprecation>
-				</configuration>
-			</plugin>
-
 			<!-- Jetty -->
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${p.jetty.ver}</version>
-				<configuration>
-					<useTestScope>true</useTestScope>
-					<webAppSourceDirectory>src/test/webapp</webAppSourceDirectory>
-					<httpConnector>
-						<port>${jetty.port}</port>
-					</httpConnector>
-
-					<stopKey>Wickomp</stopKey>
-					<stopPort>${jetty.port.stop}</stopPort>
-				</configuration>
-			</plugin>
-
-			<!-- Source -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>${p.source.ver}</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Jar -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${p.jar.ver}</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-						<manifestEntries>
-							<Built-By>${project.owner}</Built-By>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-
-			<!-- Release -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>${p.release.ver}</version>
-				<configuration>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<useReleaseProfile>false</useReleaseProfile>
-					<releaseProfiles>release</releaseProfiles>
-					<goals>deploy</goals>
-				</configuration>
 			</plugin>
 
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<!-- JavaDoc -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${p.javadoc.ver}</version>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-					<!-- GPG -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>${p.gpg.ver}</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>localRelease</id>
-			<distributionManagement>
-				<snapshotRepository>
-					<id>localNexus</id>
-					<url>http://localnexus:8080/nexus/content/repositories/snapshots/</url>
-				</snapshotRepository>
-				<repository>
-					<id>localNexus</id>
-					<url>http://localnexus:8080/nexus/content/repositories/releases/</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-
-	</profiles>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
-
-	<prerequisites>
-		<maven>3.0</maven>
-	</prerequisites>
 
 </project>
