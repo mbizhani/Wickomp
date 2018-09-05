@@ -32,6 +32,9 @@ import java.beans.PropertyDescriptor;
 import java.util.*;
 
 public abstract class WBaseGrid<T> extends WJqCallbackComponent {
+	public static final String URL_PARAM_PAGE_NO = "page";
+	public static final String URL_PARAM_PAGE_SIZE = "rows";
+
 	public static final String URL_PARAM_ID = "$id";
 	public static final String URL_PARAM_CLICK_TYPE = "$tp";
 	public static final String URL_PARAM_COLUMN_NUMBER = "$cn";
@@ -278,7 +281,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 		for (int i = 0; i < options.getToolbarButtons().size(); i++) {
 			OButton<T> button = options.getToolbarButtons().get(i);
-			button.init(getCallbackURL(), i, options.getHtmlId(), options.getColumns());
+			button.init(getCallbackURL(), i, options.getHtmlId());
 		}
 	}
 
@@ -453,23 +456,23 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		NOTE: EasyUI POST params = rows, page, id, sort, order
 		 */
 
-		pageSize = postParams.getParameterValue("rows").toInt(options.getPageSize());
-		pageNum = postParams.getParameterValue("page").toInt(1);
+		final int pageSize = postParams.getParameterValue(URL_PARAM_PAGE_SIZE).toInt(options.getPageSize());
+		final int pageNum = postParams.getParameterValue(URL_PARAM_PAGE_NO).toInt(1);
 
 		/*
 		NOTE: idByPost vs idByGet
 		idByPost: sent by EasyUI TreeGrid for expanded node
 		idByGet:  sent by a custom link in the cell
 		 */
-		String idByGet = getParams.getParameterValue(URL_PARAM_ID).toOptionalString();
-		String idByPost = postParams.getParameterValue("id").toOptionalString();
+		final String idByGet = getParams.getParameterValue(URL_PARAM_ID).toOptionalString();
+		final String idByPost = postParams.getParameterValue("id").toOptionalString();
 
-		String sortList = postParams.getParameterValue("sort").toOptionalString();
-		String orderList = postParams.getParameterValue("order").toOptionalString();
+		final String sortList = postParams.getParameterValue("sort").toOptionalString();
+		final String orderList = postParams.getParameterValue("order").toOptionalString();
 
-		String clickType = getParams.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
-		Integer colNo = getParams.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
-		String columnReorder = getParams.getParameterValue(URL_PARAM_COLUMN_REORDER).toOptionalString();
+		final String clickType = getParams.getParameterValue(URL_PARAM_CLICK_TYPE).toString();
+		final Integer colNo = getParams.getParameterValue(URL_PARAM_COLUMN_NUMBER).toOptionalInteger();
+		final String columnReorder = getParams.getParameterValue(URL_PARAM_COLUMN_REORDER).toOptionalString();
 
 		logger.debug("WBaseGrid.onRequest:\n\tpageSize=[{}], pageNum=[{}], sort=[{}], order=[{}], idByPost=[{}]\n\tclickType=[{}] idByGet=[{}] colNo=[{}]",
 			pageSize, pageNum, sortList, orderList, idByPost, clickType, idByGet, colNo);
@@ -495,6 +498,9 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		} else if (idByPost != null && idByPost.length() > 0) {
 			handleRowsById(idByPost);
 		} else {
+			this.pageSize = pageSize;
+			this.pageNum = pageNum;
+
 			if (sortList != null && orderList != null) {
 				updateSortFieldList(sortList.split(","), orderList.split(","));
 			} else {
@@ -524,7 +530,9 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			}
 			builder.append("><table><tr>");
 			for (OButton<T> button : toolbarButtons) {
+				button.setGrid(this);
 				builder.append("<td>").append(button.getHTMLContent()).append("</td>");
+				button.setGrid(null);
 			}
 			builder
 				.append("</tr></table></div>");
@@ -535,16 +543,22 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 
 	private void handleToolbarButtonClick(Integer colNo) {
 		OButton<T> button = options.getToolbarButtons().get(colNo);
-		if (button instanceof OLinkButton) {
-			OLinkButton<T> linkButton = (OLinkButton<T>) button;
-			linkButton.onClick();
-		} else if (button instanceof OAjaxLinkButton) {
-			AjaxRequestTarget target = createAjaxResponse();
+		button.setGrid(this);
 
-			OAjaxLinkButton<T> ajaxLinkButton = (OAjaxLinkButton<T>) button;
-			ajaxLinkButton.onClick(target);
-		} else {
-			throw new RuntimeException("Invalid request from button click");
+		try {
+			if (button instanceof OLinkButton) {
+				OLinkButton<T> linkButton = (OLinkButton<T>) button;
+				linkButton.onClick();
+			} else if (button instanceof OAjaxLinkButton) {
+				AjaxRequestTarget target = createAjaxResponse();
+
+				OAjaxLinkButton<T> ajaxLinkButton = (OAjaxLinkButton<T>) button;
+				ajaxLinkButton.onClick(target);
+			} else {
+				throw new RuntimeException("Invalid request from button click");
+			}
+		} finally {
+			button.setGrid(null);
 		}
 	}
 

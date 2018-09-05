@@ -16,23 +16,19 @@ public abstract class OButton<T> extends Options {
 	private int index;
 	private String url;
 	private String gridHtmlId;
-	private OColumnList<T> columnList;
+
+	private transient WBaseGrid<T> grid;
 
 	// ------------------------------
 
-	public void init(String url, int index, String gridHtmlId, OColumnList<T> columnList) {
+	public final void init(String url, int index, String gridHtmlId) {
 		this.url = url;
 		this.index = index;
 		this.gridHtmlId = gridHtmlId;
-		this.columnList = columnList;
 	}
 
-	public String getGridHtmlId() {
-		return gridHtmlId;
-	}
-
-	public OColumnList<T> getColumnList() {
-		return columnList;
+	public final void setGrid(WBaseGrid<T> grid) {
+		this.grid = grid;
 	}
 
 	// ------------------------------
@@ -40,6 +36,10 @@ public abstract class OButton<T> extends Options {
 	public abstract String getHTMLContent();
 
 	// ------------------------------
+
+	protected final String getGridHtmlId() {
+		return gridHtmlId;
+	}
 
 	protected final String getCallbackURL() {
 		//return String.format("%s&cn=%s&tp=bt", url, index);
@@ -54,5 +54,17 @@ public abstract class OButton<T> extends Options {
 	protected final void sendResource(IResource resource, PageParameters pageParameters) {
 		RequestCycle cycle = RequestCycle.get();
 		cycle.scheduleRequestHandlerAfterCurrent(new ResourceRequestHandler(resource, pageParameters));
+	}
+
+	protected final OColumnList<T> getColumnList() {
+		return grid.getOptions().getColumns();
+	}
+
+	protected final Integer getPageSize() {
+		return grid.getPageSize();
+	}
+
+	protected final Integer getPageNum() {
+		return grid.getPageNum();
 	}
 }

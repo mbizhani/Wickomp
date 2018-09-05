@@ -263,7 +263,7 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 
 				@Override
 				public void onClick(AjaxRequestTarget target) {
-					target.appendJavaScript("alert('Button');");
+					target.appendJavaScript(String.format("alert('Button: n=%s s=%s');", getPageNum(), getPageSize()));
 				}
 			})
 			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
