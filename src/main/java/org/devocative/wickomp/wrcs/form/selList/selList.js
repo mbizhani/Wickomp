@@ -10,6 +10,11 @@ var closeHandler_SelList = function (event) {
 	}
 };
 
+jQuery.expr[':'].icontains = function (a, i, m) {
+	return jQuery(a).text().toUpperCase()
+		.indexOf(m[3].toUpperCase()) >= 0;
+};
+
 // keydown and click on other side of page results to hide popup
 $(document).on("click keydown", closeHandler_SelList);
 
@@ -28,7 +33,7 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 	// NOTE: the parent of popup-div must have relative position, so on parent scroll, popup-div also moves up/down!
 	selListPanel.css("position", "relative");
 
-	if (slChoices.find("input[type='checkbox']").size() == 0) {
+	if (slChoices.find("input[type='checkbox']").size() === 0) {
 		slSelectAll.css("display", "none");
 	}
 
@@ -65,10 +70,10 @@ function handleAllSelList(selListPanelId, isEnabled, selectLabel, noOfSelectionL
 	});
 
 	slFilter.keydown(function (event) {
-		if (event.keyCode == 13) {
+		if (event.keyCode === 13) {
 			var filterTextInputValue = event.target.value;
-			slChoices.find("label:not(:contains('" + filterTextInputValue + "'))").parentsUntil("tr").parent().css("display", "none");
-			slChoices.find("label:contains('" + filterTextInputValue + "')").parentsUntil("tr").parent().css("display", "");
+			slChoices.find("label:not(:icontains('" + filterTextInputValue + "'))").parentsUntil("tr").parent().css("display", "none");
+			slChoices.find("label:icontains('" + filterTextInputValue + "')").parentsUntil("tr").parent().css("display", "");
 			event.preventDefault();
 		}
 	});
