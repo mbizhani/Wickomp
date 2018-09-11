@@ -62,6 +62,7 @@
 		callbackOnColumnReorder: false,
 		selectionIndicator: false,
 		selectionDblClick: true,
+		selectedAsUrl: "",
 
 		// ------------------------------
 
@@ -347,11 +348,24 @@
 		},
 
 		selectionChanged: function (grid) {
+			var selData = grid.datagrid("getSelections");
 			var butts = grid.datagrid("getPager").pagination("options")["buttons"];
 			if (butts) {
-				butts[0].text = grid.datagrid("getSelections").length.toString();
+				butts[0].text = selData.length.toString();
 
 				wBaseGridDefaults.updateButtonsOfPager(grid, butts);
+			}
+
+			var idField = wBaseGridDefaults.getIdField(grid);
+			if (idField && selData.length > 0) {
+				var url = "";
+				for (var i = 0; i < selData.length; i++) {
+					url += "&$selkey=" + selData[i][idField];
+				}
+				grid.datagrid("options")["selectedAsUrl"] = url;
+				wLog.debug("selectionChanged: selectedAsUrl = ", grid.datagrid("options")["selectedAsUrl"]);
+			} else {
+				grid.datagrid("options")["selectedAsUrl"] = "";
 			}
 		},
 
@@ -387,10 +401,7 @@
 				return;
 			}
 
-			var idField = grid.datagrid("options")["returnField"];
-			if (!idField) {
-				idField = grid.datagrid("options")["idField"];
-			}
+			var idField = wBaseGridDefaults.getIdField(grid);
 			if (idField) {
 				var titleField = grid.datagrid("options")["titleField"];
 				if (!titleField) {
@@ -465,6 +476,14 @@
 					$(this).tooltip("destroy");
 				}
 			});
+		},
+
+		getIdField: function (grid) {
+			var idField = grid.datagrid("options")["returnField"];
+			if (!idField) {
+				idField = grid.datagrid("options")["idField"];
+			}
+			return idField;
 		}
 	};
 

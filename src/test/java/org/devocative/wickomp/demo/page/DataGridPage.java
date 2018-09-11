@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DataGridPage extends BasePage implements IAsyncResponse<Map<String, Object>>, IGridDataSource<PersonVO>, IGridAsyncDataSource<PersonVO> {
 	private static final long serialVersionUID = 7457034189424340046L;
@@ -254,7 +255,8 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 		grid1Opt
 			.setColumns(columns)
 			.setMultiSort(true)
-			.setIdField("col02")
+			.setSingleSelect(false)
+			.setIdField("col04")
 			// .setGroupField("col01")
 			.setShowFooter(true)
 			.addToolbarButton(new OExportExcelButton<>(new FontAwesome("file-excel-o", new Model<>("Export to excel")).setColor("green"), this))
@@ -263,7 +265,10 @@ public class DataGridPage extends BasePage implements IAsyncResponse<Map<String,
 
 				@Override
 				public void onClick(AjaxRequestTarget target) {
-					target.appendJavaScript(String.format("alert('Button: n=%s s=%s');", getPageNum(), getPageSize()));
+					String key = getSelectedRowsKeys()
+						.stream()
+						.collect(Collectors.joining(","));
+					target.appendJavaScript(String.format("alert('Button: n=%s s=%s k=%s');", getPageNum(), getPageSize(), key));
 				}
 			})
 			.addToolbarButton(new OGridGroupingButton<>(new FontAwesome("expand"), new FontAwesome("compress")))
