@@ -1,5 +1,6 @@
 package org.devocative.wickomp.form;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -13,6 +14,7 @@ public class WSqlStringInput extends WLabeledFormInputPanel<String> {
 
 	private TextField<String> text;
 	private CheckBox leftBox, rightBox;
+	private WInputDir inputDir = WInputDir.AUTO;
 
 	// ------------------------------
 
@@ -24,14 +26,17 @@ public class WSqlStringInput extends WLabeledFormInputPanel<String> {
 	public WSqlStringInput(String id, IModel<String> model) {
 		super(id, model);
 
-		add(text = new TextField<>("text", new Model<>(), String.class));
-		add(leftBox = new CheckBox("leftBox", new Model<>(true)));
-		add(rightBox = new CheckBox("rightBox", new Model<>(true)));
-
 		add(new CommonBehavior());
 	}
 
 	// ------------------------------
+
+	public WSqlStringInput setInputDir(WInputDir inputDir) {
+		this.inputDir = inputDir;
+		return this;
+	}
+
+	// ---------------
 
 	@Override
 	public void convertInput() {
@@ -52,6 +57,19 @@ public class WSqlStringInput extends WLabeledFormInputPanel<String> {
 	}
 
 	// ------------------------------
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		add(text = new TextField<>("text", new Model<>(), String.class));
+		add(leftBox = new CheckBox("leftBox", new Model<>(true)));
+		add(rightBox = new CheckBox("rightBox", new Model<>(true)));
+
+		if (inputDir != null) {
+			text.add(new AttributeModifier("dir", inputDir.getHtml()));
+		}
+	}
 
 	@Override
 	protected void onBeforeRender() {

@@ -18,6 +18,7 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 
 	private Integer maxlength;
 	private Integer size;
+	private WInputDir inputDir = WInputDir.AUTO;
 
 	// ------------------------------
 
@@ -57,6 +58,11 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 		return this;
 	}
 
+	public WTextInput setInputDir(WInputDir inputDir) {
+		this.inputDir = inputDir;
+		return this;
+	}
+
 	// ---------------
 
 	@Override
@@ -79,6 +85,10 @@ public class WTextInput extends WLabeledFormInputPanel<String> {
 
 		if (size != null) {
 			textField.add(new AttributeModifier("size", size));
+		}
+
+		if (inputDir != null) {
+			textField.add(new AttributeModifier("dir", inputDir.getHtml()));
 		}
 
 		for (Behavior b : getBehaviors()) {

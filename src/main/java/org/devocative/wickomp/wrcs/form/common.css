@@ -36,6 +36,7 @@ div.w-float-table > div {
 .yr, .mo, .dy, .hr, .mi, .sc {
 	text-align: center;
 	width: 22px;
+	direction: ltr;
 }
 
 .yr {
