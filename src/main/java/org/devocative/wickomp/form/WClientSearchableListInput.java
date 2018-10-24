@@ -90,10 +90,6 @@ public abstract class WClientSearchableListInput extends WLabeledFormInputPanel 
 
 	protected abstract Component createSelectionPanel(String selectionPanelId);
 
-	protected abstract Object createServerObject(String key);
-
-	protected abstract List<KeyValueVO<String, String>> createClientOptions(List list);
-
 	// ---------------------------- PUBLIC METHODS
 
 	@Override
@@ -168,17 +164,25 @@ public abstract class WClientSearchableListInput extends WLabeledFormInputPanel 
 
 			String rows = WebUtil.toJson(createClientOptions(objectRows));
 			builder.append(String.format(
-					"handleClientSearchableList(null, '%s', '%s', '%s', %s, %s);",
-					getInputName(),
-					result.getMarkupId(),
-					title.getMarkupId(),
-					rows,
-					multipleSelection
+				"handleClientSearchableList(null, '%s', '%s', '%s', %s, %s);",
+				getInputName(),
+				result.getMarkupId(),
+				title.getMarkupId(),
+				rows,
+				multipleSelection
 				)
 			);
 
 			WebUtil.writeJQueryCall(builder.toString(), false);
 		}
+	}
+
+	protected Object createServerObject(String key) {
+		return new KeyValueVO<>(key, null);
+	}
+
+	protected List<KeyValueVO<String, String>> createClientOptions(List list) {
+		return list;
 	}
 
 	protected String getJSCallback() {

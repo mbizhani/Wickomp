@@ -13,7 +13,6 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.devocative.adroit.vo.KeyValueVO;
 import org.devocative.adroit.vo.RangeVO;
 import org.devocative.wickomp.demo.BasePage;
 import org.devocative.wickomp.demo.panel.SelectionPanel;
@@ -247,16 +246,6 @@ public class FormPage extends BasePage {
 				SelectionPanel p = new SelectionPanel(selectionPanelId);
 				p.setJS(getJSCallback());
 				return p;
-			}
-
-			@Override
-			protected KeyValueVO<String, String> createServerObject(String key) {
-				return new KeyValueVO<>(key, null);
-			}
-
-			@Override
-			protected List<KeyValueVO<String, String>> createClientOptions(List list) {
-				return list;
 			}
 		}.setOpenModalLinkVisible(true));
 		form.add(new WOrderedListInput<>("orderedPerson", personVOs).setVisibleSize(10));
