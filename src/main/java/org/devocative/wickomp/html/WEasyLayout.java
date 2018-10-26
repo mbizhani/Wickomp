@@ -1,6 +1,6 @@
 package org.devocative.wickomp.html;
 
-import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.protocol.http.WebSession;
 import org.devocative.wickomp.WebUtil;
@@ -12,7 +12,6 @@ public class WEasyLayout extends WebMarkupContainer {
 	private static final long serialVersionUID = 6610030199903497866L;
 
 	private WebMarkupContainer east, west;
-	//private boolean eastFitToContent = true, westFitToContent = true;
 
 	public WEasyLayout(String id) {
 		super(id);
@@ -25,26 +24,14 @@ public class WEasyLayout extends WebMarkupContainer {
 	public WEasyLayout setEastOfLTRDir(WebMarkupContainer east) {
 		this.east = east;
 		east.setOutputMarkupId(true);
-		//add(east);
 		return this;
 	}
 
 	public WEasyLayout setWestOfLTRDir(WebMarkupContainer west) {
 		this.west = west;
 		west.setOutputMarkupId(true);
-		//add(west);
 		return this;
 	}
-
-	/*public WEasyLayout setEastFitToContent(boolean eastFitToContent) {
-		this.eastFitToContent = eastFitToContent;
-		return this;
-	}
-
-	public WEasyLayout setWestFitToContent(boolean westFitToContent) {
-		this.westFitToContent = westFitToContent;
-		return this;
-	}*/
 
 	@Override
 	protected void onInitialize() {
@@ -58,17 +45,17 @@ public class WEasyLayout extends WebMarkupContainer {
 
 		if (userPreference.getLayoutDirection() == OLayoutDirection.RTL) {
 			if (west != null) {
-				west.add(new AttributeModifier("data-options", "region:'east',split:true"));
+				west.add(new AttributeAppender("data-options", "region:'east',split:true", ","));
 			}
 			if (east != null) {
-				east.add(new AttributeModifier("data-options", "region:'west',split:true"));
+				east.add(new AttributeAppender("data-options", "region:'west',split:true", ","));
 			}
 		} else {
 			if (west != null) {
-				west.add(new AttributeModifier("data-options", "region:'west',split:true"));
+				west.add(new AttributeAppender("data-options", "region:'west',split:true", ","));
 			}
 			if (east != null) {
-				east.add(new AttributeModifier("data-options", "region:'east',split:true"));
+				east.add(new AttributeAppender("data-options", "region:'east',split:true", ","));
 			}
 		}
 	}
@@ -77,29 +64,9 @@ public class WEasyLayout extends WebMarkupContainer {
 	protected void onAfterRender() {
 		super.onAfterRender();
 
-		/*
-		StringBuilder builder = new StringBuilder();
-		if (westFitToContent || eastFitToContent) {
-			if (westFitToContent && west != null) {
-				builder.append(getParentFitScript(west));
-			}
-
-			if (eastFitToContent && east != null) {
-				builder.append(getParentFitScript(east));
-			}
-
-		}
-		builder.append(String.format("$('#%s').layout();", getMarkupId()));
-		*/
-
 		if (isVisible()) {
 			String script = String.format("$('#%s').layout();", getMarkupId());
 			WebUtil.writeJQueryCall(script, false);
 		}
 	}
-
-	/*private String getParentFitScript(WebMarkupContainer container) {
-		String max = String.format("Math.max.apply(Math, $('#%s').find('table,div').map(function(){return $(this).width();}).get())", container.getMarkupId());
-		return String.format("$('#%s').width(%s);", container.getMarkupId(), max);
-	}*/
 }
