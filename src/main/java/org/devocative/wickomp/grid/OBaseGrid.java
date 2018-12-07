@@ -42,6 +42,7 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 	protected Boolean asyncLoadingEnabled;
 	protected Boolean autoTooltip;
 	protected Boolean callbackOnColumnReorder;
+	protected Boolean cellAutoDir;
 	protected Boolean columnReorder;
 	protected String noResultMessage;
 	protected List<OPagingButtons> pagingBarLayout;
@@ -246,6 +247,15 @@ public abstract class OBaseGrid<T> extends OComponent implements IHtmlId, ICallb
 
 	public OBaseGrid<T> setCallbackOnColumnReorder(Boolean callbackOnColumnReorder) {
 		this.callbackOnColumnReorder = callbackOnColumnReorder;
+		return this;
+	}
+
+	public Boolean getCellAutoDir() {
+		return cellAutoDir;
+	}
+
+	public OBaseGrid<T> setCellAutoDir(Boolean cellAutoDir) {
+		this.cellAutoDir = cellAutoDir;
 		return this;
 	}
 

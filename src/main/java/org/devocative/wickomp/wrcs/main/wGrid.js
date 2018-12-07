@@ -58,6 +58,7 @@
 
 		asyncLoadingEnabled: true,
 		autoTooltip: true,
+		cellAutoDir: false,
 		columnReorder: true,
 		callbackOnColumnReorder: false,
 		selectionIndicator: false,
@@ -105,6 +106,11 @@
 
 			wBaseGridDefaults.updateColumnsTooltip($(this), $(this).datagrid("getColumnFields"));
 			wBaseGridDefaults.updateColumnsTooltip($(this), $(this).datagrid("getColumnFields", true));
+
+			//TIP
+			if ($(this).datagrid("options")["cellAutoDir"]) {
+				$("div.datagrid-cell").not("div.tree-node").css({"text-align": "initial"}).attr("dir", "auto");
+			}
 		},
 
 		onLoadError: function () {
