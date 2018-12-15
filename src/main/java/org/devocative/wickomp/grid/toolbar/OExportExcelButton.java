@@ -1,6 +1,7 @@
 package org.devocative.wickomp.grid.toolbar;
 
 import org.devocative.adroit.ExcelExporter;
+import org.devocative.adroit.date.UniDate;
 import org.devocative.wickomp.grid.IGridDataSource;
 import org.devocative.wickomp.grid.WSortField;
 import org.devocative.wickomp.grid.column.OColumn;
@@ -20,8 +21,10 @@ public class OExportExcelButton<T> extends OLinkButton<T> {
 	private IGridDataSource<T> dataSource;
 
 	private List<WSortField> sortFieldList = new ArrayList<>();
-	private String fileName = "export.xlsx";
+	private String fileName = "export";
 	private Integer maxRowsCount = 1000;
+	private boolean showDateInName = true;
+	private String dateFormat = "yyyyMMdd-HHmmss";
 
 	// ------------------------------
 
@@ -33,18 +36,28 @@ public class OExportExcelButton<T> extends OLinkButton<T> {
 
 	// ------------------------------
 
-	public OExportExcelButton setSortFieldList(List<WSortField> sortFieldList) {
+	public OExportExcelButton<T> setSortFieldList(List<WSortField> sortFieldList) {
 		this.sortFieldList = sortFieldList;
 		return this;
 	}
 
-	public OExportExcelButton setFileName(String fileName) {
+	public OExportExcelButton<T> setFileName(String fileName) {
 		this.fileName = fileName;
 		return this;
 	}
 
-	public OExportExcelButton setMaxRowsCount(Integer maxRowsCount) {
+	public OExportExcelButton<T> setMaxRowsCount(Integer maxRowsCount) {
 		this.maxRowsCount = maxRowsCount;
+		return this;
+	}
+
+	public OExportExcelButton<T> setShowDateInName(boolean showDateInName) {
+		this.showDateInName = showDateInName;
+		return this;
+	}
+
+	public OExportExcelButton<T> setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
 		return this;
 	}
 
@@ -52,7 +65,17 @@ public class OExportExcelButton<T> extends OLinkButton<T> {
 
 	@Override
 	public void onClick() {
-		sendResource(new OutputStreamResource("application/excel", fileName) {
+		String fname = fileName;
+
+		if (!fname.endsWith(".xlsx")) {
+			if (showDateInName) {
+				fname += "_" + UniDate.now().format(dateFormat);
+			}
+
+			fname += ".xlsx";
+		}
+
+		sendResource(new OutputStreamResource("application/excel", fname) {
 			private static final long serialVersionUID = 8680636627426356006L;
 
 			@Override

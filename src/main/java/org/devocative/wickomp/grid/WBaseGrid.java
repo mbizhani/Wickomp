@@ -532,7 +532,7 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 			for (OButton<T> button : toolbarButtons) {
 				button.setGrid(this);
 				builder.append("<td>").append(button.getHTMLContent()).append("</td>");
-				button.setGrid(null);
+				//button.setGrid(null);
 			}
 			builder
 				.append("</tr></table></div>");
@@ -545,21 +545,21 @@ public abstract class WBaseGrid<T> extends WJqCallbackComponent {
 		OButton<T> button = options.getToolbarButtons().get(colNo);
 		button.setGrid(this);
 
-		try {
-			if (button instanceof OLinkButton) {
-				OLinkButton<T> linkButton = (OLinkButton<T>) button;
-				linkButton.onClick();
-			} else if (button instanceof OAjaxLinkButton) {
-				AjaxRequestTarget target = createAjaxResponse();
+		//try {
+		if (button instanceof OLinkButton) {
+			OLinkButton<T> linkButton = (OLinkButton<T>) button;
+			linkButton.onClick();
+		} else if (button instanceof OAjaxLinkButton) {
+			AjaxRequestTarget target = createAjaxResponse();
 
-				OAjaxLinkButton<T> ajaxLinkButton = (OAjaxLinkButton<T>) button;
-				ajaxLinkButton.onClick(target);
-			} else {
-				throw new RuntimeException("Invalid request from button click");
-			}
-		} finally {
-			button.setGrid(null);
+			OAjaxLinkButton<T> ajaxLinkButton = (OAjaxLinkButton<T>) button;
+			ajaxLinkButton.onClick(target);
+		} else {
+			throw new RuntimeException("Invalid request from button click");
 		}
+		/*} finally {
+			button.setGrid(null);
+		}*/
 	}
 
 	private void handleCellLinkClick(String id, Integer colNo) {
