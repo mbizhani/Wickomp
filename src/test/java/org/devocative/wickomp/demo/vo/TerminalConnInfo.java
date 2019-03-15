@@ -5,10 +5,12 @@ import java.io.Serializable;
 public class TerminalConnInfo implements Serializable {
 	private static final long serialVersionUID = 8548580685461815658L;
 
-	private String address = "192.168.40.131";
+	private String address = "localhost";
 	private Integer port = 22;
-	private String username = "root";
-	private String password = "qazWSX@123";
+	private String username = "test";
+	private String password = "test";
+
+	// ------------------------------
 
 	public String getAddress() {
 		return address;

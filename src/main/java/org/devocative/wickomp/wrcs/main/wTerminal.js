@@ -61,7 +61,7 @@
 					if (message && message.startsWith(ctx.PREFIX)) {
 						try {
 							var parse = JSON.parse(message.substring(ctx.PREFIX.length));
-							if (parse && parse["ctid"] && parse.ctid == ctx.ctid) {
+							if (parse && parse["ctid"] && parse.ctid === ctx.ctid) {
 								ctx.term.write(parse.text);
 							}
 						} catch (e) {
@@ -114,13 +114,13 @@
 
 				var width = ctx.target.width() - 10;
 				result["cols"] = Math.floor(width / ctx.charWidth);
-				if (result["cols"] == 0) {
+				if (result["cols"] === 0) {
 					result["cols"] = defaults.cols;
 				}
 
 				var height = (ctx.target.height() > 0 ? ctx.target.height() : ctx.target.parent().height()) - 10;
 				result["rows"] = Math.floor(height / ctx.charHeight);
-				if (result["rows"] == 0) {
+				if (result["rows"] === 0) {
 					result["rows"] = defaults.rows;
 				}
 

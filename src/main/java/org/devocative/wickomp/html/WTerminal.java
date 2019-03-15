@@ -93,7 +93,7 @@ public abstract class WTerminal extends WebMarkupContainer {
 			protected void onMessage(WebSocketRequestHandler handler, TextMessage message) {
 				String text = message.getText().trim();
 
-				if (text.startsWith(PREFIX)) {
+				if (isEnabledInHierarchy() && text.startsWith(PREFIX)) {
 					try {
 						RequestMessage rq = WebUtil.fromJson(text.substring(PREFIX.length()), RequestMessage.class);
 						logger.debug("WTerminal Client Message: {}", rq);
@@ -136,7 +136,9 @@ public abstract class WTerminal extends WebMarkupContainer {
 			@Override
 			protected void onClose(ClosedMessage message) {
 				logger.warn("WTerminal.onClose: {}", message);
-				WTerminal.this.onClose();
+				if (isEnabledInHierarchy()) {
+					WTerminal.this.onClose();
+				}
 			}
 
 			@Override
